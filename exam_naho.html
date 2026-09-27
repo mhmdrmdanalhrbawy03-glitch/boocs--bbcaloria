@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>امتحان النحو - الثانوية العامة</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Share+Tech+Mono&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: #0a0a0a;
+    color: #eee;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ========== شاشة الترحيب ========== */
+  #welcome-screen {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+  }
+
+  .terminal {
+    width: 100%;
+    max-width: 800px;
+    background: #000;
+    border: 2px solid #00ff41;
+    border-radius: 8px;
+    padding: 30px 40px;
+    box-shadow: 0 0 40px #00ff4155, 0 0 80px #00ff4122;
+  }
+
+  .terminal-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .terminal-bar span {
+    width: 13px; height: 13px;
+    border-radius: 50%;
+  }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #ffbd2e; }
+  .dot-g { background: #28ca41; }
+
+  #terminal-text {
+    font-family: 'Share Tech Mono', monospace;
+    color: #00ff41;
+    font-size: clamp(12px, 2vw, 16px);
+    line-height: 1.9;
+    white-space: pre-wrap;
+    min-height: 180px;
+    text-shadow: 0 0 8px #00ff41;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    height: 18px;
+    background: #00ff41;
+    animation: blink 0.7s infinite;
+    vertical-align: middle;
+    margin-right: 2px;
+  }
+  @keyframes blink { 0%,49%{opacity:1} 50%,100%{opacity:0} }
+
+  #start-btn {
+    margin-top: 30px;
+    padding: 14px 50px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    background: transparent;
+    color: #00ff41;
+    border: 2px solid #00ff41;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    box-shadow: 0 0 20px #00ff4144;
+    transition: all 0.3s;
+    display: none;
+  }
+  #start-btn:hover {
+    background: #00ff41;
+    color: #000;
+    box-shadow: 0 0 40px #00ff41aa;
+    transform: scale(1.05);
+  }
+
+  /* ========== شاشة الامتحان ========== */
+  #exam-screen {
+    display: none;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+    padding: 20px;
+  }
+
+  .exam-header {
+    background: linear-gradient(90deg, #1e1b4b, #312e81, #1e1b4b);
+    border: 1px solid #6366f1;
+    border-radius: 16px;
+    padding: 20px 30px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 0 30px #6366f144;
+  }
+
+  .exam-title-block h1 {
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 900;
+    color: #a5b4fc;
+    text-shadow: 0 0 15px #6366f1;
+  }
+  .exam-title-block p {
+    color: #818cf8;
+    font-size: 13px;
+    margin-top: 4px;
+  }
+
+  .timer-block {
+    text-align: center;
+  }
+  .timer-label { color: #94a3b8; font-size: 12px; margin-bottom: 4px; }
+  #timer {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: bold;
+    color: #4ade80;
+    text-shadow: 0 0 15px #4ade80;
+    transition: color 0.3s;
+  }
+  #timer.warning { color: #f59e0b; text-shadow: 0 0 15px #f59e0b; }
+  #timer.danger { color: #ef4444; text-shadow: 0 0 15px #ef4444; animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { from{opacity:1} to{opacity:0.5} }
+
+  .progress-bar-wrap {
+    background: #1e293b;
+    border-radius: 10px;
+    height: 8px;
+    margin: 0 0 25px;
+    overflow: hidden;
+    border: 1px solid #334155;
+  }
+  #progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 10px #8b5cf6;
+  }
+
+  .q-counter {
+    text-align: center;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+  .q-counter span { color: #a5b4fc; font-weight: 700; }
+
+  /* كارت السؤال */
+  .question-card {
+    background: linear-gradient(135deg, #1e1b4b11, #312e8122);
+    border: 1px solid #4338ca55;
+    border-radius: 16px;
+    padding: 30px;
+    margin-bottom: 20px;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 4px 30px #00000066;
+  }
+
+  .q-badge {
+    display: inline-block;
+    background: #312e81;
+    color: #a5b4fc;
+    font-size: 12px;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    border: 1px solid #6366f155;
+  }
+
+  .question-text {
+    font-size: clamp(16px, 2.5vw, 20px);
+    font-weight: 700;
+    color: #e2e8f0;
+    margin-bottom: 25px;
+    line-height: 1.8;
+    direction: rtl;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media(max-width:560px) { .options-grid { grid-template-columns: 1fr; } }
+
+  .option-btn {
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #cbd5e1;
+    font-family: 'Cairo', sans-serif;
+    font-size: clamp(13px, 1.8vw, 16px);
+    font-weight: 600;
+    cursor: pointer;
+    text-align: right;
+    direction: rtl;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #6366f100, #6366f111);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: #6366f1;
+    color: #a5b4fc;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px #6366f133;
+  }
+  .option-btn:hover:not(:disabled)::before { opacity: 1; }
+  .option-btn:disabled { cursor: not-allowed; }
+
+  .option-btn.correct {
+    border-color: #22c55e;
+    background: #052e16;
+    color: #4ade80;
+    box-shadow: 0 0 20px #22c55e44;
+  }
+  .option-btn.wrong {
+    border-color: #ef4444;
+    background: #2d0a0a;
+    color: #f87171;
+    box-shadow: 0 0 15px #ef444433;
+  }
+  .option-btn.selected-wrong {
+    border-color: #ef4444;
+    background: #3f0000;
+    color: #f87171;
+  }
+
+  .feedback-box {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    display: none;
+    direction: rtl;
+  }
+  .feedback-box.correct-fb {
+    background: #052e16;
+    border: 1px solid #22c55e;
+    color: #4ade80;
+  }
+  .feedback-box.wrong-fb {
+    background: #2d0a0a;
+    border: 1px solid #ef4444;
+    color: #f87171;
+  }
+
+  .nav-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 25px;
+    max-width: 850px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .nav-btn {
+    padding: 12px 32px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    border: none;
+    transition: all 0.25s;
+  }
+  .btn-prev {
+    background: #1e293b;
+    color: #94a3b8;
+    border: 1px solid #334155;
+  }
+  .btn-prev:hover { background: #334155; color: #e2e8f0; }
+  .btn-next {
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    color: white;
+    box-shadow: 0 4px 15px #6366f155;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 6px 25px #6366f177; }
+  .btn-submit {
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    color: white;
+    box-shadow: 0 4px 15px #22c55e44;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 25px #22c55e66; }
+
+  /* ========== شاشة النتيجة ========== */
+  #result-screen {
+    display: none;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0f0f1a, #1a1a2e);
+    padding: 30px 20px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .result-card {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .result-emoji {
+    font-size: 80px;
+    margin-bottom: 10px;
+    animation: pop 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+  }
+  @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
+
+  .result-title {
+    font-size: clamp(22px, 4vw, 32px);
+    font-weight: 900;
+    margin-bottom: 8px;
+  }
+  .result-subtitle { color: #64748b; margin-bottom: 30px; }
+
+  .score-ring {
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    margin: 0 auto 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid;
+    position: relative;
+  }
+  .score-ring .big-num {
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .score-ring .out-of {
+    font-size: 14px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .grade-excellent { border-color: #22c55e; color: #4ade80; box-shadow: 0 0 40px #22c55e44; }
+  .grade-good { border-color: #3b82f6; color: #60a5fa; box-shadow: 0 0 40px #3b82f644; }
+  .grade-pass { border-color: #f59e0b; color: #fbbf24; box-shadow: 0 0 40px #f59e0b44; }
+  .grade-fail { border-color: #ef4444; color: #f87171; box-shadow: 0 0 40px #ef444444; }
+
+  .stats-row {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  .stat-box {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 130px;
+  }
+  .stat-val { font-size: 28px; font-weight: 900; }
+  .stat-lbl { color: #64748b; font-size: 12px; margin-top: 4px; }
+
+  .restart-btn {
+    padding: 14px 50px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    color: white;
+    font-family: 'Cairo', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 20px #6366f155;
+    transition: all 0.3s;
+    margin-top: 10px;
+  }
+  .restart-btn:hover { transform: translateY(-3px); box-shadow: 0 8px 30px #6366f177; }
+
+  .made-by {
+    margin-top: 20px;
+    color: #475569;
+    font-size: 13px;
+  }
+  .made-by strong { color: #6366f1; }
+
+  .firework {
+    position: fixed;
+    pointer-events: none;
+    z-index: 10000;
+  }
+  .particle {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+  }
+  @keyframes explode {
+    0% { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== شاشة الترحيب ========== -->
+<div id="welcome-screen">
+  <div class="terminal">
+    <div class="terminal-bar">
+      <span class="dot-r"></span>
+      <span class="dot-y"></span>
+      <span class="dot-g"></span>
+    </div>
+    <div id="terminal-text"><span class="cursor"></span></div>
+  </div>
+  <button id="start-btn" onclick="startExam()">▶ ابدأ الاختبار</button>
+</div>
+
+<!-- ========== شاشة الامتحان ========== -->
+<div id="exam-screen">
+  <div class="exam-header">
+    <div class="exam-title-block">
+      <h1>⚡ امتحان النحو — الثانوية العامة</h1>
+      <p>صُنع بواسطة: <strong style="color:#a5b4fc">يوسف</strong> و<strong style="color:#a5b4fc">ميدوو</strong> • 50 سؤال شاملة</p>
+    </div>
+    <div class="timer-block">
+      <div class="timer-label">⏱ الوقت المتبقي</div>
+      <div id="timer">60:00</div>
+    </div>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div id="progress-bar" style="width:2%"></div>
+  </div>
+
+  <div class="q-counter">السؤال <span id="q-num">1</span> من <span>50</span></div>
+
+  <div class="question-card" id="question-card">
+    <div class="q-badge" id="q-badge">النوع</div>
+    <div class="question-text" id="question-text">...</div>
+    <div class="options-grid" id="options-grid"></div>
+    <div class="feedback-box" id="feedback-box"></div>
+  </div>
+
+  <div class="nav-row">
+    <button class="nav-btn btn-prev" onclick="prevQ()">◀ السابق</button>
+    <button class="nav-btn btn-next" id="next-btn" onclick="nextQ()">التالي ▶</button>
+    <button class="nav-btn btn-submit" id="submit-btn" onclick="submitExam()" style="display:none">✅ إنهاء الامتحان</button>
+  </div>
+</div>
+
+<!-- ========== شاشة النتيجة ========== -->
+<div id="result-screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;">
+  <div class="result-card">
+    <div class="result-emoji" id="result-emoji">🏆</div>
+    <div class="result-title" id="result-title">نتيجتك</div>
+    <div class="result-subtitle" id="result-subtitle"></div>
+    <div class="score-ring grade-excellent" id="score-ring">
+      <div class="big-num" id="score-num">0</div>
+      <div class="out-of">من 50</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-val" id="stat-correct" style="color:#4ade80">0</div>
+        <div class="stat-lbl">إجابات صحيحة ✅</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="stat-wrong" style="color:#f87171">0</div>
+        <div class="stat-lbl">إجابات خاطئة ❌</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="stat-pct" style="color:#a5b4fc">0%</div>
+        <div class="stat-lbl">النسبة المئوية</div>
+      </div>
+    </div>
+    <button class="restart-btn" onclick="restartExam()">🔄 إعادة الاختبار</button>
+    <div class="made-by">صُنع بواسطة: <strong>يوسف</strong> و<strong>ميدوو</strong> — جميع الحقوق محفوظة</div>
+  </div>
+</div>
+
+<script>
+// ========== أسئلة الامتحان (50 سؤال) ==========
+const questions = [
+  {
+    cat:"الفاعل",
+    q:"في الجملة (أكَلَ الولدُ التفاحةَ) — ما إعراب كلمة (الولدُ)؟",
+    opts:["فاعل مرفوع بالضمة","مبتدأ مرفوع","نائب فاعل مرفوع","مفعول به منصوب"],
+    ans:0, exp:"الولدُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة."
+  },
+  {
+    cat:"المفعول به",
+    q:"في الجملة (شرِبَ الطالبُ الماءَ) — ما إعراب (الماءَ)؟",
+    opts:["فاعل مرفوع","مفعول به منصوب بالفتحة","مبتدأ مرفوع","تمييز منصوب"],
+    ans:1, exp:"الماءَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة."
+  },
+  {
+    cat:"نائب الفاعل",
+    q:"في الجملة (كُسِرَ الزجاجُ) — ما إعراب (الزجاجُ)؟",
+    opts:["فاعل مرفوع","مبتدأ مرفوع","نائب فاعل مرفوع بالضمة","خبر مرفوع"],
+    ans:2, exp:"الزجاجُ: نائب فاعل مرفوع لأن الفعل مبني للمجهول."
+  },
+  {
+    cat:"كان وأخواتها",
+    q:"في الجملة (كانَ الجوُّ باردًا) — ما إعراب (الجوُّ)؟",
+    opts:["اسم كان مرفوع","خبر كان منصوب","فاعل مرفوع","مبتدأ مرفوع"],
+    ans:0, exp:"الجوُّ: اسم كان مرفوع وعلامة رفعه الضمة."
+  },
+  {
+    cat:"كان وأخواتها",
+    q:"في الجملة (أصبحَ الطقسُ جميلًا) — ما إعراب (جميلًا)؟",
+    opts:["حال منصوبة","خبر أصبح منصوب بالفتحة","مفعول به","نعت منصوب"],
+    ans:1, exp:"جميلًا: خبر أصبح منصوب وعلامة نصبه الفتحة."
+  },
+  {
+    cat:"إن وأخواتها",
+    q:"في الجملة (إنَّ العلمَ نورٌ) — ما إعراب (العلمَ)؟",
+    opts:["فاعل منصوب","اسم إن منصوب بالفتحة","مبتدأ مرفوع","خبر إن مرفوع"],
+    ans:1, exp:"العلمَ: اسم إن منصوب وعلامة نصبه الفتحة الظاهرة."
+  },
+  {
+    cat:"إن وأخواتها",
+    q:"أيٌّ من الجمل فيها خطأ إعرابي في (إنَّ)؟",
+    opts:["إنَّ الحقَّ واضحٌ","إنَّ المعلمَ مخلصٌ","إنَّ الطالبُ مجتهدٌ","إنَّ المدينةَ جميلةٌ"],
+    ans:2, exp:"الصواب: إنَّ الطالبَ (بالفتح) لأنه اسم إن منصوب."
+  },
+  {
+    cat:"المبتدأ والخبر",
+    q:"في الجملة (النجاحُ مكسبٌ) — ما إعراب (مكسبٌ)؟",
+    opts:["فاعل مرفوع","مبتدأ مرفوع","خبر مرفوع بالضمة","نعت مرفوع"],
+    ans:2, exp:"مكسبٌ: خبر مرفوع وعلامة رفعه الضمة الظاهرة."
+  },
+  {
+    cat:"الحال",
+    q:"في الجملة (جاءَ أحمدُ مسرعًا) — ما إعراب (مسرعًا)؟",
+    opts:["مفعول به منصوب","حال منصوبة وصاحب الحال أحمد","نعت منصوب","تمييز منصوب"],
+    ans:1, exp:"مسرعًا: حال منصوبة وعلامة نصبها الفتحة، وصاحب الحال (أحمدُ)."
+  },
+  {
+    cat:"التمييز",
+    q:"في الجملة (اشتريتُ عشرينَ كتابًا) — ما إعراب (كتابًا)؟",
+    opts:["مفعول به منصوب","فاعل مرفوع","تمييز منصوب بالفتحة","مضاف إليه مجرور"],
+    ans:2, exp:"كتابًا: تمييز منصوب وعلامة نصبه الفتحة الظاهرة."
+  },
+  {
+    cat:"الاستثناء",
+    q:"في الجملة (جاءَ الطلابُ إلا زيدًا) — ما إعراب (زيدًا)؟",
+    opts:["فاعل منصوب","مستثنى منصوب بإلا","مفعول به منصوب","حال منصوبة"],
+    ans:1, exp:"زيدًا: مستثنى منصوب بإلا وعلامة نصبه الفتحة."
+  },
+  {
+    cat:"الاستثناء",
+    q:"في أيٍّ من هذه الجمل يجوز في المستثنى الرفع والنصب؟",
+    opts:["جاء الطلابُ إلا زيدًا","ما جاءَ إلا زيدٌ/زيدًا","جاءَ القومُ إلا محمدًا","أكلتُ إلا التفاحةَ"],
+    ans:1, exp:"في الاستثناء المفرغ (النفي + إلا) يجوز الرفع والنصب."
+  },
+  {
+    cat:"الممنوع من الصرف",
+    q:"أيُّ الكلمات الآتية ممنوعة من الصرف؟",
+    opts:["محمدٌ","كتابٌ","يزيدُ","بيتٌ"],
+    ans:2, exp:"يزيدُ ممنوع من الصرف لأنه علم على وزن الفعل المضارع."
+  },
+  {
+    cat:"الممنوع من الصرف",
+    q:"كيف تُعرب الممنوع من الصرف في حالة الجر؟",
+    opts:["بالكسرة","بالفتحة نيابةً عن الكسرة","بالياء","لا يتغير"],
+    ans:1, exp:"الممنوع من الصرف يُجر بالفتحة نيابةً عن الكسرة ما لم يكن محلى بأل أو مضافًا."
+  },
+  {
+    cat:"الأسماء الستة",
+    q:"في الجملة (جاءَ أبوكَ) — ما علامة الرفع في (أبو)؟",
+    opts:["الضمة","الواو نيابةً عن الضمة","الألف","النون"],
+    ans:1, exp:"(أبو) من الأسماء الستة تُرفع بالواو نيابةً عن الضمة."
+  },
+  {
+    cat:"الأسماء الستة",
+    q:"في الجملة (رأيتُ أخاكَ) — ما علامة النصب في (أخا)؟",
+    opts:["الفتحة","الألف نيابةً عن الفتحة","الياء","الكسرة"],
+    ans:1, exp:"(أخا) تُنصب بالألف نيابةً عن الفتحة لأنها من الأسماء الستة."
+  },
+  {
+    cat:"العدد وتمييزه",
+    q:"ما الصواب في: (في المدرسة _____ طالبات) للعدد 5؟",
+    opts:["خمسُ طالباتٍ","خمسةُ طالباتٍ","خمسةَ طالباتٍ","خمسُ طالبةٍ"],
+    ans:0, exp:"المعدود مؤنث (طالبات) فيكون العدد مجردًا (خمسُ) — العدد يخالف المعدود في التاء."
+  },
+  {
+    cat:"المنادى",
+    q:"في الجملة (يا طالبُ اجتهِد) — ما إعراب (طالبُ)؟",
+    opts:["مفعول به منصوب","منادى مبني على الضم","مبتدأ مرفوع","نائب فاعل"],
+    ans:1, exp:"(طالبُ) منادى نكرة مقصودة مبني على الضم في محل نصب."
+  },
+  {
+    cat:"المنادى",
+    q:"في الجملة (يا عليًّا أقبِل) — لماذا جاء المنادى منصوبًا؟",
+    opts:["لأنه منادى مضاف","لأنه نكرة غير مقصودة","لأنه اسم علم أي معرفة غير مفردة","لأنه مضاف إليه"],
+    ans:0, exp:"المنادى المضاف يُنصب دائمًا، وعليٍّا مضاف لأنه صحيح أن يقال (يا عليَّ) أي مفرد — في الحقيقة (يا عليَّ) منادى علم مفرد مبني على الضم، لكن إذا جاء (يا عبدَ الله) فهو منادى مضاف منصوب."
+  },
+  {
+    cat:"الجملة الفعلية",
+    q:"ما ترتيب مكونات الجملة الفعلية؟",
+    opts:["المبتدأ ثم الخبر","الفعل ثم الفاعل ثم المفعول به","الفاعل ثم الفعل","المفعول به ثم الفاعل"],
+    ans:1, exp:"الجملة الفعلية: فعل + فاعل + مفعول به (إن وُجد)."
+  },
+  {
+    cat:"الإضافة",
+    q:"في التركيب (كتابُ الطالبِ) — ما إعراب (الطالبِ)؟",
+    opts:["فاعل مرفوع","مضاف إليه مجرور بالكسرة","نعت مجرور","مفعول به"],
+    ans:1, exp:"الطالبِ: مضاف إليه مجرور وعلامة جره الكسرة."
+  },
+  {
+    cat:"النعت",
+    q:"في الجملة (جاءَ رجلٌ طويلٌ) — ما إعراب (طويلٌ)؟",
+    opts:["خبر مرفوع","حال منصوبة","نعت مرفوع تابع لمنعوته","مبتدأ مرفوع"],
+    ans:2, exp:"طويلٌ: نعت مرفوع تبع منعوته (رجل) في الرفع والتنكير."
+  },
+  {
+    cat:"التوكيد",
+    q:"في الجملة (جاءَ الطلابُ كلُّهم) — ما إعراب (كلُّهم)؟",
+    opts:["بدل مرفوع","توكيد معنوي مرفوع","نعت مرفوع","عطف بيان"],
+    ans:1, exp:"كلُّهم: توكيد معنوي مرفوع تابع للمؤكَّد في إعرابه."
+  },
+  {
+    cat:"البدل",
+    q:"في الجملة (أكلتُ الفاكهةَ التفاحةَ) — ما إعراب (التفاحةَ)؟",
+    opts:["مفعول به ثانٍ","بدل كل من كل منصوب","نعت منصوب","حال منصوبة"],
+    ans:1, exp:"التفاحةَ: بدل كل من كل منصوب تبع (الفاكهةَ) في النصب."
+  },
+  {
+    cat:"العطف",
+    q:"في الجملة (جاءَ أحمدُ وخالدٌ) — ما إعراب (خالدٌ)؟",
+    opts:["فاعل مرفوع","معطوف على أحمد مرفوع بالضمة","مبتدأ مرفوع","توكيد لفظي"],
+    ans:1, exp:"خالدٌ: معطوف على (أحمدُ) مرفوع بالضمة الظاهرة."
+  },
+  {
+    cat:"المفعول المطلق",
+    q:"في الجملة (ضربَ اللاعبُ الكرةَ ضربًا شديدًا) — ما إعراب (ضربًا)؟",
+    opts:["حال منصوبة","مفعول مطلق منصوب بالفتحة","تمييز منصوب","مفعول به"],
+    ans:1, exp:"ضربًا: مفعول مطلق منصوب وعلامة نصبه الفتحة الظاهرة."
+  },
+  {
+    cat:"المفعول لأجله",
+    q:"في الجملة (قمتُ احترامًا للضيف) — ما إعراب (احترامًا)؟",
+    opts:["حال منصوبة","مفعول لأجله منصوب","تمييز منصوب","مفعول مطلق"],
+    ans:1, exp:"احترامًا: مفعول لأجله منصوب يبيّن سبب وقوع الفعل."
+  },
+  {
+    cat:"المفعول فيه",
+    q:"في الجملة (جلستُ أمامَ المعلمِ) — ما إعراب (أمامَ)؟",
+    opts:["حال منصوبة","مفعول فيه (ظرف مكان) منصوب","مفعول به","جار ومجرور"],
+    ans:1, exp:"أمامَ: مفعول فيه ظرف مكان منصوب وهو مضاف."
+  },
+  {
+    cat:"المفعول معه",
+    q:"في الجملة (سرتُ والنيلَ) — ما إعراب (النيلَ)؟",
+    opts:["معطوف منصوب","مفعول معه منصوب بعد واو المعية","مفعول به","حال"],
+    ans:1, exp:"النيلَ: مفعول معه منصوب وعلامة نصبه الفتحة بعد واو المعية."
+  },
+  {
+    cat:"أسلوب التعجب",
+    q:"ما الصواب في صياغة التعجب؟",
+    opts:["ما أجملَ السماءَ!","ما أجملُ السماءِ!","ما أجملَ السماءُ!","ما أجمالَ السماءَ!"],
+    ans:0, exp:"صيغة التعجب (ما أفعلَ) + المتعجب منه منصوب: ما أجملَ السماءَ!"
+  },
+  {
+    cat:"المدح والذم",
+    q:"في الجملة (نِعمَ الطالبُ أحمدُ) — ما إعراب (أحمدُ)؟",
+    opts:["فاعل مرفوع","مبتدأ مرفوع","المخصوص بالمدح مرفوع","نعت مرفوع"],
+    ans:2, exp:"أحمدُ: المخصوص بالمدح مرفوع — وهو المقصود بالمدح أو الذم."
+  },
+  {
+    cat:"الأفعال الخمسة",
+    q:"في الجملة (الطلابُ يكتبونَ الدرسَ) — ما علامة رفع (يكتبونَ)؟",
+    opts:["الضمة","الواو والنون","ثبوت النون","الألف والنون"],
+    ans:1, exp:"يكتبونَ: فعل مضارع مرفوع وعلامة رفعه ثبوت النون لأنه من الأفعال الخمسة (اتصل بواو الجماعة)."
+  },
+  {
+    cat:"الأفعال الخمسة",
+    q:"في الجملة (الطالبانِ يذهبانِ إلى المدرسة) — ما علامة رفع (يذهبانِ)؟",
+    opts:["الضمة","ثبوت النون","الألف","الواو"],
+    ans:1, exp:"يذهبانِ: مرفوع وعلامة رفعه ثبوت النون — وهو من الأفعال الخمسة."
+  },
+  {
+    cat:"الفعل المعتل",
+    q:"ما علامة جزم الفعل المضارع (يَسعى) في قولك (لم يسعَ)؟",
+    opts:["السكون","الفتح","حذف النون","حذف حرف العلة"],
+    ans:3, exp:"الفعل المعتل الآخر يُجزم بحذف حرف العلة (الألف)."
+  },
+  {
+    cat:"الفعل المعتل",
+    q:"ما علامة جزم (يَخشى) في قولك (لم يَخشَ)؟",
+    opts:["السكون","حذف الألف","الكسرة","الفتحة"],
+    ans:1, exp:"(يخشى) فعل معتل الآخر بالألف يُجزم بحذف الألف: لم يَخشَ."
+  },
+  {
+    cat:"الإعراب المحلي",
+    q:"الجملة الواقعة خبرًا لمبتدأ لها محل من الإعراب؟",
+    opts:["لا محل لها","في محل رفع خبر","في محل نصب","في محل جر"],
+    ans:1, exp:"الجملة الخبرية لها محل من الإعراب (في محل رفع خبر)."
+  },
+  {
+    cat:"الجملة الاسمية",
+    q:"في الجملة (العلمُ نافعٌ) — أيُّ التحليلات صحيح؟",
+    opts:["فعل وفاعل","مبتدأ مرفوع + خبر مرفوع","اسم كان + خبرها","فاعل ومفعول به"],
+    ans:1, exp:"(العلمُ) مبتدأ مرفوع + (نافعٌ) خبر مرفوع — جملة اسمية."
+  },
+  {
+    cat:"لا النافية للجنس",
+    q:"في الجملة (لا طالبَ غائبٌ) — ما إعراب (طالبَ)؟",
+    opts:["مبتدأ مرفوع","اسم لا النافية للجنس مبني على الفتح","فاعل مرفوع","منادى مبني"],
+    ans:1, exp:"طالبَ: اسم لا النافية للجنس مبني على الفتح في محل نصب."
+  },
+  {
+    cat:"لا النافية للجنس",
+    q:"ما الصواب في: (... تقصير في هذا العمل)؟",
+    opts:["لا تقصيرُ","لا تقصيرٌ","لا تقصيرَ","لا تقصيرًا"],
+    ans:2, exp:"الصواب: لا تقصيرَ — اسم لا مبني على الفتح (مفرد نكرة)."
+  },
+  {
+    cat:"الجر بحروف الجر",
+    q:"في الجملة (ذهبتُ إلى المدرسةِ) — ما إعراب (المدرسةِ)؟",
+    opts:["مفعول به منصوب","مجرور بـ(إلى) وعلامة جره الكسرة","مضاف إليه مجرور","فاعل مرفوع"],
+    ans:1, exp:"المدرسةِ: اسم مجرور بحرف الجر (إلى) وعلامة جره الكسرة الظاهرة."
+  },
+  {
+    cat:"الأفعال الناسخة",
+    q:"أيُّ الأفعال الآتية ليست من أخوات (كان)؟",
+    opts:["أصبحَ","صارَ","كادَ","ليسَ"],
+    ans:2, exp:"(كادَ) من أفعال المقاربة وليست من أخوات كان الكاملة، وإن كانت أفعالًا ناسخة لكنها تُعد من (أفعال الشروع والمقاربة)."
+  },
+  {
+    cat:"الإعراب بالحركات الفرعية",
+    q:"ما علامة نصب جمع المؤنث السالم؟",
+    opts:["الفتحة","الكسرة نيابةً عن الفتحة","الياء","الواو"],
+    ans:1, exp:"جمع المؤنث السالم يُنصب بالكسرة نيابةً عن الفتحة."
+  },
+  {
+    cat:"الإعراب بالحركات الفرعية",
+    q:"ما علامة رفع المثنى؟",
+    opts:["الضمة","الواو","الألف والنون","الألف"],
+    ans:2, exp:"المثنى يُرفع بالألف والنون عوضًا عن الضمة."
+  },
+  {
+    cat:"الإعراب بالحركات الفرعية",
+    q:"ما علامة جر جمع المذكر السالم؟",
+    opts:["الكسرة","الياء والنون","الألف والنون","الفتحة"],
+    ans:1, exp:"جمع المذكر السالم يُجر بالياء والنون نيابةً عن الكسرة."
+  },
+  {
+    cat:"الظرف",
+    q:"في الجملة (جلستُ خلفَ الباب) — ما نوع (خلفَ)؟",
+    opts:["اسم مجرور بحرف جر","ظرف مكان منصوب","حال منصوبة","مفعول به"],
+    ans:1, exp:"خلفَ: ظرف مكان منصوب وعلامة نصبه الفتحة وهو مضاف."
+  },
+  {
+    cat:"أساليب خاصة",
+    q:"في أسلوب الاختصاص: (نحنُ المسلمينَ نُحبُّ الوطنَ) — ما إعراب (المسلمينَ)؟",
+    opts:["فاعل منصوب","مخصوص بالاختصاص منصوب","مفعول به","نعت منصوب"],
+    ans:1, exp:"المسلمينَ: مخصوص بالاختصاص منصوب وعلامة نصبه الياء لأنه جمع مذكر سالم."
+  },
+  {
+    cat:"الاستفهام",
+    q:"أداة الاستفهام (كم) في السؤال (كم كتابًا قرأتَ؟) — تُميَّز بـ؟",
+    opts:["اسم مجرور","تمييز منصوب مفرد","مضاف إليه مجرور","فاعل مرفوع"],
+    ans:1, exp:"(كم) الاستفهامية تمييزها منصوب مفرد: كم كتابًا قرأتَ؟"
+  },
+  {
+    cat:"المصدر",
+    q:"في الجملة (أعجبني اجتهادُكَ) — ما إعراب (اجتهادُكَ)؟",
+    opts:["فاعل مرفوع لأعجب","مبتدأ مرفوع","مضاف إليه","مفعول به"],
+    ans:0, exp:"اجتهادُكَ: فاعل مرفوع وعلامة رفعه الضمة، والكاف مضاف إليه."
+  },
+  {
+    cat:"أنواع الخبر",
+    q:"في الجملة (محمدٌ أبوهُ طبيبٌ) — ما نوع الخبر؟",
+    opts:["خبر مفرد","خبر جملة اسمية","خبر جملة فعلية","خبر شبه جملة"],
+    ans:1, exp:"الخبر هنا جملة اسمية (أبوهُ طبيبٌ) في محل رفع خبر."
+  },
+  {
+    cat:"الضمير",
+    q:"في الجملة (رأيتُهُ يُكمِلُ درسَهُ) — الضمير (هُ) في (رأيتُهُ) يُعرب؟",
+    opts:["في محل رفع فاعل","في محل نصب مفعول به","في محل جر مضاف إليه","في محل رفع مبتدأ"],
+    ans:1, exp:"الضمير (هُ) في (رأيتُهُ): في محل نصب مفعول به."
+  },
+  {
+    cat:"التقديم والتأخير",
+    q:"في الجملة (في البيتِ رجلٌ) — ما إعراب (في البيتِ)؟",
+    opts:["حال مقدمة","خبر مقدم شبه جملة","فاعل","مفعول به"],
+    ans:1, exp:"(في البيتِ): جار ومجرور في محل رفع خبر مقدم، و(رجلٌ) مبتدأ مؤخر."
+  },
+  {
+    cat:"التاء المربوطة والمفتوحة",
+    q:"في الجملة (قرأتُ القصيدةَ) — التاء في (قرأتُ) هي؟",
+    opts:["تاء التأنيث الساكنة","تاء الفاعل المتحركة (ضمير)","تاء مربوطة","لا شيء مما سبق"],
+    ans:1, exp:"التاء في (قرأتُ) تاء الفاعل، وهي ضمير متحرك في محل رفع فاعل."
+  }
+];
+
+// ========== متغيرات الامتحان ==========
+let currentQ = 0;
+let score = 0;
+let answered = new Array(50).fill(null); // null = لم يُجب، true = صح، false = خطأ
+let selectedAnswers = new Array(50).fill(null);
+let timerInterval;
+let timeLeft = 3600; // 60 دقيقة
+let examStarted = false;
+
+// ========== شاشة الترحيب (تأثير الكود) ==========
+const lines = [
+  "> تهيئة النظام...",
+  "> تحميل قاعدة بيانات النحو العربي...",
+  "> جارٍ التحقق من صلاحية المستخدم...",
+  "> مرحبًا بكَ في منصة امتحانات النحو",
+  "> الثانوية العامة — مستوى متقدم",
+  "> صُنع بواسطة: يوسف & ميدوو",
+  "> عدد الأسئلة: 50 سؤال شامل لجميع أبواب النحو",
+  "> مدة الامتحان: 60 دقيقة",
+  "> النظام جاهز. اضغط (ابدأ الاختبار) ✔"
+];
+
+let lIdx = 0, cIdx = 0;
+const tEl = document.getElementById('terminal-text');
+
+function typeWriter() {
+  if (lIdx >= lines.length) {
+    document.getElementById('start-btn').style.display = 'inline-block';
+    return;
+  }
+  const line = lines[lIdx];
+  if (cIdx < line.length) {
+    tEl.innerHTML = tEl.innerHTML.replace('<span class="cursor"></span>','') 
+                   + line[cIdx] + '<span class="cursor"></span>';
+    cIdx++;
+    setTimeout(typeWriter, 28);
+  } else {
+    tEl.innerHTML = tEl.innerHTML.replace('<span class="cursor"></span>','') + '\n';
+    lIdx++; cIdx = 0;
+    setTimeout(typeWriter, 120);
+  }
+}
+setTimeout(typeWriter, 600);
+
+// ========== بدء الامتحان ==========
+function startExam() {
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  examStarted = true;
+  startTimer();
+  loadQuestion(0);
+}
+
+// ========== التايمر ==========
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitExam();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const mins = Math.floor(timeLeft / 60);
+  const secs = timeLeft % 60;
+  const t = document.getElementById('timer');
+  t.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+  t.className = '';
+  if (timeLeft <= 300) t.classList.add('danger');
+  else if (timeLeft <= 600) t.classList.add('warning');
+}
+
+// ========== تحميل سؤال ==========
+function loadQuestion(idx) {
+  currentQ = idx;
+  const q = questions[idx];
+  document.getElementById('q-num').textContent = idx + 1;
+  document.getElementById('q-badge').textContent = q.cat;
+  document.getElementById('question-text').textContent = `السؤال ${idx+1}: ${q.q}`;
+
+  const grid = document.getElementById('options-grid');
+  grid.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = `${['أ','ب','ج','د'][i]}) ${opt}`;
+    btn.onclick = () => selectAnswer(i);
+    if (answered[idx] !== null) {
+      btn.disabled = true;
+      if (i === q.ans) btn.classList.add('correct');
+      else if (i === selectedAnswers[idx] && selectedAnswers[idx] !== q.ans) btn.classList.add('selected-wrong');
+    }
+    grid.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback-box');
+  if (answered[idx] !== null) {
+    fb.style.display = 'block';
+    if (answered[idx]) {
+      fb.className = 'feedback-box correct-fb';
+      fb.textContent = `✅ إجابة صحيحة! ${q.exp}`;
+    } else {
+      fb.className = 'feedback-box wrong-fb';
+      fb.textContent = `❌ خطأ. الإجابة الصحيحة: (${q.opts[q.ans]}) — ${q.exp}`;
+    }
+  } else {
+    fb.style.display = 'none';
+    fb.textContent = '';
+  }
+
+  updateProgress();
+  updateNavButtons();
+}
+
+function selectAnswer(choice) {
+  const q = questions[currentQ];
+  if (answered[currentQ] !== null) return;
+
+  selectedAnswers[currentQ] = choice;
+  const isCorrect = choice === q.ans;
+  answered[currentQ] = isCorrect;
+  if (isCorrect) score++;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct');
+    else if (i === choice && !isCorrect) btn.classList.add('selected-wrong');
+  });
+
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'block';
+  if (isCorrect) {
+    fb.className = 'feedback-box correct-fb';
+    fb.textContent = `✅ إجابة صحيحة! ${q.exp}`;
+  } else {
+    fb.className = 'feedback-box wrong-fb';
+    fb.textContent = `❌ خطأ. الإجابة الصحيحة: (${q.opts[q.ans]}) — ${q.exp}`;
+  }
+  updateProgress();
+}
+
+function prevQ() { if (currentQ > 0) loadQuestion(currentQ - 1); }
+
+function nextQ() {
+  if (currentQ < questions.length - 1) loadQuestion(currentQ + 1);
+}
+
+function updateProgress() {
+  const done = answered.filter(a => a !== null).length;
+  document.getElementById('progress-bar').style.width = `${(done/50)*100}%`;
+}
+
+function updateNavButtons() {
+  document.getElementById('next-btn').style.display = currentQ < 49 ? 'inline-block' : 'none';
+  document.getElementById('submit-btn').style.display = currentQ === 49 ? 'inline-block' : 'none';
+}
+
+// ========== إنهاء الامتحان ==========
+function submitExam() {
+  clearInterval(timerInterval);
+  // احسب من الإجابات الفعلية
+  let finalScore = answered.filter(a => a === true).length;
+
+  document.getElementById('exam-screen').style.display = 'none';
+  const rs = document.getElementById('result-screen');
+  rs.style.display = 'flex';
+
+  const pct = Math.round((finalScore / 50) * 100);
+  const wrong = 50 - finalScore;
+
+  document.getElementById('score-num').textContent = finalScore;
+  document.getElementById('stat-correct').textContent = finalScore;
+  document.getElementById('stat-wrong').textContent = wrong;
+  document.getElementById('stat-pct').textContent = pct + '%';
+
+  const ring = document.getElementById('score-ring');
+  const emoji = document.getElementById('result-emoji');
+  const title = document.getElementById('result-title');
+  const sub = document.getElementById('result-subtitle');
+
+  ring.className = 'score-ring';
+  if (pct >= 90) {
+    ring.classList.add('grade-excellent');
+    emoji.textContent = '🏆';
+    title.textContent = 'ممتاز! متفوق!';
+    title.style.color = '#4ade80';
+    sub.textContent = 'أداء استثنائي — أنت نحوي متمكن!';
+    launchFireworks();
+  } else if (pct >= 75) {
+    ring.classList.add('grade-good');
+    emoji.textContent = '🎖️';
+    title.textContent = 'جيد جداً!';
+    title.style.color = '#60a5fa';
+    sub.textContent = 'أداء رائع — واصل المذاكرة وستصل للقمة!';
+  } else if (pct >= 50) {
+    ring.classList.add('grade-pass');
+    emoji.textContent = '📚';
+    title.textContent = 'مقبول — تحتاج مزيداً من المراجعة';
+    title.style.color = '#fbbf24';
+    sub.textContent = 'لا بأس، راجع الأبواب التي أخطأت فيها وأعِد المحاولة!';
+  } else {
+    ring.classList.add('grade-fail');
+    emoji.textContent = '📖';
+    title.textContent = 'لم تنجح — راجع النحو من البداية';
+    title.style.color = '#f87171';
+    sub.textContent = 'لا تيأس! راجع الكتاب المدرسي وأعِد الاختبار.';
+  }
+}
+
+function restartExam() {
+  score = 0;
+  currentQ = 0;
+  answered = new Array(50).fill(null);
+  selectedAnswers = new Array(50).fill(null);
+  timeLeft = 3600;
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  startTimer();
+  loadQuestion(0);
+}
+
+// ========== الألعاب النارية ==========
+function launchFireworks() {
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => createBurst(
+      Math.random() * window.innerWidth,
+      Math.random() * window.innerHeight * 0.6
+    ), i * 300);
+  }
+}
+
+function createBurst(x, y) {
+  const colors = ['#6366f1','#a855f7','#22c55e','#f59e0b','#ef4444','#38bdf8','#fb7185'];
+  const div = document.createElement('div');
+  div.className = 'firework';
+  div.style.left = x + 'px';
+  div.style.top = y + 'px';
+  document.body.appendChild(div);
+  for (let i = 0; i < 18; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = (i / 18) * 360;
+    const dist = 60 + Math.random() * 80;
+    const tx = Math.cos(angle * Math.PI / 180) * dist;
+    const ty = Math.sin(angle * Math.PI / 180) * dist;
+    p.style.setProperty('--tx', tx + 'px');
+    p.style.setProperty('--ty', ty + 'px');
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.animationDuration = (0.7 + Math.random() * 0.5) + 's';
+    div.appendChild(p);
+  }
+  setTimeout(() => div.remove(), 1500);
+}
+</script>
+</body>
+</html>

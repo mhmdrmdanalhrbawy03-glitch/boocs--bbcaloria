@@ -1,0 +1,2878 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    <script src="/_sdk/element_sdk.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        font-family: "Noto Kufi Arabic", sans-serif;
+      }
+      .book-card {
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+      .book-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+      .download-btn {
+        transition: all 0.25s ease;
+        cursor: pointer;
+      }
+      .download-btn:hover {
+        transform: scale(1.05);
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-card {
+        animation: fadeUp 0.5s ease forwards;
+        opacity: 0;
+      }
+      .filter-btn {
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+      .filter-btn.active {
+        transform: scale(1.05);
+      }
+      .search-box {
+        transition: all 0.3s ease;
+      }
+      .search-box:focus {
+        box-shadow: 0 0 0 3px rgba(240, 192, 64, 0.2);
+        outline: none;
+      }
+      .sort-badge {
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+      .sort-badge:hover {
+        transform: scale(1.05);
+      }
+      body {
+        box-sizing: border-box;
+      }
+      .whatsapp-float {
+  position: fixed;
+  bottom: 25px;
+  left: 25px; /* لو عايزه يمين غيرها إلى right */
+  width: 60px;
+  height: 60px;
+  background: #25d366;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+  z-index: 9999;
+  transition: .3s;
+  text-decoration: none;
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,.35);
+}
+
+.theme-switch {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 62px;
+  height: 34px;
+  z-index: 9999;
+}
+
+.theme-switch input {
+  display: none;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #374151;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  left: 3px;
+  top: 3px;
+  background: #3b82f6;
+  border-radius: 50%;
+  transition: .3s;
+}
+
+.icon {
+  position: absolute;
+  left: 9px;
+  top: 6px;
+  font-size: 16px;
+  transition: .3s;
+}
+
+.theme-switch input:checked + .slider {
+  background: #475569;
+}
+
+.theme-switch input:checked + .slider::before {
+  transform: translateX(28px);
+}
+
+.theme-switch input:checked + .slider .icon {
+  transform: translateX(28px);
+  content: "☀️";
+}
+
+#scrollTopBtn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+  transition: all .3s ease;
+}
+
+#scrollTopBtn:hover {
+  transform: scale(1.1);
+  background: #1d4ed8;
+}
+.footer-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 24px;
+    border-radius:15px;
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+    font-size:15px;
+    transition:.35s;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.footer-btn:hover{
+    transform:translateY(-4px) scale(1.05);
+}
+
+.whatsapp-btn{
+    background:linear-gradient(135deg,#25D366,#128C7E);
+}
+
+.channel-btn{
+    background:linear-gradient(135deg,#16a34a,#15803d);
+}
+
+.telegram-btn{
+    background:linear-gradient(135deg,#229ED9,#0088cc);
+}
+
+.platform-btn{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+.time-box:hover{
+    transform:translateY(-8px);
+    box-shadow:0 10px 25px rgba(240,192,64,.3);
+}
+
+.time-box span{
+    font-size:42px;
+    font-weight:800;
+    color:#f8c537;
+    line-height:1;
+}
+
+.time-box small{
+    margin-top:10px;
+    color:#cbd5e1;
+    font-size:15px;
+}
+
+#menuBtn{
+    position: fixed;
+    top: 52px;
+    left: 20px;
+    width: 58px;
+    height: 58px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(135deg,#f8d34f,#f0c040);
+    color: #111827;
+
+    border: none;
+    border-radius: 18px;
+
+    font-size: 30px;
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 30px rgba(240,192,64,.35);
+
+    z-index: 9999;
+
+    transition: .3s;
+}
+
+#menuBtn:hover{
+    transform: translateY(-3px) scale(1.05);
+    box-shadow:0 18px 35px rgba(240,192,64,.45);
+}
+
+.menu-overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.5);
+display:none;
+z-index:9998;
+}
+
+.side-menu{
+position:fixed;
+top:0;
+right:-340px;
+width:320px;
+height:100%;
+background:#0f172a;
+transition:.35s;
+z-index:9999;
+overflow:auto;
+box-shadow:-10px 0 30px rgba(0,0,0,.35);
+}
+
+.side-menu.open{
+right:0;
+}
+
+.menu-header{
+padding:25px;
+background:#1e293b;
+font-size:22px;
+font-weight:bold;
+text-align:center;
+color:#fbbf24;
+}
+
+.side-menu a{
+display:block;
+padding:18px 22px;
+color:white;
+text-decoration:none;
+border-bottom:1px solid rgba(255,255,255,.06);
+transition:.3s;
+}
+
+.side-menu a:hover{
+background:#1e293b;
+padding-right:30px;
+color:#fbbf24;
+}
+
+.menu-info{
+padding:20px;
+color:#cbd5e1;
+line-height:2;
+}
+
+.menu-info h3{
+color:#fbbf24;
+margin-bottom:15px;
+}
+
+.menu-info hr{
+margin:20px 0;
+border-color:#334155;
+}
+
+/* ===========================
+   شاشة التحميل
+=========================== */
+
+#loader{
+    position:fixed;
+    inset:0;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999999;
+    transition:.6s;
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.loader-icon{
+    font-size:70px;
+    animation:bounce 1.3s infinite;
+}
+
+.loader-box h1{
+    color:#f0c040;
+    margin-top:15px;
+    font-size:32px;
+}
+
+.loader-box p{
+    color:#94a3b8;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+.loader-bar{
+    width:260px;
+    height:8px;
+    background:#1e293b;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.loader-progress{
+    width:0;
+    height:100%;
+    background:linear-gradient(90deg,#f0c040,#f59e0b);
+    animation:loading 2s linear forwards;
+}
+
+@keyframes loading{
+    from{
+        width:0;
+    }
+    to{
+        width:100%;
+    }
+}
+
+@keyframes bounce{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+/*==============================
+عداد المحتويات
+==============================*/
+
+.library-stats{
+    max-width:1200px;
+    margin:35px auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:18px;
+    padding:0 20px;
+}
+
+.stat-card{
+    background:#1e293b;
+    border:1px solid #334155;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    transition:.35s;
+}
+
+.stat-card:hover{
+    transform:translateY(-8px);
+    border-color:#f0c040;
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+}
+
+.stat-icon{
+    font-size:40px;
+}
+
+.stat-number{
+    font-size:34px;
+    font-weight:bold;
+    color:#f0c040;
+    margin:12px 0;
+}
+
+.stat-title{
+    color:#cbd5e1;
+    font-size:15px;
+}
+
+/* ===========================
+   نسبة اكتمال المكتبة
+=========================== */
+
+.progress-section{
+    max-width:700px;
+    margin:25px auto;
+    background:#1e293b;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.progress-header{
+    display:flex;
+    justify-content:space-between;
+    color:#fff;
+    font-weight:bold;
+    margin-bottom:12px;
+}
+
+.progress-bar{
+    width:100%;
+    height:16px;
+    background:#334155;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    width:0;
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#22c55e,#f0c040);
+    transition:width 1.5s ease;
+}
+
+.progress-text{
+    text-align:center;
+    color:#94a3b8;
+    margin-top:15px;
+    font-size:14px;
+}
+
+#shareBtn{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+
+    width:58px;
+    height:58px;
+
+    border:none;
+    border-radius:50%;
+
+    background:linear-gradient(135deg,#3b82f6,#2563eb);
+    color:#fff;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:26px;
+    cursor:pointer;
+
+    box-shadow:0 10px 25px rgba(59,130,246,.4);
+
+    transition:.3s;
+    z-index:9999;
+}
+
+#shareBtn:hover{
+    transform:scale(1.12);
+    box-shadow:0 15px 35px rgba(59,130,246,.6);
+}
+
+.suggest-modal{
+
+display:none;
+
+position:fixed;
+
+left:0;
+
+top:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(0,0,0,.7);
+
+backdrop-filter:blur(5px);
+
+z-index:99999;
+
+}
+
+.suggest-box{
+
+width:90%;
+
+max-width:450px;
+
+margin:120px auto;
+
+background:#1e293b;
+
+padding:25px;
+
+border-radius:18px;
+
+text-align:center;
+
+}
+
+.suggest-box h2{
+
+color:#f0c040;
+
+margin-bottom:15px;
+
+}
+
+.suggest-box p{
+
+color:#cbd5e1;
+
+margin-bottom:20px;
+
+}
+
+.suggest-box input{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+background:#0f172a;
+
+color:#fff;
+
+margin-bottom:20px;
+
+outline:none;
+
+}
+
+.suggest-box button{
+
+width:100%;
+
+padding:14px;
+
+border:none;
+
+border-radius:12px;
+
+background:#25D366;
+
+color:#fff;
+
+font-size:17px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.suggest-box button:hover{
+
+transform:scale(1.03);
+
+}
+
+.close-suggest{
+
+float:left;
+
+font-size:30px;
+
+cursor:pointer;
+
+color:#f0c040;
+
+}
+
+.loader-credit{
+    margin-top:35px;
+    text-align:center;
+    animation:fadeUp 1s ease;
+}
+
+.loader-dev,
+.loader-owner{
+    margin:12px 0;
+    font-size:18px;
+    font-weight:700;
+    color:#cbd5e1;
+}
+
+.loader-dev span,
+.loader-owner span{
+
+    background:linear-gradient(
+        90deg,
+        #FFD700,
+        #FFF6B0,
+        #FFC107,
+        #FFD700
+    );
+
+    background-size:300%;
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    animation:goldMove 4s linear infinite;
+
+    font-size:23px;
+
+    text-shadow:
+    0 0 10px rgba(255,215,0,.35);
+
+}
+
+@keyframes goldMove{
+
+0%{
+background-position:0%;
+}
+
+100%{
+background-position:300%;
+}
+
+}
+
+@keyframes fadeUp{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+.loader-credit{
+
+    margin-top:40px;
+
+}
+
+.loader-dev,
+.loader-owner{
+
+    opacity:0;
+
+    animation:showText .8s forwards;
+
+}
+
+.loader-owner{
+
+    animation-delay:1s;
+
+    margin-top:18px;
+
+}
+
+.loader-credit .icon{
+
+    font-size:24px;
+
+    display:block;
+
+    margin-bottom:6px;
+
+}
+
+.loader-credit .title{
+
+    color:#94a3b8;
+
+    font-size:15px;
+
+    display:block;
+
+    margin-bottom:5px;
+
+    letter-spacing:1px;
+
+}
+
+.loader-credit h2{
+
+    margin:0;
+
+    font-size:28px;
+
+    font-weight:900;
+
+    background:linear-gradient(
+        90deg,
+        #FFD700,
+        #FFF4A3,
+        #FFC107,
+        #FFF8DC,
+        #FFD700
+    );
+
+    background-size:400%;
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+
+    animation:
+    goldMove 5s linear infinite,
+    glow 2s ease-in-out infinite;
+
+}
+
+@keyframes showText{
+
+from{
+
+opacity:0;
+
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+@keyframes goldMove{
+
+0%{
+background-position:0%;
+}
+
+100%{
+background-position:400%;
+}
+
+}
+
+@keyframes glow{
+
+0%{
+
+filter:drop-shadow(0 0 3px #FFD700);
+
+}
+
+50%{
+
+filter:drop-shadow(0 0 12px #FFD700);
+
+}
+
+100%{
+
+filter:drop-shadow(0 0 3px #FFD700);
+
+}
+
+}
+
+.news-bar{
+    background:#f0c040;
+    color:#111827;
+    overflow:hidden;
+    white-space:nowrap;
+    padding:12px 0;
+    font-weight:bold;
+    border-top:2px solid #ffd54f;
+    border-bottom:2px solid #ffd54f;
+}
+
+.news-content{
+    display:inline-block;
+    padding-left:100%;
+    animation:scrollNews 18s linear infinite;
+}
+
+.news-content a{
+    color:#0f172a;
+    text-decoration:none;
+    font-weight:900;
+    margin:0 12px;
+}
+
+@keyframes scrollNews{
+    from{
+        transform:translateX(0);
+    }
+    to{
+        transform:translateX(-100%);
+    }
+}
+.faq-section{
+max-width:950px;
+margin:70px auto;
+padding:0 20px;
+}
+
+.faq-section h2{
+text-align:center;
+font-size:34px;
+color:#f0c040;
+margin-bottom:35px;
+}
+
+.faq-item{
+background:#1e293b;
+border:1px solid rgba(240,192,64,.2);
+border-radius:18px;
+margin-bottom:18px;
+overflow:hidden;
+transition:.3s;
+}
+
+.faq-item:hover{
+border-color:#f0c040;
+transform:translateY(-2px);
+}
+
+.faq-question{
+width:100%;
+background:none;
+border:none;
+padding:22px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:18px;
+font-weight:bold;
+color:#fff;
+cursor:pointer;
+}
+
+.faq-question span{
+font-size:28px;
+color:#f0c040;
+transition:.3s;
+}
+
+.faq-answer{
+display:none;
+padding:0 22px 22px;
+color:#cbd5e1;
+line-height:2;
+font-size:16px;
+}
+
+.faq-item.active .faq-answer{
+display:block;
+animation:fade .3s;
+}
+
+.faq-item.active .faq-question span{
+transform:rotate(45deg);
+}
+
+@keyframes fade{
+from{
+opacity:0;
+transform:translateY(-8px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+#homePage{
+
+height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:linear-gradient(135deg,#0f172a,#1e293b);
+
+text-align:center;
+
+padding:20px;
+
+}
+
+.home-container h1{
+
+font-size:48px;
+
+color:#f0c040;
+
+margin:20px 0;
+
+}
+
+.home-container p{
+
+color:#cbd5e1;
+
+font-size:20px;
+
+margin-bottom:40px;
+
+}
+
+.home-btn{
+
+background:#f0c040;
+
+color:#111827;
+
+border:none;
+
+padding:18px 45px;
+
+border-radius:50px;
+
+font-size:22px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.3s;
+
+}
+
+.home-btn:hover{
+
+transform:scale(1.08);
+
+box-shadow:0 0 30px #f0c040;
+
+}
+
+#menuBtn{
+    display:none;
+}
+.motivation-box{
+    max-width:1100px;
+    margin:35px auto;
+    padding:30px;
+
+    border-radius:24px;
+
+    background:linear-gradient(135deg,#f0c040,#ffd95c,#f0c040);
+
+    color:#111827;
+
+    display:flex;
+    gap:25px;
+    align-items:center;
+
+    box-shadow:
+        0 15px 45px rgba(240,192,64,.35);
+
+    animation:fadeUp .8s ease;
+}
+
+.motivation-icon{
+
+    width:90px;
+    height:90px;
+
+    background:#fff;
+
+    border-radius:50%;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:42px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+    flex-shrink:0;
+}
+
+.motivation-content h2{
+
+    margin:0;
+    font-size:32px;
+    font-weight:900;
+
+}
+
+.motivation-content p{
+
+    margin:12px 0 18px;
+    font-size:18px;
+    line-height:1.9;
+
+}
+
+.motivation-tags{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+
+}
+
+.motivation-tags span{
+
+    background:#fff;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:bold;
+
+}
+
+@keyframes fadeUp{
+
+    from{
+        opacity:0;
+        transform:translateY(40px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+@media(max-width:768px){
+
+.motivation-box{
+
+    flex-direction:column;
+    text-align:center;
+    padding:25px;
+
+}
+
+.motivation-content h2{
+
+    font-size:26px;
+
+}
+
+.motivation-content p{
+
+    font-size:16px;
+
+}
+
+.motivation-tags{
+
+    justify-content:center;
+
+}
+
+}
+    
+/* تحسينات الشكل العام */
+:root{
+  --bg:#0b1220;
+  --surface:#111c2e;
+  --surface-2:#17243a;
+  --gold:#f4c95d;
+  --muted:#a9b7ca;
+}
+body{
+  background:var(--bg);
+  color:#f8fafc;
+  overflow-x:hidden;
+}
+#app{background:linear-gradient(180deg,#0b1220 0%,#101b2d 100%) !important;}
+#header{
+  padding:42px 20px 30px !important;
+  border-bottom:1px solid rgba(244,201,93,.16);
+}
+#header > .text-5xl{
+  width:88px;height:88px;margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:28px;
+  background:linear-gradient(145deg,#263752,#162238);
+  box-shadow:0 14px 35px rgba(0,0,0,.28);
+}
+.search-box{
+  min-height:52px;
+  padding-right:46px !important;
+  border:1px solid #263750 !important;
+  background:#111c2e !important;
+  border-radius:16px !important;
+}
+.search-box:focus{border-color:var(--gold) !important;}
+.sort-badge,.filter-btn,.grade-btn{
+  border:1px solid #2a3a54 !important;
+  box-shadow:0 5px 14px rgba(0,0,0,.12);
+}
+#books-grid{gap:22px !important;}
+.book-card{
+  background:linear-gradient(145deg,#17243a,#101a2b);
+  border:1px solid #263750 !important;
+  border-radius:24px !important;
+  box-shadow:0 10px 25px rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.book-card:hover{
+  border-color:rgba(244,201,93,.65) !important;
+  transform:translateY(-5px);
+}
+.stat-card,.progress-section,.faq-item{
+  background:linear-gradient(145deg,#17243a,#111c2e) !important;
+  border-color:#263750 !important;
+}
+footer{background:rgba(8,15,28,.35);}
+@media(max-width:768px){
+  #header{padding-top:28px !important;}
+  .motivation-box{margin:20px 14px !important;border-radius:22px !important;}
+  .library-stats{padding:0 14px !important;gap:12px !important;}
+  .stat-card{padding:18px !important;}
+  #books-grid{padding-left:14px !important;padding-right:14px !important;}
+}
+
+
+/* إصلاح اختلاف الخلفية بين الوضعين */
+body.light-mode {
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+}
+body.light-mode #app {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%) !important;
+  color: #1e293b !important;
+}
+body.light-mode #header {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
+  border-bottom-color: #cbd5e1 !important;
+}
+body.light-mode .search-box {
+  background: #ffffff !important;
+  color: #334155 !important;
+  border-color: #cbd5e1 !important;
+}
+body.light-mode .book-card,
+body.light-mode .stat-card,
+body.light-mode .progress-section,
+body.light-mode .faq-item {
+  background: #ffffff !important;
+  color: #1e293b !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08) !important;
+}
+body.light-mode footer {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+</style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+
+
+    <button id="menuBtn" onclick="toggleMenu()">
+    <i data-lucide="menu"></i>
+</button>
+  </head>
+
+  <section class="motivation-box">
+
+    <div class="motivation-icon">
+        🚀
+    </div>
+
+    <div class="motivation-content">
+
+        <h2>
+            ابدأ رحلتك نحو التفوق
+        </h2>
+
+        <p>
+            النجاح لا يأتي صدفة...
+            بل يبدأ بخطوة، وكل كتاب تقرؤه يقربك من حلمك.
+        </p>
+
+        <div class="motivation-tags">
+            <span>📚 أكثر من 100 كتاب</span>
+            <span>📝 امتحانات مجانية</span>
+            <span>🎥 كورسات</span>
+            <span>⭐ تحديثات مستمرة</span>
+        </div>
+
+    </div>
+
+</section>
+  <div class="news-bar">
+    <div class="news-content">
+        🎓 رابط المنصة التعليمية الخاصة بنا:
+        <a href="https://mhmdrmdan.yobader.com" target="_blank">
+            https://mhmdrmdan.yobader.com
+        </a>
+        ⭐ جميع الكورسات والشرح والامتحانات متوفرة على المنصة.
+    </div>
+</div>
+  <a
+  href="https://wa.me/201500492203"
+  target="_blank"
+  class="whatsapp-float"
+  aria-label="تواصل عبر واتساب"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="32"
+    height="32"
+    viewBox="0 0 24 24"
+    fill="white"
+  >
+    <path d="M20.52 3.48A11.86 11.86 0 0 0 12.04 0C5.5 0 .17 5.33.17 11.87c0 2.09.55 4.14 1.59 5.95L0 24l6.37-1.67a11.84 11.84 0 0 0 5.67 1.45h.01c6.54 0 11.87-5.33 11.87-11.87 0-3.17-1.23-6.15-3.4-8.43zM12.05 21.7a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.78.99 1.01-3.68-.23-.38a9.77 9.77 0 0 1-1.51-5.19c0-5.42 4.41-9.83 9.84-9.83 2.63 0 5.1 1.02 6.95 2.88a9.77 9.77 0 0 1 2.88 6.95c0 5.42-4.41 9.84-9.8 9.84zm5.39-7.35c-.29-.14-1.7-.84-1.97-.94-.26-.1-.45-.14-.64.14-.19.29-.74.94-.91 1.13-.17.19-.33.22-.62.07-.29-.14-1.2-.44-2.29-1.4-.84-.75-1.41-1.67-1.57-1.95-.17-.29-.02-.44.12-.58.13-.13.29-.33.43-.5.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 1-.99 2.45 0 1.44 1.04 2.84 1.19 3.03.14.19 2.05 3.13 4.96 4.39.69.3 1.23.48 1.65.61.69.22 1.31.19 1.8.12.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.08-.12-.27-.19-.55-.33z"/>
+  </svg>
+</a>
+
+<button id="shareBtn" onclick="shareLibrary()">
+    <i data-lucide="share-2"></i>
+</button>
+<button id="scrollTopBtn" onclick="scrollToTop()">
+  ⬆
+</button>
+
+
+  <body class="h-full">
+    
+
+    
+<div id="loader">
+
+    <div class="loader-box">
+
+        <div class="loader-icon">📚</div>
+
+        <h1>مكتبة الثانوية العامة</h1>
+
+        <p>جارِ تحميل المحتوى...</p>
+
+        <div class="loader-bar">
+            <div class="loader-progress"></div>
+        </div>
+
+        <!-- حقوق التصميم -->
+<div class="loader-credit">
+
+    <div class="loader-dev">
+        <span class="icon">💻</span>
+        <span class="title">تصميم وتطوير</span>
+        <h2>مالك سامح</h2>
+    </div>
+
+    <div class="loader-owner">
+        <span class="icon">👑</span>
+        <span class="title">برعاية</span>
+        <h2>محمد رمضان الحرباوي</h2>
+    </div>
+
+</div>
+
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<div id="homePage">
+
+    <div class="home-container">
+
+        <div style="font-size:90px;">📚</div>
+
+        <h1>مكتبة الثانوية العامة</h1>
+
+        <p>
+            جميع الكتب • المذكرات • الامتحانات • الكورسات
+            مجانًا
+        </p>
+
+        <button onclick="openLibrary()" class="home-btn">
+            🚀 دخول المكتبة
+        </button>
+
+    </div>
+
+</div>
+<div id="libraryPage" style="display:none;">
+
+    <div
+      id="app"
+      class="w-full h-full overflow-auto"
+      style="background-color: #0f172a"
+    >
+<div
+id="header"
+class="text-center py-10 px-4"
+style="background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%)"
+>
+
+        <div class="text-5xl mb-4">📚</div>
+<!-- نسبة اكتمال المكتبة -->
+<div class="progress-section">
+
+    <div class="progress-header">
+        <span>📚 اكتمال المكتبة</span>
+        <span id="progressPercent">50%</span>
+    </div>
+
+    <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+    </div>
+
+    <p class="progress-text">
+        🚀 جاري إضافة باقي الكتب والمذكرات والامتحانات والكورسات أولًا بأول.
+    </p>
+
+</div>
+</div>
+
+<label class="theme-switch">
+  <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+  <span class="slider">
+    <span class="icon">🌙</span>
+  </span>
+</label>
+      </div>
+
+
+<div
+  class="flex flex-wrap justify-center gap-2 px-4 py-4"
+  style="border-bottom: 1px solid #1e293b"
+>
+  <button
+    data-grade="2sec"
+    class="grade-btn active px-4 py-2 rounded-full text-sm font-semibold transition"
+    style="background-color: #f0c040; color: #0f172a"
+  >
+    🏫 ثانية ثانوي
+  </button>
+</div>      <div class="max-w-6xl mx-auto px-4 py-6">
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+          <div class="flex-1 relative">
+            <input
+              type="text"
+              id="search-input"
+              class="search-box w-full px-4 py-3 rounded-xl border-0 text-sm"
+              placeholder="ابحث عن الكتاب..."
+              style="background-color: #1e293b; color: #f0c040"
+              onkeyup="handleSearch()"
+            />
+            <i
+              data-lucide="search"
+              style="
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 20px;
+                height: 20px;
+                color: #94a3b8;
+                pointer-events: none;
+              "
+            ></i>
+          </div>
+          <div class="flex gap-2">
+            <button
+              onclick="sortBooks('name')"
+              data-sort="name"
+              class="sort-badge px-4 py-3 rounded-xl text-sm font-semibold"
+              style="background-color: #1e293b; color: #94a3b8"
+            >
+              أ-ي
+            </button>
+            <button
+              onclick="sortBooks('newest')"
+              data-sort="newest"
+              class="sort-badge px-4 py-3 rounded-xl text-sm font-semibold"
+              style="background-color: #1e293b; color: #94a3b8"
+            >
+              🆕 جديد
+            </button>
+            <button
+              onclick="sortBooks('popular')"
+              data-sort="popular"
+              class="sort-badge px-4 py-3 rounded-xl text-sm font-semibold"
+              style="background-color: #f0c040; color: #0f172a"
+            >
+              ⭐ شهير
+            </button>
+
+            
+          </div>
+        </div>
+      </div>
+<div class="flex flex-wrap justify-center gap-2 px-4 py-6">
+  <button
+    onclick="filterBooks('all')"
+    data-filter="all"
+    class="filter-btn active px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #f0c040; color: #0f172a"
+  >
+    الكل
+  </button>
+
+  <button
+    onclick="filterBooks('لغة عربية')"
+    data-filter="لغة عربية"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+    📖 اللغة العربية
+  </button>
+
+    <button
+    onclick="filterBooks('مواد شرعية')"
+    data-filter="مواد شرعية"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+     مواد شرعية
+  </button>
+
+  <button
+    onclick="filterBooks('تاريخ')"
+    data-filter="تاريخ"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+    🏛️ التاريخ
+  </button>
+
+  <button
+    onclick="filterBooks('إنجليزي')"
+    data-filter="إنجليزي"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+    🇬🇧 الإنجليزي
+  </button>
+
+    <button
+    onclick="filterBooks('رياضيات')"
+    data-filter="رياضيات"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+     الرياضيات
+  </button>
+
+      <button
+    onclick="filterBooks('برمجة')"
+    data-filter="برمجة"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+     البرمجة
+  </button>
+
+  <button
+    onclick="filterBooks('فيزياء')"
+    data-filter="فيزياء"
+    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+    style="background-color: #1e293b; color: #94a3b8"
+  >
+    ⚛️ الفيزياء
+  </button>
+
+  <button
+  onclick="filterBooks('امتحانات')"
+  data-filter="امتحانات"
+  class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+  style="background-color: #1e293b; color: #94a3b8"
+>
+  📝 الامتحانات
+</button>
+
+<button
+  onclick="filterBooks('كورسات')"
+  data-filter="كورسات"
+  class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+  style="background-color: #1e293b; color: #94a3b8"
+>
+  🎓 الكورسات
+</button>
+
+<button
+  onclick="filterBooks('favorites')"
+  data-filter="favorites"
+  class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
+  style="background-color:#1e293b;color:#94a3b8"
+>
+❤️ المفضلة
+</button>
+</div>
+
+<!-- عداد المحتويات -->
+<div id="libraryStats" class="library-stats">
+
+    <div class="stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-number" id="booksCount">0</div>
+        <div class="stat-title">الكتب</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📝</div>
+        <div class="stat-number" id="examCount">0</div>
+        <div class="stat-title">الامتحانات</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🎓</div>
+        <div class="stat-number" id="courseCount">0</div>
+        <div class="stat-title">الكورسات</div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-number" id="notesCount">0</div>
+        <div class="stat-title">المذكرات</div>
+    </div>
+
+</div>
+<div
+  id="books-grid"
+  class="max-w-6xl mx-auto px-4 pb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+></div>
+
+<!-- Footer -->
+<footer class="text-center py-10 px-4" style="border-top:1px solid #1e293b; margin-top:40px;">
+
+  <h3 style="color:#f0c040;font-size:22px;font-weight:bold;margin-bottom:10px;">
+    📚 مكتبة الثانوية العامة
+  </h3>
+
+  <p style="color:#94a3b8;font-size:15px;margin-bottom:25px;">
+    مكتبة مجانية تضم الكتب والمذكرات والكورسات والامتحانات لخدمة جميع طلاب الثانوية العامة.
+  </p>
+
+  <div style="
+      display:flex;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:15px;
+      margin-bottom:30px;
+  ">
+
+    <a href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
+       target="_blank"
+       class="footer-btn whatsapp-btn">
+       💬 جروب واتساب
+    </a>
+
+    <a href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+       target="_blank"
+       class="footer-btn channel-btn">
+       📢 قناة واتساب
+    </a>
+
+    <a href="https://t.me/geniuses_youssef"
+       target="_blank"
+       class="footer-btn telegram-btn">
+       ✈️ قناة تليجرام
+    </a>
+
+    <a href="https://mhmdrmdan.yobader.com"
+       target="_blank"
+       class="footer-btn platform-btn">
+       🎓 المنصة التعليمية
+    </a>
+
+  </div>
+
+  <hr style="border-color:#1e293b; margin:25px auto; max-width:700px;">
+
+  <div style="color:#94a3b8;line-height:2;font-size:15px;">
+
+      💻 تطوير وبرمجة:
+
+      <br>
+
+      <a href="https://maleksameh121-web.github.io/Personal-website/"
+         target="_blank"
+         style="
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            margin-top:10px;
+            padding:10px 18px;
+            background:linear-gradient(135deg,#2563eb,#1d4ed8);
+            color:#fff;
+            text-decoration:none;
+            border-radius:12px;
+            font-weight:bold;
+            box-shadow:0 8px 20px rgba(37,99,235,.35);
+            transition:.3s;
+         "
+         onmouseover="this.style.transform='translateY(-3px) scale(1.05)'"
+         onmouseout="this.style.transform='translateY(0) scale(1)'">
+         👨‍💻 مالك سامح
+      </a>
+
+      <br><br>
+
+      🎓 برعاية وإشراف:
+      <span style="color:#f0c040;font-weight:bold;">
+        محمد رمضان الحرباوي
+      </span>
+
+      <br><br>
+
+      <span style="color:#64748b;font-size:14px;">
+        © 2026 جميع الحقوق محفوظة
+      </span>
+
+  </div>
+
+</footer>
+
+<!-- الأسئلة الشائعة -->
+<section class="faq-section">
+
+<h2>❓ الأسئلة الشائعة</h2>
+
+<div class="faq-item">
+<button class="faq-question">
+📚 هل جميع الكتب مجانية؟
+<span>+</span>
+</button>
+
+<div class="faq-answer">
+نعم، جميع الكتب والمذكرات والكورسات الموجودة داخل المكتبة مجانية بالكامل.
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">
+📥 لا أجد كتابًا معينًا؟
+<span>+</span>
+</button>
+
+<div class="faq-answer">
+يمكنك طلب أي كتاب وسيتم إضافته في أقرب وقت بإذن الله.
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">
+🔄 هل يتم تحديث المكتبة؟
+<span>+</span>
+</button>
+
+<div class="faq-answer">
+نعم، يتم إضافة الكتب والكورسات والامتحانات الجديدة باستمرار.
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">
+🎓 هل سيتم إضافة جميع كتب المنهج؟
+<span>+</span>
+</button>
+
+<div class="faq-answer">
+بإذن الله سيتم توفير جميع كتب المنهج الرسمي فور صدورها.
+</div>
+</div>
+
+<div class="faq-item">
+<button class="faq-question">
+💬 كيف أتواصل مع الدعم؟
+<span>+</span>
+</button>
+
+<div class="faq-answer">
+يمكنك التواصل عبر واتساب على الرقم:
+<br><br>
+<b>01500492203</b>
+</div>
+</div>
+
+</section>
+</div>
+   <script>
+      const books = [
+    {
+  title: "كتاب التاريخ",
+  icon: "📚",
+  cat: "تاريخ",
+  grade: "2sec",
+  desc: "الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).",
+  url: "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+  date: 20260305,
+  popular: 75,
+},
+{
+  title: "كتاب النحو",
+  icon: "📖",
+  cat: "لغة عربية",
+  grade: "2sec",
+  desc: "الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).",
+  url: "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+  date: 20260305,
+  popular: 75,
+},
+      {
+  title: "تأسيس رياضيات",
+  icon: "📐",
+  cat: "رياضيات",
+  grade: "2sec",
+  desc: "مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).",
+  url: "https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
+  date: 20260305,
+  popular: 75,
+},
+{
+  title: "الميسر في أصول الفقه الإسلامي",
+  icon: "📘",
+  cat: "مواد شرعية",
+  grade: "2sec",
+  desc: "كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).",
+  url: "https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing",
+  date: 20260305,
+  popular: 75,
+},
+{
+  title: "ملخص الدرس الأول - التاريخ (بناء الدولة المصرية)",
+  icon: "🏛️",
+  cat: "تاريخ",
+  grade: "2sec",
+  desc: "ملخص الدرس الأول في مادة التاريخ: بناء الدولة المصرية للصف الثاني الثانوي (PDF).",
+  url: "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+  date: 20260305,
+  popular: 75,
+},
+{
+  title: "الثلاثة الذين خُلِّفوا",
+  icon: "📘",
+  cat: "مواد شرعية",
+  grade: "2sec",
+  desc: "كتاب الثلاثة الذين خُلِّفوا – إعداد: عمر أحمد المنشاوي (PDF).",
+  url: "https://drive.google.com/file/d/1VH8UeFmU4hVWWrQCii4tYwscaspOfvX3/view?usp=sharing",
+  date: 20260305,
+  popular: 75,
+},  
+
+{
+  title: "كورس تأسيس رياضة",
+  icon: "🎥",
+  cat: "رياضيات",
+  grade: "2sec",
+  desc: "كورس تأسيس الرياضيات للصف الثاني الثانوي.",
+  url: "https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing",
+  date: 20260712,
+  popular: 100,
+},
+
+{
+  title: "الفيزياء",
+  icon: "⚛️",
+  cat: "فيزياء",
+  grade: "2sec",
+  desc: "كتاب الفيزياء للصف الثاني الثانوي (PDF).",
+  url: "https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing",
+  date: 20260712,
+  popular: 100,
+},
+{
+  title: "الجزء الأول من الكورس التأسيسي للبرمجة",
+  icon: "💻",
+  cat: "برمجة",
+  grade: "2sec",
+  desc: "الجزء الأول من الكورس التأسيسي للبرمجة – إعداد وتجهيز: محمد رمضان الحرباوي.",
+  url: "https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing",
+  date: 20260713,
+  popular: 100,
+},
+
+{
+  title: "الكافي في علوم البلاغة العربية",
+  icon: "📖",
+  cat: "لغة عربية",
+  grade: "2sec",
+  desc: "كتاب الكافي في علوم البلاغة العربية (PDF).",
+  url: "./الكافي_في_علوم_البلاغة_العربية.html",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "كورس اللغة العربية",
+  icon: "📖",
+  cat: "كورسات",
+  grade: "2sec",
+  desc: "كورس اللغة العربية.",
+  url: "https://mhmdrmdan.yobader.com/course/kors-lghh-aarbyh",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "كورس اللغة الإنجليزية",
+  icon: "🇬🇧",
+  cat: "كورسات",
+  grade: "2sec",
+  desc: "كورس اللغة الإنجليزية.",
+  url: "https://mhmdrmdan.yobader.com/course/lghh-anglyzyh",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "كورس الفيزياء",
+  icon: "⚛️",
+  cat: "كورسات",
+  grade: "2sec",
+  desc: "كورس الفيزياء.",
+  url: "https://mhmdrmdan.yobader.com/course/fyzyaaa",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "كورس التاريخ الوطني",
+  icon: "🏛️",
+  cat: "كورسات",
+  grade: "2sec",
+  desc: "كورس التاريخ الوطني.",
+  url: "https://mhmdrmdan.yobader.com/course/tarykh-otny",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "كورس البرمجة والذكاء الاصطناعي",
+  icon: "💻",
+  cat: "كورسات",
+  grade: "2sec",
+  desc: "الكورس التأسيسي للبرمجة والذكاء الاصطناعي.",
+  url: "https://mhmdrmdan.yobader.com/course/kors-tasysy-brmgh",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "أخبار وزارة التربية والتعليم",
+  icon: "📰",
+  cat: "كورسات",
+  grade: "2sec",
+  desc: "آخر الأخبار والحوارات والمعلومات الرسمية.",
+  url: "https://mhmdrmdan.yobader.com/course/ay-akhbar-bkhsos-ozarh-altrbyh-oaltaalym-ontham-albkalorya",
+  date: 20260714,
+  popular: 100,
+},
+
+{
+  title: "امتحان تاريخ - الدرس الأول",
+  icon: "📝",
+  cat: "امتحانات",
+  grade: "2sec",
+  desc: "امتحان على الدرس الأول في مادة التاريخ.",
+  url: "./index (1).html",
+  date: 20260713,
+  popular: 100,
+},
+
+{
+  title: "امتحان النحو ",
+  icon: "📝",
+  cat: "امتحانات",
+  grade: "2sec",
+  desc: "امتحان تفاعلي على النحو.",
+  url: "./exam_naho.html",
+  date: 20260715,
+  popular: 100,
+},
+
+{
+  title: "أجمل مذكرة بلاغة للثانوية العامة بصفوفها الثلاثة",
+  icon: "📘",
+  cat: "لغة عربية",
+  grade: "2sec",
+  desc: "مذكرة شاملة في البلاغة للثانوية العامة بجميع الصفوف، مناسبة للمراجعة والتأسيس.",
+  url: "https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing",
+  date: 20260716,
+  popular: 100,
+},
+
+{
+  title: "تأسيس إنجلش - العمالقة 2026",
+  icon: "🇬🇧",
+  cat: "إنجليزي",
+  grade: "2sec",
+  desc: "كتاب تأسيس اللغة الإنجليزية (العمالقة 2026) بصيغة PDF.",
+  url: "https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing",
+  date: 20260716,
+  popular: 100,
+},
+
+{
+  title: "كورس تأسيس إنجليزي - مستر سعيد الهيت",
+  icon: "🇬🇧",
+  cat: "إنجليزي",
+  grade: "2sec",
+  desc: "ملف كورس تأسيسي في اللغة الإنجليزية بصيغة PDF.",
+  url: "https://drive.google.com/file/d/1R7LLcvinGsCPZhK_TvKwvnoq_j9M09BM/view?usp=sharing",
+  date: 20260717,
+  popular: 100,
+},
+
+{
+  title: "الحصة التمهيدية",
+  icon: "🎥",
+  cat: "برمجة",
+  grade: "2sec",
+  desc: "الحصة التمهيدية.",
+  url: "https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing",
+  date: 20260718,
+  popular: 100,
+},
+
+{
+  title: "ترسيخ العقيدة الإسلامية - 2",
+  icon: "📘",
+  cat: "مواد شرعية",
+  grade: "2sec",
+  desc: "كتاب ترسيخ العقيدة الإسلامية - 2.",
+  url: "./ترسيخ_العقيدة_الإسلامية-2.html",
+  date: 20260718,
+  popular: 100,
+},
+
+{
+  title: "قاموس الفكيكه",
+  icon: "📖",
+  cat: "إنجليزي",
+  grade: "2sec",
+  desc: "قاموس الفكيكه.",
+  url: "./قاموس الفكيكه.html",
+  date: 20260718,
+  popular: 100,
+},
+    ];
+
+    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+
+function toggleFavorite(title){
+    if(favorites.includes(title)){
+        favorites = favorites.filter(t => t !== title);
+    }else{
+        favorites.push(title);
+    }
+
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+    applySort();
+}
+let currentFilter = "all",
+    currentSort = "popular",
+    isDarkMode = true,
+    currentGrade = "2sec";
+
+// تفعيل الوضع الداكن افتراضيًا عند فتح المكتبة.
+document.body.classList.remove("light-mode");
+
+function switchGrade(grade) {
+  currentGrade = grade;
+  document.querySelectorAll(".grade-btn").forEach((btn) => {
+    const isActive = btn.dataset.grade === grade;
+    btn.style.backgroundColor = isActive
+      ? isDarkMode
+        ? "#f0c040"
+        : "#d97706"
+      : isDarkMode
+        ? "#1e293b"
+        : "#e2e8f0";
+    btn.style.color = isActive
+      ? isDarkMode
+        ? "#0f172a"
+        : "#ffffff"
+      : isDarkMode
+        ? "#94a3b8"
+        : "#64748b";
+    btn.classList.toggle("active", isActive);
+  });
+
+  const gradeName = {
+    "2sec": "ثانية ثانوي",
+  };
+
+  document.getElementById("main-title").textContent =
+    `مكتبة ${gradeName[grade]}`;
+
+  applySort();
+}
+
+function handleSearch() {
+
+  const searchTerm = document
+    .getElementById("search-input")
+    .value
+    .toLowerCase();
+
+  let filtered;
+
+  if(currentFilter === "favorites"){
+
+    filtered = books.filter(book =>
+      favorites.includes(book.title) &&
+      book.grade === currentGrade
+    );
+
+  }else if(currentFilter === "all"){
+
+    filtered = books.filter(book =>
+      book.grade === currentGrade
+    );
+
+  }else{
+
+    filtered = books.filter(book =>
+      book.cat === currentFilter &&
+      book.grade === currentGrade
+    );
+
+  }
+
+  filtered = filtered.filter(book =>
+    book.title.toLowerCase().includes(searchTerm) ||
+    book.desc.toLowerCase().includes(searchTerm) ||
+    book.cat.toLowerCase().includes(searchTerm)
+  );
+
+  applyCurrentSort(filtered);
+
+}
+
+function sortBooks(type) {
+  currentSort = type;
+  updateSortButtons();
+  applySort();
+}
+
+function updateSortButtons() {
+  document.querySelectorAll(".sort-badge").forEach((btn) => {
+    const isActive = btn.dataset.sort === currentSort;
+    btn.style.backgroundColor = isActive
+      ? isDarkMode
+        ? "#f0c040"
+        : "#d97706"
+      : isDarkMode
+        ? "#1e293b"
+        : "#e2e8f0";
+
+    btn.style.color = isActive
+      ? isDarkMode
+        ? "#0f172a"
+        : "#ffffff"
+      : isDarkMode
+        ? "#94a3b8"
+        : "#64748b";
+  });
+}
+
+function applySort() {
+
+  let filtered;
+
+  if(currentFilter === "favorites"){
+
+    filtered = books.filter(book =>
+      favorites.includes(book.title) &&
+      book.grade === currentGrade
+    );
+
+  }else if(currentFilter === "all"){
+
+    filtered = books.filter(book =>
+      book.grade === currentGrade
+    );
+
+  }else{
+
+    filtered = books.filter(book =>
+      book.cat === currentFilter &&
+      book.grade === currentGrade
+    );
+
+  }
+
+  const searchTerm = document
+    .getElementById("search-input")
+    .value
+    .toLowerCase();
+
+  filtered = filtered.filter(book =>
+    book.title.toLowerCase().includes(searchTerm) ||
+    book.desc.toLowerCase().includes(searchTerm) ||
+    book.cat.toLowerCase().includes(searchTerm)
+  );
+
+  applyCurrentSort(filtered);
+
+}
+
+function applyCurrentSort(filtered) {
+  if (currentSort === "name")
+    filtered.sort((a, b) => a.title.localeCompare(b.title, "ar"));
+  else if (currentSort === "newest")
+    filtered.sort((a, b) => b.date - a.date);
+  else if (currentSort === "popular")
+    filtered.sort((a, b) => b.popular - a.popular);
+
+  renderBooks(filtered);
+}
+
+function toggleTheme() {
+  isDarkMode = !isDarkMode;
+
+  const app = document.getElementById("app");
+  const header = document.getElementById("header");
+  const btn = document.getElementById("themeToggle");
+
+  // الكلاس هو المسؤول عن تغيير ألوان العناصر التي تستخدم !important في التصميم.
+  document.body.classList.toggle("light-mode", !isDarkMode);
+
+  if (isDarkMode) {
+    header.style.background =
+      "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)";
+    app.style.backgroundColor = "#0f172a";
+    btn.textContent = "🌙 وضع ليلي";
+    btn.style.backgroundColor = "#1e293b";
+    btn.style.color = "#f0c040";
+  } else {
+    header.style.background =
+      "linear-gradient(135deg,#fde68a 0%,#ffffff 100%)";
+    app.style.backgroundColor = "#f8fafc";
+    btn.textContent = "☀️ وضع نهاري";
+    btn.style.backgroundColor = "#ffffff";
+    btn.style.color = "#d97706";
+  }
+
+  updateSearchStyles();
+  updateSortButtons();
+  applySort();
+}
+
+      function updateSearchStyles() {
+        const input = document.getElementById("search-input");
+        if (isDarkMode) {
+          input.style.backgroundColor = "#1e293b";
+          input.style.color = "#f0c040";
+        } else {
+          input.style.backgroundColor = "#ffffff";
+          input.style.color = "#d97706";
+        }
+      }
+
+function renderBooks(filtered) {
+
+    const grid = document.getElementById("books-grid");
+    grid.innerHTML = "";
+
+    const colors = {
+        "لغة عربية":"#7f1d1d",
+        "مواد شرعية":"#14532d",
+        "تاريخ":"#78350f",
+        "إنجليزي":"#1e3a8a",
+        "رياضيات":"#581c87",
+        "فيزياء":"#164e63",
+        "البرمجة":"#134e4a",
+        "امتحانات":"#831843"
+    };
+
+    const textColor = isDarkMode ? "#94a3b8" : "#64748b";
+    const titleColor = isDarkMode ? "#f0c040" : "#d97706";
+    const tagBg = isDarkMode ? "#0f172a" : "#f1f5f9";
+
+    filtered.forEach((book,i)=>{
+
+        const card=document.createElement("div");
+
+        card.className="book-card animate-card rounded-2xl p-5 flex flex-col";
+
+        const cardColor=isDarkMode
+            ? (colors[book.cat] || "#1e293b")
+            : "#ffffff";
+
+        card.style.cssText=`
+            background:${cardColor};
+            animation-delay:${i*0.07}s;
+            position:relative;
+        `;
+
+        const fav = favorites.includes(book.title);
+
+        card.innerHTML=`
+
+<button
+onclick="toggleFavorite('${book.title.replace(/'/g,"\\'")}')"
+style="
+position:absolute;
+top:15px;
+left:15px;
+background:none;
+border:none;
+font-size:26px;
+cursor:pointer;
+transition:.3s;
+">
+${fav ? "❤️" : "🤍"}
+</button>
+
+<div class="text-4xl mb-3">${book.icon}</div>
+
+<h3 class="text-lg font-bold mb-1"
+style="color:${titleColor}">
+${book.title}
+</h3>
+
+<span
+class="inline-block text-xs px-2 py-1 rounded-full mb-3 w-fit font-semibold"
+style="background:${tagBg};color:${textColor}">
+${book.cat}
+</span>
+
+<p class="text-sm mb-4 flex-1"
+style="color:${textColor}">
+${book.desc}
+</p>
+
+<div class="flex gap-2">
+
+<a
+href="${book.url}"
+target="_blank"
+class="download-btn flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold"
+style="background:${titleColor};color:${isDarkMode?"#0f172a":"#fff"}">
+
+<i
+data-lucide="${
+book.cat==="كورسات" ||
+book.cat==="امتحانات"
+?
+"external-link"
+:
+"download"
+}"
+style="width:18px;height:18px">
+</i>
+
+${
+book.cat==="لغة عربية" ||
+book.cat==="إنجليزي" ||
+book.cat==="رياضيات" ||
+book.cat==="فيزياء" ||
+book.cat==="مواد شرعية" ||
+book.cat==="تاريخ" ||
+book.cat==="برمجة"
+?
+"تحميل"
+:
+"فتح"
+}
+
+</a>
+
+</div>
+`;
+
+        grid.appendChild(card);
+
+    });
+
+    if(filtered.length===0){
+
+        const searchValue=document.getElementById("search-input").value;
+
+        grid.innerHTML=`
+
+<div class="col-span-full text-center py-12">
+
+<div style="font-size:70px">📚</div>
+
+<h2 style="color:${titleColor};font-size:24px;margin:15px 0">
+لم نعثر على هذا الكتاب
+</h2>
+
+<p style="color:${textColor};margin-bottom:20px">
+سنقوم بإضافته قريبًا بإذن الله.
+</p>
+
+<a
+href="https://wa.me/201500492203?text=${encodeURIComponent(
+"السلام عليكم، أريد إضافة هذا الكتاب إلى المكتبة:\n\n"+searchValue
+)}"
+
+target="_blank"
+
+style="
+display:inline-flex;
+align-items:center;
+gap:8px;
+background:#25D366;
+color:#fff;
+padding:14px 24px;
+border-radius:999px;
+text-decoration:none;
+font-weight:bold;
+">
+
+💬 كلم الدعم لإضافة الكتاب
+
+</a>
+
+</div>
+
+`;
+
+        return;
+
+    }
+
+    lucide.createIcons();
+
+}
+
+function filterBooks(cat) {
+
+  currentFilter = cat;
+
+  document.querySelectorAll(".filter-btn").forEach((btn) => {
+
+    const isActive = btn.dataset.filter === cat;
+
+    const activeColor = isDarkMode ? "#f0c040" : "#d97706";
+    const inactiveColor = isDarkMode ? "#1e293b" : "#e2e8f0";
+
+    btn.style.backgroundColor = isActive
+      ? activeColor
+      : inactiveColor;
+
+    btn.style.color = isActive
+      ? (isDarkMode ? "#0f172a" : "#ffffff")
+      : (isDarkMode ? "#94a3b8" : "#64748b");
+
+    btn.classList.toggle("active", isActive);
+
+  });
+
+  applySort();
+
+}
+
+      const defaultConfig = {
+        library_title: "مكتبة تانية بكالوريا ",
+        subtitle: "الترم الأول – كل الكتب في مكان واحد 🚀",
+        search_placeholder: "ابحث عن الكتاب...",
+        empty_message: "لا توجد كتب تطابق البحث",
+        background_color: "#0f172a",
+        surface_color: "#1e293b",
+        text_color: "#94a3b8",
+        accent_color: "#f0c040",
+        font_family: "Noto Kufi Arabic",
+        font_size: 16,
+      };
+
+      function applyConfig(config) {
+        const font = config.font_family || defaultConfig.font_family;
+        const fs = config.font_size || defaultConfig.font_size;
+        document.getElementById("main-title").textContent =
+          config.library_title || defaultConfig.library_title;
+        document.getElementById("main-title").style.fontFamily =
+          `${font}, sans-serif`;
+        document.getElementById("main-title").style.fontSize = `${fs * 2}px`;
+        document.getElementById("main-subtitle").textContent =
+          config.subtitle || defaultConfig.subtitle;
+        document.getElementById("main-subtitle").style.fontFamily =
+          `${font}, sans-serif`;
+        document.getElementById("main-subtitle").style.fontSize = `${fs}px`;
+        document.getElementById("search-input").placeholder =
+          config.search_placeholder || defaultConfig.search_placeholder;
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            applyConfig(config);
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () =>
+                  config.background_color || defaultConfig.background_color,
+                set: (v) => {
+                  config.background_color = v;
+                  window.elementSdk.setConfig({ background_color: v });
+                },
+              },
+              {
+                get: () => config.surface_color || defaultConfig.surface_color,
+                set: (v) => {
+                  config.surface_color = v;
+                  window.elementSdk.setConfig({ surface_color: v });
+                },
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (v) => {
+                  config.text_color = v;
+                  window.elementSdk.setConfig({ text_color: v });
+                },
+              },
+              {
+                get: () => config.accent_color || defaultConfig.accent_color,
+                set: (v) => {
+                  config.accent_color = v;
+                  window.elementSdk.setConfig({ accent_color: v });
+                },
+              },
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (v) => {
+                config.font_family = v;
+                window.elementSdk.setConfig({ font_family: v });
+              },
+            },
+            fontSizeable: {
+              get: () => config.font_size || defaultConfig.font_size,
+              set: (v) => {
+                config.font_size = v;
+                window.elementSdk.setConfig({ font_size: v });
+              },
+            },
+          }),
+          mapToEditPanelValues: (config) =>
+            new Map([
+              [
+                "library_title",
+                config.library_title || defaultConfig.library_title,
+              ],
+              ["subtitle", config.subtitle || defaultConfig.subtitle],
+              [
+                "search_placeholder",
+                config.search_placeholder || defaultConfig.search_placeholder,
+              ],
+              [
+                "empty_message",
+                config.empty_message || defaultConfig.empty_message,
+              ],
+            ]),
+        });
+      }
+
+      renderBooks(books);
+      sortBooks("popular");
+      lucide.createIcons();
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'9e6cb15b544ca470',t:'MTc3NTI2Nzc0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+
+const scrollBtn = document.getElementById("scrollTopBtn");
+const app = document.getElementById("app");
+
+app.addEventListener("scroll", () => {
+  if (app.scrollTop > 100) {
+    scrollBtn.style.display = "block";
+  } else {
+    scrollBtn.style.display = "none";
+  }
+});
+
+function scrollToTop() {
+  app.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+}
+
+let menuOpened = false;
+
+function toggleMenu() {
+
+    if (menuOpened) {
+        closeMenu();
+    } else {
+        openMenu();
+    }
+
+}
+
+function openMenu() {
+
+    menuOpened = true;
+
+    document.getElementById("sideMenu").classList.add("open");
+    document.getElementById("menuOverlay").style.display = "block";
+
+    document.getElementById("menuBtn").innerHTML = "✕";
+
+}
+
+function closeMenu() {
+
+    menuOpened = false;
+
+    document.getElementById("sideMenu").classList.remove("open");
+    document.getElementById("menuOverlay").style.display = "none";
+
+    document.getElementById("menuBtn").innerHTML = "☰";
+
+}
+
+// شاشة التحميل
+
+window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+        const loader = document.getElementById("loader");
+
+        loader.style.opacity = "0";
+
+        loader.style.visibility = "hidden";
+
+    }, 1800);
+
+});
+
+/*==============================
+عداد المحتويات
+==============================*/
+
+function updateLibraryStats(){
+
+    const booksOnly =
+        books.filter(item =>
+            item.cat !== "امتحانات" &&
+            item.cat !== "كورسات" &&
+            item.cat !== "مذكرات"
+        ).length;
+
+    const exams =
+        books.filter(item =>
+            item.cat === "امتحانات"
+        ).length;
+
+    const courses =
+        books.filter(item =>
+            item.cat === "كورسات"
+        ).length;
+
+    const notes =
+        books.filter(item =>
+            item.cat === "مذكرات"
+        ).length;
+
+    document.getElementById("booksCount").textContent = booksOnly;
+    document.getElementById("examCount").textContent = exams;
+    document.getElementById("courseCount").textContent = courses;
+    document.getElementById("notesCount").textContent = notes;
+
+}
+
+updateLibraryStats();
+
+/* ===========================
+   نسبة اكتمال المكتبة
+=========================== */
+
+const libraryProgress = 52; // غيرها لأي نسبة
+
+window.addEventListener("load", () => {
+
+    document.getElementById("progressPercent").textContent =
+        libraryProgress + "%";
+
+    document.getElementById("progressFill").style.width =
+        libraryProgress + "%";
+
+});
+
+function shareLibrary(){
+
+    const shareData = {
+        title: "مكتبة الثانوية العامة",
+        text: "📚 جميع كتب الثانوية العامة والامتحانات والكورسات مجانًا.",
+        url: "https://zadalmrfh-create.github.io/LibraryThe-Distinguished/"
+    };
+
+    if(navigator.share){
+        navigator.share(shareData);
+    }else{
+        navigator.clipboard.writeText(shareData.url);
+        alert("✅ تم نسخ رابط المكتبة.");
+    }
+
+}
+
+function toggleAbout(){
+
+    const about = document.getElementById("aboutLibrary");
+
+    if(about.style.display === "none" || about.style.display === ""){
+
+        about.style.display = "block";
+
+    }else{
+
+        about.style.display = "none";
+
+    }
+
+}
+
+function openSuggestBook(){
+
+    document.getElementById("suggestModal").style.display="block";
+
+}
+
+function closeSuggestBook(){
+
+    document.getElementById("suggestModal").style.display="none";
+
+}
+
+function sendSuggestion(){
+
+    const book=document.getElementById("bookSuggestion").value.trim();
+
+    if(book===""){
+
+        alert("اكتب اسم الكتاب أولاً.");
+
+        return;
+
+    }
+
+    const message=
+`السلام عليكم،
+
+أقترح إضافة هذا الكتاب إلى المكتبة:
+
+📚 ${book}`;
+
+    window.open(
+        "https://wa.me/201500492203?text="+encodeURIComponent(message),
+        "_blank"
+    );
+
+}
+
+document.querySelectorAll(".faq-question").forEach(btn=>{
+
+btn.onclick=function(){
+
+const item=this.parentElement;
+
+document.querySelectorAll(".faq-item").forEach(f=>{
+
+if(f!==item){
+f.classList.remove("active");
+}
+
+});
+
+item.classList.toggle("active");
+
+};
+
+});
+
+function openLibrary(){
+
+    document.getElementById("homePage").style.display="none";
+
+    document.getElementById("libraryPage").style.display="block";
+
+    document.getElementById("menuBtn").style.display = "flex";
+}
+
+    </script>
+
+
+
+<div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
+
+<div id="sideMenu" class="side-menu">
+
+    <div class="menu-header">
+        📚 مكتبة تانية بكالوريا
+    </div>
+
+    <a href="#" onclick="closeMenu()">
+        🏠 الرئيسية
+    </a>
+
+    <a href="javascript:void(0)" onclick="toggleAbout()">
+        ℹ️ عن المكتبة
+    </a>
+
+    <a href="https://mhmdrmdan.yobader.com" target="_blank">
+        🎓 المنصة التعليمية
+    </a>
+
+    <a href="https://wa.me/201500492203" target="_blank">
+        💬 الدعم الفني
+    </a>
+
+    <a href="javascript:void(0)" onclick="openSuggestBook()">
+    📚 اقترح كتابًا
+</a>
+
+    <a href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V" target="_blank">
+        📢 قناة واتساب
+    </a>
+
+    <a href="https://t.me/geniuses_youssef" target="_blank">
+        ✈️ تليجرام
+    </a>
+
+    <!-- قسم عن المكتبة -->
+    <div id="aboutLibrary" style="display:none" class="menu-info">
+
+        <h3>📚 عن المكتبة</h3>
+
+        <p>📖 مكتبة مجانية لخدمة طلاب الثانوية العامة.</p>
+
+        <p>✅ جميع الكتب مجانية.</p>
+
+        <p>✅ إضافة الكتب أولًا بأول.</p>
+
+        <p>✅ كورسات مجانية.</p>
+
+        <p>✅ امتحانات إلكترونية.</p>
+
+        <p>✅ بحث سريع داخل المكتبة.</p>
+
+        <p>✅ تعمل على الهاتف والكمبيوتر.</p>
+
+        <p>✅ سيتم إضافة جميع كتب المنهج الرسمي قريبًا.</p>
+
+        <hr>
+
+        <p>
+            👨‍💻 تطوير وبرمجة<br>
+            <a href="https://maleksameh121-web.github.io/Personal-website/"
+               target="_blank"
+               style="color:#38bdf8;font-weight:bold">
+               مالك سامح
+            </a>
+        </p>
+
+        <p>
+            🎓 برعاية وإشراف<br>
+            <span style="color:#f0c040;font-weight:bold">
+                محمد رمضان الحرباوي
+            </span>
+        </p>
+
+    </div>
+
+</div>
+
+<div id="suggestModal" class="suggest-modal">
+
+    <div class="suggest-box">
+
+        <span class="close-suggest" onclick="closeSuggestBook()">&times;</span>
+
+        <h2>📚 اقترح كتابًا</h2>
+
+        <p>اكتب اسم الكتاب أو المذكرة التي تريد إضافتها.</p>
+
+        <input
+            id="bookSuggestion"
+            type="text"
+            placeholder="مثال: كتاب العمالقة 2027"
+        >
+
+        <button onclick="sendSuggestion()">
+            إرسال الاقتراح
+        </button>
+
+    </div>
+
+</div>
+  </body>
+</html>
