@@ -1,2878 +1,3360 @@
 <!doctype html>
-<html lang="ar" dir="rtl" class="h-full">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
-    <script src="/_sdk/element_sdk.js"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;800&amp;display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      * {
-        font-family: "Noto Kufi Arabic", sans-serif;
-      }
-      .book-card {
-        transition:
-          transform 0.3s ease,
-          box-shadow 0.3s ease;
-      }
-      .book-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      }
-      .download-btn {
-        transition: all 0.25s ease;
-        cursor: pointer;
-      }
-      .download-btn:hover {
-        transform: scale(1.05);
-      }
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(30px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-card {
-        animation: fadeUp 0.5s ease forwards;
-        opacity: 0;
-      }
-      .filter-btn {
-        transition: all 0.2s ease;
-        cursor: pointer;
-      }
-      .filter-btn.active {
-        transform: scale(1.05);
-      }
-      .search-box {
-        transition: all 0.3s ease;
-      }
-      .search-box:focus {
-        box-shadow: 0 0 0 3px rgba(240, 192, 64, 0.2);
-        outline: none;
-      }
-      .sort-badge {
-        transition: all 0.2s ease;
-        cursor: pointer;
-      }
-      .sort-badge:hover {
-        transform: scale(1.05);
-      }
-      body {
-        box-sizing: border-box;
-      }
-      .whatsapp-float {
-  position: fixed;
-  bottom: 25px;
-  left: 25px; /* لو عايزه يمين غيرها إلى right */
-  width: 60px;
-  height: 60px;
-  background: #25d366;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,.25);
-  z-index: 9999;
-  transition: .3s;
-  text-decoration: none;
-}
-
-.whatsapp-float:hover {
-  transform: scale(1.1);
-  box-shadow: 0 10px 25px rgba(0,0,0,.35);
-}
-
-.theme-switch {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 62px;
-  height: 34px;
-  z-index: 9999;
-}
-
-.theme-switch input {
-  display: none;
-}
-
-.slider {
-  position: absolute;
-  inset: 0;
-  background: #374151;
-  border-radius: 999px;
-  cursor: pointer;
-  transition: .3s;
-}
-
-.slider::before {
-  content: "";
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  left: 3px;
-  top: 3px;
-  background: #3b82f6;
-  border-radius: 50%;
-  transition: .3s;
-}
-
-.icon {
-  position: absolute;
-  left: 9px;
-  top: 6px;
-  font-size: 16px;
-  transition: .3s;
-}
-
-.theme-switch input:checked + .slider {
-  background: #475569;
-}
-
-.theme-switch input:checked + .slider::before {
-  transform: translateX(28px);
-}
-
-.theme-switch input:checked + .slider .icon {
-  transform: translateX(28px);
-  content: "☀️";
-}
-
-#scrollTopBtn {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 55px;
-  height: 55px;
-  border: none;
-  border-radius: 50%;
-  background: #2563eb;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-  z-index: 9999;
-  box-shadow: 0 8px 20px rgba(0,0,0,.25);
-  transition: all .3s ease;
-}
-
-#scrollTopBtn:hover {
-  transform: scale(1.1);
-  background: #1d4ed8;
-}
-.footer-btn{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:14px 24px;
-    border-radius:15px;
-    text-decoration:none;
-    color:white;
-    font-weight:bold;
-    font-size:15px;
-    transition:.35s;
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
-}
-
-.footer-btn:hover{
-    transform:translateY(-4px) scale(1.05);
-}
-
-.whatsapp-btn{
-    background:linear-gradient(135deg,#25D366,#128C7E);
-}
-
-.channel-btn{
-    background:linear-gradient(135deg,#16a34a,#15803d);
-}
-
-.telegram-btn{
-    background:linear-gradient(135deg,#229ED9,#0088cc);
-}
-
-.platform-btn{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
-}
-
-.time-box:hover{
-    transform:translateY(-8px);
-    box-shadow:0 10px 25px rgba(240,192,64,.3);
-}
-
-.time-box span{
-    font-size:42px;
-    font-weight:800;
-    color:#f8c537;
-    line-height:1;
-}
-
-.time-box small{
-    margin-top:10px;
-    color:#cbd5e1;
-    font-size:15px;
-}
-
-#menuBtn{
-    position: fixed;
-    top: 52px;
-    left: 20px;
-    width: 58px;
-    height: 58px;
-
-    display: none;
-    align-items: center;
-    justify-content: center;
-
-    background: linear-gradient(135deg,#f8d34f,#f0c040);
-    color: #111827;
-
-    border: none;
-    border-radius: 18px;
-
-    font-size: 30px;
-    cursor: pointer;
-
-    box-shadow:
-        0 10px 30px rgba(240,192,64,.35);
-
-    z-index: 9999;
-
-    transition: .3s;
-}
-
-#menuBtn:hover{
-    transform: translateY(-3px) scale(1.05);
-    box-shadow:0 18px 35px rgba(240,192,64,.45);
-}
-
-.menu-overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.5);
-display:none;
-z-index:9998;
-}
-
-.side-menu{
-position:fixed;
-top:0;
-right:-340px;
-width:320px;
-height:100%;
-background:#0f172a;
-transition:.35s;
-z-index:9999;
-overflow:auto;
-box-shadow:-10px 0 30px rgba(0,0,0,.35);
-}
-
-.side-menu.open{
-right:0;
-}
-
-.menu-header{
-padding:25px;
-background:#1e293b;
-font-size:22px;
-font-weight:bold;
-text-align:center;
-color:#fbbf24;
-}
-
-.side-menu a{
-display:block;
-padding:18px 22px;
-color:white;
-text-decoration:none;
-border-bottom:1px solid rgba(255,255,255,.06);
-transition:.3s;
-}
-
-.side-menu a:hover{
-background:#1e293b;
-padding-right:30px;
-color:#fbbf24;
-}
-
-.menu-info{
-padding:20px;
-color:#cbd5e1;
-line-height:2;
-}
-
-.menu-info h3{
-color:#fbbf24;
-margin-bottom:15px;
-}
-
-.menu-info hr{
-margin:20px 0;
-border-color:#334155;
-}
-
-/* ===========================
-   شاشة التحميل
-=========================== */
-
-#loader{
-    position:fixed;
-    inset:0;
-    background:#0f172a;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:999999;
-    transition:.6s;
-}
-
-.loader-box{
-    text-align:center;
-}
-
-.loader-icon{
-    font-size:70px;
-    animation:bounce 1.3s infinite;
-}
-
-.loader-box h1{
-    color:#f0c040;
-    margin-top:15px;
-    font-size:32px;
-}
-
-.loader-box p{
-    color:#94a3b8;
-    margin-top:10px;
-    margin-bottom:20px;
-}
-
-.loader-bar{
-    width:260px;
-    height:8px;
-    background:#1e293b;
-    border-radius:999px;
-    overflow:hidden;
-}
-
-.loader-progress{
-    width:0;
-    height:100%;
-    background:linear-gradient(90deg,#f0c040,#f59e0b);
-    animation:loading 2s linear forwards;
-}
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<title>مكتبة تانية بكالوريا</title>
 
-@keyframes loading{
-    from{
-        width:0;
-    }
-    to{
-        width:100%;
-    }
-}
-
-@keyframes bounce{
-    0%,100%{
-        transform:translateY(0);
-    }
-    50%{
-        transform:translateY(-12px);
-    }
-}
-
-/*==============================
-عداد المحتويات
-==============================*/
-
-.library-stats{
-    max-width:1200px;
-    margin:35px auto;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:18px;
-    padding:0 20px;
-}
-
-.stat-card{
-    background:#1e293b;
-    border:1px solid #334155;
-    border-radius:18px;
-    padding:25px;
-    text-align:center;
-    transition:.35s;
-}
-
-.stat-card:hover{
-    transform:translateY(-8px);
-    border-color:#f0c040;
-    box-shadow:0 15px 35px rgba(0,0,0,.35);
-}
-
-.stat-icon{
-    font-size:40px;
-}
-
-.stat-number{
-    font-size:34px;
-    font-weight:bold;
-    color:#f0c040;
-    margin:12px 0;
-}
-
-.stat-title{
-    color:#cbd5e1;
-    font-size:15px;
-}
-
-/* ===========================
-   نسبة اكتمال المكتبة
-=========================== */
-
-.progress-section{
-    max-width:700px;
-    margin:25px auto;
-    background:#1e293b;
-    padding:20px;
-    border-radius:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
-}
-
-.progress-header{
-    display:flex;
-    justify-content:space-between;
-    color:#fff;
-    font-weight:bold;
-    margin-bottom:12px;
-}
-
-.progress-bar{
-    width:100%;
-    height:16px;
-    background:#334155;
-    border-radius:999px;
-    overflow:hidden;
-}
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
 
-.progress-fill{
-    width:0;
-    height:100%;
-    border-radius:999px;
-    background:linear-gradient(90deg,#22c55e,#f0c040);
-    transition:width 1.5s ease;
+<style>
+:root{
+  --bg:#07111f;
+  --bg2:#0b1728;
+  --surface:#101d31;
+  --surface2:#14243b;
+  --line:#263a57;
+  --text:#f7f9fc;
+  --muted:#9eacc0;
+  --gold:#f4c95d;
+  --gold2:#dcae35;
+  --blue:#3b82f6;
 }
-
-.progress-text{
-    text-align:center;
-    color:#94a3b8;
-    margin-top:15px;
-    font-size:14px;
-}
-
-#shareBtn{
-    position:fixed;
-    bottom:25px;
-    right:25px;
-
-    width:58px;
-    height:58px;
 
-    border:none;
-    border-radius:50%;
-
-    background:linear-gradient(135deg,#3b82f6,#2563eb);
-    color:#fff;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:26px;
-    cursor:pointer;
-
-    box-shadow:0 10px 25px rgba(59,130,246,.4);
-
-    transition:.3s;
-    z-index:9999;
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
 
-#shareBtn:hover{
-    transform:scale(1.12);
-    box-shadow:0 15px 35px rgba(59,130,246,.6);
+html{
+  scroll-behavior:smooth;
 }
-
-.suggest-modal{
-
-display:none;
-
-position:fixed;
-
-left:0;
-
-top:0;
-
-width:100%;
-
-height:100%;
-
-background:rgba(0,0,0,.7);
 
-backdrop-filter:blur(5px);
-
-z-index:99999;
-
+body{
+  font-family:"Noto Kufi Arabic",sans-serif;
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
 }
-
-.suggest-box{
-
-width:90%;
-
-max-width:450px;
-
-margin:120px auto;
 
-background:#1e293b;
-
-padding:25px;
-
-border-radius:18px;
-
-text-align:center;
-
+button,input,a{
+  font:inherit;
 }
-
-.suggest-box h2{
-
-color:#f0c040;
-
-margin-bottom:15px;
 
+button{
+  cursor:pointer;
 }
 
-.suggest-box p{
-
-color:#cbd5e1;
-
-margin-bottom:20px;
-
+a{
+  color:inherit;
 }
-
-.suggest-box input{
-
-width:100%;
-
-padding:14px;
 
-border:none;
-
-border-radius:10px;
-
-background:#0f172a;
-
-color:#fff;
-
-margin-bottom:20px;
-
-outline:none;
-
+::selection{
+  background:rgba(244,201,93,.28);
 }
-
-.suggest-box button{
 
-width:100%;
-
-padding:14px;
-
-border:none;
-
-border-radius:12px;
-
-background:#25D366;
-
-color:#fff;
-
-font-size:17px;
-
-font-weight:bold;
-
-cursor:pointer;
-
-transition:.3s;
-
+body.light-ui{
+  background:linear-gradient(180deg,#f8fafc 0%,#eef3f8 100%);
+  color:#142033;
 }
-
-.suggest-box button:hover{
 
-transform:scale(1.03);
-
+body.light-ui #libraryPage{
+  background:linear-gradient(180deg,#f8fafc 0%,#edf2f7 100%);
 }
-
-.close-suggest{
 
-float:left;
-
-font-size:30px;
-
-cursor:pointer;
-
-color:#f0c040;
-
+body.light-ui .library-header{
+  background:rgba(255,255,255,.9);
 }
 
-.loader-credit{
-    margin-top:35px;
-    text-align:center;
-    animation:fadeUp 1s ease;
+body.light-ui .brand-mini h1{
+  color:#142033;
 }
 
-.loader-dev,
-.loader-owner{
-    margin:12px 0;
-    font-size:18px;
-    font-weight:700;
-    color:#cbd5e1;
+body.light-ui .brand-mini p,
+.light-ui .hero-panel p,
+.light-ui .section-head p,
+.light-ui .section-title p{
+  color:#718096;
 }
-
-.loader-dev span,
-.loader-owner span{
-
-    background:linear-gradient(
-        90deg,
-        #FFD700,
-        #FFF6B0,
-        #FFC107,
-        #FFD700
-    );
 
-    background-size:300%;
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-
-    animation:goldMove 4s linear infinite;
-
-    font-size:23px;
-
-    text-shadow:
-    0 0 10px rgba(255,215,0,.35);
-
+body.light-ui .control-panel,
+.light-ui .stat-card,
+.light-ui .mini-book,
+.light-ui .book-card,
+.light-ui .faq-item,
+.light-ui .book-details-box{
+  background:#fff;
+  border-color:#d6dee9;
 }
 
-@keyframes goldMove{
+body.light-ui #search-input,
+.light-ui .sort-btn,
+.light-ui .filter-btn,
+.light-ui .ghost-btn,
+.light-ui .favorite-btn,
+.light-ui .secondary-action,
+.light-ui .details-fav{
+  background:#f8fafc;
+  color:#46566b;
+  border-color:#d6dee9;
+}
+
+body.light-ui .book-desc,
+.light-ui .details-desc,
+.light-ui .faq-answer,
+.light-ui .footer-copy{
+  color:#64748b;
+}
+
+body.light-ui .mini-book p{
+  color:#64748b;
+}
+
+body.light-ui .footer-credit{
+  border-color:#d6dee9;
+}
+
+.hidden{
+  display:none!important;
+}
+
+/* =========================
+   الصفحة الرئيسية
+========================= */
 
-0%{
-background-position:0%;
-}
+#homePage{
+  min-height:100svh;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:28px 16px;
+  position:relative;
+  overflow:hidden;
 
-100%{
-background-position:300%;
+  background:
+    radial-gradient(circle at 15% 15%,rgba(244,201,93,.15),transparent 28%),
+    radial-gradient(circle at 88% 78%,rgba(59,130,246,.14),transparent 30%),
+    linear-gradient(145deg,#050d18 0%,#091728 52%,#0e1c31 100%);
+}
+
+#homePage::before,
+#homePage::after{
+  content:"";
+  position:absolute;
+  border:1px solid rgba(244,201,93,.12);
+  border-radius:50%;
+  pointer-events:none;
+}
+
+#homePage::before{
+  width:420px;
+  height:420px;
+  top:-230px;
+  right:-180px;
+}
+
+#homePage::after{
+  width:520px;
+  height:520px;
+  bottom:-300px;
+  left:-220px;
+  border-color:rgba(59,130,246,.10);
+}
+
+.home-shell{
+  width:min(980px,100%);
+  text-align:center;
+  position:relative;
+  z-index:2;
+}
+
+.home-topline{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 15px;
+  border-radius:999px;
+  border:1px solid rgba(244,201,93,.22);
+  background:rgba(255,255,255,.045);
+  color:#dbe5f2;
+  font-size:13px;
+  font-weight:800;
+}
+
+.hero-logo-wrap{
+  width:clamp(150px,24vw,210px);
+  height:clamp(150px,24vw,210px);
+  padding:9px;
+  margin:22px auto 20px;
+  border-radius:34px;
+  background:linear-gradient(
+    145deg,
+    rgba(244,201,93,.46),
+    rgba(255,255,255,.08)
+  );
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.36),
+    0 0 0 1px rgba(244,201,93,.14);
+  animation:floatLogo 4s ease-in-out infinite;
+}
+
+.hero-logo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  border-radius:27px;
+  background:#fff;
+}
+
+.home-title{
+  font-size:clamp(35px,6vw,62px);
+  line-height:1.25;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+
+.home-title span{
+  color:var(--gold);
+}
+
+.home-subtitle{
+  color:#c8d3e1;
+  font-size:clamp(16px,2.2vw,21px);
+  line-height:2;
+  margin:9px auto 0;
+  max-width:820px;
+}
+
+.hero-message{
+  max-width:780px;
+  margin:24px auto 22px;
+  padding:19px 20px;
+  border-radius:22px;
+  background:linear-gradient(
+    135deg,
+    rgba(244,201,93,.14),
+    rgba(255,255,255,.045)
+  );
+  border:1px solid rgba(244,201,93,.22);
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+
+.hero-message strong{
+  display:block;
+  color:var(--gold);
+  font-size:clamp(18px,2.5vw,24px);
+  margin-bottom:6px;
 }
 
+.hero-message p{
+  color:#e7edf5;
+  font-size:clamp(14px,2vw,17px);
+  line-height:2;
 }
-
-@keyframes fadeUp{
 
-from{
-opacity:0;
-transform:translateY(20px);
+.home-pills{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:9px;
+  margin:0 auto 25px;
 }
 
-to{
-opacity:1;
-transform:translateY(0);
+.home-pill{
+  padding:9px 13px;
+  border-radius:999px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(148,163,184,.14);
+  color:#d8e2ee;
+  font-size:12px;
+  font-weight:800;
 }
 
+.home-cta{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  min-width:min(360px,100%);
+  padding:16px 26px;
+  border:none;
+  border-radius:17px;
+  background:linear-gradient(135deg,#f8db70,#e0ac33);
+  color:#111827;
+  font-weight:900;
+  font-size:18px;
+  box-shadow:0 18px 40px rgba(244,201,93,.24);
+  transition:.25s;
 }
 
-.loader-credit{
-
-    margin-top:40px;
-
+.home-cta:hover{
+  transform:translateY(-3px);
+  box-shadow:0 23px 48px rgba(244,201,93,.34);
 }
-
-.loader-dev,
-.loader-owner{
 
-    opacity:0;
-
-    animation:showText .8s forwards;
-
+.home-note{
+  margin-top:12px;
+  color:#8090a5;
+  font-size:12px;
 }
-
-.loader-owner{
 
-    animation-delay:1s;
-
-    margin-top:18px;
-
+@keyframes floatLogo{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-7px)}
 }
-
-.loader-credit .icon{
 
-    font-size:24px;
+/* =========================
+   الهيدر
+========================= */
 
-    display:block;
-
-    margin-bottom:6px;
-
+#libraryPage{
+  display:none;
+  min-height:100vh;
+  background:linear-gradient(180deg,var(--bg) 0%,#091424 100%);
 }
-
-.loader-credit .title{
-
-    color:#94a3b8;
 
-    font-size:15px;
-
-    display:block;
-
-    margin-bottom:5px;
-
-    letter-spacing:1px;
-
+.library-shell{
+  width:min(1440px,100%);
+  margin:0 auto;
+  min-height:100vh;
 }
-
-.loader-credit h2{
-
-    margin:0;
 
-    font-size:28px;
-
-    font-weight:900;
-
-    background:linear-gradient(
-        90deg,
-        #FFD700,
-        #FFF4A3,
-        #FFC107,
-        #FFF8DC,
-        #FFD700
-    );
-
-    background-size:400%;
-
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-
-    animation:
-    goldMove 5s linear infinite,
-    glow 2s ease-in-out infinite;
-
+.library-header{
+  position:sticky;
+  top:0;
+  z-index:50;
+  padding:12px clamp(14px,3vw,34px);
+  background:rgba(7,17,31,.88);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(148,163,184,.12);
 }
-
-@keyframes showText{
 
-from{
-
-opacity:0;
-
-transform:translateY(20px);
-
+.header-inner{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:16px;
+  max-width:1320px;
+  margin:auto;
 }
 
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
+.header-side{
+  display:flex;
+  align-items:center;
+  gap:8px;
 }
 
+.header-side.start{
+  justify-content:flex-start;
 }
-
-@keyframes goldMove{
 
-0%{
-background-position:0%;
+.header-side.end{
+  justify-content:flex-end;
 }
 
-100%{
-background-position:400%;
+.brand-mini{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  justify-content:center;
 }
 
+.brand-mini img{
+  width:54px;
+  height:54px;
+  padding:3px;
+  border-radius:15px;
+  background:#fff;
+  object-fit:cover;
+  box-shadow:0 9px 24px rgba(0,0,0,.25);
 }
 
-@keyframes glow{
-
-0%{
-
-filter:drop-shadow(0 0 3px #FFD700);
-
+.brand-mini h1{
+  font-size:clamp(17px,2.2vw,24px);
+  font-weight:900;
+  color:#fff;
 }
 
-50%{
-
-filter:drop-shadow(0 0 12px #FFD700);
-
+.brand-mini p{
+  color:#8999ad;
+  font-size:11px;
+  margin-top:2px;
 }
-
-100%{
-
-filter:drop-shadow(0 0 3px #FFD700);
 
+.icon-btn{
+  width:44px;
+  height:44px;
+  border:1px solid #263a57;
+  border-radius:13px;
+  background:#102038;
+  color:#dbe5f2;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:.2s;
 }
 
+.icon-btn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(244,201,93,.6);
+  color:var(--gold);
 }
 
 .news-bar{
-    background:#f0c040;
-    color:#111827;
-    overflow:hidden;
-    white-space:nowrap;
-    padding:12px 0;
-    font-weight:bold;
-    border-top:2px solid #ffd54f;
-    border-bottom:2px solid #ffd54f;
+  background:#f2c84f;
+  color:#111827;
+  border-bottom:1px solid rgba(255,255,255,.18);
+  overflow:hidden;
 }
 
-.news-content{
-    display:inline-block;
-    padding-left:100%;
-    animation:scrollNews 18s linear infinite;
+.news-track{
+  display:flex;
+  width:max-content;
+  animation:news 28s linear infinite;
+  padding:9px 0;
+  font-size:12px;
+  font-weight:900;
 }
 
-.news-content a{
-    color:#0f172a;
-    text-decoration:none;
-    font-weight:900;
-    margin:0 12px;
+.news-track span{
+  padding:0 26px;
 }
 
-@keyframes scrollNews{
-    from{
-        transform:translateX(0);
-    }
-    to{
-        transform:translateX(-100%);
-    }
+.news-track a{
+  text-decoration:none;
+  color:#111827;
 }
+
+@keyframes news{
+  from{transform:translateX(0)}
+  to{transform:translateX(50%)}
+}
+
+/* =========================
+   المحتوى
+========================= */
+
+.content-wrap{
+  width:min(1320px,100%);
+  margin:0 auto;
+  padding:18px clamp(14px,3vw,28px) 70px;
+}
+
+.hero-panel{
+  padding:22px 0 8px;
+}
+
+.hero-panel h2{
+  font-size:clamp(23px,3vw,34px);
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.hero-panel p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.9;
+}
+
+.section-kicker{
+  color:var(--gold);
+  font-size:11px;
+  font-weight:900;
+}
+
+.control-panel{
+  margin-top:18px;
+  padding:14px;
+  border:1px solid #243953;
+  border-radius:22px;
+  background:rgba(16,29,49,.78);
+  box-shadow:0 18px 45px rgba(0,0,0,.16);
+}
+
+.search-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:10px;
+}
+
+.search-wrap{
+  position:relative;
+}
+
+.search-wrap svg{
+  position:absolute;
+  right:15px;
+  top:50%;
+  transform:translateY(-50%);
+  width:19px;
+  color:#7f90a7;
+}
+
+#search-input{
+  width:100%;
+  height:52px;
+  border-radius:15px;
+  border:1px solid #29405f;
+  background:#0d192a;
+  color:#fff;
+  padding:0 48px 0 15px;
+  outline:none;
+  font-size:14px;
+}
+
+#search-input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px rgba(244,201,93,.10);
+}
+
+.sort-row{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.sort-btn{
+  height:52px;
+  padding:0 15px;
+  border:1px solid #29405f;
+  border-radius:15px;
+  background:#0d192a;
+  color:#9dafc4;
+  font-weight:800;
+  font-size:12px;
+}
+
+.sort-btn.active{
+  background:var(--gold);
+  color:#111827;
+  border-color:var(--gold);
+}
+
+.filter-scroll{
+  display:flex;
+  gap:9px;
+  overflow-x:auto;
+  padding:14px 1px 4px;
+  scrollbar-width:none;
+}
+
+.filter-scroll::-webkit-scrollbar{
+  display:none;
+}
+
+.filter-btn{
+  white-space:nowrap;
+  border:1px solid #29405f;
+  border-radius:999px;
+  background:#0d192a;
+  color:#9dafc4;
+  padding:9px 14px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.filter-btn.active{
+  background:var(--gold);
+  color:#111827;
+  border-color:var(--gold);
+}
+
+/* =========================
+   الإحصائيات
+========================= */
+
+.library-stats{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+  margin:18px 0 26px;
+}
+
+.stat-card{
+  padding:18px;
+  border-radius:20px;
+  border:1px solid #263a57;
+  background:linear-gradient(145deg,#13233a,#0f1c2e);
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-height:92px;
+  box-shadow:0 12px 28px rgba(0,0,0,.11);
+}
+
+.stat-icon{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  background:rgba(244,201,93,.09);
+  font-size:25px;
+  flex-shrink:0;
+}
+
+.stat-number{
+  font-size:25px;
+  font-weight:900;
+  color:var(--gold);
+  line-height:1;
+}
+
+.stat-title{
+  color:#98a7bb;
+  font-size:11px;
+  margin-top:7px;
+  font-weight:800;
+}
+
+/* =========================
+   المختارات
+========================= */
+
+.section-card{
+  margin-bottom:25px;
+}
+
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:0 0 13px;
+}
+
+.section-head h3{
+  font-size:20px;
+  font-weight:900;
+}
+
+.section-head p,
+.section-title p{
+  color:#8191a6;
+  font-size:11px;
+}
+
+.ghost-btn{
+  border:1px solid #29405f;
+  background:#102038;
+  color:var(--gold);
+  padding:8px 12px;
+  border-radius:11px;
+  font-size:11px;
+  font-weight:900;
+}
+
+.mini-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+
+.mini-book{
+  min-width:0;
+  padding:15px;
+  border-radius:18px;
+  background:linear-gradient(145deg,#14253e,#0e1a2d);
+  border:1px solid #263a57;
+  cursor:pointer;
+  transition:.22s;
+  box-shadow:0 10px 22px rgba(0,0,0,.11);
+}
+
+.mini-book:hover{
+  transform:translateY(-4px);
+  border-color:rgba(244,201,93,.5);
+}
+
+.mini-icon{
+  font-size:27px;
+  margin-bottom:8px;
+}
+
+.mini-book h4{
+  font-size:13px;
+  line-height:1.8;
+  color:#f6d46b;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.mini-book p{
+  font-size:11px;
+  color:#94a5ba;
+  line-height:1.7;
+  margin-top:3px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.mini-meta{
+  display:inline-block;
+  margin-top:9px;
+  padding:4px 7px;
+  border-radius:999px;
+  background:#0a1322;
+  color:#8fa2b8;
+  font-size:9px;
+  font-weight:900;
+}
+
+/* =========================
+   الكتب
+========================= */
+
+.section-title{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:12px;
+  margin:35px 0 14px;
+}
+
+.section-title h3{
+  font-size:23px;
+  font-weight:900;
+}
+
+#books-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+
+.book-card{
+  position:relative;
+  padding:18px;
+  border-radius:22px;
+  background:linear-gradient(145deg,#14253e,#0f1c2e);
+  border:1px solid #263a57;
+  box-shadow:0 14px 32px rgba(0,0,0,.13);
+  transition:.24s;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  animation:cardIn .42s ease both;
+}
+
+.book-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(244,201,93,.48);
+  box-shadow:0 18px 38px rgba(0,0,0,.22);
+}
+
+@keyframes cardIn{
+  from{
+    opacity:0;
+    transform:translateY(10px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.book-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.book-icon{
+  width:58px;
+  height:58px;
+  border-radius:17px;
+  display:grid;
+  place-items:center;
+  font-size:28px;
+  background:rgba(244,201,93,.08);
+  border:1px solid rgba(244,201,93,.12);
+}
+
+.favorite-btn{
+  width:40px;
+  height:40px;
+  border:1px solid #2a3e5b;
+  border-radius:12px;
+  background:#101f34;
+  color:#fff;
+  display:grid;
+  place-items:center;
+  font-size:20px;
+}
+
+.book-card h4{
+  font-size:16px;
+  line-height:1.8;
+  margin:14px 0 5px;
+  color:#f8d56c;
+}
+
+.book-tag{
+  display:inline-flex;
+  align-self:flex-start;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#0b1626;
+  color:#9aaec5;
+  border:1px solid #213754;
+  font-size:10px;
+  font-weight:900;
+}
+
+.book-desc{
+  color:#9bacbf;
+  font-size:12px;
+  line-height:1.9;
+  margin-top:10px;
+  min-height:52px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+.book-actions{
+  display:flex;
+  gap:8px;
+  margin-top:15px;
+}
+
+.book-action{
+  flex:1;
+  min-width:0;
+  height:45px;
+  border-radius:13px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  text-decoration:none;
+  font-size:10px;
+  font-weight:900;
+  border:0;
+}
+
+.primary-action{
+  background:linear-gradient(135deg,#f7d466,#e1af35);
+  color:#111827;
+}
+
+.secondary-action{
+  background:#12233a;
+  color:#dbe5f2;
+  border:1px solid #29405f;
+}
+
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;
+  padding:55px 15px;
+  color:#91a2b8;
+}
+
+.empty-icon{
+  font-size:56px;
+  margin-bottom:12px;
+}
+
+/* =========================
+   FAQ + Footer
+========================= */
+
 .faq-section{
-max-width:950px;
-margin:70px auto;
-padding:0 20px;
+  width:min(980px,100%);
+  margin:45px auto 0;
 }
 
 .faq-section h2{
-text-align:center;
-font-size:34px;
-color:#f0c040;
-margin-bottom:35px;
+  text-align:center;
+  color:#f6d56a;
+  font-size:clamp(24px,3vw,32px);
+  margin-bottom:20px;
 }
 
 .faq-item{
-background:#1e293b;
-border:1px solid rgba(240,192,64,.2);
-border-radius:18px;
-margin-bottom:18px;
-overflow:hidden;
-transition:.3s;
-}
-
-.faq-item:hover{
-border-color:#f0c040;
-transform:translateY(-2px);
+  border:1px solid #263a57;
+  background:linear-gradient(145deg,#12233a,#0e1b2d);
+  border-radius:17px;
+  margin-bottom:10px;
+  overflow:hidden;
 }
 
 .faq-question{
-width:100%;
-background:none;
-border:none;
-padding:22px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-font-size:18px;
-font-weight:bold;
-color:#fff;
-cursor:pointer;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:17px 18px;
+  background:none;
+  color:#f2f6fb;
+  border:0;
+  text-align:right;
+  font-size:13px;
+  font-weight:900;
 }
 
 .faq-question span{
-font-size:28px;
-color:#f0c040;
-transition:.3s;
+  font-size:23px;
+  color:var(--gold);
+  transition:.22s;
+  flex-shrink:0;
 }
 
 .faq-answer{
-display:none;
-padding:0 22px 22px;
-color:#cbd5e1;
-line-height:2;
-font-size:16px;
+  display:none;
+  padding:0 18px 17px;
+  color:#9aabbe;
+  font-size:12px;
+  line-height:2;
 }
 
 .faq-item.active .faq-answer{
-display:block;
-animation:fade .3s;
+  display:block;
 }
 
 .faq-item.active .faq-question span{
-transform:rotate(45deg);
+  transform:rotate(45deg);
 }
 
-@keyframes fade{
-from{
-opacity:0;
-transform:translateY(-8px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-#homePage{
-
-height:100vh;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-background:linear-gradient(135deg,#0f172a,#1e293b);
-
-text-align:center;
-
-padding:20px;
-
+footer{
+  margin-top:35px;
+  padding:35px 18px 24px;
+  border-top:1px solid #1e3049;
+  background:rgba(5,12,22,.55);
+  text-align:center;
 }
 
-.home-container h1{
-
-font-size:48px;
-
-color:#f0c040;
-
-margin:20px 0;
-
+.footer-brand{
+  font-size:20px;
+  font-weight:900;
+  color:#f5d36b;
 }
 
-.home-container p{
-
-color:#cbd5e1;
-
-font-size:20px;
-
-margin-bottom:40px;
-
+.footer-copy{
+  max-width:720px;
+  margin:7px auto 20px;
+  color:#8ea0b6;
+  font-size:12px;
+  line-height:2;
 }
 
-.home-btn{
-
-background:#f0c040;
-
-color:#111827;
-
-border:none;
-
-padding:18px 45px;
-
-border-radius:50px;
-
-font-size:22px;
-
-font-weight:bold;
-
-cursor:pointer;
-
-transition:.3s;
-
+.footer-links{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:9px;
 }
 
-.home-btn:hover{
-
-transform:scale(1.08);
-
-box-shadow:0 0 30px #f0c040;
-
+.footer-link{
+  padding:10px 13px;
+  border-radius:12px;
+  text-decoration:none;
+  font-size:11px;
+  font-weight:900;
+  border:1px solid rgba(255,255,255,.08);
 }
 
-#menuBtn{
+.footer-link.whatsapp{
+  background:#0f5132;
+  color:#b8ffd6;
+}
+
+.footer-link.channel{
+  background:#123e2b;
+  color:#b8ffd6;
+}
+
+.footer-link.telegram{
+  background:#0f3a55;
+  color:#bfe5ff;
+}
+
+.footer-link.platform{
+  background:#4b3508;
+  color:#ffe79d;
+}
+
+.footer-credit{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid #1c2c43;
+  color:#8393a8;
+  font-size:11px;
+  line-height:2.1;
+}
+
+.footer-credit strong{
+  color:#f4c95d;
+}
+
+/* =========================
+   الأزرار العائمة
+========================= */
+
+.floating-stack{
+  position:fixed;
+  bottom:18px;
+  left:18px;
+  z-index:120;
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+
+.float-btn{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.12);
+  display:grid;
+  place-items:center;
+  box-shadow:0 12px 25px rgba(0,0,0,.24);
+  transition:.2s;
+  text-decoration:none;
+}
+
+.float-btn:hover{
+  transform:translateY(-2px) scale(1.04);
+}
+
+.wa-float{
+  background:#25d366;
+  color:#fff;
+}
+
+.share-float{
+  background:#2563eb;
+  color:#fff;
+}
+
+.top-float{
+  background:#f0c040;
+  color:#111827;
+  display:none;
+}
+
+/* =========================
+   القائمة
+========================= */
+
+.menu-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(3px);
+  display:none;
+  z-index:200;
+}
+
+.side-menu{
+  position:fixed;
+  top:0;
+  right:-350px;
+  width:min(330px,88vw);
+  height:100vh;
+  background:#0b1524;
+  border-left:1px solid #263a57;
+  z-index:210;
+  transition:right .28s;
+  box-shadow:-20px 0 50px rgba(0,0,0,.35);
+  overflow:auto;
+}
+
+.side-menu.open{
+  right:0;
+}
+
+.menu-header{
+  padding:23px 18px;
+  background:linear-gradient(135deg,#13243b,#0d1728);
+  border-bottom:1px solid #253956;
+  text-align:center;
+  color:#f4d066;
+  font-weight:900;
+}
+
+.side-menu a{
+  display:block;
+  padding:15px 18px;
+  color:#d6e0eb;
+  text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  font-size:13px;
+}
+
+.side-menu a:hover{
+  background:#102038;
+  color:#f4cd63;
+}
+
+.menu-info{
+  margin:14px;
+  padding:16px;
+  border-radius:16px;
+  background:#0f1d30;
+  color:#98a9bd;
+  line-height:2;
+  font-size:11px;
+}
+
+.menu-info h4{
+  color:#f3cd66;
+  margin-bottom:8px;
+}
+
+/* =========================
+   تفاصيل الكتاب
+========================= */
+
+.book-details-modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:rgba(1,5,13,.78);
+  backdrop-filter:blur(7px);
+  z-index:300;
+}
+
+.book-details-modal.open{
+  display:flex;
+}
+
+.book-details-box{
+  width:min(560px,100%);
+  max-height:min(88vh,760px);
+  overflow:auto;
+  border-radius:25px;
+  background:linear-gradient(145deg,#152844,#0b1626);
+  border:1px solid rgba(244,201,93,.22);
+  box-shadow:0 28px 80px rgba(0,0,0,.5);
+  padding:24px;
+  position:relative;
+}
+
+.book-details-close{
+  position:absolute;
+  top:12px;
+  left:12px;
+  width:40px;
+  height:40px;
+  border:0;
+  border-radius:50%;
+  background:#11233a;
+  color:#f4cd66;
+  font-size:24px;
+}
+
+.book-details-icon{
+  text-align:center;
+  font-size:58px;
+}
+
+.book-details-box h2{
+  text-align:center;
+  color:#f5d36b;
+  font-size:23px;
+  line-height:1.7;
+  margin:8px 30px 3px;
+}
+
+.details-cat{
+  text-align:center;
+  color:#91a4bb;
+  font-size:11px;
+}
+
+.details-desc{
+  text-align:center;
+  color:#b8c5d5;
+  font-size:13px;
+  line-height:2;
+  margin-top:13px;
+}
+
+.details-actions{
+  display:flex;
+  gap:9px;
+  margin-top:20px;
+}
+
+.details-action{
+  flex:1;
+  min-height:45px;
+  border-radius:13px;
+  border:0;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:900;
+}
+
+.details-open{
+  background:#f2ca5c;
+  color:#111827;
+}
+
+.details-fav{
+  background:#11233a;
+  color:#e8eef7;
+  border:1px solid #29405f;
+}
+
+/* =========================
+   Responsive
+========================= */
+
+@media (max-width:1100px){
+  .mini-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  #books-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+
+@media (max-width:800px){
+
+  .header-inner{
+    grid-template-columns:auto 1fr auto;
+  }
+
+  .header-side.start{
+    grid-column:1;
+    grid-row:1;
+    justify-content:flex-start;
+  }
+
+  .brand-mini{
+    grid-column:2;
+    grid-row:1;
+  }
+
+  .header-side.end{
     display:none;
-}
-.motivation-box{
-    max-width:1100px;
-    margin:35px auto;
-    padding:30px;
+  }
 
-    border-radius:24px;
+  .library-header{
+    padding:10px 12px;
+  }
 
-    background:linear-gradient(135deg,#f0c040,#ffd95c,#f0c040);
+  .brand-mini img{
+    width:48px;
+    height:48px;
+  }
 
-    color:#111827;
-
-    display:flex;
-    gap:25px;
-    align-items:center;
-
-    box-shadow:
-        0 15px 45px rgba(240,192,64,.35);
-
-    animation:fadeUp .8s ease;
-}
-
-.motivation-icon{
-
-    width:90px;
-    height:90px;
-
-    background:#fff;
-
-    border-radius:50%;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    font-size:42px;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.15);
-
-    flex-shrink:0;
-}
-
-.motivation-content h2{
-
-    margin:0;
-    font-size:32px;
-    font-weight:900;
-
-}
-
-.motivation-content p{
-
-    margin:12px 0 18px;
-    font-size:18px;
-    line-height:1.9;
-
-}
-
-.motivation-tags{
-
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-
-}
-
-.motivation-tags span{
-
-    background:#fff;
-    padding:10px 18px;
-    border-radius:999px;
-    font-weight:bold;
-
-}
-
-@keyframes fadeUp{
-
-    from{
-        opacity:0;
-        transform:translateY(40px);
-    }
-
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-
-}
-
-@media(max-width:768px){
-
-.motivation-box{
-
-    flex-direction:column;
-    text-align:center;
-    padding:25px;
-
-}
-
-.motivation-content h2{
-
-    font-size:26px;
-
-}
-
-.motivation-content p{
-
+  .brand-mini h1{
     font-size:16px;
+  }
 
-}
+  .brand-mini p{
+    font-size:9px;
+  }
 
-.motivation-tags{
+  .search-row{
+    grid-template-columns:1fr;
+  }
 
-    justify-content:center;
+  .sort-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+  }
 
-}
+  .sort-btn{
+    width:100%;
+  }
 
-}
-    
-/* تحسينات الشكل العام */
-:root{
-  --bg:#0b1220;
-  --surface:#111c2e;
-  --surface-2:#17243a;
-  --gold:#f4c95d;
-  --muted:#a9b7ca;
-}
-body{
-  background:var(--bg);
-  color:#f8fafc;
-  overflow-x:hidden;
-}
-#app{background:linear-gradient(180deg,#0b1220 0%,#101b2d 100%) !important;}
-#header{
-  padding:42px 20px 30px !important;
-  border-bottom:1px solid rgba(244,201,93,.16);
-}
-#header > .text-5xl{
-  width:88px;height:88px;margin:0 auto 18px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:28px;
-  background:linear-gradient(145deg,#263752,#162238);
-  box-shadow:0 14px 35px rgba(0,0,0,.28);
-}
-.search-box{
-  min-height:52px;
-  padding-right:46px !important;
-  border:1px solid #263750 !important;
-  background:#111c2e !important;
-  border-radius:16px !important;
-}
-.search-box:focus{border-color:var(--gold) !important;}
-.sort-badge,.filter-btn,.grade-btn{
-  border:1px solid #2a3a54 !important;
-  box-shadow:0 5px 14px rgba(0,0,0,.12);
-}
-#books-grid{gap:22px !important;}
-.book-card{
-  background:linear-gradient(145deg,#17243a,#101a2b);
-  border:1px solid #263750 !important;
-  border-radius:24px !important;
-  box-shadow:0 10px 25px rgba(0,0,0,.18);
-  overflow:hidden;
-}
-.book-card:hover{
-  border-color:rgba(244,201,93,.65) !important;
-  transform:translateY(-5px);
-}
-.stat-card,.progress-section,.faq-item{
-  background:linear-gradient(145deg,#17243a,#111c2e) !important;
-  border-color:#263750 !important;
-}
-footer{background:rgba(8,15,28,.35);}
-@media(max-width:768px){
-  #header{padding-top:28px !important;}
-  .motivation-box{margin:20px 14px !important;border-radius:22px !important;}
-  .library-stats{padding:0 14px !important;gap:12px !important;}
-  .stat-card{padding:18px !important;}
-  #books-grid{padding-left:14px !important;padding-right:14px !important;}
+  .library-stats{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+
+  .mini-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
 }
 
+@media (max-width:560px){
 
-/* إصلاح اختلاف الخلفية بين الوضعين */
-body.light-mode {
-  background: #f1f5f9 !important;
-  color: #1e293b !important;
-}
-body.light-mode #app {
-  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%) !important;
-  color: #1e293b !important;
-}
-body.light-mode #header {
-  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%) !important;
-  border-bottom-color: #cbd5e1 !important;
-}
-body.light-mode .search-box {
-  background: #ffffff !important;
-  color: #334155 !important;
-  border-color: #cbd5e1 !important;
-}
-body.light-mode .book-card,
-body.light-mode .stat-card,
-body.light-mode .progress-section,
-body.light-mode .faq-item {
-  background: #ffffff !important;
-  color: #1e293b !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.08) !important;
-}
-body.light-mode footer {
-  background: #e2e8f0 !important;
-  color: #334155 !important;
+  #homePage{
+    padding:20px 12px;
+  }
+
+  .home-topline{
+    font-size:10px;
+    padding:8px 11px;
+  }
+
+  .hero-logo-wrap{
+    margin-top:17px;
+  }
+
+  .home-title{
+    font-size:34px;
+  }
+
+  .home-subtitle{
+    font-size:14px;
+    line-height:1.9;
+  }
+
+  .hero-message{
+    margin-top:18px;
+    padding:16px 14px;
+    border-radius:18px;
+  }
+
+  .hero-message strong{
+    font-size:17px;
+  }
+
+  .hero-message p{
+    font-size:13px;
+  }
+
+  .home-pills{
+    gap:7px;
+    margin-bottom:19px;
+  }
+
+  .home-pill{
+    font-size:10px;
+    padding:8px 10px;
+  }
+
+  .home-cta{
+    width:100%;
+    min-width:0;
+    font-size:16px;
+    padding:14px 18px;
+  }
+
+  .content-wrap{
+    padding:15px 12px 55px;
+  }
+
+  .hero-panel{
+    padding-top:15px;
+  }
+
+  .hero-panel h2{
+    font-size:21px;
+  }
+
+  .control-panel{
+    padding:11px;
+    border-radius:18px;
+  }
+
+  .filter-scroll{
+    margin-right:-4px;
+    margin-left:-4px;
+  }
+
+  .library-stats{
+    gap:9px;
+    margin-bottom:20px;
+  }
+
+  .stat-card{
+    padding:12px;
+    min-height:76px;
+    gap:9px;
+    border-radius:16px;
+  }
+
+  .stat-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    font-size:20px;
+  }
+
+  .stat-number{
+    font-size:20px;
+  }
+
+  .stat-title{
+    font-size:9px;
+  }
+
+  .mini-grid{
+    grid-template-columns:1fr;
+  }
+
+  .section-head h3{
+    font-size:18px;
+  }
+
+  .section-title{
+    margin-top:28px;
+  }
+
+  .section-title h3{
+    font-size:20px;
+  }
+
+  #books-grid{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+
+  .book-card{
+    padding:15px;
+    border-radius:19px;
+  }
+
+  .book-card h4{
+    font-size:15px;
+  }
+
+  .book-desc{
+    font-size:11px;
+    min-height:0;
+  }
+
+  .book-actions{
+    margin-top:13px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .book-action{
+    height:42px;
+    font-size:10px;
+  }
+
+  .book-actions .secondary-action:last-child{
+    grid-column:1/-1;
+  }
+
+  .faq-section{
+    margin-top:35px;
+  }
+
+  .faq-question{
+    padding:15px;
+    font-size:11px;
+  }
+
+  .faq-answer{
+    font-size:11px;
+    padding:0 15px 15px;
+  }
+
+  footer{
+    padding-left:13px;
+    padding-right:13px;
+  }
+
+  .footer-links{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+
+  .footer-link{
+    font-size:10px;
+    padding:10px 7px;
+  }
+
+  .floating-stack{
+    left:10px;
+    bottom:10px;
+  }
+
+  .float-btn{
+    width:42px;
+    height:42px;
+  }
+
+  .side-menu{
+    width:86vw;
+  }
+
+  .book-details-box{
+    padding:20px;
+    border-radius:21px;
+  }
+
+  .details-actions{
+    flex-direction:column;
+  }
 }
 
+@media (prefers-reduced-motion:reduce){
+  *,
+  *::before,
+  *::after{
+    animation-duration:.01ms!important;
+    animation-iteration-count:1!important;
+    scroll-behavior:auto!important;
+    transition:none!important;
+  }
+}
 </style>
-    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+</head>
 
+<body>
 
-    <button id="menuBtn" onclick="toggleMenu()">
-    <i data-lucide="menu"></i>
-</button>
-  </head>
+<section id="homePage">
+  <div class="home-shell">
 
-  <section class="motivation-box">
-
-    <div class="motivation-icon">
-        🚀
+    <div class="home-topline">
+      🎓 مكتبة تانية بكالوريا • كل ما تحتاجه في مكان واحد
     </div>
 
-    <div class="motivation-content">
+    <div class="hero-logo-wrap">
+      <img
+        class="hero-logo"
+        src="logo.png"
+        alt="شعار مكتبة تانية بكالوريا"
+      >
+    </div>
+
+    <h1 class="home-title">
+      خطوتك اليوم… <span>تصنع تفوقك</span> غدًا
+    </h1>
+
+    <p class="home-subtitle">
+      كتب ومذكرات وامتحانات وكورسات مرتبة لتصل لما تحتاجه بسرعة، من الهاتف أو الكمبيوتر.
+    </p>
+
+    <div class="hero-message">
+      <strong>💡 لا تؤجل خطوة مذاكرتك القادمة</strong>
+      <p>
+        ابدأ بالمادة التي تحتاجها الآن، اختَر الكتاب أو الامتحان،
+        وواصل طريقك بثبات حتى تحقق هدفك.
+      </p>
+    </div>
+
+    <div class="home-pills">
+      <span class="home-pill">📚 مكتبة متنوعة</span>
+      <span class="home-pill">📝 امتحانات</span>
+      <span class="home-pill">🎓 كورسات</span>
+      <span class="home-pill">🔎 بحث سريع</span>
+      <span class="home-pill">❤️ مفضلة</span>
+    </div>
+
+    <button class="home-cta" onclick="openLibrary()">
+      🚀 دخول المكتبة <span>←</span>
+    </button>
+
+    <div class="home-note">
+      متوافقة مع الموبايل والتابلت والكمبيوتر
+    </div>
+
+  </div>
+</section>
+
+<section id="libraryPage">
+
+  <div class="library-shell">
+
+    <header class="library-header">
+
+      <div class="header-inner">
+
+        <div class="header-side start">
+
+          <button
+            class="icon-btn"
+            onclick="toggleMenu()"
+            aria-label="فتح القائمة"
+          >
+            <i data-lucide="menu"></i>
+          </button>
+
+          <button
+            class="icon-btn"
+            onclick="toggleTheme()"
+            aria-label="تبديل الوضع"
+          >
+            <i data-lucide="sun-moon"></i>
+          </button>
+
+        </div>
+
+        <div class="brand-mini">
+
+          <img
+            src="logo.png"
+            alt="شعار المكتبة"
+          >
+
+          <div>
+            <h1>مكتبة تانية بكالوريا</h1>
+            <p>كتب • امتحانات • كورسات • مذكرات</p>
+          </div>
+
+        </div>
+
+        <div class="header-side end"></div>
+
+      </div>
+
+    </header>
+
+    <div class="news-bar">
+
+      <div class="news-track">
+
+        <span>
+          🎓 المنصة التعليمية:
+          <a
+            href="https://mhmdrmdan.yobader.com"
+            target="_blank"
+            rel="noopener"
+          >
+            mhmdrmdan.yobader.com
+          </a>
+        </span>
+
+        <span>
+          ⭐ جميع الكورسات والشرح والامتحانات متوفرة على المنصة.
+        </span>
+
+        <span>
+          📚 استخدم البحث للوصول للمحتوى بسرعة.
+        </span>
+
+      </div>
+
+    </div>
+
+    <main class="content-wrap">
+
+      <section class="hero-panel">
+
+        <div class="section-kicker">
+          مكتبتك في مكان واحد
+        </div>
 
         <h2>
-            ابدأ رحلتك نحو التفوق
+          مرحبًا بك في مكتبة تانية بكالوريا 👋
         </h2>
 
         <p>
-            النجاح لا يأتي صدفة...
-            بل يبدأ بخطوة، وكل كتاب تقرؤه يقربك من حلمك.
+          اختر المادة أو ابحث باسم الكتاب، ثم افتح المحتوى مباشرة.
         </p>
 
-        <div class="motivation-tags">
-            <span>📚 أكثر من 100 كتاب</span>
-            <span>📝 امتحانات مجانية</span>
-            <span>🎥 كورسات</span>
-            <span>⭐ تحديثات مستمرة</span>
+        <div class="control-panel">
+
+          <div class="search-row">
+
+            <div class="search-wrap">
+
+              <i data-lucide="search"></i>
+
+              <input
+                id="search-input"
+                type="search"
+                autocomplete="off"
+                placeholder="ابحث باسم الكتاب أو المادة أو الوصف..."
+                oninput="handleSearch()"
+              >
+
+            </div>
+
+            <div class="sort-row">
+
+              <button
+                class="sort-btn"
+                data-sort="name"
+                onclick="sortBooks('name')"
+              >
+                أ–ي
+              </button>
+
+              <button
+                class="sort-btn"
+                data-sort="newest"
+                onclick="sortBooks('newest')"
+              >
+                🆕 جديد
+              </button>
+
+              <button
+                class="sort-btn active"
+                data-sort="popular"
+                onclick="sortBooks('popular')"
+              >
+                ⭐ شهير
+              </button>
+
+            </div>
+
+          </div>
+
+          <div
+            class="filter-scroll"
+            id="filter-scroll"
+          ></div>
+
         </div>
 
-    </div>
+      </section>
+
+      <section
+        class="library-stats"
+        id="libraryStats"
+      >
+
+        <div class="stat-card">
+          <div class="stat-icon">📚</div>
+          <div>
+            <div
+              class="stat-number"
+              id="booksCount"
+            >
+              0
+            </div>
+            <div class="stat-title">
+              الكتب والمراجع
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📝</div>
+          <div>
+            <div
+              class="stat-number"
+              id="examCount"
+            >
+              0
+            </div>
+            <div class="stat-title">
+              الامتحانات
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">🎓</div>
+          <div>
+            <div
+              class="stat-number"
+              id="courseCount"
+            >
+              0
+            </div>
+            <div class="stat-title">
+              الكورسات
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">📄</div>
+          <div>
+            <div
+              class="stat-number"
+              id="notesCount"
+            >
+              0
+            </div>
+            <div class="stat-title">
+              المذكرات
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <section
+        class="section-card"
+        id="featuredSection"
+      >
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">
+              مختارات المكتبة
+            </div>
+
+            <h3>
+              أحدث ما تمت إضافته
+            </h3>
+          </div>
+
+          <button
+            class="ghost-btn"
+            onclick="scrollToBooks()"
+          >
+            عرض الكل ↓
+          </button>
+
+        </div>
+
+        <div
+          id="latest-grid"
+          class="mini-grid"
+        ></div>
+
+      </section>
+
+      <section class="section-card">
+
+        <div class="section-head">
+
+          <div>
+            <div class="section-kicker">
+              ابدأ من هنا
+            </div>
+
+            <h3>
+              محتوى يستحق أن تبدأ به
+            </h3>
+          </div>
+
+        </div>
+
+        <div
+          id="popular-grid"
+          class="mini-grid"
+        ></div>
+
+      </section>
+
+      <section id="allBooks">
+
+        <div class="section-title">
+
+          <div>
+
+            <div class="section-kicker">
+              كل المحتوى
+            </div>
+
+            <h3>
+              المكتبة كاملة
+            </h3>
+
+          </div>
+
+          <p id="resultsCount"></p>
+
+        </div>
+
+        <div id="books-grid"></div>
+
+      </section>
+
+      <section
+        class="faq-section"
+        id="faq"
+      >
+
+        <h2>
+          ❓ الأسئلة الشائعة
+        </h2>
+
+        <div class="faq-item">
+
+          <button class="faq-question">
+            📚 هل جميع الكتب مجانية؟
+            <span>+</span>
+          </button>
+
+          <div class="faq-answer">
+            نعم، جميع الكتب والمذكرات والكورسات الموجودة داخل المكتبة مجانية بالكامل.
+          </div>
+
+        </div>
+
+        <div class="faq-item">
+
+          <button class="faq-question">
+            📥 لا أجد كتابًا معينًا؟
+            <span>+</span>
+          </button>
+
+          <div class="faq-answer">
+            يمكنك التواصل مع الدعم الفني وذكر اسم الكتاب المطلوب إضافته.
+          </div>
+
+        </div>
+
+        <div class="faq-item">
+
+          <button class="faq-question">
+            🔄 هل يتم تحديث المكتبة؟
+            <span>+</span>
+          </button>
+
+          <div class="faq-answer">
+            نعم، يتم إضافة الكتب والكورسات والامتحانات الجديدة باستمرار.
+          </div>
+
+        </div>
+
+        <div class="faq-item">
+
+          <button class="faq-question">
+            🎓 هل سيتم إضافة جميع كتب المنهج؟
+            <span>+</span>
+          </button>
+
+          <div class="faq-answer">
+            بإذن الله سيتم توفير جميع كتب المنهج الرسمي فور صدورها.
+          </div>
+
+        </div>
+
+        <div class="faq-item">
+
+          <button class="faq-question">
+            💬 كيف أتواصل مع الدعم؟
+            <span>+</span>
+          </button>
+
+          <div class="faq-answer">
+            يمكنك التواصل عبر واتساب على الرقم:
+            <b>01500492203</b>
+          </div>
+
+        </div>
+
+      </section>
+
+      <footer>
+
+        <div class="footer-brand">
+          📚 مكتبة تانية بكالوريا
+        </div>
+
+        <div class="footer-copy">
+          مكتبة مجانية تضم الكتب والمذكرات والكورسات والامتحانات لخدمة طلاب تانية بكالوريا.
+        </div>
+
+        <div class="footer-links">
+
+          <a
+            class="footer-link whatsapp"
+            href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
+            target="_blank"
+            rel="noopener"
+          >
+            💬 جروب واتساب
+          </a>
+
+          <a
+            class="footer-link channel"
+            href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+            target="_blank"
+            rel="noopener"
+          >
+            📢 قناة واتساب
+          </a>
+
+          <a
+            class="footer-link telegram"
+            href="https://t.me/geniuses_youssef"
+            target="_blank"
+            rel="noopener"
+          >
+            ✈️ قناة تليجرام
+          </a>
+
+          <a
+            class="footer-link platform"
+            href="https://mhmdrmdan.yobader.com"
+            target="_blank"
+            rel="noopener"
+          >
+            🎓 المنصة التعليمية
+          </a>
+
+        </div>
+
+        <div class="footer-credit">
+
+          💻 بالشراكة مع
+          <strong>مالك سامح</strong>
+
+          • 🎓 برعاية وإشراف
+
+          <strong>
+            محمد رمضان الحرباوي
+          </strong>
+
+          <br>
+
+          © 2026 جميع الحقوق محفوظة
+
+        </div>
+
+      </footer>
+
+    </main>
+
+  </div>
 
 </section>
-  <div class="news-bar">
-    <div class="news-content">
-        🎓 رابط المنصة التعليمية الخاصة بنا:
-        <a href="https://mhmdrmdan.yobader.com" target="_blank">
-            https://mhmdrmdan.yobader.com
-        </a>
-        ⭐ جميع الكورسات والشرح والامتحانات متوفرة على المنصة.
-    </div>
-</div>
+
+<div class="floating-stack">
+
   <a
-  href="https://wa.me/201500492203"
-  target="_blank"
-  class="whatsapp-float"
-  aria-label="تواصل عبر واتساب"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="32"
-    height="32"
-    viewBox="0 0 24 24"
-    fill="white"
+    class="float-btn wa-float"
+    href="https://wa.me/201500492203"
+    target="_blank"
+    rel="noopener"
+    aria-label="واتساب"
   >
-    <path d="M20.52 3.48A11.86 11.86 0 0 0 12.04 0C5.5 0 .17 5.33.17 11.87c0 2.09.55 4.14 1.59 5.95L0 24l6.37-1.67a11.84 11.84 0 0 0 5.67 1.45h.01c6.54 0 11.87-5.33 11.87-11.87 0-3.17-1.23-6.15-3.4-8.43zM12.05 21.7a9.8 9.8 0 0 1-5-1.37l-.36-.21-3.78.99 1.01-3.68-.23-.38a9.77 9.77 0 0 1-1.51-5.19c0-5.42 4.41-9.83 9.84-9.83 2.63 0 5.1 1.02 6.95 2.88a9.77 9.77 0 0 1 2.88 6.95c0 5.42-4.41 9.84-9.8 9.84zm5.39-7.35c-.29-.14-1.7-.84-1.97-.94-.26-.1-.45-.14-.64.14-.19.29-.74.94-.91 1.13-.17.19-.33.22-.62.07-.29-.14-1.2-.44-2.29-1.4-.84-.75-1.41-1.67-1.57-1.95-.17-.29-.02-.44.12-.58.13-.13.29-.33.43-.5.14-.17.19-.29.29-.48.1-.19.05-.36-.02-.5-.07-.14-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 1-.99 2.45 0 1.44 1.04 2.84 1.19 3.03.14.19 2.05 3.13 4.96 4.39.69.3 1.23.48 1.65.61.69.22 1.31.19 1.8.12.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.08-.12-.27-.19-.55-.33z"/>
-  </svg>
-</a>
+    <i data-lucide="message-circle"></i>
+  </a>
 
-<button id="shareBtn" onclick="shareLibrary()">
+  <button
+    class="float-btn share-float"
+    onclick="shareLibrary()"
+    aria-label="مشاركة"
+  >
     <i data-lucide="share-2"></i>
-</button>
-<button id="scrollTopBtn" onclick="scrollToTop()">
-  ⬆
-</button>
+  </button>
 
-
-  <body class="h-full">
-    
-
-    
-<div id="loader">
-
-    <div class="loader-box">
-
-        <div class="loader-icon">📚</div>
-
-        <h1>مكتبة الثانوية العامة</h1>
-
-        <p>جارِ تحميل المحتوى...</p>
-
-        <div class="loader-bar">
-            <div class="loader-progress"></div>
-        </div>
-
-        <!-- حقوق التصميم -->
-<div class="loader-credit">
-
-    <div class="loader-dev">
-        <span class="icon">💻</span>
-        <span class="title">تصميم وتطوير</span>
-        <h2>مالك سامح</h2>
-    </div>
-
-    <div class="loader-owner">
-        <span class="icon">👑</span>
-        <span class="title">برعاية</span>
-        <h2>محمد رمضان الحرباوي</h2>
-    </div>
+  <button
+    id="scrollTopBtn"
+    class="float-btn top-float"
+    onclick="scrollToTop()"
+    aria-label="العودة للأعلى"
+  >
+    ↑
+  </button>
 
 </div>
-
-        </div>
-
-    </div>
-
-</div>
-</div>
-
-<div id="homePage">
-
-    <div class="home-container">
-
-        <div style="font-size:90px;">📚</div>
-
-        <h1>مكتبة الثانوية العامة</h1>
-
-        <p>
-            جميع الكتب • المذكرات • الامتحانات • الكورسات
-            مجانًا
-        </p>
-
-        <button onclick="openLibrary()" class="home-btn">
-            🚀 دخول المكتبة
-        </button>
-
-    </div>
-
-</div>
-<div id="libraryPage" style="display:none;">
-
-    <div
-      id="app"
-      class="w-full h-full overflow-auto"
-      style="background-color: #0f172a"
-    >
-<div
-id="header"
-class="text-center py-10 px-4"
-style="background:linear-gradient(135deg,#1e293b 0%,#0f172a 100%)"
->
-
-        <div class="text-5xl mb-4">📚</div>
-<!-- نسبة اكتمال المكتبة -->
-<div class="progress-section">
-
-    <div class="progress-header">
-        <span>📚 اكتمال المكتبة</span>
-        <span id="progressPercent">50%</span>
-    </div>
-
-    <div class="progress-bar">
-        <div id="progressFill" class="progress-fill"></div>
-    </div>
-
-    <p class="progress-text">
-        🚀 جاري إضافة باقي الكتب والمذكرات والامتحانات والكورسات أولًا بأول.
-    </p>
-
-</div>
-</div>
-
-<label class="theme-switch">
-  <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-  <span class="slider">
-    <span class="icon">🌙</span>
-  </span>
-</label>
-      </div>
-
 
 <div
-  class="flex flex-wrap justify-center gap-2 px-4 py-4"
-  style="border-bottom: 1px solid #1e293b"
->
-  <button
-    data-grade="2sec"
-    class="grade-btn active px-4 py-2 rounded-full text-sm font-semibold transition"
-    style="background-color: #f0c040; color: #0f172a"
-  >
-    🏫 ثانية ثانوي
-  </button>
-</div>      <div class="max-w-6xl mx-auto px-4 py-6">
-        <div class="flex flex-col sm:flex-row gap-4 mb-6">
-          <div class="flex-1 relative">
-            <input
-              type="text"
-              id="search-input"
-              class="search-box w-full px-4 py-3 rounded-xl border-0 text-sm"
-              placeholder="ابحث عن الكتاب..."
-              style="background-color: #1e293b; color: #f0c040"
-              onkeyup="handleSearch()"
-            />
-            <i
-              data-lucide="search"
-              style="
-                position: absolute;
-                right: 12px;
-                top: 50%;
-                transform: translateY(-50%);
-                width: 20px;
-                height: 20px;
-                color: #94a3b8;
-                pointer-events: none;
-              "
-            ></i>
-          </div>
-          <div class="flex gap-2">
-            <button
-              onclick="sortBooks('name')"
-              data-sort="name"
-              class="sort-badge px-4 py-3 rounded-xl text-sm font-semibold"
-              style="background-color: #1e293b; color: #94a3b8"
-            >
-              أ-ي
-            </button>
-            <button
-              onclick="sortBooks('newest')"
-              data-sort="newest"
-              class="sort-badge px-4 py-3 rounded-xl text-sm font-semibold"
-              style="background-color: #1e293b; color: #94a3b8"
-            >
-              🆕 جديد
-            </button>
-            <button
-              onclick="sortBooks('popular')"
-              data-sort="popular"
-              class="sort-badge px-4 py-3 rounded-xl text-sm font-semibold"
-              style="background-color: #f0c040; color: #0f172a"
-            >
-              ⭐ شهير
-            </button>
-
-            
-          </div>
-        </div>
-      </div>
-<div class="flex flex-wrap justify-center gap-2 px-4 py-6">
-  <button
-    onclick="filterBooks('all')"
-    data-filter="all"
-    class="filter-btn active px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #f0c040; color: #0f172a"
-  >
-    الكل
-  </button>
-
-  <button
-    onclick="filterBooks('لغة عربية')"
-    data-filter="لغة عربية"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-    📖 اللغة العربية
-  </button>
-
-    <button
-    onclick="filterBooks('مواد شرعية')"
-    data-filter="مواد شرعية"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-     مواد شرعية
-  </button>
-
-  <button
-    onclick="filterBooks('تاريخ')"
-    data-filter="تاريخ"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-    🏛️ التاريخ
-  </button>
-
-  <button
-    onclick="filterBooks('إنجليزي')"
-    data-filter="إنجليزي"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-    🇬🇧 الإنجليزي
-  </button>
-
-    <button
-    onclick="filterBooks('رياضيات')"
-    data-filter="رياضيات"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-     الرياضيات
-  </button>
-
-      <button
-    onclick="filterBooks('برمجة')"
-    data-filter="برمجة"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-     البرمجة
-  </button>
-
-  <button
-    onclick="filterBooks('فيزياء')"
-    data-filter="فيزياء"
-    class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-    style="background-color: #1e293b; color: #94a3b8"
-  >
-    ⚛️ الفيزياء
-  </button>
-
-  <button
-  onclick="filterBooks('امتحانات')"
-  data-filter="امتحانات"
-  class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-  style="background-color: #1e293b; color: #94a3b8"
->
-  📝 الامتحانات
-</button>
-
-<button
-  onclick="filterBooks('كورسات')"
-  data-filter="كورسات"
-  class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-  style="background-color: #1e293b; color: #94a3b8"
->
-  🎓 الكورسات
-</button>
-
-<button
-  onclick="filterBooks('favorites')"
-  data-filter="favorites"
-  class="filter-btn px-4 py-2 rounded-full text-sm font-semibold"
-  style="background-color:#1e293b;color:#94a3b8"
->
-❤️ المفضلة
-</button>
-</div>
-
-<!-- عداد المحتويات -->
-<div id="libraryStats" class="library-stats">
-
-    <div class="stat-card">
-        <div class="stat-icon">📚</div>
-        <div class="stat-number" id="booksCount">0</div>
-        <div class="stat-title">الكتب</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">📝</div>
-        <div class="stat-number" id="examCount">0</div>
-        <div class="stat-title">الامتحانات</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">🎓</div>
-        <div class="stat-number" id="courseCount">0</div>
-        <div class="stat-title">الكورسات</div>
-    </div>
-
-    <div class="stat-card">
-        <div class="stat-icon">📄</div>
-        <div class="stat-number" id="notesCount">0</div>
-        <div class="stat-title">المذكرات</div>
-    </div>
-
-</div>
-<div
-  id="books-grid"
-  class="max-w-6xl mx-auto px-4 pb-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+  id="menuOverlay"
+  class="menu-overlay"
+  onclick="closeMenu()"
 ></div>
 
-<!-- Footer -->
-<footer class="text-center py-10 px-4" style="border-top:1px solid #1e293b; margin-top:40px;">
+<aside
+  id="sideMenu"
+  class="side-menu"
+>
 
-  <h3 style="color:#f0c040;font-size:22px;font-weight:bold;margin-bottom:10px;">
-    📚 مكتبة الثانوية العامة
-  </h3>
+  <div class="menu-header">
+    📚 مكتبة تانية بكالوريا
+  </div>
 
-  <p style="color:#94a3b8;font-size:15px;margin-bottom:25px;">
-    مكتبة مجانية تضم الكتب والمذكرات والكورسات والامتحانات لخدمة جميع طلاب الثانوية العامة.
-  </p>
+  <a
+    href="#"
+    onclick="goHome()"
+  >
+    🏠 الرئيسية
+  </a>
 
-  <div style="
-      display:flex;
-      justify-content:center;
-      flex-wrap:wrap;
-      gap:15px;
-      margin-bottom:30px;
-  ">
+  <a
+    href="#allBooks"
+    onclick="closeMenu()"
+  >
+    📚 كل الكتب
+  </a>
 
-    <a href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
-       target="_blank"
-       class="footer-btn whatsapp-btn">
-       💬 جروب واتساب
-    </a>
+  <a
+    href="#featuredSection"
+    onclick="closeMenu()"
+  >
+    ⭐ المختارات
+  </a>
 
-    <a href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
-       target="_blank"
-       class="footer-btn channel-btn">
-       📢 قناة واتساب
-    </a>
+  <a
+    href="#faq"
+    onclick="closeMenu()"
+  >
+    ❓ الأسئلة الشائعة
+  </a>
 
-    <a href="https://t.me/geniuses_youssef"
-       target="_blank"
-       class="footer-btn telegram-btn">
-       ✈️ قناة تليجرام
-    </a>
+  <a
+    href="https://mhmdrmdan.yobader.com"
+    target="_blank"
+    rel="noopener"
+  >
+    🎓 المنصة التعليمية
+  </a>
 
-    <a href="https://mhmdrmdan.yobader.com"
-       target="_blank"
-       class="footer-btn platform-btn">
-       🎓 المنصة التعليمية
-    </a>
+  <a
+    href="https://wa.me/201500492203"
+    target="_blank"
+    rel="noopener"
+  >
+    💬 الدعم الفني
+  </a>
+
+  <a
+    href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+    target="_blank"
+    rel="noopener"
+  >
+    📢 قناة واتساب
+  </a>
+
+  <div class="menu-info">
+
+    <h4>
+      ℹ️ عن المكتبة
+    </h4>
+
+    <div>✅ كتب ومراجع مرتبة.</div>
+    <div>✅ امتحانات وكورسات.</div>
+    <div>✅ بحث سريع ومفضلة.</div>
+    <div>✅ تعمل على الهاتف والتابلت والكمبيوتر.</div>
 
   </div>
 
-  <hr style="border-color:#1e293b; margin:25px auto; max-width:700px;">
+</aside>
 
-  <div style="color:#94a3b8;line-height:2;font-size:15px;">
+<div
+  id="bookDetailsModal"
+  class="book-details-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="detailsTitle"
+>
 
-      💻 تطوير وبرمجة:
+  <div class="book-details-box">
 
-      <br>
+    <button
+      class="book-details-close"
+      onclick="closeBookDetails()"
+      aria-label="إغلاق"
+    >
+      ×
+    </button>
 
-      <a href="https://maleksameh121-web.github.io/Personal-website/"
-         target="_blank"
-         style="
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            margin-top:10px;
-            padding:10px 18px;
-            background:linear-gradient(135deg,#2563eb,#1d4ed8);
-            color:#fff;
-            text-decoration:none;
-            border-radius:12px;
-            font-weight:bold;
-            box-shadow:0 8px 20px rgba(37,99,235,.35);
-            transition:.3s;
-         "
-         onmouseover="this.style.transform='translateY(-3px) scale(1.05)'"
-         onmouseout="this.style.transform='translateY(0) scale(1)'">
-         👨‍💻 مالك سامح
+    <div
+      id="detailsIcon"
+      class="book-details-icon"
+    >
+      📚
+    </div>
+
+    <h2 id="detailsTitle">
+      اسم المحتوى
+    </h2>
+
+    <div
+      id="detailsCat"
+      class="details-cat"
+    >
+      المادة
+    </div>
+
+    <p
+      id="detailsDesc"
+      class="details-desc"
+    >
+      وصف المحتوى
+    </p>
+
+    <div class="details-actions">
+
+      <a
+        id="detailsOpenBtn"
+        class="details-action details-open"
+        href="#"
+        target="_blank"
+        rel="noopener"
+      >
+        📖 فتح المحتوى
       </a>
 
-      <br><br>
+      <button
+        id="detailsFavBtn"
+        class="details-action details-fav"
+      >
+        🤍 إضافة للمفضلة
+      </button>
 
-      🎓 برعاية وإشراف:
-      <span style="color:#f0c040;font-weight:bold;">
-        محمد رمضان الحرباوي
-      </span>
-
-      <br><br>
-
-      <span style="color:#64748b;font-size:14px;">
-        © 2026 جميع الحقوق محفوظة
-      </span>
+    </div>
 
   </div>
 
-</footer>
-
-<!-- الأسئلة الشائعة -->
-<section class="faq-section">
-
-<h2>❓ الأسئلة الشائعة</h2>
-
-<div class="faq-item">
-<button class="faq-question">
-📚 هل جميع الكتب مجانية؟
-<span>+</span>
-</button>
-
-<div class="faq-answer">
-نعم، جميع الكتب والمذكرات والكورسات الموجودة داخل المكتبة مجانية بالكامل.
-</div>
 </div>
 
-<div class="faq-item">
-<button class="faq-question">
-📥 لا أجد كتابًا معينًا؟
-<span>+</span>
-</button>
+<script>
 
-<div class="faq-answer">
-يمكنك طلب أي كتاب وسيتم إضافته في أقرب وقت بإذن الله.
-</div>
-</div>
+const books = [
 
-<div class="faq-item">
-<button class="faq-question">
-🔄 هل يتم تحديث المكتبة؟
-<span>+</span>
-</button>
+  {
+    title: "كتاب التاريخ",
+    icon: "📚",
+    cat: "تاريخ",
+    grade: "2sec",
+    desc: "الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).",
+    url: "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+    date: 20260305,
+    popular: 75,
+  },
 
-<div class="faq-answer">
-نعم، يتم إضافة الكتب والكورسات والامتحانات الجديدة باستمرار.
-</div>
-</div>
+  {
+    title: "كتاب النحو",
+    icon: "📖",
+    cat: "لغة عربية",
+    grade: "2sec",
+    desc: "الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).",
+    url: "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+    date: 20260305,
+    popular: 75,
+  },
 
-<div class="faq-item">
-<button class="faq-question">
-🎓 هل سيتم إضافة جميع كتب المنهج؟
-<span>+</span>
-</button>
+  {
+    title: "تأسيس رياضيات",
+    icon: "📐",
+    cat: "رياضيات",
+    grade: "2sec",
+    desc: "مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).",
+    url: "https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
+    date: 20260305,
+    popular: 75,
+  },
 
-<div class="faq-answer">
-بإذن الله سيتم توفير جميع كتب المنهج الرسمي فور صدورها.
-</div>
-</div>
+  {
+    title: "الميسر في أصول الفقه الإسلامي",
+    icon: "📘",
+    cat: "مواد شرعية",
+    grade: "2sec",
+    desc: "كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).",
+    url: "https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing",
+    date: 20260305,
+    popular: 75,
+  },
 
-<div class="faq-item">
-<button class="faq-question">
-💬 كيف أتواصل مع الدعم؟
-<span>+</span>
-</button>
+  {
+    title: "ملخص الدرس الأول - التاريخ (بناء الدولة المصرية)",
+    icon: "🏛️",
+    cat: "تاريخ",
+    grade: "2sec",
+    desc: "ملخص الدرس الأول في مادة التاريخ: بناء الدولة المصرية للصف الثاني الثانوي (PDF).",
+    url: "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+    date: 20260305,
+    popular: 75,
+  },
 
-<div class="faq-answer">
-يمكنك التواصل عبر واتساب على الرقم:
-<br><br>
-<b>01500492203</b>
-</div>
-</div>
+  {
+    title: "الثلاثة الذين خُلِّفوا",
+    icon: "📘",
+    cat: "مواد شرعية",
+    grade: "2sec",
+    desc: "كتاب الثلاثة الذين خُلِّفوا – إعداد: عمر أحمد المنشاوي (PDF).",
+    url: "https://drive.google.com/file/d/1VH8UeFmU4hVWWrQCii4tYwscaspOfvX3/view?usp=sharing",
+    date: 20260305,
+    popular: 75,
+  },
 
-</section>
-</div>
-   <script>
-      const books = [
-    {
-  title: "كتاب التاريخ",
-  icon: "📚",
-  cat: "تاريخ",
-  grade: "2sec",
-  desc: "الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).",
-  url: "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
-  date: 20260305,
-  popular: 75,
-},
-{
-  title: "كتاب النحو",
-  icon: "📖",
-  cat: "لغة عربية",
-  grade: "2sec",
-  desc: "الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).",
-  url: "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
-  date: 20260305,
-  popular: 75,
-},
-      {
-  title: "تأسيس رياضيات",
-  icon: "📐",
-  cat: "رياضيات",
-  grade: "2sec",
-  desc: "مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).",
-  url: "https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
-  date: 20260305,
-  popular: 75,
-},
-{
-  title: "الميسر في أصول الفقه الإسلامي",
-  icon: "📘",
-  cat: "مواد شرعية",
-  grade: "2sec",
-  desc: "كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).",
-  url: "https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing",
-  date: 20260305,
-  popular: 75,
-},
-{
-  title: "ملخص الدرس الأول - التاريخ (بناء الدولة المصرية)",
-  icon: "🏛️",
-  cat: "تاريخ",
-  grade: "2sec",
-  desc: "ملخص الدرس الأول في مادة التاريخ: بناء الدولة المصرية للصف الثاني الثانوي (PDF).",
-  url: "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
-  date: 20260305,
-  popular: 75,
-},
-{
-  title: "الثلاثة الذين خُلِّفوا",
-  icon: "📘",
-  cat: "مواد شرعية",
-  grade: "2sec",
-  desc: "كتاب الثلاثة الذين خُلِّفوا – إعداد: عمر أحمد المنشاوي (PDF).",
-  url: "https://drive.google.com/file/d/1VH8UeFmU4hVWWrQCii4tYwscaspOfvX3/view?usp=sharing",
-  date: 20260305,
-  popular: 75,
-},  
+  {
+    title: "كورس تأسيس رياضة",
+    icon: "🎥",
+    cat: "رياضيات",
+    grade: "2sec",
+    desc: "كورس تأسيس الرياضيات للصف الثاني الثانوي.",
+    url: "https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing",
+    date: 20260712,
+    popular: 100,
+  },
 
-{
-  title: "كورس تأسيس رياضة",
-  icon: "🎥",
-  cat: "رياضيات",
-  grade: "2sec",
-  desc: "كورس تأسيس الرياضيات للصف الثاني الثانوي.",
-  url: "https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing",
-  date: 20260712,
-  popular: 100,
-},
+  {
+    title: "الفيزياء",
+    icon: "⚛️",
+    cat: "فيزياء",
+    grade: "2sec",
+    desc: "كتاب الفيزياء للصف الثاني الثانوي (PDF).",
+    url: "https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing",
+    date: 20260712,
+    popular: 100,
+  },
 
-{
-  title: "الفيزياء",
-  icon: "⚛️",
-  cat: "فيزياء",
-  grade: "2sec",
-  desc: "كتاب الفيزياء للصف الثاني الثانوي (PDF).",
-  url: "https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing",
-  date: 20260712,
-  popular: 100,
-},
-{
-  title: "الجزء الأول من الكورس التأسيسي للبرمجة",
-  icon: "💻",
-  cat: "برمجة",
-  grade: "2sec",
-  desc: "الجزء الأول من الكورس التأسيسي للبرمجة – إعداد وتجهيز: محمد رمضان الحرباوي.",
-  url: "https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing",
-  date: 20260713,
-  popular: 100,
-},
+  {
+    title: "الجزء الأول من الكورس التأسيسي للبرمجة",
+    icon: "💻",
+    cat: "برمجة",
+    grade: "2sec",
+    desc: "الجزء الأول من الكورس التأسيسي للبرمجة – إعداد وتجهيز: محمد رمضان الحرباوي.",
+    url: "https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing",
+    date: 20260713,
+    popular: 100,
+  },
 
-{
-  title: "الكافي في علوم البلاغة العربية",
-  icon: "📖",
-  cat: "لغة عربية",
-  grade: "2sec",
-  desc: "كتاب الكافي في علوم البلاغة العربية (PDF).",
-  url: "./الكافي_في_علوم_البلاغة_العربية.html",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "الكافي في علوم البلاغة العربية",
+    icon: "📖",
+    cat: "لغة عربية",
+    grade: "2sec",
+    desc: "كتاب الكافي في علوم البلاغة العربية (PDF).",
+    url: "./الكافي_في_علوم_البلاغة_العربية.html",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "كورس اللغة العربية",
-  icon: "📖",
-  cat: "كورسات",
-  grade: "2sec",
-  desc: "كورس اللغة العربية.",
-  url: "https://mhmdrmdan.yobader.com/course/kors-lghh-aarbyh",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "كورس اللغة العربية",
+    icon: "📖",
+    cat: "كورسات",
+    grade: "2sec",
+    desc: "كورس اللغة العربية.",
+    url: "https://mhmdrmdan.yobader.com/course/kors-lghh-aarbyh",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "كورس اللغة الإنجليزية",
-  icon: "🇬🇧",
-  cat: "كورسات",
-  grade: "2sec",
-  desc: "كورس اللغة الإنجليزية.",
-  url: "https://mhmdrmdan.yobader.com/course/lghh-anglyzyh",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "كورس اللغة الإنجليزية",
+    icon: "🇬🇧",
+    cat: "كورسات",
+    grade: "2sec",
+    desc: "كورس اللغة الإنجليزية.",
+    url: "https://mhmdrmdan.yobader.com/course/lghh-anglyzyh",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "كورس الفيزياء",
-  icon: "⚛️",
-  cat: "كورسات",
-  grade: "2sec",
-  desc: "كورس الفيزياء.",
-  url: "https://mhmdrmdan.yobader.com/course/fyzyaaa",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "كورس الفيزياء",
+    icon: "⚛️",
+    cat: "كورسات",
+    grade: "2sec",
+    desc: "كورس الفيزياء.",
+    url: "https://mhmdrmdan.yobader.com/course/fyzyaaa",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "كورس التاريخ الوطني",
-  icon: "🏛️",
-  cat: "كورسات",
-  grade: "2sec",
-  desc: "كورس التاريخ الوطني.",
-  url: "https://mhmdrmdan.yobader.com/course/tarykh-otny",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "كورس التاريخ الوطني",
+    icon: "🏛️",
+    cat: "كورسات",
+    grade: "2sec",
+    desc: "كورس التاريخ الوطني.",
+    url: "https://mhmdrmdan.yobader.com/course/tarykh-otny",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "كورس البرمجة والذكاء الاصطناعي",
-  icon: "💻",
-  cat: "كورسات",
-  grade: "2sec",
-  desc: "الكورس التأسيسي للبرمجة والذكاء الاصطناعي.",
-  url: "https://mhmdrmdan.yobader.com/course/kors-tasysy-brmgh",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "كورس البرمجة والذكاء الاصطناعي",
+    icon: "💻",
+    cat: "كورسات",
+    grade: "2sec",
+    desc: "الكورس التأسيسي للبرمجة والذكاء الاصطناعي.",
+    url: "https://mhmdrmdan.yobader.com/course/kors-tasysy-brmgh",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "أخبار وزارة التربية والتعليم",
-  icon: "📰",
-  cat: "كورسات",
-  grade: "2sec",
-  desc: "آخر الأخبار والحوارات والمعلومات الرسمية.",
-  url: "https://mhmdrmdan.yobader.com/course/ay-akhbar-bkhsos-ozarh-altrbyh-oaltaalym-ontham-albkalorya",
-  date: 20260714,
-  popular: 100,
-},
+  {
+    title: "أخبار وزارة التربية والتعليم",
+    icon: "📰",
+    cat: "كورسات",
+    grade: "2sec",
+    desc: "آخر الأخبار والحوارات والمعلومات الرسمية.",
+    url: "https://mhmdrmdan.yobader.com/course/ay-akhbar-bkhsos-ozarh-altrbyh-oaltaalym-ontham-albkalorya",
+    date: 20260714,
+    popular: 100,
+  },
 
-{
-  title: "امتحان تاريخ - الدرس الأول",
-  icon: "📝",
-  cat: "امتحانات",
-  grade: "2sec",
-  desc: "امتحان على الدرس الأول في مادة التاريخ.",
-  url: "./index (1).html",
-  date: 20260713,
-  popular: 100,
-},
+  {
+    title: "امتحان تاريخ - الدرس الأول",
+    icon: "📝",
+    cat: "امتحانات",
+    grade: "2sec",
+    desc: "امتحان على الدرس الأول في مادة التاريخ.",
+    url: "./index (1).html",
+    date: 20260713,
+    popular: 100,
+  },
 
-{
-  title: "امتحان النحو ",
-  icon: "📝",
-  cat: "امتحانات",
-  grade: "2sec",
-  desc: "امتحان تفاعلي على النحو.",
-  url: "./exam_naho.html",
-  date: 20260715,
-  popular: 100,
-},
+  {
+    title: "امتحان النحو ",
+    icon: "📝",
+    cat: "امتحانات",
+    grade: "2sec",
+    desc: "امتحان تفاعلي على النحو.",
+    url: "./exam_naho.html",
+    date: 20260715,
+    popular: 100,
+  },
 
-{
-  title: "أجمل مذكرة بلاغة للثانوية العامة بصفوفها الثلاثة",
-  icon: "📘",
-  cat: "لغة عربية",
-  grade: "2sec",
-  desc: "مذكرة شاملة في البلاغة للثانوية العامة بجميع الصفوف، مناسبة للمراجعة والتأسيس.",
-  url: "https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing",
-  date: 20260716,
-  popular: 100,
-},
+  {
+    title: "أجمل مذكرة بلاغة للثانوية العامة بصفوفها الثلاثة",
+    icon: "📘",
+    cat: "لغة عربية",
+    grade: "2sec",
+    desc: "مذكرة شاملة في البلاغة للثانوية العامة بجميع الصفوف، مناسبة للمراجعة والتأسيس.",
+    url: "https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing",
+    date: 20260716,
+    popular: 100,
+  },
 
-{
-  title: "تأسيس إنجلش - العمالقة 2026",
-  icon: "🇬🇧",
-  cat: "إنجليزي",
-  grade: "2sec",
-  desc: "كتاب تأسيس اللغة الإنجليزية (العمالقة 2026) بصيغة PDF.",
-  url: "https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing",
-  date: 20260716,
-  popular: 100,
-},
+  {
+    title: "تأسيس إنجلش - العمالقة 2026",
+    icon: "🇬🇧",
+    cat: "إنجليزي",
+    grade: "2sec",
+    desc: "كتاب تأسيس اللغة الإنجليزية (العمالقة 2026) بصيغة PDF.",
+    url: "https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing",
+    date: 20260716,
+    popular: 100,
+  },
 
-{
-  title: "كورس تأسيس إنجليزي - مستر سعيد الهيت",
-  icon: "🇬🇧",
-  cat: "إنجليزي",
-  grade: "2sec",
-  desc: "ملف كورس تأسيسي في اللغة الإنجليزية بصيغة PDF.",
-  url: "https://drive.google.com/file/d/1R7LLcvinGsCPZhK_TvKwvnoq_j9M09BM/view?usp=sharing",
-  date: 20260717,
-  popular: 100,
-},
+  {
+    title: "كورس تأسيس إنجليزي - مستر سعيد الهيت",
+    icon: "🇬🇧",
+    cat: "إنجليزي",
+    grade: "2sec",
+    desc: "ملف كورس تأسيسي في اللغة الإنجليزية بصيغة PDF.",
+    url: "https://drive.google.com/file/d/1R7LLcvinGsCPZhK_TvKwvnoq_j9M09BM/view?usp=sharing",
+    date: 20260717,
+    popular: 100,
+  },
 
-{
-  title: "الحصة التمهيدية",
-  icon: "🎥",
-  cat: "برمجة",
-  grade: "2sec",
-  desc: "الحصة التمهيدية.",
-  url: "https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing",
-  date: 20260718,
-  popular: 100,
-},
+  {
+    title: "الحصة التمهيدية",
+    icon: "🎥",
+    cat: "برمجة",
+    grade: "2sec",
+    desc: "الحصة التمهيدية.",
+    url: "https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing",
+    date: 20260718,
+    popular: 100,
+  },
 
-{
-  title: "ترسيخ العقيدة الإسلامية - 2",
-  icon: "📘",
-  cat: "مواد شرعية",
-  grade: "2sec",
-  desc: "كتاب ترسيخ العقيدة الإسلامية - 2.",
-  url: "./ترسيخ_العقيدة_الإسلامية-2.html",
-  date: 20260718,
-  popular: 100,
-},
+  {
+    title: "ترسيخ العقيدة الإسلامية - 2",
+    icon: "📘",
+    cat: "مواد شرعية",
+    grade: "2sec",
+    desc: "كتاب ترسيخ العقيدة الإسلامية - 2.",
+    url: "./ترسيخ_العقيدة_الإسلامية-2.html",
+    date: 20260718,
+    popular: 100,
+  },
 
-{
-  title: "قاموس الفكيكه",
-  icon: "📖",
-  cat: "إنجليزي",
-  grade: "2sec",
-  desc: "قاموس الفكيكه.",
-  url: "./قاموس الفكيكه.html",
-  date: 20260718,
-  popular: 100,
-},
-    ];
+  {
+    title: "قاموس الفكيكه",
+    icon: "📖",
+    cat: "إنجليزي",
+    grade: "2sec",
+    desc: "قاموس الفكيكه.",
+    url: "./قاموس الفكيكه.html",
+    date: 20260718,
+    popular: 100,
+  }
 
-    let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+];
 
-function toggleFavorite(title){
-    if(favorites.includes(title)){
-        favorites = favorites.filter(t => t !== title);
-    }else{
-        favorites.push(title);
-    }
+let favorites =
+  JSON.parse(
+    localStorage.getItem("libraryFavoritesV2") || "[]"
+  );
 
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-    applySort();
-}
-let currentFilter = "all",
-    currentSort = "popular",
-    isDarkMode = true,
-    currentGrade = "2sec";
+let currentFilter = "all";
+let currentSort = "popular";
+let currentTheme = "dark";
 
-// تفعيل الوضع الداكن افتراضيًا عند فتح المكتبة.
-document.body.classList.remove("light-mode");
+const categories = [
+  ["all","📚 الكل"],
+  ["لغة عربية","📖 اللغة العربية"],
+  ["مواد شرعية","🕌 مواد شرعية"],
+  ["تاريخ","🏛️ التاريخ"],
+  ["إنجليزي","🇬🇧 الإنجليزي"],
+  ["رياضيات","📐 الرياضيات"],
+  ["برمجة","💻 البرمجة"],
+  ["فيزياء","⚛️ الفيزياء"],
+  ["امتحانات","📝 الامتحانات"],
+  ["كورسات","🎓 الكورسات"],
+  ["favorites","❤️ المفضلة"]
+];
 
-function switchGrade(grade) {
-  currentGrade = grade;
-  document.querySelectorAll(".grade-btn").forEach((btn) => {
-    const isActive = btn.dataset.grade === grade;
-    btn.style.backgroundColor = isActive
-      ? isDarkMode
-        ? "#f0c040"
-        : "#d97706"
-      : isDarkMode
-        ? "#1e293b"
-        : "#e2e8f0";
-    btn.style.color = isActive
-      ? isDarkMode
-        ? "#0f172a"
-        : "#ffffff"
-      : isDarkMode
-        ? "#94a3b8"
-        : "#64748b";
-    btn.classList.toggle("active", isActive);
-  });
-
-  const gradeName = {
-    "2sec": "ثانية ثانوي",
-  };
-
-  document.getElementById("main-title").textContent =
-    `مكتبة ${gradeName[grade]}`;
-
-  applySort();
+function isDrive(url){
+  return /drive\.google\.com/.test(url || "");
 }
 
-function handleSearch() {
+function getDriveId(url){
+  const m = (url || "").match(/\/d\/([^/]+)/);
+  return m ? m[1] : null;
+}
 
-  const searchTerm = document
-    .getElementById("search-input")
-    .value
-    .toLowerCase();
+function getDownloadUrl(url){
+  const id = getDriveId(url);
+  return id
+    ? `https://drive.google.com/uc?export=download&id=${id}`
+    : url;
+}
 
-  let filtered;
+function safeText(s){
+  return String(s ?? "").replace(
+    /[<>&"']/g,
+    c => ({
+      "<":"&lt;",
+      ">":"&gt;",
+      "&":"&amp;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c])
+  );
+}
+
+function buildFilters(){
+
+  const el =
+    document.getElementById("filter-scroll");
+
+  el.innerHTML =
+    categories
+      .map(
+        ([key,label]) =>
+          `<button
+             class="filter-btn ${key===currentFilter ? "active" : ""}"
+             onclick="filterBooks('${key}')"
+           >
+             ${label}
+           </button>`
+      )
+      .join("");
+
+}
+
+function getFilteredBooks(){
+
+  const term =
+    document
+      .getElementById("search-input")
+      .value
+      .trim()
+      .toLowerCase();
+
+  let data =
+    books.filter(
+      b => b.grade === "2sec"
+    );
 
   if(currentFilter === "favorites"){
 
-    filtered = books.filter(book =>
-      favorites.includes(book.title) &&
-      book.grade === currentGrade
-    );
+    data =
+      data.filter(
+        b => favorites.includes(b.title)
+      );
 
-  }else if(currentFilter === "all"){
+  }else if(currentFilter !== "all"){
 
-    filtered = books.filter(book =>
-      book.grade === currentGrade
-    );
+    data =
+      data.filter(
+        b => b.cat === currentFilter
+      );
 
-  }else{
+  }
 
-    filtered = books.filter(book =>
-      book.cat === currentFilter &&
-      book.grade === currentGrade
+  if(term){
+
+    data =
+      data.filter(
+        b =>
+          [
+            b.title,
+            b.desc,
+            b.cat
+          ].some(
+            v =>
+              String(v || "")
+                .toLowerCase()
+                .includes(term)
+          )
+      );
+
+  }
+
+  return data;
+}
+
+function sortData(data){
+
+  const copy = [...data];
+
+  if(currentSort === "name"){
+
+    copy.sort(
+      (a,b) =>
+        a.title.localeCompare(
+          b.title,
+          "ar"
+        )
     );
 
   }
 
-  filtered = filtered.filter(book =>
-    book.title.toLowerCase().includes(searchTerm) ||
-    book.desc.toLowerCase().includes(searchTerm) ||
-    book.cat.toLowerCase().includes(searchTerm)
-  );
+  if(currentSort === "newest"){
 
-  applyCurrentSort(filtered);
+    copy.sort(
+      (a,b) =>
+        (b.date || 0) -
+        (a.date || 0)
+    );
 
+  }
+
+  if(currentSort === "popular"){
+
+    copy.sort(
+      (a,b) =>
+        (b.popular || 0) -
+        (a.popular || 0) ||
+        (b.date || 0) -
+        (a.date || 0)
+    );
+
+  }
+
+  return copy;
 }
 
-function sortBooks(type) {
+function sortBooks(type){
+
   currentSort = type;
-  updateSortButtons();
-  applySort();
-}
 
-function updateSortButtons() {
-  document.querySelectorAll(".sort-badge").forEach((btn) => {
-    const isActive = btn.dataset.sort === currentSort;
-    btn.style.backgroundColor = isActive
-      ? isDarkMode
-        ? "#f0c040"
-        : "#d97706"
-      : isDarkMode
-        ? "#1e293b"
-        : "#e2e8f0";
-
-    btn.style.color = isActive
-      ? isDarkMode
-        ? "#0f172a"
-        : "#ffffff"
-      : isDarkMode
-        ? "#94a3b8"
-        : "#64748b";
-  });
-}
-
-function applySort() {
-
-  let filtered;
-
-  if(currentFilter === "favorites"){
-
-    filtered = books.filter(book =>
-      favorites.includes(book.title) &&
-      book.grade === currentGrade
+  document
+    .querySelectorAll(".sort-btn")
+    .forEach(
+      b =>
+        b.classList.toggle(
+          "active",
+          b.dataset.sort === type
+        )
     );
 
-  }else if(currentFilter === "all"){
-
-    filtered = books.filter(book =>
-      book.grade === currentGrade
-    );
-
-  }else{
-
-    filtered = books.filter(book =>
-      book.cat === currentFilter &&
-      book.grade === currentGrade
-    );
-
-  }
-
-  const searchTerm = document
-    .getElementById("search-input")
-    .value
-    .toLowerCase();
-
-  filtered = filtered.filter(book =>
-    book.title.toLowerCase().includes(searchTerm) ||
-    book.desc.toLowerCase().includes(searchTerm) ||
-    book.cat.toLowerCase().includes(searchTerm)
-  );
-
-  applyCurrentSort(filtered);
+  renderBooks();
 
 }
 
-function applyCurrentSort(filtered) {
-  if (currentSort === "name")
-    filtered.sort((a, b) => a.title.localeCompare(b.title, "ar"));
-  else if (currentSort === "newest")
-    filtered.sort((a, b) => b.date - a.date);
-  else if (currentSort === "popular")
-    filtered.sort((a, b) => b.popular - a.popular);
-
-  renderBooks(filtered);
-}
-
-function toggleTheme() {
-  isDarkMode = !isDarkMode;
-
-  const app = document.getElementById("app");
-  const header = document.getElementById("header");
-  const btn = document.getElementById("themeToggle");
-
-  // الكلاس هو المسؤول عن تغيير ألوان العناصر التي تستخدم !important في التصميم.
-  document.body.classList.toggle("light-mode", !isDarkMode);
-
-  if (isDarkMode) {
-    header.style.background =
-      "linear-gradient(135deg,#1e293b 0%,#0f172a 100%)";
-    app.style.backgroundColor = "#0f172a";
-    btn.textContent = "🌙 وضع ليلي";
-    btn.style.backgroundColor = "#1e293b";
-    btn.style.color = "#f0c040";
-  } else {
-    header.style.background =
-      "linear-gradient(135deg,#fde68a 0%,#ffffff 100%)";
-    app.style.backgroundColor = "#f8fafc";
-    btn.textContent = "☀️ وضع نهاري";
-    btn.style.backgroundColor = "#ffffff";
-    btn.style.color = "#d97706";
-  }
-
-  updateSearchStyles();
-  updateSortButtons();
-  applySort();
-}
-
-      function updateSearchStyles() {
-        const input = document.getElementById("search-input");
-        if (isDarkMode) {
-          input.style.backgroundColor = "#1e293b";
-          input.style.color = "#f0c040";
-        } else {
-          input.style.backgroundColor = "#ffffff";
-          input.style.color = "#d97706";
-        }
-      }
-
-function renderBooks(filtered) {
-
-    const grid = document.getElementById("books-grid");
-    grid.innerHTML = "";
-
-    const colors = {
-        "لغة عربية":"#7f1d1d",
-        "مواد شرعية":"#14532d",
-        "تاريخ":"#78350f",
-        "إنجليزي":"#1e3a8a",
-        "رياضيات":"#581c87",
-        "فيزياء":"#164e63",
-        "البرمجة":"#134e4a",
-        "امتحانات":"#831843"
-    };
-
-    const textColor = isDarkMode ? "#94a3b8" : "#64748b";
-    const titleColor = isDarkMode ? "#f0c040" : "#d97706";
-    const tagBg = isDarkMode ? "#0f172a" : "#f1f5f9";
-
-    filtered.forEach((book,i)=>{
-
-        const card=document.createElement("div");
-
-        card.className="book-card animate-card rounded-2xl p-5 flex flex-col";
-
-        const cardColor=isDarkMode
-            ? (colors[book.cat] || "#1e293b")
-            : "#ffffff";
-
-        card.style.cssText=`
-            background:${cardColor};
-            animation-delay:${i*0.07}s;
-            position:relative;
-        `;
-
-        const fav = favorites.includes(book.title);
-
-        card.innerHTML=`
-
-<button
-onclick="toggleFavorite('${book.title.replace(/'/g,"\\'")}')"
-style="
-position:absolute;
-top:15px;
-left:15px;
-background:none;
-border:none;
-font-size:26px;
-cursor:pointer;
-transition:.3s;
-">
-${fav ? "❤️" : "🤍"}
-</button>
-
-<div class="text-4xl mb-3">${book.icon}</div>
-
-<h3 class="text-lg font-bold mb-1"
-style="color:${titleColor}">
-${book.title}
-</h3>
-
-<span
-class="inline-block text-xs px-2 py-1 rounded-full mb-3 w-fit font-semibold"
-style="background:${tagBg};color:${textColor}">
-${book.cat}
-</span>
-
-<p class="text-sm mb-4 flex-1"
-style="color:${textColor}">
-${book.desc}
-</p>
-
-<div class="flex gap-2">
-
-<a
-href="${book.url}"
-target="_blank"
-class="download-btn flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold"
-style="background:${titleColor};color:${isDarkMode?"#0f172a":"#fff"}">
-
-<i
-data-lucide="${
-book.cat==="كورسات" ||
-book.cat==="امتحانات"
-?
-"external-link"
-:
-"download"
-}"
-style="width:18px;height:18px">
-</i>
-
-${
-book.cat==="لغة عربية" ||
-book.cat==="إنجليزي" ||
-book.cat==="رياضيات" ||
-book.cat==="فيزياء" ||
-book.cat==="مواد شرعية" ||
-book.cat==="تاريخ" ||
-book.cat==="برمجة"
-?
-"تحميل"
-:
-"فتح"
-}
-
-</a>
-
-</div>
-`;
-
-        grid.appendChild(card);
-
-    });
-
-    if(filtered.length===0){
-
-        const searchValue=document.getElementById("search-input").value;
-
-        grid.innerHTML=`
-
-<div class="col-span-full text-center py-12">
-
-<div style="font-size:70px">📚</div>
-
-<h2 style="color:${titleColor};font-size:24px;margin:15px 0">
-لم نعثر على هذا الكتاب
-</h2>
-
-<p style="color:${textColor};margin-bottom:20px">
-سنقوم بإضافته قريبًا بإذن الله.
-</p>
-
-<a
-href="https://wa.me/201500492203?text=${encodeURIComponent(
-"السلام عليكم، أريد إضافة هذا الكتاب إلى المكتبة:\n\n"+searchValue
-)}"
-
-target="_blank"
-
-style="
-display:inline-flex;
-align-items:center;
-gap:8px;
-background:#25D366;
-color:#fff;
-padding:14px 24px;
-border-radius:999px;
-text-decoration:none;
-font-weight:bold;
-">
-
-💬 كلم الدعم لإضافة الكتاب
-
-</a>
-
-</div>
-
-`;
-
-        return;
-
-    }
-
-    lucide.createIcons();
-
-}
-
-function filterBooks(cat) {
+function filterBooks(cat){
 
   currentFilter = cat;
 
-  document.querySelectorAll(".filter-btn").forEach((btn) => {
+  buildFilters();
 
-    const isActive = btn.dataset.filter === cat;
-
-    const activeColor = isDarkMode ? "#f0c040" : "#d97706";
-    const inactiveColor = isDarkMode ? "#1e293b" : "#e2e8f0";
-
-    btn.style.backgroundColor = isActive
-      ? activeColor
-      : inactiveColor;
-
-    btn.style.color = isActive
-      ? (isDarkMode ? "#0f172a" : "#ffffff")
-      : (isDarkMode ? "#94a3b8" : "#64748b");
-
-    btn.classList.toggle("active", isActive);
-
-  });
-
-  applySort();
+  renderBooks();
 
 }
 
-      const defaultConfig = {
-        library_title: "مكتبة تانية بكالوريا ",
-        subtitle: "الترم الأول – كل الكتب في مكان واحد 🚀",
-        search_placeholder: "ابحث عن الكتاب...",
-        empty_message: "لا توجد كتب تطابق البحث",
-        background_color: "#0f172a",
-        surface_color: "#1e293b",
-        text_color: "#94a3b8",
-        accent_color: "#f0c040",
-        font_family: "Noto Kufi Arabic",
-        font_size: 16,
-      };
+function handleSearch(){
 
-      function applyConfig(config) {
-        const font = config.font_family || defaultConfig.font_family;
-        const fs = config.font_size || defaultConfig.font_size;
-        document.getElementById("main-title").textContent =
-          config.library_title || defaultConfig.library_title;
-        document.getElementById("main-title").style.fontFamily =
-          `${font}, sans-serif`;
-        document.getElementById("main-title").style.fontSize = `${fs * 2}px`;
-        document.getElementById("main-subtitle").textContent =
-          config.subtitle || defaultConfig.subtitle;
-        document.getElementById("main-subtitle").style.fontFamily =
-          `${font}, sans-serif`;
-        document.getElementById("main-subtitle").style.fontSize = `${fs}px`;
-        document.getElementById("search-input").placeholder =
-          config.search_placeholder || defaultConfig.search_placeholder;
-      }
+  renderBooks();
 
-      if (window.elementSdk) {
-        window.elementSdk.init({
-          defaultConfig,
-          onConfigChange: async (config) => {
-            applyConfig(config);
-          },
-          mapToCapabilities: (config) => ({
-            recolorables: [
-              {
-                get: () =>
-                  config.background_color || defaultConfig.background_color,
-                set: (v) => {
-                  config.background_color = v;
-                  window.elementSdk.setConfig({ background_color: v });
-                },
-              },
-              {
-                get: () => config.surface_color || defaultConfig.surface_color,
-                set: (v) => {
-                  config.surface_color = v;
-                  window.elementSdk.setConfig({ surface_color: v });
-                },
-              },
-              {
-                get: () => config.text_color || defaultConfig.text_color,
-                set: (v) => {
-                  config.text_color = v;
-                  window.elementSdk.setConfig({ text_color: v });
-                },
-              },
-              {
-                get: () => config.accent_color || defaultConfig.accent_color,
-                set: (v) => {
-                  config.accent_color = v;
-                  window.elementSdk.setConfig({ accent_color: v });
-                },
-              },
-            ],
-            borderables: [],
-            fontEditable: {
-              get: () => config.font_family || defaultConfig.font_family,
-              set: (v) => {
-                config.font_family = v;
-                window.elementSdk.setConfig({ font_family: v });
-              },
-            },
-            fontSizeable: {
-              get: () => config.font_size || defaultConfig.font_size,
-              set: (v) => {
-                config.font_size = v;
-                window.elementSdk.setConfig({ font_size: v });
-              },
-            },
-          }),
-          mapToEditPanelValues: (config) =>
-            new Map([
-              [
-                "library_title",
-                config.library_title || defaultConfig.library_title,
-              ],
-              ["subtitle", config.subtitle || defaultConfig.subtitle],
-              [
-                "search_placeholder",
-                config.search_placeholder || defaultConfig.search_placeholder,
-              ],
-              [
-                "empty_message",
-                config.empty_message || defaultConfig.empty_message,
-              ],
-            ]),
-        });
-      }
+}
 
-      renderBooks(books);
-      sortBooks("popular");
-      lucide.createIcons();
-      (function () {
-        function c() {
-          var b = a.contentDocument || a.contentWindow.document;
-          if (b) {
-            var d = b.createElement("script");
-            d.innerHTML =
-              "window.__CF$cv$params={r:'9e6cb15b544ca470',t:'MTc3NTI2Nzc0Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-            b.getElementsByTagName("head")[0].appendChild(d);
-          }
-        }
-        if (document.body) {
-          var a = document.createElement("iframe");
-          a.height = 1;
-          a.width = 1;
-          a.style.position = "absolute";
-          a.style.top = 0;
-          a.style.left = 0;
-          a.style.border = "none";
-          a.style.visibility = "hidden";
-          document.body.appendChild(a);
-          if ("loading" !== document.readyState) c();
-          else if (window.addEventListener)
-            document.addEventListener("DOMContentLoaded", c);
-          else {
-            var e = document.onreadystatechange || function () {};
-            document.onreadystatechange = function (b) {
-              e(b);
-              "loading" !== document.readyState &&
-                ((document.onreadystatechange = e), c());
-            };
-          }
-        }
-      })();
+function toggleFavorite(title){
 
-const scrollBtn = document.getElementById("scrollTopBtn");
-const app = document.getElementById("app");
+  if(
+    favorites.includes(title)
+  ){
 
-app.addEventListener("scroll", () => {
-  if (app.scrollTop > 100) {
-    scrollBtn.style.display = "block";
-  } else {
-    scrollBtn.style.display = "none";
+    favorites =
+      favorites.filter(
+        t => t !== title
+      );
+
+  }else{
+
+    favorites.push(title);
+
   }
-});
 
-function scrollToTop() {
-  app.scrollTo({
-    top: 0,
-    behavior: "smooth",
-  });
-}
+  localStorage.setItem(
+    "libraryFavoritesV2",
+    JSON.stringify(favorites)
+  );
 
-let menuOpened = false;
-
-function toggleMenu() {
-
-    if (menuOpened) {
-        closeMenu();
-    } else {
-        openMenu();
-    }
+  renderBooks();
+  renderFeatured();
 
 }
 
-function openMenu() {
+function renderBooks(){
 
-    menuOpened = true;
+  const data =
+    sortData(
+      getFilteredBooks()
+    );
 
-    document.getElementById("sideMenu").classList.add("open");
-    document.getElementById("menuOverlay").style.display = "block";
+  const grid =
+    document.getElementById(
+      "books-grid"
+    );
 
-    document.getElementById("menuBtn").innerHTML = "✕";
+  document.getElementById(
+    "resultsCount"
+  ).textContent =
+    `${data.length} نتيجة`;
+
+  if(!data.length){
+
+    grid.innerHTML = `
+      <div class="empty-state">
+
+        <div class="empty-icon">
+          🔎
+        </div>
+
+        <h3
+          style="
+            color:#f4cd65;
+            font-size:20px;
+            margin-bottom:8px
+          "
+        >
+          لا توجد نتائج مطابقة
+        </h3>
+
+        <p>
+          جرّب كلمة بحث أخرى أو اختر تصنيفًا مختلفًا.
+        </p>
+
+      </div>
+    `;
+
+    return;
+  }
+
+  grid.innerHTML =
+    data
+      .map(
+        (book,index) => {
+
+          const fav =
+            favorites.includes(
+              book.title
+            );
+
+          const drive =
+            isDrive(book.url);
+
+          const actionText =
+            (
+              book.cat === "كورسات" ||
+              book.cat === "امتحانات"
+            )
+            ? "فتح"
+            : "عرض";
+
+          const downloadPart =
+            drive
+              ? `
+                <a
+                  class="book-action secondary-action"
+                  href="${safeText(
+                    getDownloadUrl(
+                      book.url
+                    )
+                  )}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  ⬇ تحميل
+                </a>
+              `
+              : "";
+
+          return `
+            <article
+              class="book-card"
+              style="
+                animation-delay:
+                  ${Math.min(
+                    index * 0.03,
+                    0.3
+                  )}s
+              "
+            >
+
+              <div class="book-top">
+
+                <div class="book-icon">
+                  ${book.icon || "📚"}
+                </div>
+
+                <button
+                  class="favorite-btn"
+                  onclick="
+                    event.stopPropagation();
+                    toggleFavorite(
+                      ${JSON.stringify(
+                        book.title
+                      )}
+                    )
+                  "
+                  aria-label="المفضلة"
+                >
+                  ${fav ? "❤️" : "🤍"}
+                </button>
+
+              </div>
+
+              <h4>
+                ${safeText(book.title)}
+              </h4>
+
+              <span class="book-tag">
+                ${safeText(
+                  book.cat || "محتوى"
+                )}
+              </span>
+
+              <p class="book-desc">
+                ${safeText(
+                  book.desc ||
+                  "محتوى تعليمي داخل المكتبة."
+                )}
+              </p>
+
+              <div class="book-actions">
+
+                <button
+                  class="book-action primary-action"
+                  onclick="
+                    openBookDetails(
+                      ${JSON.stringify(
+                        book.title
+                      )}
+                    )
+                  "
+                >
+                  📖 تفاصيل
+                </button>
+
+                <a
+                  class="book-action secondary-action"
+                  href="${safeText(
+                    book.url
+                  )}"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  ↗ ${actionText}
+                </a>
+
+                ${downloadPart}
+
+              </div>
+
+            </article>
+          `;
+
+        }
+      )
+      .join("");
+
+  lucide.createIcons();
 
 }
 
-function closeMenu() {
+function renderMiniBook(book){
 
-    menuOpened = false;
+  const el =
+    document.createElement(
+      "article"
+    );
 
-    document.getElementById("sideMenu").classList.remove("open");
-    document.getElementById("menuOverlay").style.display = "none";
+  el.className =
+    "mini-book";
 
-    document.getElementById("menuBtn").innerHTML = "☰";
+  el.onclick =
+    () =>
+      openBookDetails(
+        book.title
+      );
 
-}
+  el.innerHTML = `
+    <div class="mini-icon">
+      ${book.icon || "📚"}
+    </div>
 
-// شاشة التحميل
+    <h4>
+      ${safeText(
+        book.title
+      )}
+    </h4>
 
-window.addEventListener("load", () => {
+    <p>
+      ${safeText(
+        book.desc || ""
+      )}
+    </p>
 
-    setTimeout(() => {
+    <span class="mini-meta">
+      ${safeText(
+        book.cat || "محتوى"
+      )}
+    </span>
+  `;
 
-        const loader = document.getElementById("loader");
-
-        loader.style.opacity = "0";
-
-        loader.style.visibility = "hidden";
-
-    }, 1800);
-
-});
-
-/*==============================
-عداد المحتويات
-==============================*/
-
-function updateLibraryStats(){
-
-    const booksOnly =
-        books.filter(item =>
-            item.cat !== "امتحانات" &&
-            item.cat !== "كورسات" &&
-            item.cat !== "مذكرات"
-        ).length;
-
-    const exams =
-        books.filter(item =>
-            item.cat === "امتحانات"
-        ).length;
-
-    const courses =
-        books.filter(item =>
-            item.cat === "كورسات"
-        ).length;
-
-    const notes =
-        books.filter(item =>
-            item.cat === "مذكرات"
-        ).length;
-
-    document.getElementById("booksCount").textContent = booksOnly;
-    document.getElementById("examCount").textContent = exams;
-    document.getElementById("courseCount").textContent = courses;
-    document.getElementById("notesCount").textContent = notes;
+  return el;
 
 }
 
-updateLibraryStats();
+function renderFeatured(){
 
-/* ===========================
-   نسبة اكتمال المكتبة
-=========================== */
+  const latest =
+    document.getElementById(
+      "latest-grid"
+    );
 
-const libraryProgress = 52; // غيرها لأي نسبة
+  const popular =
+    document.getElementById(
+      "popular-grid"
+    );
 
-window.addEventListener("load", () => {
+  const base =
+    books.filter(
+      b => b.grade === "2sec"
+    );
 
-    document.getElementById("progressPercent").textContent =
-        libraryProgress + "%";
+  latest.innerHTML = "";
+  popular.innerHTML = "";
 
-    document.getElementById("progressFill").style.width =
-        libraryProgress + "%";
+  [...base]
+    .sort(
+      (a,b) =>
+        (b.date || 0) -
+        (a.date || 0)
+    )
+    .slice(0,6)
+    .forEach(
+      b =>
+        latest.appendChild(
+          renderMiniBook(b)
+        )
+    );
 
-});
-
-function shareLibrary(){
-
-    const shareData = {
-        title: "مكتبة الثانوية العامة",
-        text: "📚 جميع كتب الثانوية العامة والامتحانات والكورسات مجانًا.",
-        url: "https://zadalmrfh-create.github.io/LibraryThe-Distinguished/"
-    };
-
-    if(navigator.share){
-        navigator.share(shareData);
-    }else{
-        navigator.clipboard.writeText(shareData.url);
-        alert("✅ تم نسخ رابط المكتبة.");
-    }
-
-}
-
-function toggleAbout(){
-
-    const about = document.getElementById("aboutLibrary");
-
-    if(about.style.display === "none" || about.style.display === ""){
-
-        about.style.display = "block";
-
-    }else{
-
-        about.style.display = "none";
-
-    }
-
-}
-
-function openSuggestBook(){
-
-    document.getElementById("suggestModal").style.display="block";
-
-}
-
-function closeSuggestBook(){
-
-    document.getElementById("suggestModal").style.display="none";
-
-}
-
-function sendSuggestion(){
-
-    const book=document.getElementById("bookSuggestion").value.trim();
-
-    if(book===""){
-
-        alert("اكتب اسم الكتاب أولاً.");
-
-        return;
-
-    }
-
-    const message=
-`السلام عليكم،
-
-أقترح إضافة هذا الكتاب إلى المكتبة:
-
-📚 ${book}`;
-
-    window.open(
-        "https://wa.me/201500492203?text="+encodeURIComponent(message),
-        "_blank"
+  [...base]
+    .sort(
+      (a,b) =>
+        (b.popular || 0) -
+        (a.popular || 0) ||
+        (b.date || 0) -
+        (a.date || 0)
+    )
+    .slice(0,6)
+    .forEach(
+      b =>
+        popular.appendChild(
+          renderMiniBook(b)
+        )
     );
 
 }
 
-document.querySelectorAll(".faq-question").forEach(btn=>{
+function updateLibraryStats(){
 
-btn.onclick=function(){
+  const items =
+    books.filter(
+      b => b.grade === "2sec"
+    );
 
-const item=this.parentElement;
+  document.getElementById(
+    "booksCount"
+  ).textContent =
+    items.filter(
+      b =>
+        ![
+          "امتحانات",
+          "كورسات",
+          "مذكرات"
+        ].includes(b.cat)
+    ).length;
 
-document.querySelectorAll(".faq-item").forEach(f=>{
+  document.getElementById(
+    "examCount"
+  ).textContent =
+    items.filter(
+      b =>
+        b.cat === "امتحانات"
+    ).length;
 
-if(f!==item){
-f.classList.remove("active");
+  document.getElementById(
+    "courseCount"
+  ).textContent =
+    items.filter(
+      b =>
+        b.cat === "كورسات"
+    ).length;
+
+  document.getElementById(
+    "notesCount"
+  ).textContent =
+    items.filter(
+      b =>
+        b.cat === "مذكرات"
+    ).length;
+
 }
 
-});
+function openBookDetails(title){
 
-item.classList.toggle("active");
+  const book =
+    books.find(
+      b => b.title === title
+    );
 
-};
+  if(!book) return;
 
-});
+  document.getElementById(
+    "detailsIcon"
+  ).textContent =
+    book.icon || "📚";
+
+  document.getElementById(
+    "detailsTitle"
+  ).textContent =
+    book.title;
+
+  document.getElementById(
+    "detailsCat"
+  ).textContent =
+    book.cat ||
+    "محتوى تعليمي";
+
+  document.getElementById(
+    "detailsDesc"
+  ).textContent =
+    book.desc ||
+    "محتوى تعليمي داخل المكتبة.";
+
+  document.getElementById(
+    "detailsOpenBtn"
+  ).href =
+    book.url;
+
+  const favBtn =
+    document.getElementById(
+      "detailsFavBtn"
+    );
+
+  favBtn.textContent =
+    favorites.includes(
+      book.title
+    )
+      ? "❤️ إزالة من المفضلة"
+      : "🤍 إضافة للمفضلة";
+
+  favBtn.onclick =
+    () => {
+
+      toggleFavorite(
+        book.title
+      );
+
+      favBtn.textContent =
+        favorites.includes(
+          book.title
+        )
+          ? "❤️ إزالة من المفضلة"
+          : "🤍 إضافة للمفضلة";
+
+    };
+
+  document
+    .getElementById(
+      "bookDetailsModal"
+    )
+    .classList.add("open");
+
+  document.body.style.overflow =
+    "hidden";
+
+}
+
+function closeBookDetails(){
+
+  document
+    .getElementById(
+      "bookDetailsModal"
+    )
+    .classList.remove("open");
+
+  document.body.style.overflow =
+    "";
+
+}
+
+function toggleTheme(){
+
+  currentTheme =
+    currentTheme === "dark"
+      ? "light"
+      : "dark";
+
+  document.body.classList.toggle(
+    "light-ui",
+    currentTheme === "light"
+  );
+
+}
+
+function shareLibrary(){
+
+  const data = {
+    title:
+      "مكتبة تانية بكالوريا",
+
+    text:
+      "📚 مكتبة تانية بكالوريا",
+
+    url:
+      location.href
+  };
+
+  if(
+    navigator.share
+  ){
+
+    navigator
+      .share(data)
+      .catch(
+        () => {}
+      );
+
+  }else{
+
+    navigator
+      .clipboard
+      ?.writeText(
+        location.href
+      )
+      .then(
+        () =>
+          alert(
+            "✅ تم نسخ رابط المكتبة."
+          )
+      );
+
+  }
+
+}
+
+function scrollToBooks(){
+
+  document
+    .getElementById(
+      "allBooks"
+    )
+    ?.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+}
+
+function scrollToTop(){
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
 
 function openLibrary(){
 
-    document.getElementById("homePage").style.display="none";
+  document.getElementById(
+    "homePage"
+  ).style.display =
+    "none";
 
-    document.getElementById("libraryPage").style.display="block";
+  document.getElementById(
+    "libraryPage"
+  ).style.display =
+    "block";
 
-    document.getElementById("menuBtn").style.display = "flex";
+  renderFeatured();
+  renderBooks();
+
+  window.scrollTo(
+    0,
+    0
+  );
+
 }
 
-    </script>
+function goHome(){
 
+  closeMenu();
 
+  document.getElementById(
+    "libraryPage"
+  ).style.display =
+    "none";
 
-<div id="menuOverlay" class="menu-overlay" onclick="closeMenu()"></div>
+  document.getElementById(
+    "homePage"
+  ).style.display =
+    "flex";
 
-<div id="sideMenu" class="side-menu">
+  window.scrollTo(
+    0,
+    0
+  );
 
-    <div class="menu-header">
-        📚 مكتبة تانية بكالوريا
-    </div>
+}
 
-    <a href="#" onclick="closeMenu()">
-        🏠 الرئيسية
-    </a>
+function toggleMenu(){
 
-    <a href="javascript:void(0)" onclick="toggleAbout()">
-        ℹ️ عن المكتبة
-    </a>
+  document
+    .getElementById(
+      "sideMenu"
+    )
+    .classList.toggle(
+      "open"
+    );
 
-    <a href="https://mhmdrmdan.yobader.com" target="_blank">
-        🎓 المنصة التعليمية
-    </a>
+  document
+    .getElementById(
+      "menuOverlay"
+    )
+    .style.display =
+      document
+        .getElementById(
+          "sideMenu"
+        )
+        .classList
+        .contains(
+          "open"
+        )
+        ? "block"
+        : "none";
 
-    <a href="https://wa.me/201500492203" target="_blank">
-        💬 الدعم الفني
-    </a>
+}
 
-    <a href="javascript:void(0)" onclick="openSuggestBook()">
-    📚 اقترح كتابًا
-</a>
+function closeMenu(){
 
-    <a href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V" target="_blank">
-        📢 قناة واتساب
-    </a>
+  document
+    .getElementById(
+      "sideMenu"
+    )
+    .classList.remove(
+      "open"
+    );
 
-    <a href="https://t.me/geniuses_youssef" target="_blank">
-        ✈️ تليجرام
-    </a>
+  document
+    .getElementById(
+      "menuOverlay"
+    )
+    .style.display =
+      "none";
 
-    <!-- قسم عن المكتبة -->
-    <div id="aboutLibrary" style="display:none" class="menu-info">
+}
 
-        <h3>📚 عن المكتبة</h3>
+window.addEventListener(
+  "scroll",
+  () => {
 
-        <p>📖 مكتبة مجانية لخدمة طلاب الثانوية العامة.</p>
+    document.getElementById(
+      "scrollTopBtn"
+    ).style.display =
+      window.scrollY > 420
+        ? "grid"
+        : "none";
 
-        <p>✅ جميع الكتب مجانية.</p>
+  }
+);
 
-        <p>✅ إضافة الكتب أولًا بأول.</p>
+document
+  .querySelectorAll(
+    ".faq-question"
+  )
+  .forEach(
+    btn =>
+      btn.addEventListener(
+        "click",
+        () => {
 
-        <p>✅ كورسات مجانية.</p>
+          const item =
+            btn.parentElement;
 
-        <p>✅ امتحانات إلكترونية.</p>
+          document
+            .querySelectorAll(
+              ".faq-item"
+            )
+            .forEach(
+              x => {
 
-        <p>✅ بحث سريع داخل المكتبة.</p>
+                if(x !== item){
+                  x.classList.remove(
+                    "active"
+                  );
+                }
 
-        <p>✅ تعمل على الهاتف والكمبيوتر.</p>
+              }
+            );
 
-        <p>✅ سيتم إضافة جميع كتب المنهج الرسمي قريبًا.</p>
+          item.classList.toggle(
+            "active"
+          );
 
-        <hr>
+        }
+      )
+  );
 
-        <p>
-            👨‍💻 تطوير وبرمجة<br>
-            <a href="https://maleksameh121-web.github.io/Personal-website/"
-               target="_blank"
-               style="color:#38bdf8;font-weight:bold">
-               مالك سامح
-            </a>
-        </p>
+document
+  .getElementById(
+    "bookDetailsModal"
+  )
+  .addEventListener(
+    "click",
+    e => {
 
-        <p>
-            🎓 برعاية وإشراف<br>
-            <span style="color:#f0c040;font-weight:bold">
-                محمد رمضان الحرباوي
-            </span>
-        </p>
+      if(
+        e.target.id ===
+        "bookDetailsModal"
+      ){
+        closeBookDetails();
+      }
 
-    </div>
+    }
+  );
 
-</div>
+document.addEventListener(
+  "keydown",
+  e => {
 
-<div id="suggestModal" class="suggest-modal">
+    if(
+      e.key === "Escape"
+    ){
 
-    <div class="suggest-box">
+      closeBookDetails();
+      closeMenu();
 
-        <span class="close-suggest" onclick="closeSuggestBook()">&times;</span>
+    }
 
-        <h2>📚 اقترح كتابًا</h2>
+  }
+);
 
-        <p>اكتب اسم الكتاب أو المذكرة التي تريد إضافتها.</p>
+buildFilters();
+updateLibraryStats();
+renderFeatured();
+renderBooks();
 
-        <input
-            id="bookSuggestion"
-            type="text"
-            placeholder="مثال: كتاب العمالقة 2027"
-        >
+lucide.createIcons();
 
-        <button onclick="sendSuggestion()">
-            إرسال الاقتراح
-        </button>
+</script>
 
-    </div>
-
-</div>
-  </body>
-</html>
+</body>
+  </html>
