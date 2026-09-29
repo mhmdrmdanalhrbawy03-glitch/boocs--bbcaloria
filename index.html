@@ -1,948 +1,4239 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
 <title>مكتبة تانية بكالوريا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg-gradient: linear-gradient(135deg, #090e17 0%, #111a28 50%, #0d1522 100%);
-  --panel-bg: rgba(255, 255, 255, 0.05);
-  --panel-border: rgba(255, 255, 255, 0.1);
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --gold-accent: #f59e0b;
-  --gold-hover: #d97706;
-  --accent-cyan: #06b6d4;
-  --accent-blue: #3b82f6;
-  --radius-lg: 16px;
-  --radius-md: 10px;
-  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+:root{--bg:#07111f;--bg2:#0b1728;--card:#12233a;--line:#29415f;--txt:#f8fafc;--muted:#9badc2;--gold:#f4cb59}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Cairo",Tahoma,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--txt);overflow-x:hidden;font-weight:600}
+body.light{--bg:#f2f6fa;--bg2:#e7edf5;--card:#fff;--line:#cbd7e5;--txt:#182235;--muted:#617087}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button{cursor:pointer}
+
+.home{
+min-height:100vh;
+display:grid;
+place-items:center;
+text-align:center;
+padding:18px;
+position:relative;
+overflow:hidden;
+isolation:isolate;
+background:
+radial-gradient(circle at 50% 35%,#173251aa 0%,#0d1f35 30%,#040b15 78%),
+linear-gradient(145deg,#020712,#10223a 52%,#060e1b)
 }
 
-body.light {
-  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
-  --panel-bg: rgba(0, 0, 0, 0.03);
-  --panel-border: rgba(0, 0, 0, 0.1);
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --gold-accent: #d97706;
-  --gold-hover: #b45309;
-  --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+#fireworks{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+pointer-events:none;
+z-index:1
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+.hero{
+width:min(920px,100%);
+position:relative;
+z-index:2
 }
 
-body {
-  background: var(--bg-gradient);
-  color: var(--text-main);
-  min-height: 100vh;
-  line-height: 1.6;
-  overflow-x: hidden;
+.badge,.pill,.tag,.new,.meta{
+display:inline-block;
+border-radius:999px
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--panel-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+.badge{
+padding:8px 13px;
+background:#ffffff0b;
+border:1px solid #f4cb5938;
+font-size:11px;
+font-weight:900;
+animation:float 3.5s ease-in-out infinite
 }
 
-body.light header {
-  background: rgba(255, 255, 255, 0.8);
+.scene{
+position:relative;
+width:min(420px,90vw);
+height:88px;
+margin:auto;
+display:flex;
+align-items:flex-end;
+justify-content:center
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-weight: 700;
-  font-size: 1.25rem;
-  color: var(--gold-accent);
+.orbit{
+position:absolute;
+bottom:12px;
+width:245px;
+height:58px;
+border:1px solid #f4cb5938;
+border-radius:50%;
+transform:rotateX(64deg);
+animation:orbit 10s linear infinite
 }
 
-.brand img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+.orbit:after{
+content:"";
+position:absolute;
+width:8px;
+height:8px;
+right:16%;
+top:-4px;
+border-radius:50%;
+background:var(--gold);
+box-shadow:0 0 15px var(--gold)
 }
 
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.scene-label{
+position:absolute;
+top:0;
+left:50%;
+transform:translateX(-50%);
+padding:5px 12px;
+border:1px solid #f4cb5944;
+border-radius:999px;
+background:#07111fe8;
+color:var(--gold);
+font-size:10px;
+font-weight:900;
+white-space:nowrap
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: transparent;
-  color: var(--text-main);
-  transition: var(--transition);
+.shelf{
+width:220px;
+height:56px;
+border-bottom:5px solid #d5a83e;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:5px;
+padding:0 10px 7px;
+filter:drop-shadow(0 12px 17px #0007)
 }
 
-.iconBtn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
+.scene-book{
+width:24px;
+border-radius:5px 5px 2px 2px;
+box-shadow:3px 5px 10px #0006;
+animation:book 3.3s ease-in-out infinite
 }
 
-.iconBtn:hover {
-  background: var(--gold-accent);
-  color: #000;
+.scene-book:nth-child(1){
+height:34px;
+background:#496789;
+transform:rotate(-8deg)
 }
 
-#home {
-  min-height: calc(100vh - 73px);
-  display: grid;
-  place-items: center;
-  padding: 2rem;
-  position: relative;
+.scene-book:nth-child(2){
+height:44px;
+background:#c79537;
+transform:rotate(-3deg);
+animation-delay:-.7s
 }
 
-.hero {
-  max-width: 800px;
-  text-align: center;
-  z-index: 2;
+.scene-book:nth-child(3){
+height:39px;
+background:#82424d;
+transform:rotate(2deg);
+animation-delay:-1.2s
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  background: linear-gradient(to right, var(--gold-accent), var(--accent-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.scene-book:nth-child(4){
+height:47px;
+background:#3b7257;
+transform:rotate(5deg);
+animation-delay:-1.7s
 }
 
-.hero p {
-  color: var(--text-muted);
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
+.scene-book:nth-child(5){
+height:36px;
+background:#637c9d;
+transform:rotate(8deg);
+animation-delay:-2.2s
 }
 
-.ctaBtn {
-  background: linear-gradient(135deg, var(--gold-accent), var(--gold-hover));
-  color: #000;
-  font-weight: 700;
-  padding: 0.875rem 2.5rem;
-  border-radius: 9999px;
-  font-size: 1.1rem;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+.logo{
+width:210px;
+height:210px;
+padding:7px;
+margin:16px auto;
+position:relative;
+border-radius:34px;
+background:linear-gradient(145deg,#f4cb5970,#ffffff12);
+box-shadow:
+0 26px 75px #0008,
+0 0 0 1px #f4cb5940,
+0 0 42px #f4cb5920;
+animation:float 5s ease-in-out infinite
 }
 
-.ctaBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.6);
+.logo:before{
+content:"";
+position:absolute;
+inset:-10px;
+border:1px solid #f4cb5922;
+border-radius:42px;
+box-shadow:
+0 0 0 8px #f4cb5906,
+0 0 35px #f4cb590d;
+animation:glow 4s ease-in-out infinite
 }
 
-#library {
-  display: none;
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+.logo:after{
+content:"";
+position:absolute;
+left:-45%;
+top:8%;
+width:25%;
+height:84%;
+background:linear-gradient(90deg,transparent,#fff8c83a,transparent);
+transform:skewX(-18deg) translateX(-160%);
+border-radius:999px;
+pointer-events:none;
+animation:shine 5s ease-in-out infinite;
+z-index:3
 }
 
-.searchBar {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
+.logo img{
+width:100%;
+height:100%;
+display:block;
+object-fit:contain;
+border-radius:27px;
+background:#fff;
+position:relative;
+z-index:2
 }
 
-.searchInput {
-  flex: 1;
-  min-width: 250px;
-  padding: 0.75rem 1.25rem;
-  border-radius: var(--radius-md);
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  color: var(--text-main);
-  outline: none;
+.title{
+margin:0;
+font-size:clamp(35px,6vw,62px);
+font-weight:900;
+animation:textGlow 4s ease-in-out infinite
 }
 
-.filters {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
+.lead{
+color:var(--muted);
+line-height:2;
+font-size:12px
 }
 
-.filter {
-  padding: 0.5rem 1.25rem;
-  border-radius: 9999px;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  white-space: nowrap;
+.pills{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:8px;
+margin:17px 0
 }
 
-.filter.active {
-  background: var(--gold-accent);
-  color: #000;
-  font-weight: 600;
+.pill{
+padding:8px 11px;
+background:#ffffff0b;
+border:1px solid #ffffff18;
+color:inherit;
+font-size:10px;
+font-weight:800;
+transition:.25s;
+animation:pill 5s ease-in-out infinite
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+.pill:hover{
+transform:translateY(-4px) scale(1.04);
+box-shadow:
+0 12px 25px #0005,
+0 0 18px #f4cb5926
 }
 
-.book {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--radius-lg);
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  position: relative;
-  box-shadow: var(--shadow);
+.pill:nth-child(2){animation-delay:-.7s}
+.pill:nth-child(3){animation-delay:-1.4s}
+.pill:nth-child(4){animation-delay:-2.1s}
+.pill:nth-child(5){animation-delay:-2.8s}
+
+.enter{
+width:min(350px,100%);
+padding:15px;
+border:0;
+border-radius:16px;
+background:linear-gradient(135deg,#f8dc73,#dfae38);
+color:#111827;
+font-weight:900;
+font-size:17px;
+box-shadow:0 18px 40px #f4cb593d;
+animation:pulse 3s ease-in-out infinite;
+position:relative;
+overflow:hidden
 }
 
-.book:hover {
-  transform: translateY(-4px);
-  border-color: var(--gold-accent);
+.enter:after{
+content:"";
+position:absolute;
+left:-75%;
+top:-30%;
+width:50%;
+height:160%;
+background:linear-gradient(90deg,transparent,#fff8,transparent);
+transform:skewX(-18deg);
+animation:buttonShine 3.8s ease-in-out infinite;
+pointer-events:none
 }
 
-.bookIcon {
-  font-size: 2.5rem;
+.note{
+margin-top:10px;
+color:#7f91a6;
+font-size:10px
 }
 
-.topline {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+#library{
+display:none;
+min-height:100vh
 }
 
-.favBtn {
-  font-size: 1.25rem;
+.header{
+position:sticky;
+top:0;
+z-index:40;
+background:#07111fee;
+backdrop-filter:blur(14px);
+border-bottom:1px solid #ffffff18;
+padding:10px 13px
 }
 
-.actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: auto;
+.head{
+width:min(1380px,100%);
+margin:auto;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+gap:10px;
+min-width:0
 }
 
-.action {
-  flex: 1;
-  padding: 0.5rem;
-  border-radius: var(--radius-md);
-  text-align: center;
-  text-decoration: none;
-  font-size: 0.9rem;
-  font-weight: 600;
+.tools{
+display:flex;
+gap:7px
 }
 
-.open {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  color: var(--text-main);
+.ib{
+width:43px;
+height:43px;
+border-radius:13px;
+border:1px solid var(--line);
+background:#102038;
+color:#fff
 }
 
-.download {
-  background: var(--gold-accent);
-  color: #000;
+.brand{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:9px;
+min-width:0
 }
 
-#fireworksCanvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
+.brand img{
+width:52px;
+height:52px;
+padding:3px;
+object-fit:contain;
+border-radius:15px;
+background:#fff
 }
 
-.menu {
-  position: fixed;
-  top: 0;
-  right: -300px;
-  width: 300px;
-  height: 100vh;
-  background: #0f172a;
-  z-index: 200;
-  transition: var(--transition);
-  padding: 2rem;
-  border-left: 1px solid var(--panel-border);
+.brand h2{
+margin:0;
+font-size:20px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis
 }
 
-.menu.open {
-  right: 0;
+.brand p{
+margin:2px 0;
+color:var(--muted);
+font-size:9px
 }
 
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  z-index: 150;
-  display: none;
+.news{
+background:#f2c84f;
+color:#111827;
+overflow:hidden;
+white-space:nowrap
 }
 
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  background: #0f172a;
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--panel-border);
-  z-index: 300;
-  width: 90%;
-  max-width: 500px;
-  opacity: 0;
-  pointer-events: none;
-  transition: var(--transition);
+.track{
+width:max-content;
+display:flex;
+animation:ticker 32s linear infinite;
+padding:9px 0;
+font-size:11px;
+font-weight:900
 }
 
-.modal.open {
-  opacity: 1;
-  pointer-events: all;
-  transform: translate(-50%, -50%) scale(1);
+.track span{
+padding:0 30px
 }
 
-.musicBtn.on {
-  color: var(--gold-accent);
+.track a{
+text-decoration:underline
 }
 
-.quickStats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+.wrap{
+width:min(1380px,100%);
+margin:auto;
+padding:18px 14px 80px
 }
 
-.statCard {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  text-align: center;
+.welcome small,.sectionHead small{
+font-size:10px;
+color:var(--gold);
+font-weight:900
 }
 
-.miniGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+.welcome h2{
+font-size:clamp(23px,3vw,33px);
+margin:5px 0
 }
 
-.mini {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  padding: 1rem;
-  border-radius: var(--radius-md);
-  cursor: pointer;
+.welcome p{
+color:var(--muted);
+font-size:11px;
+line-height:2
 }
 
-.seriesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+.controls,.stat,.mini,.book,.series,.faqItem{
+border:1px solid var(--line);
+background:linear-gradient(145deg,#14263e,#0f1b2d);
+border-radius:18px
 }
 
-.series {
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  padding: 1rem;
-  border-radius: var(--radius-md);
+body.light .controls,
+body.light .stat,
+body.light .mini,
+body.light .book,
+body.light .series,
+body.light .faqItem{
+background:var(--card)
 }
 
-.seriesActions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+.controls{
+padding:13px
 }
 
-.seriesAction {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-size: 0.8rem;
+.searchRow{
+display:grid;
+grid-template-columns:1fr auto;
+gap:9px
 }
 
-.seriesOpen { background: var(--panel-bg); color: var(--text-main); }
-.seriesDl { background: var(--gold-accent); color: #000; }
-
-.empty {
-  text-align: center;
-  padding: 3rem;
-  grid-column: 1 / -1;
+.search{
+position:relative;
+min-width:0
 }
 
-.emptyIcon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.search span{
+position:absolute;
+right:14px;
+top:15px
 }
 
-.faqItem {
-  margin-bottom: 1rem;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  border-radius: var(--radius-md);
-  overflow: hidden;
+.search input{
+width:100%;
+height:52px;
+border-radius:15px;
+border:1px solid var(--line);
+background:#0d192a;
+color:#fff;
+padding:0 44px 0 12px;
+outline:0
 }
 
-.question {
-  padding: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
+body.light .search input{
+background:#fff;
+color:var(--txt)
 }
 
-.answer {
-  padding: 0 1rem 1rem 1rem;
-  display: none;
-  color: var(--text-muted);
+.sort{
+display:flex;
+gap:7px;
+flex-wrap:wrap
 }
 
-.faqItem.active .answer {
-  display: block;
+.sortBtn,.filter{
+height:52px;
+padding:0 13px;
+border-radius:14px;
+border:1px solid var(--line);
+background:#0d192a;
+color:#9eb0c5;
+font-size:10px;
+font-weight:900;
+white-space:nowrap
 }
 
-#top {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  display: none;
+body.light .sortBtn,
+body.light .filter{
+background:#fff;
+color:#526276
+}
+
+.sortBtn.active,
+.filter.active{
+background:var(--gold);
+color:#111827;
+border-color:var(--gold)
+}
+
+.filters{
+display:flex;
+gap:8px;
+overflow:auto;
+padding-top:12px;
+scrollbar-width:none
+}
+
+.filters::-webkit-scrollbar{
+display:none
+}
+
+.filter{
+height:auto;
+padding:8px 12px;
+border-radius:999px
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,minmax(0,1fr));
+gap:11px;
+margin:18px 0 28px
+}
+
+.stat{
+padding:14px;
+display:flex;
+gap:10px;
+align-items:center;
+min-width:0
+}
+
+.statIcon{
+width:48px;
+height:48px;
+flex:0 0 48px;
+border-radius:15px;
+display:grid;
+place-items:center;
+background:#f4cb5912;
+font-size:22px
+}
+
+.num{
+font-size:23px;
+color:var(--gold);
+font-weight:900
+}
+
+.small{
+font-size:9px;
+color:var(--muted);
+margin-top:4px
+}
+
+.section{
+margin-bottom:30px
+}
+
+.sectionHead{
+display:flex;
+justify-content:space-between;
+align-items:end;
+gap:12px;
+margin-bottom:12px
+}
+
+.sectionHead h3{
+margin:5px 0 0;
+font-size:20px
+}
+
+.sectionBtn{
+padding:8px 11px;
+border-radius:11px;
+border:1px solid var(--line);
+background:#102038;
+color:var(--gold);
+font-size:10px;
+font-weight:900
+}
+
+.miniGrid{
+display:grid;
+grid-template-columns:repeat(4,minmax(0,1fr));
+gap:11px
+}
+
+.mini,.series{
+padding:14px;
+cursor:pointer;
+min-width:0;
+transition:.2s
+}
+
+.mini:hover,.series:hover,.book:hover{
+transform:translateY(-4px);
+border-color:#f4cb5980
+}
+
+.miniTop{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:8px
+}
+
+.miniIcon{
+font-size:26px;
+margin-bottom:7px
+}
+
+.mini h4,.series h4{
+font-size:12px;
+color:var(--gold);
+line-height:1.8;
+margin:5px 0;
+overflow-wrap:anywhere
+}
+
+.mini p,.series p{
+color:var(--muted);
+font-size:9px;
+line-height:1.8;
+overflow-wrap:anywhere
+}
+
+.tag{
+padding:4px 7px;
+background:#0a1524;
+color:#8fa3ba;
+font-size:8px
+}
+
+.new{
+padding:5px 8px;
+background:#173b2f;
+color:#baf5d9;
+border:1px solid #2d735b;
+font-size:8px;
+font-weight:900
+}
+
+.seriesGrid{
+display:grid;
+grid-template-columns:repeat(3,minmax(0,1fr));
+gap:11px
+}
+
+.seriesActions,.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:7px;
+margin-top:10px
+}
+
+.seriesAction,.action{
+height:42px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:900;
+text-align:center
+}
+
+.seriesOpen,.details{
+background:linear-gradient(135deg,#f6d56d,#dfad35);
+color:#111827
+}
+
+.seriesDl,.download{
+background:#123b30;
+color:#b8f5d7
+}
+
+.booksTitle{
+display:flex;
+justify-content:space-between;
+align-items:end;
+gap:10px;
+margin:35px 0 13px
+}
+
+.booksTitle h3{
+margin:5px 0 0;
+font-size:23px
+}
+
+.booksGrid{
+display:grid;
+grid-template-columns:repeat(3,minmax(0,1fr));
+gap:15px
+}
+
+.book{
+padding:17px;
+transition:.2s;
+min-width:0
+}
+
+.topline{
+display:flex;
+justify-content:space-between;
+align-items:flex-start;
+gap:8px
+}
+
+.bookIcon{
+width:57px;
+height:57px;
+border-radius:16px;
+display:grid;
+place-items:center;
+background:#f4cb5912;
+font-size:27px;
+flex:0 0 57px
+}
+
+.favBtn{
+width:40px;
+height:40px;
+border-radius:12px;
+border:1px solid var(--line);
+background:#101f34;
+color:#fff;
+font-size:19px;
+transition:.2s
+}
+
+.favBtn.is-fav{
+background:#3b1b25;
+border-color:#ff6680
+}
+
+.book h3{
+font-size:15px;
+color:var(--gold);
+line-height:1.8;
+margin:13px 0 5px;
+overflow-wrap:anywhere
+}
+
+.desc{
+min-height:50px;
+color:var(--muted);
+font-size:11px;
+line-height:2;
+display:-webkit-box;
+-webkit-line-clamp:3;
+-webkit-box-orient:vertical;
+overflow:hidden;
+overflow-wrap:anywhere
+}
+
+.action.open{
+background:#12243a;
+color:#dce5ef;
+border:1px solid var(--line)
+}
+
+body.light .action.open{
+background:#f8fafc;
+color:#526276
+}
+
+.download{
+grid-column:1/-1;
+border:1px solid #23644f
+}
+
+.empty{
+grid-column:1/-1;
+text-align:center;
+padding:50px;
+color:var(--muted)
+}
+
+.emptyIcon{
+font-size:52px
+}
+
+.faq{
+width:min(950px,100%);
+margin:50px auto 0
+}
+
+.faq h2{
+text-align:center;
+color:var(--gold);
+font-size:28px
+}
+
+.faqItem{
+margin-bottom:9px;
+overflow:hidden
+}
+
+.question{
+width:100%;
+display:flex;
+justify-content:space-between;
+gap:12px;
+background:none;
+border:0;
+padding:16px;
+color:var(--txt);
+font-size:11px;
+font-weight:900;
+text-align:right
+}
+
+.question span{
+font-size:22px;
+color:var(--gold)
+}
+
+.answer{
+display:none;
+padding:0 16px 16px;
+color:var(--muted);
+font-size:10px;
+line-height:2
+}
+
+.faqItem.active .answer{
+display:block
+}
+
+footer{
+text-align:center;
+border-top:1px solid #1e3048;
+padding:32px 14px 22px
+}
+
+.footerTitle{
+color:var(--gold);
+font-weight:900;
+font-size:20px
+}
+
+.footerText{
+color:var(--muted);
+font-size:10px;
+line-height:2;
+max-width:720px;
+margin:8px auto 18px
+}
+
+.footerLinks{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+gap:8px
+}
+
+.footerLinks a{
+padding:9px 11px;
+border-radius:11px;
+font-size:9px;
+font-weight:900
+}
+
+.w{background:#0d5131}
+.c{background:#123c2a}
+.t{background:#0e3a55}
+.p{background:#513908}
+
+.footerCredit{
+margin-top:20px;
+padding-top:16px;
+border-top:1px solid #1c2c43;
+color:#8394a8;
+font-size:9px
+}
+
+.footerCredit strong{
+color:var(--gold)
+}
+
+.developerBox{
+margin-top:14px;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+flex-wrap:wrap
+}
+
+.developerName{
+color:var(--gold);
+font-weight:900;
+font-size:11px
+}
+
+.developerBtn{
+border:1px solid #f4cb5966;
+background:#f4cb5912;
+color:var(--gold);
+padding:8px 14px;
+border-radius:999px;
+font-size:10px;
+font-weight:900
+}
+
+.floating{
+position:fixed;
+left:15px;
+right:15px;
+bottom:15px;
+z-index:9999;
+display:flex;
+justify-content:space-between;
+align-items:flex-end;
+pointer-events:none
+}
+
+.float{
+width:56px;
+height:56px;
+border-radius:50%;
+border:1px solid #ffffff22;
+display:grid;
+place-items:center;
+pointer-events:auto;
+box-shadow:0 10px 25px #0006;
+transition:.2s;
+padding:0
+}
+
+.float:hover{
+transform:translateY(-2px) scale(1.05)
+}
+
+.floatRight{
+display:flex;
+flex-direction:column;
+gap:9px;
+align-items:flex-end
+}
+
+.wa{
+background:#25d366;
+color:#fff;
+border:0
+}
+
+.up{
+background:#f0c040;
+color:#111827;
+border:0;
+display:none
+}
+
+.overlay{
+position:fixed;
+inset:0;
+background:#0009;
+display:none;
+z-index:200
+}
+
+.menu{
+position:fixed;
+top:0;
+right:-340px;
+width:min(330px,88vw);
+height:100vh;
+background:#0a1524;
+z-index:210;
+transition:right .25s;
+overflow:auto
+}
+
+.menu.open{
+right:0
+}
+
+.menuHead{
+padding:22px;
+text-align:center;
+color:var(--gold);
+font-weight:900;
+background:#122239
+}
+
+.menu>a{
+display:block;
+padding:15px 17px;
+border-bottom:1px solid #ffffff0d;
+font-size:12px;
+color:#d5e0eb
+}
+
+.menuInfo{
+margin:13px;
+padding:15px;
+border-radius:15px;
+background:#0f1d30;
+color:#99aabe;
+font-size:10px;
+line-height:2
+}
+
+.modal{
+position:fixed;
+inset:0;
+background:#000b;
+display:none;
+align-items:center;
+justify-content:center;
+padding:14px;
+z-index:300
+}
+
+.modal.open{
+display:flex
+}
+
+.modalBox{
+width:min(620px,100%);
+padding:22px;
+border-radius:22px;
+background:#152843;
+border:1px solid #f4cb5938;
+position:relative;
+max-height:min(90vh,700px);
+overflow:auto
+}
+
+.modalClose{
+position:absolute;
+left:10px;
+top:10px;
+width:38px;
+height:38px;
+border:0;
+border-radius:50%;
+background:#11243a;
+color:var(--gold);
+font-size:22px
+}
+
+.modalIcon{
+text-align:center;
+font-size:52px
+}
+
+.modal h2{
+text-align:center;
+color:var(--gold);
+font-size:20px;
+line-height:1.8
+}
+
+.modalCat{
+text-align:center;
+color:#9badc2;
+font-size:10px
+}
+
+.metaBox{
+display:flex;
+gap:6px;
+justify-content:center;
+flex-wrap:wrap;
+margin:12px 0
+}
+
+.meta{
+padding:5px 8px;
+background:#0a1524;
+color:#9badc2;
+font-size:8px
+}
+
+.modalDesc{
+text-align:center;
+color:var(--muted);
+font-size:11px;
+line-height:2
+}
+
+.modalActions{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:7px;
+margin-top:15px
+}
+
+.modalAction{
+height:43px;
+border-radius:11px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:900;
+border:0
+}
+
+.mOpen{
+background:#f2cc5c;
+color:#111827
+}
+
+.mDl{
+background:#123a30;
+color:#b6f5d7
+}
+
+.mFav{
+background:#10243a;
+color:#fff;
+border:1px solid var(--line)
+}
+
+.developerModalText{
+text-align:center;
+color:var(--muted);
+font-size:11px;
+line-height:2
+}
+
+.developerContact{
+display:flex;
+justify-content:center;
+margin-top:15px
+}
+
+.developerWhatsApp{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+min-width:245px;
+height:47px;
+padding:0 18px;
+border-radius:13px;
+background:#25d366;
+color:#fff;
+font-weight:900;
+font-size:11px;
+box-shadow:0 10px 24px #25d36640
+}
+
+/* تحسينات التناسق */
+
+.head>*{
+min-width:0
+}
+
+.booksGrid>*,
+.miniGrid>*,
+.seriesGrid>*,
+.stats>*{
+min-width:0
+}
+
+@media(min-width:1200px){
+.booksGrid{
+grid-template-columns:repeat(4,minmax(0,1fr))
+}
+
+.miniGrid{
+grid-template-columns:repeat(4,minmax(0,1fr))
+}
+}
+
+@media(min-width:701px) and (max-width:1199px){
+
+.booksGrid{
+grid-template-columns:repeat(3,minmax(0,1fr))
+}
+
+.miniGrid{
+grid-template-columns:repeat(3,minmax(0,1fr))
+}
+
+.seriesGrid{
+grid-template-columns:repeat(2,minmax(0,1fr))
+}
+
+}
+
+@media(max-width:700px){
+
+.head{
+grid-template-columns:auto minmax(0,1fr) auto
+}
+
+.brand h2{
+font-size:14px
+}
+
+.brand p{
+display:none
+}
+
+.searchRow{
+grid-template-columns:1fr
+}
+
+.sort{
+overflow:auto;
+flex-wrap:nowrap;
+padding-bottom:2px
+}
+
+.stats{
+grid-template-columns:repeat(2,minmax(0,1fr))
+}
+
+.miniGrid,
+.booksGrid,
+.seriesGrid{
+grid-template-columns:minmax(0,1fr)
+}
+
+.logo{
+width:175px;
+height:175px
+}
+
+.title{
+font-size:clamp(30px,9vw,38px)
+}
+
+.lead{
+font-size:10px
+}
+
+.pill{
+font-size:9px;
+padding:7px 9px
+}
+
+.enter{
+font-size:15px;
+padding:13px
+}
+
+.wrap{
+padding:12px 9px 65px
+}
+
+.modalActions{
+grid-template-columns:1fr
+}
+
+.floating{
+left:10px;
+right:10px;
+bottom:10px
+}
+
+.float{
+width:52px;
+height:52px
+}
+
+.brand img{
+width:44px;
+height:44px
+}
+
+.ib{
+width:40px;
+height:40px
+}
+
+}
+
+@media(max-width:430px){
+
+.home{
+padding:9px
+}
+
+.scene{
+height:76px
+}
+
+.shelf{
+width:200px
+}
+
+.scene-book{
+width:21px
+}
+
+.orbit{
+width:220px
+}
+
+.logo{
+width:160px;
+height:160px;
+margin:13px auto
+}
+
+.pills{
+gap:6px
+}
+
+.pill{
+font-size:8px;
+padding:6px 8px
+}
+
+.stats{
+gap:7px
+}
+
+.stat{
+padding:10px
+}
+
+.statIcon{
+width:40px;
+height:40px;
+flex-basis:40px;
+font-size:18px
+}
+
+.num{
+font-size:20px
+}
+
+.sectionHead h3{
+font-size:17px
+}
+
+.booksTitle h3{
+font-size:20px
+}
+
+}
+
+@media(max-width:360px){
+
+.brand img{
+display:none
+}
+
+.brand h2{
+font-size:12px
+}
+
+.ib{
+width:37px;
+height:37px
+}
+
+.logo{
+width:145px;
+height:145px
+}
+
+.pill{
+font-size:7px
+}
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+*{
+animation:none!important;
+transition:none!important;
+scroll-behavior:auto!important
+}
+
+#fireworks{
+display:none
+}
+
+}
+
+@keyframes ticker{
+from{
+transform:translateX(0)
+}
+to{
+transform:translateX(50%)
+}
+}
+
+@keyframes float{
+
+0%,100%{
+transform:translateY(0)
+}
+
+50%{
+transform:translateY(-6px)
+}
+
+}
+
+@keyframes glow{
+
+0%,100%{
+opacity:.25;
+transform:scale(1)
+}
+
+50%{
+opacity:1;
+transform:scale(1.02)
+}
+
+}
+
+@keyframes textGlow{
+
+0%,100%{
+text-shadow:0 8px 28px #0004
+}
+
+50%{
+text-shadow:
+0 10px 35px #0008,
+0 0 20px #f4cb5920
+}
+
+}
+
+@keyframes pill{
+
+0%,100%{
+transform:translateY(0)
+}
+
+50%{
+transform:translateY(-2px)
+}
+
+}
+
+@keyframes pulse{
+
+0%,100%{
+transform:scale(1)
+}
+
+50%{
+transform:scale(1.045)
+}
+
+}
+
+@keyframes dot{
+
+0%,100%{
+transform:translateY(0) scale(.8);
+opacity:.2
+}
+
+50%{
+transform:translateY(-18px) scale(1.35);
+opacity:1
+}
+
+}
+
+@keyframes orbit{
+to{
+transform:rotateX(64deg) rotateZ(360deg)
+}
+}
+
+@keyframes book{
+
+0%,100%{
+translate:0 0
+}
+
+50%{
+translate:0 -5px
+}
+
+}
+
+@keyframes shine{
+
+0%,55%{
+transform:skewX(-18deg) translateX(-160%);
+opacity:0
+}
+
+65%{
+opacity:1
+}
+
+80%,100%{
+transform:skewX(-18deg) translateX(560%);
+opacity:0
+}
+
+}
+
+@keyframes buttonShine{
+
+0%,55%{
+left:-75%;
+opacity:0
+}
+
+65%{
+opacity:1
+}
+
+82%,100%{
+left:140%;
+opacity:0
+}
+
 }
 </style>
 </head>
+
 <body>
 
-<header>
-  <div class="brand">
-    <img id="headerLogo" src="" alt="الشعار">
-    <span>مكتبة البكالوريا</span>
-  </div>
-  <div class="controls">
-    <button class="iconBtn musicBtn" id="musicBtn" title="تشغيل/إيقاف الموسيقى">🎵</button>
-    <button class="iconBtn" id="themeBtn" title="تغيير المظهر">☀️</button>
-    <button class="iconBtn" id="menuBtn" title="القائمة">☰</button>
-  </div>
-</header>
+<section id="home" class="home">
 
-<div class="overlay" id="overlay"></div>
+<canvas id="fireworks" aria-hidden="true"></canvas>
 
-<nav class="menu" id="menu">
-  <h2>القائمة الرئيسية</h2>
-  <br>
-  <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
-    <li><a href="#" id="homeMenu" style="color: var(--text-main); text-decoration: none;">🏠 الصفحة الرئيسية</a></li>
-    <li><a href="#" id="favoritesMenu" style="color: var(--text-main); text-decoration: none;">❤ المفضلة</a></li>
-    <li><button id="developerBtn" style="color: var(--text-main); text-decoration: none; padding: 0; font-size: 1rem;">👨‍💻 عن المطور</button></li>
-  </ul>
-</nav>
+<div class="hero">
 
-<section id="home">
-  <canvas id="fireworksCanvas"></canvas>
-  <div class="hero">
-    <img id="homeLogo" src="" alt="الشعار الكبير" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1.5rem; border: 2px solid var(--gold-accent);">
-    <h1>مكتبة تانية بكالوريا الشاملة</h1>
-    <p>المصدر الأول والأشهر لكل ما تحتاجه للثانوية العامة والأنظمة التعليمية - كتب، امتحانات، ومراجعات نهائية</p>
-    <button class="ctaBtn" id="enter">تصفح المكتبة الآن</button>
-  </div>
+<span class="badge">
+📚 المكتبة الإلكترونية • تانية بكالوريا
+</span>
+
+<div class="scene">
+
+<div class="orbit"></div>
+
+<div class="scene-label">
+📚 مكتبة تانية بكالوريا
+</div>
+
+<div class="shelf">
+
+<span class="scene-book"></span>
+<span class="scene-book"></span>
+<span class="scene-book"></span>
+<span class="scene-book"></span>
+<span class="scene-book"></span>
+
+</div>
+
+</div>
+
+<div class="logo">
+
+<img
+id="homeLogo"
+alt="شعار مكتبة تانية بكالوريا">
+
+</div>
+
+<h1 class="title">
+مكتبة <span class="gold">تانية بكالوريا</span>
+</h1>
+
+<p class="lead">
+كتب ومذكرات وامتحانات وكورسات مرتبة لتصل إلى ما تحتاجه بسرعة من الموبايل أو التابلت أو الكمبيوتر.
+</p>
+
+<div class="pills">
+
+<button
+class="pill"
+type="button"
+data-home-filter="books">
+
+📚 كتب ومراجع
+
+</button>
+
+<button
+class="pill"
+type="button"
+data-home-filter="امتحانات">
+
+📝 امتحانات
+
+</button>
+
+<button
+class="pill"
+type="button"
+data-home-filter="كورسات">
+
+🎓 كورسات
+
+</button>
+
+<button
+class="pill"
+type="button"
+data-home-filter="search">
+
+🔎 بحث سريع
+
+</button>
+
+<button
+class="pill"
+type="button"
+data-home-filter="fav">
+
+❤️ المفضلة
+
+</button>
+
+</div>
+
+<button
+id="enter"
+class="enter"
+type="button">
+
+🚀 دخول المكتبة
+
+</button>
+
+<div class="note">
+متوافقة مع جميع الشاشات
+</div>
+
+</div>
 </section>
 
-<main id="library">
-  <div class="quickStats">
-    <div class="statCard">
-      <h3 id="total">0</h3>
-      <p>إجمالي المراجع</p>
-    </div>
-    <div class="statCard">
-      <h3 id="bookCount">0</h3>
-      <p>الكتب الدراسية</p>
-    </div>
-    <div class="statCard">
-      <h3 id="examCount">0</h3>
-      <p>الامتحانات والتقييمات</p>
-    </div>
-    <div class="statCard">
-      <h3 id="courseCount">0</h3>
-      <p>الكورسات والمراجعات</p>
-    </div>
-  </div>
+<section id="library">
 
-  <div class="searchBar">
-    <input type="text" class="searchInput" id="search" placeholder="ابحث باسم الكتاب، المادة، أو الكلمة المفتاحية...">
-    <div style="display: flex; gap: 0.5rem;">
-      <button class="filter sortBtn active" data-sort="popular">🔥 الأكثر طلباً</button>
-      <button class="filter sortBtn" data-sort="newest">✨ الأحدث</button>
-      <button class="filter sortBtn" data-sort="name">🔤 الأبجدي</button>
-    </div>
-  </div>
+<header class="header">
 
-  <div class="filters" id="filters"></div>
+<div class="head">
 
-  <h2>أحدث الإضافات</h2>
-  <br>
-  <div class="miniGrid" id="latest"></div>
+<div class="tools">
 
-  <h2>السلاسل التعليمية المميزة</h2>
-  <br>
-  <div class="seriesGrid" id="series"></div>
+<button
+id="menuBtn"
+class="ib"
+type="button">
 
-  <h2>جميع المراجع والكتب <span id="results" style="font-size: 1rem; color: var(--text-muted);"></span></h2>
-  <br>
-  <div class="grid" id="books"></div>
+☰
 
-  <br><br>
-  <h2>الأسئلة الشائعة</h2>
-  <br>
-  <div class="faq">
-    <div class="faqItem">
-      <div class="question">كيف يمكنني تحميل الكتب؟ <span>＋</span></div>
-      <div class="answer">يمكنك الضغط على زر "تحميل" الموجود أسفل كارت كل كتاب لتحميل الملف مباشرة عبر روابط Google Drive أو المصادر الرسمية.</div>
-    </div>
-    <div class="faqItem">
-      <div class="question">هل المكتبة مجانية بالكامل؟ <span>＋</span></div>
-      <div class="answer">نعم، جميع المصادر المتاحة على المكتبة مجانية تماماً ومتاحة لجميع الطلاب.</div>
-    </div>
-  </div>
+</button>
+
+<button
+id="themeBtn"
+class="ib"
+type="button">
+
+☀️
+
+</button>
+
+</div>
+
+<div class="brand">
+
+<img
+id="headerLogo"
+alt="شعار المكتبة">
+
+<div>
+
+<h2>
+مكتبة تانية بكالوريا
+</h2>
+
+<p>
+كتب • امتحانات • كورسات • مذكرات
+</p>
+
+</div>
+
+</div>
+
+<div></div>
+
+</div>
+</header>
+
+<div class="news">
+
+<div class="track">
+
+<span>
+📘 العمالقة English-part 3 🩶 —
+<a
+href="https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk"
+target="_blank"
+rel="noopener">
+اضغط هنا للتحميل
+</a>
+</span>
+
+<span>
+📚 جميع كتب وزارة التربية والتعليم لتحميل كتب التقييمات وكتاب الوزارة —
+<a
+href="https://ellibrary.moe.gov.eg/"
+target="_blank"
+rel="noopener">
+ellibrary.moe.gov.eg
+</a>
+</span>
+
+<span>
+🎓 المنصة التعليمية:
+<a
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+rel="noopener">
+mhmdrmdan.yobader.com
+</a>
+</span>
+
+</div>
+</div>
+
+<main class="wrap">
+
+<section class="welcome">
+
+<small>
+مكتبتك في مكان واحد
+</small>
+
+<h2>
+مرحبًا بك في مكتبة تانية بكالوريا 👋
+</h2>
+
+<p>
+اختر المادة أو ابحث باسم الكتاب ثم افتح أو حمّل المحتوى مباشرة.
+</p>
+
+</section>
+
+<section class="controls">
+
+<div class="searchRow">
+
+<div class="search">
+
+<span>
+🔎
+</span>
+
+<input
+id="search"
+type="search"
+placeholder="ابحث باسم الكتاب أو المادة أو الوصف..."
+autocomplete="off">
+
+</div>
+
+<div class="sort">
+
+<button
+class="sortBtn active"
+data-sort="popular"
+type="button">
+
+⭐ شهير
+
+</button>
+
+<button
+class="sortBtn"
+data-sort="newest"
+type="button">
+
+🆕 جديد
+
+</button>
+
+<button
+class="sortBtn"
+data-sort="name"
+type="button">
+
+أ–ي
+
+</button>
+
+</div>
+
+</div>
+
+<div
+id="filters"
+class="filters">
+</div>
+
+</section>
+
+<section class="stats">
+
+<div class="stat">
+
+<div class="statIcon">
+📚
+</div>
+
+<div>
+
+<div
+id="total"
+class="num">
+0
+</div>
+
+<div class="small">
+إجمالي المحتوى
+</div>
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="statIcon">
+📖
+</div>
+
+<div>
+
+<div
+id="bookCount"
+class="num">
+0
+</div>
+
+<div class="small">
+الكتب والمراجع
+</div>
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="statIcon">
+📝
+</div>
+
+<div>
+
+<div
+id="examCount"
+class="num">
+0
+</div>
+
+<div class="small">
+الامتحانات
+</div>
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="statIcon">
+🎓
+</div>
+
+<div>
+
+<div
+id="courseCount"
+class="num">
+0
+</div>
+
+<div class="small">
+الكورسات
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="sectionHead">
+
+<div>
+
+<small>
+وصل حديثًا
+</small>
+
+<h3>
+🆕 أحدث الإضافات
+</h3>
+
+</div>
+
+<button
+id="showAll"
+class="sectionBtn"
+type="button">
+
+عرض الكل ↓
+
+</button>
+
+</div>
+
+<div
+id="latest"
+class="miniGrid">
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="sectionHead">
+
+<div>
+
+<small>
+مختارات المكتبة
+</small>
+
+<h3>
+🔥 الأكثر طلبًا
+</h3>
+
+</div>
+
+</div>
+
+<div
+id="popular"
+class="miniGrid">
+</div>
+
+</section>
+
+<section
+id="examSeries"
+class="section">
+
+<div class="sectionHead">
+
+<div>
+
+<small>
+السلسلة الجديدة
+</small>
+
+<h3>
+📕 سلسلة كتاب الامتحان - اللغة العربية
+</h3>
+
+</div>
+
+</div>
+
+<div
+id="series"
+class="seriesGrid">
+</div>
+
+</section>
+
+<section id="allBooks">
+
+<div class="booksTitle">
+
+<div>
+
+<small class="gold">
+المكتبة كاملة
+</small>
+
+<h3>
+📚 جميع المحتويات
+</h3>
+
+</div>
+
+<span
+id="results"
+class="small">
+</span>
+
+</div>
+
+<div
+id="books"
+class="booksGrid">
+</div>
+
+</section>
+
+<section
+id="faq"
+class="faq">
+
+<h2>
+❓ الأسئلة الشائعة
+</h2>
+
+<div class="faqItem">
+
+<button
+class="question"
+type="button">
+
+هل الكتب قابلة للتحميل؟
+
+<span>
+＋
+</span>
+
+</button>
+
+<div class="answer">
+
+نعم، ملفات Google Drive التي يتوفر لها تحميل يمكن تنزيلها، والمجلدات تُفتح كمجلد.
+
+</div>
+
+</div>
+
+<div class="faqItem">
+
+<button
+class="question"
+type="button">
+
+كيف أجد مادة معينة؟
+
+<span>
+＋
+</span>
+
+</button>
+
+<div class="answer">
+
+استخدم البحث أو اختر التصنيف المناسب من شريط التصنيفات.
+
+</div>
+
+</div>
+
+</section>
+
 </main>
 
-<button class="iconBtn" id="top" title="للأعلى">⬆</button>
-<button class="iconBtn" id="shareBtn" style="position: fixed; bottom: 20px; right: 20px;" title="مشاركة">🔗</button>
+<footer>
 
-<div class="modal" id="modal">
-  <div class="topline">
-    <div class="bookIcon" id="modalIcon">📕</div>
-    <button id="modalClose">✕</button>
-  </div>
-  <br>
-  <h2 id="modalTitle">اسم الكتاب</h2>
-  <p id="modalCat" style="color: var(--gold-accent); margin-bottom: 0.5rem;"></p>
-  <p id="modalDesc" style="color: var(--text-muted); margin-bottom: 1.5rem;"></p>
-  <div class="actions">
-    <a class="action open" id="modalOpen" href="#" target="_blank">📖 فتح مباشر</a>
-    <a class="action download" id="modalDownload" href="#" target="_blank">⬇ تحميل الآن</a>
-  </div>
-  <br>
-  <button id="modalFav" style="width: 100%; padding: 0.5rem; border: 1px solid var(--panel-border); border-radius: var(--radius-md);">إضافة للمفضلة</button>
+<div class="footerTitle">
+مكتبة تانية بكالوريا
 </div>
 
-<div class="modal" id="developerModal">
-  <h2>عن المطور</h2>
-  <br>
-  <p style="color: var(--text-muted);">تم تطوير هذه المكتبة لتوفير أسرع وأسهل تجربة للوصول للكتب والمراجع الدراسية.</p>
-  <br>
-  <button id="developerModalClose" class="ctaBtn" style="width: 100%;">إغلاق</button>
+<p class="footerText">
+مكتبة تعليمية تجمع الكتب والمذكرات والامتحانات والكورسات في واجهة واحدة.
+</p>
+
+<div class="footerLinks">
+
+<a
+class="w"
+href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
+target="_blank"
+rel="noopener">
+💬 مجموعة واتساب
+</a>
+
+<a
+class="c"
+href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+target="_blank"
+rel="noopener">
+📣 قناة واتساب
+</a>
+
+<a
+class="t"
+href="https://t.me/geniuses_youssef"
+target="_blank"
+rel="noopener">
+✈️ تيليجرام
+</a>
+
+<a
+class="p"
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+rel="noopener">
+🎓 المنصة التعليمية
+</a>
+
 </div>
 
-<audio id="libraryAudio" loop preload="none">
-  <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
-</audio>
+<div class="footerCredit">
+
+💻
+<strong>
+بالشراكة مع مالك سامح
+</strong>
+
+•
+🎓 برعاية وإشراف محمد رمضان الحرباوي
+
+<div class="developerBox">
+
+<button
+id="developerBtn"
+class="developerBtn"
+type="button">
+
+Developer
+
+</button>
+
+<span class="developerName">
+
+محمد رمضان الحرباوي
+
+</span>
+
+</div>
+
+</div>
+
+</footer>
+
+</section>
+
+<div class="floating">
+
+<button
+id="shareBtn"
+class="float"
+type="button"
+aria-label="مشاركة المكتبة">
+
+↗️
+
+</button>
+
+<div class="floatRight">
+
+<a
+class="float wa"
+href="https://wa.me/201500492203"
+target="_blank"
+rel="noopener"
+aria-label="واتساب">
+
+💬
+
+</a>
+
+<button
+id="top"
+class="float up"
+type="button"
+aria-label="العودة لأعلى الصفحة">
+
+↑
+
+</button>
+
+</div>
+
+</div>
+
+<div
+id="overlay"
+class="overlay">
+</div>
+
+<aside
+id="menu"
+class="menu">
+
+<div class="menuHead">
+📚 مكتبة تانية بكالوريا
+</div>
+
+<a
+id="homeMenu"
+href="#">
+🏠 الرئيسية
+</a>
+
+<a
+href="#allBooks">
+📚 كل الكتب
+</a>
+
+<a
+id="favoritesMenu"
+href="#allBooks">
+❤️ المفضلة فقط
+</a>
+
+<a
+href="#examSeries">
+📕 سلسلة كتاب الامتحان
+</a>
+
+<a
+href="#faq">
+❓ الأسئلة الشائعة
+</a>
+
+<a
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+rel="noopener">
+🎓 المنصة التعليمية
+</a>
+
+<a
+href="https://wa.me/201500492203"
+target="_blank"
+rel="noopener">
+💬 الدعم الفني
+</a>
+
+<a
+href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+target="_blank"
+rel="noopener">
+📢 قناة واتساب
+</a>
+
+<div class="menuInfo">
+
+<strong>
+ℹ️ عن المكتبة
+</strong>
+
+<br>
+
+✅ كتب ومراجع مرتبة.
+
+<br>
+
+✅ امتحانات وكورسات.
+
+<br>
+
+✅ بحث سريع.
+
+<br>
+
+✅ نظام مفضلة.
+
+<br>
+
+✅ تعمل على جميع الشاشات.
+
+</div>
+
+</aside>
+
+<div
+id="modal"
+class="modal">
+
+<div class="modalBox">
+
+<button
+id="modalClose"
+class="modalClose"
+type="button">
+×
+</button>
+
+<div
+id="modalIcon"
+class="modalIcon">
+📚
+</div>
+
+<h2
+id="modalTitle">
+</h2>
+
+<div
+id="modalCat"
+class="modalCat">
+</div>
+
+<div
+id="modalMeta"
+class="metaBox">
+</div>
+
+<p
+id="modalDesc"
+class="modalDesc">
+</p>
+
+<div class="modalActions">
+
+<a
+id="modalOpen"
+class="modalAction mOpen"
+target="_blank"
+rel="noopener">
+📖 فتح المحتوى
+</a>
+
+<a
+id="modalDownload"
+class="modalAction mDl"
+target="_blank"
+rel="noopener">
+⬇ تحميل
+</a>
+
+<button
+id="modalFav"
+class="modalAction mFav"
+type="button">
+🤍 إضافة للمفضلة
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div
+id="developerModal"
+class="modal">
+
+<div class="modalBox">
+
+<button
+id="developerModalClose"
+class="modalClose"
+type="button">
+×
+</button>
+
+<div class="modalIcon">
+👨‍💻
+</div>
+
+<h2>
+Developer
+</h2>
+
+<p class="developerModalText">
+
+المطور:
+<strong class="gold">
+محمد رمضان الحرباوي
+</strong>
+
+<br>
+
+للتواصل والاستفسارات وطلبات تصميم المواقع والمنصات
+
+</p>
+
+<div class="developerContact">
+
+<a
+class="developerWhatsApp"
+href="https://wa.me/201500492203"
+target="_blank"
+rel="noopener">
+
+💬 التواصل عبر واتساب • 01500492203
+
+</a>
+
+</div>
+
+</div>
+
+</div>
 
 <script>
-const LOGO='data:image/png;base64,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';
 
-const booksData = [
-  {
-    id: 1,
-    title: "كتاب الامتحان - اللغة العربية (الجزء الأول)",
-    category: "كتب ومراجع",
-    subject: "اللغة العربية",
-    icon: "📕",
-    desc: "الشرح والأسئلة لجميع وحدات النحو والبلاغة والأدب وفق المنظومة الحديثة.",
-    openUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
-    downloadUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
-    popular: true,
-    newest: true,
-    series: true
-  },
-  {
-    id: 2,
-    title: "العمالقة English - Part 3",
-    category: "كتب ومراجع",
-    subject: "اللغة الإنجليزية",
-    icon: "📘",
-    desc: "كتاب العمالقة في اللغة الإنجليزية للثانوية العامة الجزء الثالث مع التدريبات المكثفة.",
-    openUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
-    downloadUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
-    popular: true,
-    newest: true,
-    series: false
-  },
-  {
-    id: 3,
-    title: "امتحانات التقييم الأسبوعي - وزارة التربية والتعليم",
-    category: "امتحانات",
-    subject: "جميع المواد",
-    icon: "📝",
-    desc: "جميع تقييمات الوزارة والأسئلة الأسبوعية لمختلف المواد الدراسية مع نماذج الإجابة.",
-    openUrl: "https://ellibrary.moe.gov.eg/",
-    downloadUrl: "https://ellibrary.moe.gov.eg/",
-    popular: true,
-    newest: false,
-    series: false
-  },
-  {
-    id: 4,
-    title: "كورس التأسيس الشامل في الفيزياء",
-    category: "كورسات",
-    subject: "الفيزياء",
-    icon: "🎓",
-    desc: "سلسلة محتويات تعليمية وشرح مبسط لأهم قوانين ومفاهيم الفيزياء الأساسية.",
-    openUrl: "https://mhmdrmdan.yobader.com",
-    downloadUrl: "https://mhmdrmdan.yobader.com",
-    popular: false,
-    newest: true,
-    series: false
-  }
+const LOGO='data:image/webp;base64,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';
+
+const books=[
+{id:1,title:'كتاب التاريخ',icon:'📚',cat:'تاريخ',desc:'الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link',date:20260305,popular:75},
+{id:2,title:'كتاب النحو',icon:'📖',cat:'لغة عربية',desc:'الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',date:20260305,popular:75},
+{id:3,title:'تأسيس رياضيات',icon:'📐',cat:'رياضيات',desc:'مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',date:20260305,popular:75},
+{id:4,title:'الميسر في أصول الفقه الإسلامي',icon:'📘',cat:'مواد شرعية',desc:'كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).',url:'https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing',date:20260305,popular:75},
+{id:5,title:'ملخص الدرس الأول - التاريخ (بناء الدولة المصرية)',icon:'🏛️',cat:'تاريخ',desc:'ملخص الدرس الأول في مادة التاريخ: بناء الدولة المصرية للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing',date:20260305,popular:75},
+{id:6,title:'الثلاثة الذين خُلِّفوا',icon:'📘',cat:'مواد شرعية',desc:'كتاب الثلاثة الذين خُلِّفوا – إعداد: عمر أحمد المنشاوي (PDF).',url:'https://drive.google.com/file/d/1VH8UeFmU4hVWWrQCii4tYwscaspOfvX3/view?usp=sharing',date:20260305,popular:75},
+{id:7,title:'كورس تأسيس رياضة',icon:'🎥',cat:'رياضيات',desc:'كورس تأسيس الرياضيات للصف الثاني الثانوي.',url:'https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing',date:20260712,popular:100},
+{id:8,title:'الفيزياء',icon:'⚛️',cat:'فيزياء',desc:'كتاب الفيزياء للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing',date:20260712,popular:100},
+{id:9,title:'الجزء الأول من الكورس التأسيسي للبرمجة',icon:'💻',cat:'برمجة',desc:'الجزء الأول من الكورس التأسيسي للبرمجة – إعداد وتجهيز: محمد رمضان الحرباوي.',url:'https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing',date:20260713,popular:100},
+{id:10,title:'الكافي في علوم البلاغة العربية',icon:'📖',cat:'لغة عربية',desc:'كتاب الكافي في علوم البلاغة العربية (HTML).',url:'./الكافي_في_علوم_البلاغة_العربية.html',date:20260714,popular:100},
+{id:11,title:'كورس اللغة العربية',icon:'📖',cat:'كورسات',desc:'كورس اللغة العربية.',url:'https://mhmdrmdan.yobader.com/course/kors-lghh-aarbyh',date:20260714,popular:100},
+{id:12,title:'كورس اللغة الإنجليزية',icon:'🇬🇧',cat:'كورسات',desc:'كورس اللغة الإنجليزية.',url:'https://mhmdrmdan.yobader.com/course/lghh-anglyzyh',date:20260714,popular:100},
+{id:13,title:'كورس الفيزياء',icon:'⚛️',cat:'كورسات',desc:'كورس الفيزياء.',url:'https://mhmdrmdan.yobader.com/course/fyzyaaa',date:20260714,popular:100},
+{id:14,title:'كورس التاريخ الوطني',icon:'🏛️',cat:'كورسات',desc:'كورس التاريخ الوطني.',url:'https://mhmdrmdan.yobader.com/course/tarykh-otny',date:20260714,popular:100},
+{id:15,title:'كورس البرمجة والذكاء الاصطناعي',icon:'💻',cat:'كورسات',desc:'الكورس التأسيسي للبرمجة والذكاء الاصطناعي.',url:'https://mhmdrmdan.yobader.com/course/kors-tasysy-brmgh',date:20260714,popular:100},
+{id:16,title:'أخبار وزارة التربية والتعليم',icon:'📰',cat:'كورسات',desc:'آخر الأخبار والحوارات والمعلومات الرسمية.',url:'https://mhmdrmdan.yobader.com/course/ay-akhbar-bkhsos-ozarh-altrbyh-oaltaalym-ontham-albkalorya',date:20260714,popular:100},
+{id:17,title:'امتحان تاريخ - الدرس الأول',icon:'📝',cat:'امتحانات',desc:'امتحان على الدرس الأول في مادة التاريخ.',url:'./index (1).html',date:20260713,popular:100},
+{id:18,title:'امتحان النحو',icon:'📝',cat:'امتحانات',desc:'امتحان تفاعلي على النحو.',url:'./exam_naho.html',date:20260715,popular:100},
+{id:19,title:'أجمل مذكرة بلاغة للثانوية العامة بصفوفها الثلاثة',icon:'📘',cat:'لغة عربية',desc:'مذكرة شاملة في البلاغة للثانوية العامة بجميع الصفوف، مناسبة للمراجعة والتأسيس.',url:'https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing',date:20260716,popular:100},
+{id:20,title:'تأسيس إنجلش - العمالقة 2026',icon:'🇬🇧',cat:'إنجليزي',desc:'كتاب تأسيس اللغة الإنجليزية (العمالقة 2026) بصيغة PDF.',url:'https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing',date:20260716,popular:100},
+{id:21,title:'كورس تأسيس إنجليزي - مستر سعيد الهيت',icon:'🇬🇧',cat:'إنجليزي',desc:'ملف كورس تأسيسي في اللغة الإنجليزية بصيغة PDF.',url:'https://drive.google.com/file/d/1R7LLcvinGsCPZhK_TvKwvnoqj9M09BM/view?usp=sharing',date:20260717,popular:100},
+{id:22,title:'الحصة التمهيدية',icon:'🎥',cat:'برمجة',desc:'الحصة التمهيدية.',url:'https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing',date:20260718,popular:100},
+{id:23,title:'ترسيخ العقيدة الإسلامية - 2',icon:'📘',cat:'مواد شرعية',desc:'كتاب ترسيخ العقيدة الإسلامية - 2.',url:'./ترسيخ_العقيدة_الإسلامية-2.html',date:20260718,popular:100},
+{id:24,title:'قاموس الفكيكه',icon:'📖',cat:'إنجليزي',desc:'قاموس الفكيكه.',url:'./قاموس الفكيكه.html',date:20260718,popular:100},
+{id:25,title:'كتاب كيان لغة عربية تانية بكالوريا',icon:'📖',cat:'لغة عربية',desc:'كتاب كيان للغة العربية لطلاب تانية بكالوريا.',url:'https://drive.google.com/file/d/1aXVTBXMEb7suoapqTZjHbLnBGPIWyPui/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:26,title:'كتاب العمالقة سنة تانية بكالوريا - الجزء الثاني 2027',icon:'🇬🇧',cat:'إنجليزي',desc:'كتاب العمالقة للصف الثاني الثانوي بكالوريا – الجزء الثاني 2027.',url:'https://drive.google.com/file/d/1mZIXzZD5DaskdzvVEGXrM0DZxCw7WhY3/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:27,title:'الثقافة المالية PDF تانية بكالوريا',icon:'💰',cat:'ثقافة مالية',desc:'ملف الثقافة المالية PDF لطلاب تانية بكالوريا.',url:'https://drive.google.com/file/d/1POmeADij1wPo-5c2FbusKZa3bYibfqPB/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:28,title:'إجابات_المعاصر_تانية_ثانوي_بكالوريا_الترم_الاول_2027',icon:'✅',cat:'إنجليزي',desc:'إجابات المعاصر تانية ثانوي بكالوريا – الترم الأول 2027.',url:'https://drive.google.com/file/d/1VXSqXuikXpknsXYEoQgCY4mIPj3LHjSd/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:29,title:'ملحق_المعاصر_انجليزي_2ث_بكالوريا_الترم_الاول_2027',icon:'📎',cat:'إنجليزي',desc:'ملحق المعاصر إنجليزي 2 ث بكالوريا – الترم الأول 2027.',url:'https://drive.google.com/file/d/1IxXRUpuJ-uzYiycTzFX33Qy8g43eE34I/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:30,title:'كتاب_المعاصر_انجليزي_2بكالوريا_2027_ترم1',icon:'📘',cat:'إنجليزي',desc:'كتاب المعاصر إنجليزي 2 بكالوريا 2027 – الترم الأول.',url:'https://drive.google.com/file/d/1uftB4n53TRWacPzTe7Kmv_HHGLLslZ7q/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:31,title:'كتاب الإنجليزي العمالقة - الجزء الأول',icon:'🇬🇧',cat:'إنجليزي',desc:'كتاب الإنجليزي العمالقة – الجزء الأول.',url:'https://drive.google.com/file/d/1WhYUKpIivmpWmLqf-h1idF2HcjJxlIWQ/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:32,title:'كتاب الأضواء تاريخ تانية بكالوريا',icon:'🏛️',cat:'تاريخ',desc:'كتاب الأضواء لمادة التاريخ لطلاب تانية بكالوريا.',url:'https://drive.google.com/file/d/1_BBe00y41IfyNfPWKYMvol_WqqPsDd_D/view?usp=sharing',date:20260929,popular:110,isNew:true},
+{id:33,title:'كتاب الامتحان لغة عربية - الجزء الأول 2027',icon:'📕',cat:'لغة عربية',desc:'الجزء الأول من سلسلة كتاب الامتحان في اللغة العربية – 2027.',url:'https://drive.google.com/file/d/14W9FiVD8F1TVMlxlGMwfGqJw5USehBEJ/view?usp=sharing',date:20260929,popular:110,isNew:true,series:'exam_arabic'},
+{id:34,title:'كتاب الامتحان لغة عربية - الجزء الثاني 2027',icon:'📕',cat:'لغة عربية',desc:'الجزء الثاني من سلسلة كتاب الامتحان في اللغة العربية – 2027.',url:'https://drive.google.com/file/d/107Obccz6RVtYLDwiHHYKUm8PwCzjQuh-/view?usp=sharing',date:20260929,popular:110,isNew:true,series:'exam_arabic'},
+{id:35,title:'كتاب الامتحان لغة عربية - الجزء الثالث 2027',icon:'📕',cat:'لغة عربية',desc:'الجزء الثالث من سلسلة كتاب الامتحان في اللغة العربية – 2027.',url:'https://drive.google.com/file/d/1GvsB2L0-S9ZpZaGKwkF_txFOUXy6N78H/view?usp=sharing',date:20260929,popular:110,isNew:true,series:'exam_arabic'},
+{id:36,title:'المواد كاملة 🍒🫂 🤍',icon:'📚',cat:'المواد كاملة',desc:'مجلد Google Drive شامل يحتوي على المواد كاملة.',url:'https://drive.google.com/drive/folders/1mgk5MoazbJ1uUzL3zvvfzltQUOXQoTM2',date:20260929,popular:120,isNew:true,isFolder:true},
+{id:37,title:'العمالقة English-part 3 🩶',icon:'🇬🇧',cat:'إنجليزي',desc:'كتاب العمالقة English-part 3 لطلاب تانية بكالوريا.',url:'https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk',date:20260929,popular:130,isNew:true}
 ];
 
-let favorites = JSON.parse(localStorage.getItem('fav_books') || '[]');
-let currentSort = 'popular';
-let currentCategory = 'all';
-let searchQuery = '';
+let favs=[];
+let filter='all';
+let sort='popular';
+let current=null;
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('homeLogo').src = LOGO;
-  document.getElementById('headerLogo').src = LOGO;
+try{
+favs=JSON.parse(
+localStorage.getItem('tb_favorites')||'[]'
+).map(Number).filter(Number.isFinite)
+}catch(e){
+favs=[]
+}
 
-  initEvents();
-  renderFilters();
-  renderAll();
-  initFireworks();
+const $=
+id=>document.getElementById(id);
+
+const cats=[
+['all','📚 الكل'],
+['books','📖 الكتب والمراجع'],
+['لغة عربية','📖 اللغة العربية'],
+['مواد شرعية','🕌 مواد شرعية'],
+['تاريخ','🏛️ التاريخ'],
+['إنجليزي','🇬🇧 الإنجليزي'],
+['رياضيات','📐 الرياضيات'],
+['برمجة','💻 البرمجة'],
+['فيزياء','⚛️ الفيزياء'],
+['ثقافة مالية','💰 الثقافة المالية'],
+['المواد كاملة','📚 المواد كاملة'],
+['امتحانات','📝 الامتحانات'],
+['كورسات','🎓 الكورسات'],
+['fav','❤️ المفضلة']
+];
+
+function save(){
+
+try{
+
+localStorage.setItem(
+'tb_favorites',
+JSON.stringify(favs)
+)
+
+}catch(e){}
+
+}
+
+function get(id){
+
+return books.find(
+b=>b.id===Number(id)
+)
+
+}
+
+function esc(v){
+
+const d=
+document.createElement('div');
+
+d.textContent=
+String(v??'');
+
+return d.innerHTML
+
+}
+
+function gid(u){
+
+const m=
+String(u||'').match(
+/\/d\/([^/]+)/
+);
+
+return m?
+m[1]:
+null
+
+}
+
+function dl(u){
+
+const id=
+gid(u);
+
+return id?
+`https://drive.google.com/uc?export=download&id=${id}`:
+u
+
+}
+
+function buildCats(){
+
+$('filters').innerHTML=
+
+cats.map(
+c=>`
+
+<button
+class="filter ${filter===c[0]?'active':''}"
+data-filter="${esc(c[0])}"
+type="button">
+
+${c[1]}
+
+</button>
+
+`
+).join('')
+
+}
+
+function filtered(){
+
+let r=
+[...books];
+
+const q=
+$('search')
+.value
+.trim()
+.toLowerCase();
+
+
+if(filter==='fav'){
+
+r=
+r.filter(
+b=>favs.includes(b.id)
+)
+
+}
+
+else if(filter==='books'){
+
+r=
+r.filter(
+b=>![
+'امتحانات',
+'كورسات'
+].includes(b.cat)
+)
+
+}
+
+else if(filter!=='all'){
+
+r=
+r.filter(
+b=>b.cat===filter
+)
+
+}
+
+
+if(q){
+
+r=
+r.filter(
+b=>
+(
+b.title+
+' '+
+b.desc+
+' '+
+b.cat
+)
+.toLowerCase()
+.includes(q)
+)
+
+}
+
+
+if(sort==='name'){
+
+r.sort(
+(a,b)=>
+a.title.localeCompare(
+b.title,
+'ar'
+)
+)
+
+}
+
+else if(sort==='newest'){
+
+r.sort(
+(a,b)=>
+(b.date||0)-
+(a.date||0)
+)
+
+}
+
+else{
+
+r.sort(
+(a,b)=>
+(b.popular||0)-
+(a.popular||0)||
+(b.date||0)-
+(a.date||0)
+)
+
+}
+
+
+return r
+
+}
+
+function toggleFavorite(id){
+
+id=
+Number(id);
+
+if(!Number.isFinite(id))
+return;
+
+
+const i=
+favs.indexOf(id);
+
+
+if(i<0){
+
+favs.push(id)
+
+}else{
+
+favs.splice(
+i,
+1
+)
+
+}
+
+
+favs=[
+...new Set(favs)
+];
+
+
+save();
+
+buildCats();
+
+featured();
+
+render();
+
+
+if(current===id){
+
+$('modalFav').textContent=
+
+favs.includes(id)
+?
+'❤️ إزالة من المفضلة'
+:
+'🤍 إضافة للمفضلة'
+
+}
+
+}
+
+function render(){
+
+const r=
+filtered();
+
+
+$('results').textContent=
+`${r.length} نتيجة`;
+
+
+if(!r.length){
+
+$('books').innerHTML=`
+
+<div class="empty">
+
+<div class="emptyIcon">
+
+🔎
+
+</div>
+
+<h3 class="gold">
+
+لا توجد نتائج مطابقة
+
+</h3>
+
+<p>
+
+${
+filter==='fav'
+?
+'لم تضف أي عنصر إلى المفضلة حتى الآن.'
+:
+'جرّب كلمة أخرى أو تصنيفًا مختلفًا.'
+}
+
+</p>
+
+</div>
+
+`;
+
+return
+
+}
+
+
+$('books').innerHTML=
+
+r.map(
+b=>{
+
+const f=
+favs.includes(b.id);
+
+const can=
+!!gid(b.url)&&
+!b.isFolder;
+
+
+return `
+
+<article class="book">
+
+<div class="topline">
+
+<div class="bookIcon">
+
+${b.icon}
+
+</div>
+
+<button
+class="favBtn ${f?'is-fav':''}"
+data-action="fav"
+data-id="${b.id}"
+type="button"
+aria-label="${
+f
+?
+'إزالة من المفضلة'
+:
+'إضافة للمفضلة'
+}">
+
+${f?'❤️':'🤍'}
+
+</button>
+
+</div>
+
+<h3>
+
+${esc(b.title)}
+
+</h3>
+
+<span class="tag">
+
+${esc(b.cat)}
+
+</span>
+
+<p class="desc">
+
+${esc(b.desc)}
+
+</p>
+
+<div class="actions">
+
+<button
+class="action details"
+data-action="details"
+data-id="${b.id}"
+type="button">
+
+📖 التفاصيل
+
+</button>
+
+<a
+class="action open"
+href="${esc(b.url)}"
+target="_blank"
+rel="noopener">
+
+${
+b.isFolder
+?
+'📂 فتح المجلد'
+:
+'↗ فتح'
+}
+
+</a>
+
+${
+can
+?
+`
+
+<a
+class="action download"
+href="${esc(dl(b.url))}"
+target="_blank"
+rel="noopener">
+
+⬇ تحميل
+
+</a>
+
+`
+:
+''
+}
+
+</div>
+
+</article>
+
+`
+
+}
+).join('')
+
+}
+
+function mini(b){
+
+const f=
+favs.includes(b.id);
+
+return `
+
+<article
+class="mini"
+data-id="${b.id}"
+tabindex="0"
+role="button">
+
+<div class="miniTop">
+
+<div class="miniIcon">
+
+${b.icon}
+
+</div>
+
+<button
+class="favBtn ${f?'is-fav':''}"
+data-mini-fav="${b.id}"
+type="button">
+
+${f?'❤️':'🤍'}
+
+</button>
+
+</div>
+
+${
+b.isNew
+?
+'<span class="new">🆕 جديد</span>'
+:
+''
+}
+
+<h4>
+
+${esc(b.title)}
+
+</h4>
+
+<p>
+
+${esc(b.desc)}
+
+</p>
+
+<span class="tag">
+
+${esc(b.cat)}
+
+</span>
+
+</article>
+
+`
+
+}
+
+function featured(){
+
+$('latest').innerHTML=
+
+[...books]
+.sort(
+(a,b)=>
+(b.date||0)-
+(a.date||0)
+)
+.slice(
+0,
+6
+)
+.map(mini)
+.join('');
+
+
+$('popular').innerHTML=
+
+[...books]
+.sort(
+(a,b)=>
+(b.popular||0)-
+(a.popular||0)||
+(b.date||0)-
+(a.date||0)
+)
+.slice(
+0,
+6
+)
+.map(mini)
+.join('');
+
+
+$('series').innerHTML=
+
+books
+.filter(
+b=>b.series==='exam_arabic'
+)
+.map(
+b=>`
+
+<article class="series">
+
+<span class="new">
+
+🆕 جديد للتنزيل
+
+</span>
+
+<div class="miniIcon">
+
+${b.icon}
+
+</div>
+
+<h4>
+
+${esc(b.title)}
+
+</h4>
+
+<p>
+
+جاهز للفتح والتحميل مباشرة
+
+</p>
+
+<div class="seriesActions">
+
+<a
+class="seriesAction seriesOpen"
+href="${esc(b.url)}"
+target="_blank"
+rel="noopener">
+
+📖 فتح
+
+</a>
+
+<a
+class="seriesAction seriesDl"
+href="${esc(dl(b.url))}"
+target="_blank"
+rel="noopener">
+
+⬇ تحميل
+
+</a>
+
+</div>
+
+</article>
+
+`
+)
+.join('')
+
+}
+
+function stats(){
+
+$('total').textContent=
+books.length;
+
+$('bookCount').textContent=
+books.filter(
+b=>![
+'امتحانات',
+'كورسات'
+].includes(b.cat)
+).length;
+
+$('examCount').textContent=
+books.filter(
+b=>b.cat==='امتحانات'
+).length;
+
+$('courseCount').textContent=
+books.filter(
+b=>b.cat==='كورسات'
+).length;
+
+}
+
+function details(id){
+
+const b=
+get(id);
+
+if(!b)
+return;
+
+current=
+b.id;
+
+$('modalIcon').textContent=
+b.icon;
+
+$('modalTitle').textContent=
+b.title;
+
+$('modalCat').textContent=
+b.cat;
+
+$('modalDesc').textContent=
+b.desc;
+
+$('modalOpen').href=
+b.url;
+
+const d=
+$('modalDownload');
+
+
+if(
+b.isFolder||
+!gid(b.url)
+){
+
+d.style.display=
+'none';
+
+d.removeAttribute(
+'href'
+)
+
+}
+else{
+
+d.style.display=
+'flex';
+
+d.href=
+dl(b.url)
+
+}
+
+
+$('modalMeta').innerHTML=
+
+`
+
+<span class="meta">
+
+🎓 تانية بكالوريا
+
+</span>
+
+<span class="meta">
+
+📌 ${esc(b.cat)}
+
+</span>
+
+${
+b.isFolder
+?
+'<span class="meta">📂 مجلد Google Drive</span>'
+:
+gid(b.url)
+?
+'<span class="meta">☁️ Google Drive</span>'
+:
+''
+}
+
+${
+b.isNew
+?
+'<span class="meta">🆕 جديد</span>'
+:
+''
+}
+
+`;
+
+
+$('modalFav').textContent=
+
+favs.includes(b.id)
+?
+'❤️ إزالة من المفضلة'
+:
+'🤍 إضافة للمفضلة';
+
+
+$('modal')
+.classList
+.add('open');
+
+
+document.body.style.overflow=
+'hidden'
+
+}
+
+function closeModal(){
+
+$('modal')
+.classList
+.remove('open');
+
+document.body.style.overflow=
+'';
+
+current=null
+
+}
+
+function openLibrary(){
+
+$('home').style.display=
+'none';
+
+$('library').style.display=
+'block';
+
+scrollTo(
+0,
+0
+)
+
+}
+
+function goHome(){
+
+$('menu')
+.classList
+.remove('open');
+
+$('overlay')
+.style
+.display=
+'none';
+
+closeModal();
+
+$('library').style.display=
+'none';
+
+$('home').style.display=
+'grid';
+
+scrollTo(
+0,
+0
+)
+
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle(
+'light'
+);
+
+$('themeBtn').textContent=
+
+document.body.classList.contains(
+'light'
+)
+?
+'🌙'
+:
+'☀️'
+
+}
+
+function shareLibrary(){
+
+const data={
+
+title:
+'مكتبة تانية بكالوريا',
+
+text:
+'📚 مكتبة تانية بكالوريا: كتب ومذكرات وكورسات وامتحانات.',
+
+url:
+'https://zadalmrfh-create.github.io/LibraryThe-Distinguished/'
+
+};
+
+
+if(
+navigator.share
+){
+
+navigator.share(
+data
+).catch(
+()=>{}
+)
+
+}
+else if(
+navigator.clipboard
+){
+
+navigator.clipboard
+.writeText(data.url)
+.then(
+()=>
+alert(
+'✅ تم نسخ رابط المكتبة.'
+)
+)
+.catch(
+()=>
+alert(data.url)
+)
+
+}
+else{
+
+alert(data.url)
+
+}
+
+}
+
+$('homeLogo').src=
+LOGO;
+
+$('headerLogo').src=
+LOGO;
+
+$('enter').onclick=
+openLibrary;
+
+$('menuBtn').onclick=
+()=>{
+
+const open=
+$('menu')
+.classList
+.contains(
+'open'
+);
+
+$('menu')
+.classList
+.toggle(
+'open',
+!open
+);
+
+$('overlay')
+.style
+.display=
+open
+?
+'none'
+:
+'block'
+
+};
+
+$('overlay').onclick=
+()=>{
+
+$('menu')
+.classList
+.remove('open');
+
+$('overlay')
+.style
+.display=
+'none'
+
+};
+
+$('homeMenu').onclick=
+e=>{
+
+e.preventDefault();
+
+goHome()
+
+};
+
+$('themeBtn').onclick=
+toggleTheme;
+
+$('shareBtn').onclick=
+shareLibrary;
+
+$('search').oninput=
+render;
+
+$('showAll').onclick=
+()=>
+$('allBooks')
+.scrollIntoView({
+behavior:'smooth'
 });
 
-function initEvents() {
-  document.getElementById('enter').addEventListener('click', () => {
-    document.getElementById('home').style.display = 'none';
-    document.getElementById('library').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+$('modalClose').onclick=
+closeModal;
 
-  document.getElementById('themeBtn').addEventListener('click', () => {
-    document.body.classList.toggle('light');
-    const btn = document.getElementById('themeBtn');
-    btn.textContent = document.body.classList.contains('light') ? '🌙' : '☀️';
-  });
+$('modalFav').onclick=
+()=>
+current!==null&&
+toggleFavorite(
+current
+);
 
-  const menu = document.getElementById('menu');
-  const overlay = document.getElementById('overlay');
-  
-  const toggleMenu = () => {
-    menu.classList.toggle('open');
-    overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
-  };
+$('modal').onclick=
+e=>{
 
-  document.getElementById('menuBtn').addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', () => {
-    menu.classList.remove('open');
-    overlay.style.display = 'none';
-    closeModals();
-  });
+if(
+e.target===
+$('modal')
+){
 
-  document.getElementById('homeMenu').addEventListener('click', (e) => {
-    e.preventDefault();
-    menu.classList.remove('open');
-    overlay.style.display = 'none';
-    document.getElementById('library').style.display = 'none';
-    document.getElementById('home').style.display = 'grid';
-  });
+closeModal()
 
-  document.getElementById('search').addEventListener('input', (e) => {
-    searchQuery = e.target.value.toLowerCase().trim();
-    renderAll();
-  });
-
-  document.querySelectorAll('.sortBtn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.sortBtn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      currentSort = btn.dataset.sort;
-      renderAll();
-    });
-  });
-
-  document.getElementById('favoritesMenu').addEventListener('click', () => {
-    menu.classList.remove('open');
-    overlay.style.display = 'none';
-    currentCategory = 'المفضلة';
-    renderFilters();
-    renderAll();
-  });
-
-  window.addEventListener('scroll', () => {
-    const upBtn = document.getElementById('top');
-    upBtn.style.display = window.scrollY > 300 ? 'grid' : 'none';
-  });
-
-  document.getElementById('top').addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  document.getElementById('shareBtn').addEventListener('click', () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'مكتبة تانية بكالوريا',
-        text: 'تحميل الكتب والامتحانات والكورسات للصف الثاني البكالوريا/الثانوية العامة',
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('تم نسخ رابط المكتبة بنجاح!');
-    }
-  });
-
-  document.getElementById('modalClose').addEventListener('click', closeModals);
-  document.getElementById('developerBtn').addEventListener('click', () => {
-    document.getElementById('developerModal').classList.add('open');
-  });
-  document.getElementById('developerModalClose').addEventListener('click', closeModals);
-
-  const audio = document.getElementById('libraryAudio');
-  const musicBtn = document.getElementById('musicBtn');
-  let isPlaying = false;
-
-  musicBtn.addEventListener('click', () => {
-    isPlaying = !isPlaying;
-    musicBtn.classList.toggle('on', isPlaying);
-    musicBtn.setAttribute('aria-pressed', isPlaying);
-    if (isPlaying) {
-      audio.play().catch(() => {});
-    } else {
-      audio.pause();
-    }
-  });
-
-  document.querySelectorAll('.question').forEach(q => {
-    q.addEventListener('click', () => {
-      const parent = q.parentElement;
-      parent.classList.toggle('active');
-      q.querySelector('span').textContent = parent.classList.contains('active') ? '－' : '＋';
-    });
-  });
 }
 
-function closeModals() {
-  document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
-  document.getElementById('overlay').style.display = 'none';
+};
+
+$('filters').onclick=
+e=>{
+
+const b=
+e.target.closest(
+'[data-filter]'
+);
+
+if(!b)
+return;
+
+filter=
+b.dataset.filter;
+
+buildCats();
+
+render();
+
+};
+
+document
+.querySelector(
+'.sort'
+)
+.onclick=
+e=>{
+
+const b=
+e.target.closest(
+'[data-sort]'
+);
+
+if(!b)
+return;
+
+sort=
+b.dataset.sort;
+
+document
+.querySelectorAll(
+'.sortBtn'
+)
+.forEach(
+x=>
+x.classList.toggle(
+'active',
+x===b
+)
+);
+
+render();
+
+};
+
+$('books').onclick=
+e=>{
+
+const b=
+e.target.closest(
+'[data-action]'
+);
+
+if(!b)
+return;
+
+if(
+b.dataset.action===
+'fav'
+){
+
+toggleFavorite(
+b.dataset.id
+)
+
+}
+else{
+
+details(
+b.dataset.id
+)
+
 }
 
-function renderFilters() {
-  const categories = ['الكل', 'كتب ومراجع', 'امتحانات', 'كورسات', 'المفضلة'];
-  const container = document.getElementById('filters');
-  container.innerHTML = categories.map(cat => `
-    <button class="filter ${currentCategory === cat || (cat === 'الكل' && currentCategory === 'all') ? 'active' : ''}" 
-            onclick="selectCategory('${cat}')">
-      ${cat === 'المفضلة' ? '❤️️ ' : ''}${cat}
-    </button>
-  `).join('');
+};
+
+['latest','popular']
+.forEach(
+id=>{
+
+$(id).onclick=
+e=>{
+
+const favButton=
+e.target.closest(
+'[data-mini-fav]'
+);
+
+if(favButton){
+
+e.stopPropagation();
+
+toggleFavorite(
+favButton.dataset.miniFav
+);
+
+return;
+
 }
 
-function selectCategory(cat) {
-  currentCategory = cat === 'الكل' ? 'all' : cat;
-  renderFilters();
-  renderAll();
+const card=
+e.target.closest(
+'[data-id]'
+);
+
+if(card){
+
+details(
+card.dataset.id
+)
+
 }
 
-function getFilteredBooks() {
-  return booksData.filter(book => {
-    const matchesCategory = currentCategory === 'all' ? true :
-                            currentCategory === 'المفضلة' ? favorites.includes(book.id) :
-                            book.category === currentCategory || book.title.includes(currentCategory);
-    
-    const matchesSearch = !searchQuery || 
-                          book.title.toLowerCase().includes(searchQuery) ||
-                          book.desc.toLowerCase().includes(searchQuery) ||
-                          book.subject.toLowerCase().includes(searchQuery);
+};
 
-    return matchesCategory && matchesSearch;
-  }).sort((a, b) => {
-    if (currentSort === 'popular') return b.popular - a.popular;
-    if (currentSort === 'newest') return b.newest - a.newest;
-    if (currentSort === 'name') return a.title.localeCompare(b.title, 'ar');
-    return 0;
-  });
+});
+
+document
+.querySelectorAll(
+'.question'
+)
+.forEach(
+q=>
+
+q.onclick=
+()=>
+q.parentElement
+.classList
+.toggle(
+'active'
+)
+
+);
+
+$('developerBtn').onclick=
+()=>{
+
+$('developerModal')
+.classList
+.add('open');
+
+document.body.style.overflow=
+'hidden'
+
+};
+
+$('developerModalClose').onclick=
+()=>{
+
+$('developerModal')
+.classList
+.remove('open');
+
+document.body.style.overflow=
+''
+
+};
+
+$('developerModal').onclick=
+e=>{
+
+if(
+e.target===
+$('developerModal')
+){
+
+$('developerModal')
+.classList
+.remove('open');
+
+document.body.style.overflow=
+''
+
 }
 
-function renderAll() {
-  const filtered = getFilteredBooks();
-  
-  document.getElementById('total').textContent = booksData.length;
-  document.getElementById('bookCount').textContent = booksData.filter(b => b.category === 'كتب ومراجع').length;
-  document.getElementById('examCount').textContent = booksData.filter(b => b.category === 'امتحانات').length;
-  document.getElementById('courseCount').textContent = booksData.filter(b => b.category === 'كورسات').length;
+};
 
-  const latestList = [...booksData].filter(b => b.newest).slice(0, 4);
-  const popularList = [...booksData].filter(b => b.popular).slice(0, 4);
-  const seriesList = [...booksData].filter(b => b.series);
+$('favoritesMenu').onclick=
+e=>{
 
-  renderMiniGrid('latest', latestList);
-  renderSeriesGrid('series', seriesList);
+e.preventDefault();
 
-  const booksGrid = document.getElementById('books');
-  document.getElementById('results').textContent = `(عدد النتائج: ${filtered.length})`;
+filter=
+'fav';
 
-  if (filtered.length === 0) {
-    booksGrid.innerHTML = `
-      <div class="empty">
-        <div class="emptyIcon">🔍</div>
-        <p>لا توجد نتائج تطابق بحثك أو تصنيفك المختار.</p>
-      </div>
-    `;
-    return;
-  }
+$('search').value=
+'';
 
-  booksGrid.innerHTML = filtered.map(book => {
-    const isFav = favorites.includes(book.id);
-    return `
-      <div class="book">
-        <div class="topline">
-          <div class="bookIcon">${book.icon}</div>
-          <button class="favBtn" onclick="toggleFavorite(${book.id}, event)">${isFav ? '❤️' : '🤍'}</button>
-        </div>
-        <h3>${book.title}</h3>
-        <p class="desc">${book.desc}</p>
-        <div class="actions">
-          <button class="action open" onclick="openBookModal(${book.id})">🔍 التفاصيل</button>
-          <a class="action open" href="${book.openUrl}" target="_blank" rel="noopener">📖 فتح</a>
-          <a class="action download" href="${book.downloadUrl}" target="_blank" rel="noopener">⬇ تحميل</a>
-        </div>
-      </div>
-    `;
-  }).join('');
+buildCats();
+
+render();
+
+$('menu')
+.classList
+.remove('open');
+
+$('overlay')
+.style
+.display=
+'none';
+
+$('allBooks')
+.scrollIntoView({
+behavior:'smooth'
+})
+
+};
+
+document.addEventListener(
+'click',
+e=>{
+
+const b=
+e.target.closest(
+'[data-home-filter]'
+);
+
+if(!b)
+return;
+
+openLibrary();
+
+$('search').value=
+'';
+
+const v=
+b.dataset.homeFilter;
+
+
+if(v==='fav'){
+
+filter=
+'fav'
+
+}
+else if(v==='books'){
+
+filter=
+'books'
+
+}
+else if(v==='search'){
+
+filter=
+'all'
+
+}
+else{
+
+filter=
+v
+
 }
 
-function renderMiniGrid(elementId, list) {
-  const container = document.getElementById(elementId);
-  container.innerHTML = list.map(item => `
-    <div class="mini" onclick="openBookModal(${item.id})">
-      <div class="miniIcon">${item.icon}</div>
-      <h4>${item.title}</h4>
-      <p>${item.subject}</p>
-    </div>
-  `).join('');
+
+buildCats();
+
+render();
+
+
+setTimeout(
+()=>{
+
+if(
+v==='search'
+){
+
+$('search').focus()
+
+}
+else{
+
+$('allBooks')
+.scrollIntoView({
+behavior:'smooth'
+})
+
 }
 
-function renderSeriesGrid(elementId, list) {
-  const container = document.getElementById(elementId);
-  container.innerHTML = list.map(item => `
-    <div class="series">
-      <div class="miniIcon">${item.icon}</div>
-      <h4>${item.title}</h4>
-      <p>${item.desc}</p>
-      <div class="seriesActions">
-        <a class="seriesAction seriesOpen" href="${item.openUrl}" target="_blank" rel="noopener">📖 فتح</a>
-        <a class="seriesAction seriesDl" href="${item.downloadUrl}" target="_blank" rel="noopener">⬇ تحميل</a>
-      </div>
-    </div>
-  `).join('');
+},
+80
+)
+
+});
+
+
+$('top').onclick=
+()=>
+scrollTo({
+top:0,
+behavior:'smooth'
+});
+
+
+addEventListener(
+'scroll',
+()=>
+$('top')
+.style
+.display=
+scrollY>120
+?
+'grid'
+:
+'none',
+{
+passive:true
+}
+);
+
+
+document.addEventListener(
+'keydown',
+e=>{
+
+if(
+e.key==='Escape'
+){
+
+closeModal();
+
+$('menu')
+.classList
+.remove('open');
+
+$('overlay')
+.style
+.display=
+'none';
+
+$('developerModal')
+.classList
+.remove('open');
+
+document.body.style.overflow=
+''
+
 }
 
-function toggleFavorite(id, event) {
-  if (event) event.stopPropagation();
-  if (favorites.includes(id)) {
-    favorites = favorites.filter(favId => favId !== id);
-  } else {
-    favorites.push(id);
-  }
-  localStorage.setItem('fav_books', JSON.stringify(favorites));
-  renderAll();
+});
+
+
+/* ألعاب نارية مرئية + صوت برمجي فقط، بدون موسيقى */
+
+(()=>{
+
+const canvas=
+$('fireworks');
+
+if(!canvas)
+return;
+
+const ctx=
+canvas.getContext(
+'2d'
+);
+
+if(!ctx)
+return;
+
+let w=0;
+let h=0;
+let ps=[];
+let timer=0;
+let last=0;
+let audioCtx=null;
+
+
+function resize(){
+
+const r=
+canvas.getBoundingClientRect();
+
+const d=
+Math.min(
+devicePixelRatio||1,
+2
+);
+
+w=
+r.width;
+
+h=
+r.height;
+
+canvas.width=
+Math.max(
+1,
+Math.floor(w*d)
+);
+
+canvas.height=
+Math.max(
+1,
+Math.floor(h*d)
+);
+
+ctx.setTransform(
+d,
+0,
+0,
+d,
+0,
+0
+)
+
 }
 
-function openBookModal(id) {
-  const book = booksData.find(b => b.id === id);
-  if (!book) return;
 
-  document.getElementById('modalIcon').textContent = book.icon;
-  document.getElementById('modalTitle').textContent = book.title;
-  document.getElementById('modalCat').textContent = `${book.category} • ${book.subject}`;
-  document.getElementById('modalDesc').textContent = book.desc;
-  document.getElementById('modalOpen').href = book.openUrl;
-  document.getElementById('modalDownload').href = book.downloadUrl;
+function rnd(a,b){
 
-  const favBtn = document.getElementById('modalFav');
-  const isFav = favorites.includes(book.id);
-  favBtn.textContent = isFav ? '❤️ إزالة من المفضلة' : '🤍 إضافة للمفضلة';
-  favBtn.onclick = () => {
-    toggleFavorite(book.id);
-    openBookModal(book.id);
-  };
+return Math.random()*
+(b-a)+a
 
-  document.getElementById('modal').classList.add('open');
 }
 
-function initFireworks() {
-  const canvas = document.getElementById('fireworksCanvas');
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  
-  function resize() {
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.parentElement.clientHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
 
-  let particles = [];
-  
-  function createParticle() {
-    if (Math.random() > 0.15) return;
-    const x = Math.random() * canvas.width;
-    const y = Math.random() * (canvas.height * 0.6);
-    const color = `hsl(${Math.random() * 60 + 35}, 100%, 60%)`;
-    
-    for (let i = 0; i < 12; i++) {
-      const angle = (Math.PI * 2 / 12) * i;
-      const speed = Math.random() * 2 + 1;
-      particles.push({
-        x, y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed,
-        alpha: 1,
-        color
-      });
-    }
-  }
+function fireSound(){
 
-  function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    createParticle();
+const now=
+performance.now();
 
-    particles.forEach((p, index) => {
-      p.x += p.vx;
-      p.y += p.vy;
-      p.alpha -= 0.015;
+if(
+now-last<450
+)
+return;
 
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-      ctx.fillStyle = p.color;
-      ctx.globalAlpha = Math.max(0, p.alpha);
-      ctx.fill();
+last=
+now;
 
-      if (p.alpha <= 0) particles.splice(index, 1);
-    });
+const AC=
+window.AudioContext||
+window.webkitAudioContext;
 
-    requestAnimationFrame(animate);
-  }
-  animate();
+if(!AC)
+return;
+
+try{
+
+if(!audioCtx)
+audioCtx=
+new AC();
+
+if(
+audioCtx.state===
+'suspended'
+){
+
+audioCtx
+.resume()
+.catch(
+()=>{}
+)
+
 }
+
+const t=
+audioCtx.currentTime;
+
+const o=
+audioCtx.createOscillator();
+
+const g=
+audioCtx.createGain();
+
+o.type=
+'sine';
+
+o.frequency.setValueAtTime(
+170,
+t
+);
+
+o.frequency.exponentialRampToValueAtTime(
+32,
+t+.45
+);
+
+g.gain.setValueAtTime(
+.0001,
+t
+);
+
+g.gain.exponentialRampToValueAtTime(
+.18,
+t+.015
+);
+
+g.gain.exponentialRampToValueAtTime(
+.0001,
+t+.48
+);
+
+o.connect(g);
+
+g.connect(
+audioCtx.destination
+);
+
+o.start(t);
+
+o.stop(
+t+.5
+)
+
+}catch(e){}
+
+}
+
+
+function burst(){
+
+if(
+document.hidden||
+w<120||
+h<120
+)
+return;
+
+fireSound();
+
+const cx=
+rnd(
+w*.14,
+w*.86
+);
+
+const cy=
+rnd(
+h*.12,
+h*.44
+);
+
+const count=
+innerWidth<650
+?
+34
+:
+54;
+
+const hue=
+rnd(
+35,
+65
+);
+
+
+for(
+let i=0;
+i<count;
+i++
+){
+
+const a=
+Math.PI*2*i/count+
+rnd(
+-.08,
+.08
+);
+
+const s=
+rnd(
+1.6,
+4.8
+);
+
+ps.push({
+
+x:cx,
+y:cy,
+px:cx,
+py:cy,
+
+vx:
+Math.cos(a)*s,
+
+vy:
+Math.sin(a)*s,
+
+life:1,
+
+decay:
+rnd(
+.014,
+.024
+),
+
+g:.045,
+
+size:
+rnd(
+1,
+2.5
+),
+
+h:
+(
+hue+
+rnd(
+-20,
+20
+)+360
+)%360
+
+})
+
+}
+
+if(
+ps.length>850
+){
+
+ps.splice(
+0,
+ps.length-850
+)
+
+}
+
+}
+
+
+function draw(){
+
+ctx.clearRect(
+0,
+0,
+w,
+h
+);
+
+ctx.globalCompositeOperation=
+'lighter';
+
+
+for(
+let i=
+ps.length-1;
+i>=0;
+i--
+){
+
+const p=
+ps[i];
+
+p.px=
+p.x;
+
+p.py=
+p.y;
+
+p.x+=
+p.vx;
+
+p.y+=
+p.vy;
+
+p.vx*=.988;
+
+p.vy=
+p.vy*.988+
+p.g;
+
+p.life-=
+p.decay;
+
+
+if(
+p.life<=0
+){
+
+ps.splice(
+i,
+1
+);
+
+continue
+
+}
+
+
+ctx.beginPath();
+
+ctx.moveTo(
+p.px,
+p.py
+);
+
+ctx.lineTo(
+p.x,
+p.y
+);
+
+ctx.lineWidth=
+p.size;
+
+ctx.strokeStyle=
+`hsla(
+${p.h},
+100%,
+70%,
+${p.life}
+)`;
+
+ctx.stroke()
+
+}
+
+
+requestAnimationFrame(
+draw
+)
+
+}
+
+
+function schedule(){
+
+clearTimeout(
+timer
+);
+
+timer=
+setTimeout(
+()=>{
+
+if(
+!document.hidden
+){
+
+burst()
+
+}
+
+schedule();
+
+},
+5800+
+Math.random()*2400
+)
+
+}
+
+
+resize();
+
+draw();
+
+setTimeout(
+burst,
+700
+);
+
+setTimeout(
+burst,
+1200
+);
+
+schedule();
+
+
+addEventListener(
+'resize',
+resize,
+{
+passive:true
+}
+);
+
+
+/* تفعيل الصوت البرمجي للمفرقعات بعد أول تفاعل */
+
+addEventListener(
+'pointerdown',
+()=>{
+
+const AC=
+window.AudioContext||
+window.webkitAudioContext;
+
+if(!AC)
+return;
+
+try{
+
+if(!audioCtx)
+audioCtx=
+new AC();
+
+if(
+audioCtx.state===
+'suspended'
+){
+
+audioCtx
+.resume()
+.catch(
+()=>{}
+)
+
+}
+
+}catch(e){}
+
+},
+{
+once:true,
+passive:true
+}
+);
+
+})();
+
+
+buildCats();
+
+stats();
+
+featured();
+
+render();
+
 </script>
+
 </body>
-</html>
+  </html>
