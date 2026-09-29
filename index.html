@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="مكتبة تانية بكالوريا">
+<link rel="manifest" href="./manifest.json">
 <title>مكتبة تانية بكالوريا</title>
 
 <style>
@@ -726,6 +731,7 @@ padding:0
 transform:translateY(-2px) scale(1.05)
 }
 
+/* المشاركة القديمة - الشمال */
 #shareBtn{
 background:linear-gradient(135deg,#3b82f6,#2563eb);
 color:#fff;
@@ -742,6 +748,7 @@ stroke-linecap:round;
 stroke-linejoin:round
 }
 
+/* واتساب - اليمين */
 .floatRight{
 display:flex;
 flex-direction:column;
@@ -1299,12 +1306,12 @@ placeholder="ابحث باسم الكتاب أو المادة أو الوصف...
 <div class="faqItem">
 
 <button class="question">
-<span>كيف أفتح الكتاب؟</span>
+هل الكتب قابلة للتحميل؟
 <span>＋</span>
 </button>
 
 <div class="answer">
-اضغط على زر "فتح" الموجود أسفل الكتاب للوصول إلى المحتوى مباشرة.
+نعم، ملفات Google Drive التي يتوفر لها تحميل يمكن تنزيلها، والمجلدات تُفتح كمجلد.
 </div>
 
 </div>
@@ -1312,38 +1319,12 @@ placeholder="ابحث باسم الكتاب أو المادة أو الوصف...
 <div class="faqItem">
 
 <button class="question">
-<span>هل يمكنني تحميل الكتب؟</span>
+كيف أجد مادة معينة؟
 <span>＋</span>
 </button>
 
 <div class="answer">
-إذا كان المحتوى يسمح بالتحميل، سيظهر لك زر التحميل داخل بطاقة الكتاب أو نافذة التفاصيل.
-</div>
-
-</div>
-
-<div class="faqItem">
-
-<button class="question">
-<span>هل المكتبة تعمل على الهاتف؟</span>
-<span>＋</span>
-</button>
-
-<div class="answer">
-نعم، التصميم متجاوب ويعمل على الهاتف والتابلت والكمبيوتر.
-</div>
-
-</div>
-
-<div class="faqItem">
-
-<button class="question">
-<span>هل يمكن حفظ الكتب في المفضلة؟</span>
-<span>＋</span>
-</button>
-
-<div class="answer">
-نعم، اضغط على ❤️ بجوار أي محتوى لحفظه في المفضلة على جهازك.
+استخدم البحث أو اختر التصنيف المناسب من شريط التصنيفات.
 </div>
 
 </div>
@@ -1355,54 +1336,157 @@ placeholder="ابحث باسم الكتاب أو المادة أو الوصف...
 <footer>
 
 <div class="footerTitle">
-📚 مكتبة تانية بكالوريا
+مكتبة تانية بكالوريا
 </div>
 
-<div class="footerText">
-مكتبة إلكترونية تجمع الكتب والمذكرات والامتحانات والكورسات في مكان واحد لتسهيل الوصول إلى المحتوى التعليمي.
-</div>
+<p class="footerText">
+مكتبة تعليمية تجمع الكتب والمذكرات والامتحانات والكورسات في واجهة واحدة.
+</p>
 
 <div class="footerLinks">
 
-<a class="w" href="https://chat.whatsapp.com/" target="_blank" rel="noopener">
+<a
+class="w"
+href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
+target="_blank"
+rel="noopener">
 💬 مجموعة واتساب
 </a>
 
-<a class="c" href="https://whatsapp.com/channel/" target="_blank" rel="noopener">
-📢 قناة واتساب
+<a
+class="c"
+href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+target="_blank"
+rel="noopener">
+📣 قناة واتساب
 </a>
 
-<a class="t" href="https://t.me/" target="_blank" rel="noopener">
+<a
+class="t"
+href="https://t.me/geniuses_youssef"
+target="_blank"
+rel="noopener">
 ✈️ تيليجرام
 </a>
 
-<a class="p" href="https://mhmdrmdan.yobader.com" target="_blank" rel="noopener">
+<a
+class="p"
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+rel="noopener">
 🎓 المنصة التعليمية
 </a>
 
 </div>
 
+<div class="footerCredit">
+
+💻 <strong>بالشراكة مع مالك سامح</strong>
+•
+🎓 برعاية وإشراف محمد رمضان الحرباوي
+
 <div class="developerBox">
 
-<span class="developerName">
-👨‍💻 بالشراكة مع مالك سامح
-</span>
-
-<button id="developerBtn" class="developerBtn">
-معلومات المطور
+<button
+id="developerBtn"
+class="developerBtn"
+type="button">
+Developer
 </button>
+
+<span class="developerName">
+محمد رمضان الحرباوي
+</span>
 
 </div>
 
-<div class="footerCredit">
-برعاية وإشراف <strong>محمد رمضان الحرباوي</strong>
 </div>
 
 </footer>
 
 </section>
 
+
+<!-- نافذة تثبيت المكتبة -->
+<div id="installHint" class="installHint" role="dialog" aria-label="تثبيت المكتبة">
+<div class="installHintTop">
+<div class="installHintIcon">📲</div>
+<div class="installHintText">
+<strong>ثبّت مكتبة تانية بكالوريا</strong>
+<span id="installHintText">ثبّت المكتبة على جهازك للوصول إليها بسرعة من الشاشة الرئيسية.</span>
+</div>
+<button id="installClose" class="installClose" type="button" aria-label="إغلاق">✕</button>
+</div>
+<div id="installSteps" class="installSteps"></div>
+</div>
+
+<!-- المشاركة القديمة - الشمال -->
+<div class="floating">
+
+<button
+id="shareBtn"
+class="float"
+type="button"
+aria-label="مشاركة المكتبة">
+
+<svg
+viewBox="0 0 24 24"
+aria-hidden="true">
+
+<circle cx="18" cy="5" r="3"></circle>
+<circle cx="6" cy="12" r="3"></circle>
+<circle cx="18" cy="19" r="3"></circle>
+
+<line
+x1="8.59"
+y1="13.51"
+x2="15.42"
+y2="17.49">
+</line>
+
+<line
+x1="15.41"
+y1="6.51"
+x2="8.59"
+y2="10.49">
+</line>
+
+</svg>
+
+</button>
+
+
+<!-- واتساب - اليمين -->
+<div class="floatRight">
+
+<a
+class="float wa"
+href="https://wa.me/201500492203"
+target="_blank"
+rel="noopener"
+aria-label="واتساب">
+
+💬
+
+</a>
+
+<button
+id="top"
+class="float up"
+type="button"
+aria-label="العودة لأعلى الصفحة">
+
+↑
+
+</button>
+
+</div>
+
+</div>
+
+
 <div id="overlay" class="overlay"></div>
+
 
 <aside id="menu" class="menu">
 
@@ -1410,33 +1494,76 @@ placeholder="ابحث باسم الكتاب أو المادة أو الوصف...
 📚 مكتبة تانية بكالوريا
 </div>
 
-<a href="#" id="homeMenu">
+<a id="homeMenu" href="#">
 🏠 الرئيسية
 </a>
 
-<a href="#allBooks" onclick="closeMenu()">
-📚 جميع المحتويات
+<a href="#allBooks">
+📚 كل الكتب
 </a>
 
-<a href="#examSeries" onclick="closeMenu()">
+<a href="#examSeries">
 📕 سلسلة كتاب الامتحان
 </a>
 
-<a href="#faq" onclick="closeMenu()">
+<a href="#faq">
 ❓ الأسئلة الشائعة
 </a>
 
+<a
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+rel="noopener">
+🎓 المنصة التعليمية
+</a>
+
+<a
+href="https://wa.me/201500492203"
+target="_blank"
+rel="noopener">
+💬 الدعم الفني
+</a>
+
+<a
+href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+target="_blank"
+rel="noopener">
+📢 قناة واتساب
+</a>
+
 <div class="menuInfo">
-المكتبة مصممة لتجميع أهم الكتب والمذكرات والامتحانات والكورسات الخاصة بطلاب تانية بكالوريا في مكان واحد.
+
+<strong>ℹ️ عن المكتبة</strong>
+
+<br>
+✅ كتب ومراجع مرتبة.
+
+<br>
+✅ امتحانات وكورسات.
+
+<br>
+✅ بحث سريع.
+
+<br>
+✅ نظام مفضلة.
+
+<br>
+✅ تعمل على جميع الشاشات.
+
 </div>
 
 </aside>
 
+
+<!-- نافذة تفاصيل الكتاب -->
 <div id="modal" class="modal">
 
 <div class="modalBox">
 
-<button id="modalClose" class="modalClose">
+<button
+id="modalClose"
+class="modalClose"
+type="button">
 ×
 </button>
 
@@ -1444,30 +1571,36 @@ placeholder="ابحث باسم الكتاب أو المادة أو الوصف...
 📚
 </div>
 
-<h2 id="modalTitle">
-تفاصيل المحتوى
-</h2>
+<h2 id="modalTitle"></h2>
 
-<div id="modalCat" class="modalCat">
-</div>
+<div id="modalCat" class="modalCat"></div>
 
-<div id="modalMeta" class="metaBox">
-</div>
+<div id="modalMeta" class="metaBox"></div>
 
-<p id="modalDesc" class="modalDesc">
-</p>
+<p id="modalDesc" class="modalDesc"></p>
 
 <div class="modalActions">
 
-<a id="modalOpen" class="modalAction mOpen" target="_blank" rel="noopener">
-فتح المحتوى
+<a
+id="modalOpen"
+class="modalAction mOpen"
+target="_blank"
+rel="noopener">
+📖 فتح المحتوى
 </a>
 
-<a id="modalDownload" class="modalAction mDl" target="_blank" rel="noopener">
-تحميل
+<a
+id="modalDownload"
+class="modalAction mDl"
+target="_blank"
+rel="noopener">
+⬇ تحميل
 </a>
 
-<button id="modalFav" class="modalAction mFav">
+<button
+id="modalFav"
+class="modalAction mFav"
+type="button">
 🤍 إضافة للمفضلة
 </button>
 
@@ -1477,97 +1610,8 @@ placeholder="ابحث باسم الكتاب أو المادة أو الوصف...
 
 </div>
 
-<div id="developerModal" class="modal">
 
-<div class="modalBox">
-
-<button id="developerModalClose" class="modalClose">
-×
-</button>
-
-<div class="modalIcon">
-👨‍💻
-</div>
-
-<h2>
-معلومات المطور
-</h2>
-
-<p class="developerModalText">
-تم تطوير وتصميم المكتبة بالتعاون مع المبرمج والمطور مالك سامح، وبرعاية وإشراف محمد رمضان الحرباوي.
-</p>
-
-<div class="developerContact">
-
-<a
-class="developerWhatsApp"
-href="https://wa.me/20150042203"
-target="_blank"
-rel="noopener"
->
-<svg viewBox="0 0 24 24" aria-hidden="true">
-<path d="M20.5 3.5A11.7 11.7 0 0 0 12.15 0C5.68 0 .42 5.25.42 11.72c0 2.06.54 4.07 1.56 5.84L.33 24l6.59-1.73a11.7 11.7 0 0 0 5.23 1.25h.01c6.47 0 11.72-5.25 11.72-11.72 0-3.13-1.22-6.07-3.38-8.3ZM12.16 21.5h-.01a9.73 9.73 0 0 1-4.96-1.35l-.36-.21-3.91 1.03 1.04-3.81-.23-.39a9.73 9.73 0 1 1 8.43 4.73Zm5.34-7.3c-.29-.15-1.71-.84-1.98-.94-.27-.1-.47-.15-.67.15-.2.29-.77.94-.94 1.14-.17.2-.35.22-.64.07-.29-.15-1.22-.45-2.33-1.44-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.45.13-.6.13-.13.29-.34.44-.52.15-.17.2-.29.3-.49.1-.2.05-.37-.02-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.29-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.5 1.69.64.71.23 1.36.2 1.87.12.57-.09 1.71-.7 1.95-1.37.24-.67.24-1.24.17-1.37-.07-.12-.27-.2-.57-.35Z"/>
-</svg>
-تواصل مع المطور
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="installHint" class="installHint" role="dialog" aria-label="تثبيت المكتبة">
-<div class="installHintTop">
-<div class="installHintIcon">📲</div>
-
-<div class="installHintText">
-<strong>ثبّت مكتبة تانية بكالوريا</strong>
-<span id="installHintText">ثبّت المكتبة على جهازك للوصول إليها بسرعة من الشاشة الرئيسية.</span>
-</div>
-
-<button id="installClose" class="installClose" type="button" aria-label="إغلاق">✕</button>
-</div>
-
-<div id="installSteps" class="installSteps"></div>
-</div>
-
-<div class="floating">
-
-<button id="shareBtn" class="float" aria-label="مشاركة المكتبة">
-
-<svg viewBox="0 0 24 24">
-<path d="M12 16V3"></path>
-<path d="M7 8l5-5 5 5"></path>
-<path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7"></path>
-</svg>
-
-</button>
-
-<div class="floatRight">
-
-<a
-class="float wa"
-href="https://wa.me/20150042203"
-target="_blank"
-rel="noopener"
-aria-label="واتساب">
-💬
-</a>
-
-<button id="top" class="float up" aria-label="العودة للأعلى">
-↑
-</button>
-
-</div>
-
-</div>
-
-<script>
-
-const $=id=>document.getElementById(id);
-
-const LOGO='data:image/webp;base64,<!-- نافذة المطور -->
+<!-- نافذة المطور -->
 <div id="developerModal" class="modal">
 
 <div class="modalBox">
@@ -1628,16 +1672,16 @@ rel="noopener">
 <script>
 
 /* الصورة مدمجة داخل الكود */
-const LOGO='data:image/webp;base64,PASTE_THE_REST_OF_THE_ORIGINAL_LOGO_HERE';
+const LOGO='data:image/webp;base64,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';
 
 
 const books=[
 
-{id:1,title:'كتاب اللغة العربية',icon:'📖',cat:'لغة عربية',desc:'كتاب اللغة العربية للصف الثاني الثانوي.',url:'https://drive.google.com/file/d/1example/view',date:20260305,popular:80},
+{id:1,title:'كتاب التاريخ',icon:'📚',cat:'تاريخ',desc:'الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link',date:20260305,popular:75},
 
-{id:2,title:'كتاب اللغة الإنجليزية',icon:'🇬🇧',cat:'إنجليزي',desc:'كتاب اللغة الإنجليزية للصف الثاني الثانوي.',url:'https://drive.google.com/file/d/1example/view',date:20260305,popular:80},
+{id:2,title:'كتاب النحو',icon:'📖',cat:'لغة عربية',desc:'الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',date:20260305,popular:75},
 
-{id:3,title:'المرشد في اللغة العربية',icon:'📖',cat:'لغة عربية',desc:'كتاب المرشد في اللغة العربية.',url:'https://drive.google.com/file/d/1example/view',date:20260305,popular:75},
+{id:3,title:'تأسيس رياضيات',icon:'📐',cat:'رياضيات',desc:'مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).',url:'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',date:20260305,popular:75},
 
 {id:4,title:'الميسر في أصول الفقه الإسلامي',icon:'📘',cat:'مواد شرعية',desc:'كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).',url:'https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing',date:20260305,popular:75},
 
@@ -2526,268 +2570,37 @@ document.body.style.overflow='';
 }
 );
 
-
 /* ===== PWA / نظام تثبيت المكتبة ===== */
 (function(){
-
 const INSTALL_KEY='tb_install_hint_hidden';
 let deferredInstallPrompt=null;
-
 function showInstallButtons(show){
-const a=document.getElementById('installBtn');
-const b=document.getElementById('homeInstallBtn');
-
-if(a)a.classList.toggle('hidden',!show);
-if(b)b.classList.toggle('hidden',!show);
+ const a=document.getElementById('installBtn'),b=document.getElementById('homeInstallBtn');
+ if(a)a.classList.toggle('hidden',!show);
+ if(b)b.classList.toggle('hidden',!show);
 }
-
-function isStandalone(){
-return window.matchMedia('(display-mode: standalone)').matches ||
-window.navigator.standalone===true;
-}
-
-function closeInstallHint(){
-const h=document.getElementById('installHint');
-if(h)h.classList.remove('show');
-}
-
+function isStandalone(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}
+function closeInstallHint(){const h=document.getElementById('installHint');if(h)h.classList.remove('show');}
 function openInstallHint(){
-
-const h=document.getElementById('installHint');
-const steps=document.getElementById('installSteps');
-
-if(!h)return;
-
-if(deferredInstallPrompt){
-
-h.classList.add('show');
-
-if(steps)
-steps.innerHTML=
-'اضغط <b>تثبيت المكتبة</b> ثم اختر <b>تثبيت</b> لتظهر المكتبة على الشاشة الرئيسية.';
-
-return;
+ const h=document.getElementById('installHint'),steps=document.getElementById('installSteps');if(!h)return;
+ h.classList.add('show');
+ if(deferredInstallPrompt){if(steps)steps.innerHTML='اضغط <b>تثبيت المكتبة</b> ثم اختر <b>تثبيت</b> لتظهر المكتبة على الشاشة الرئيسية.';return;}
+ const ua=navigator.userAgent.toLowerCase(),ios=/iphone|ipad|ipod/.test(ua),android=/android/.test(ua);
+ if(steps)steps.innerHTML=ios?'على iPhone/iPad: اضغط زر <b>المشاركة</b> ثم اختر <b>إضافة إلى الشاشة الرئيسية</b>.':android?'على Android: افتح قائمة المتصفح <b>⋮</b> ثم اختر <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.':'افتح قائمة المتصفح وابحث عن <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.';
 }
-
-const ua=navigator.userAgent.toLowerCase();
-
-const ios=/iphone|ipad|ipod/.test(ua);
-const android=/android/.test(ua);
-
-h.classList.add('show');
-
-if(steps){
-
-if(ios){
-
-steps.innerHTML=
-'على iPhone/iPad: اضغط زر <b>المشاركة</b> في المتصفح ثم اختر <b>إضافة إلى الشاشة الرئيسية</b>.';
-
-}
-else if(android){
-
-steps.innerHTML=
-'على Android: افتح قائمة المتصفح <b>⋮</b> ثم اختر <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.';
-
-}
-else{
-
-steps.innerHTML=
-'افتح قائمة المتصفح وابحث عن <b>تثبيت التطبيق</b> أو <b>إضافة إلى الشاشة الرئيسية</b>.';
-
-}
-
-}
-
-}
-
-
 async function installLibrary(){
-
-if(deferredInstallPrompt){
-
-deferredInstallPrompt.prompt();
-
-try{
-await deferredInstallPrompt.userChoice
-}catch(e){}
-
-deferredInstallPrompt=null;
-
-showInstallButtons(false);
-closeInstallHint();
-
-return;
+ if(deferredInstallPrompt){try{deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;}catch(e){}deferredInstallPrompt=null;showInstallButtons(false);closeInstallHint();return;}
+ openInstallHint();
 }
-
-openInstallHint();
-
-}
-
-
-window.addEventListener(
-'beforeinstallprompt',
-function(e){
-
-e.preventDefault();
-
-deferredInstallPrompt=e;
-
-if(!isStandalone())
-showInstallButtons(true);
-
-}
-);
-
-
-window.addEventListener(
-'appinstalled',
-function(){
-
-deferredInstallPrompt=null;
-
-showInstallButtons(false);
-
-closeInstallHint();
-
-}
-);
-
-
-if(
-!isStandalone() &&
-!localStorage.getItem(INSTALL_KEY)
-){
-
-window.addEventListener(
-'load',
-function(){
-
-setTimeout(
-function(){
-
-if(deferredInstallPrompt)
-showInstallButtons(true);
-
-},
-1200
-);
-
-}
-);
-
-}
-
-
-['installBtn','homeInstallBtn']
-.forEach(function(id){
-
-const el=document.getElementById(id);
-
-if(el)
-el.addEventListener(
-'click',
-installLibrary
-);
-
-});
-
-
-const close=
-document.getElementById('installClose');
-
-if(close)
-close.addEventListener(
-'click',
-function(){
-
-localStorage.setItem(
-INSTALL_KEY,
-'1'
-);
-
-closeInstallHint();
-
-}
-);
-
-
-/* ملف Manifest ديناميكي حتى يظل التصميم في ملف HTML واحد */
-try{
-
-const manifest={
-
-name:'مكتبة تانية بكالوريا',
-
-short_name:'مكتبة تانية بكالوريا',
-
-description:
-'كتب ومذكرات وامتحانات وكورسات تانية بكالوريا',
-
-start_url:
-location.href.split('#')[0],
-
-scope:'./',
-
-display:'standalone',
-
-orientation:'portrait-primary',
-
-background_color:'#07111f',
-
-theme_color:'#07111f',
-
-dir:'rtl',
-
-lang:'ar'
-
-};
-
-const blob=
-new Blob(
-[JSON.stringify(manifest)],
-{type:'application/manifest+json'}
-);
-
-const link=
-document.createElement('link');
-
-link.rel='manifest';
-
-link.href=
-URL.createObjectURL(blob);
-
-document.head.appendChild(link);
-
-}catch(e){}
-
-
-/* تسجيل Service Worker إن كان ملف sw.js موجودًا على الاستضافة */
-if(
-'serviceWorker' in navigator &&
-location.protocol!=='file:'
-){
-
-window.addEventListener(
-'load',
-function(){
-
-navigator.serviceWorker
-.register('./sw.js')
-.catch(function(){
-
-/* لا يؤثر فشل التسجيل على عمل المكتبة */
-
-});
-
-}
-);
-
-}
-
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredInstallPrompt=e;if(!isStandalone())showInstallButtons(true);});
+window.addEventListener('appinstalled',function(){deferredInstallPrompt=null;showInstallButtons(false);closeInstallHint();});
+window.addEventListener('load',function(){if(!isStandalone())setTimeout(function(){showInstallButtons(true);},800);});
+['installBtn','homeInstallBtn'].forEach(function(id){const el=document.getElementById(id);if(el)el.addEventListener('click',installLibrary);});
+const close=document.getElementById('installClose');
+if(close)close.addEventListener('click',function(){localStorage.setItem(INSTALL_KEY,'1');closeInstallHint();});
+if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',function(){navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(function(){});});
 })();
-
-
+\n
 buildCats();
 stats();
 featured();
