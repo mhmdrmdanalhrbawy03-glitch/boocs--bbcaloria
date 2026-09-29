@@ -2813,14 +2813,16 @@ open?'block':'none';
 
 function closeMenu(){
 
-$('menu').classList.remove('open');$('overlay').style.display='none';
+$('menu').classList.remove('open');
+$('overlay').style.display='none';
 
 }
 
 
 function openLibrary(){
 
-$('home').style.display='none';$('library').style.display='block';
+$('home').style.display='none';
+$('library').style.display='block';
 scrollTo(0,0);
 
 }
@@ -2831,7 +2833,8 @@ function goHome(){
 closeMenu();
 closeModal();
 
-$('library').style.display='none';$('home').style.display='grid';
+$('library').style.display='none';
+$('home').style.display='grid';
 
 scrollTo(0,0);
 
@@ -2860,13 +2863,16 @@ setTimeout(window.fireworksBurst,180);
 } 
 });
 
-$('homeLogo').style.display='block';$('headerLogo').style.display='block';
+$('homeLogo').style.display='block';
+$('headerLogo').style.display='block';
 
 // إبقاء الشعار ظاهرًا حتى لو أعاد المتصفح تحديث خصائص الصورة
-$('homeLogo').addEventListener('error',()=>{$('homeLogo').style.visibility='hidden';
+$('homeLogo').addEventListener('error',()=>{
+  $('homeLogo').style.visibility='hidden';
 });
 
-$('headerLogo').addEventListener('error',()=>{$('headerLogo').style.visibility='hidden';
+$('headerLogo').addEventListener('error',()=>{
+  $('headerLogo').style.visibility='hidden';
 });
 
 
@@ -2898,7 +2904,8 @@ $('shareBtn').onclick=shareLibrary;
 $('search').oninput=render;
 
 
-$('showAll').onclick=()=>$('allBooks').scrollIntoView({
+$('showAll').onclick=()=>
+$('allBooks').scrollIntoView({
 behavior:'smooth'
 });
 
@@ -2981,9 +2988,10 @@ details(b.dataset.id);
 $(id).onclick=e=>{
 
 const b=
-e.target.closest('.mini');
+e.target.closest('[data-id]');
 
-if(b)details(b.dataset.id);
+if(b)
+details(b.dataset.id);
 
 };
 
@@ -2992,28 +3000,61 @@ if(b)details(b.dataset.id);
 
 document
 .querySelectorAll('.question')
-.forEach(btn=>{
+.forEach(q=>
 
-btn.onclick=()=>{
+q.onclick=()=>
+q.parentElement
+.classList
+.toggle('active')
 
-const item=btn.parentElement;
+);
 
-item.classList.toggle('active');
 
-btn.querySelector('span').textContent=
-item.classList.contains('active')
-?'−'
-:'＋';
+$('modal').onclick=e=>{
+
+if(e.target===$('modal'))
+closeModal();
 
 };
 
-});
+
+const developerBtn=
+$('developerBtn');
+
+const developerModal=
+$('developerModal');
+
+const developerClose=
+$('developerModalClose');
 
 
-window.onscroll=()=>{
+developerBtn.onclick=()=>{
 
-$('top').style.display=
-scrollY>400?'grid':'none';
+developerModal.classList.add('open');
+
+document.body.style.overflow='hidden';
+
+};
+
+
+developerClose.onclick=()=>{
+
+developerModal.classList.remove('open');
+
+document.body.style.overflow='';
+
+};
+
+
+developerModal.onclick=e=>{
+
+if(e.target===developerModal){
+
+developerModal.classList.remove('open');
+
+document.body.style.overflow='';
+
+}
 
 };
 
@@ -3025,189 +3066,273 @@ behavior:'smooth'
 });
 
 
-// نافذة المطور
-const devModal = $('developerModal');
-const devBtn = $('developerBtn');
-const devClose = $('developerModalClose');
+window.addEventListener(
+'scroll',
+()=>{
 
-if(devBtn && devModal && devClose){
-
-devBtn.onclick = () => {
-devModal.classList.add('open');
-document.body.style.overflow = 'hidden';
-};
-
-devClose.onclick = () => {
-devModal.classList.remove('open');
-document.body.style.overflow = '';
-};
-
-devModal.onclick = (e) => {
-if(e.target === devModal){
-devModal.classList.remove('open');
-document.body.style.overflow = '';
-}
-};
+$('top').style.display=
+scrollY>120
+?'grid'
+:'none';
 
 }
+);
 
 
-buildCats();
-featured();
-stats();
-render();
+document.addEventListener(
+'keydown',
+e=>{
+
+if(e.key==='Escape'){
+
+closeModal();
+closeMenu();
+
+developerModal.classList.remove('open');
+
+document.body.style.overflow='';
+
+}
+
+}
+);
 
 
 
 /* =========================================================
-   مؤثر ألعاب نارية متطور (Canvas Fireworks)
-   يعمل كخلفية تفاعلية واحترافية بدون التأثير على الأزرار
+   نظام ألعاب نارية بصري خفيف — للشاشة الرئيسية فقط
    ========================================================= */
-(function(){
+(function setupFireworks(){
   const canvas = document.getElementById('fireworksCanvas');
   if(!canvas) return;
+
   const ctx = canvas.getContext('2d');
-  let width = 0, height = 0;
+  if(!ctx) return;
+
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;
+
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
   let particles = [];
-  let rockets = [];
+  let raf = 0;
+  let timer = 0;
 
-  function resize(){
-    const home = document.getElementById('home');
-    if(!home) return;
-    width = canvas.width = home.clientWidth || window.innerWidth;
-    height = canvas.height = home.clientHeight || window.innerHeight;
+  function sizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr,0,0,dpr,0,0);
   }
 
-  window.addEventListener('resize', resize);
-  resize();
-
-  function random(min, max){
-    return Math.random() * (max - min) + min;
+  function rand(min,max){
+    return Math.random()*(max-min)+min;
   }
 
-  const colors = ['#f4cb59', '#f8dc73', '#ffffff', '#60a5fa', '#34d399', '#f472b6', '#fbbf24'];
+  function explode(x,y,hue){
+    const count = window.innerWidth < 650 ? 34 : 56;
 
-  class Rocket {
-    constructor(){
-      this.x = random(width * 0.1, width * 0.9);
-      this.y = height + random(10, 40);
-      this.targetY = random(height * 0.12, height * 0.45);
-      this.speed = random(6, 10);
-      this.angle = random(-0.08, 0.08);
-      this.color = colors[Math.floor(Math.random() * colors.length)];
-      this.trail = [];
+    for(let i=0;i<count;i++){
+      const a = Math.PI*2*(i/count) + rand(-0.09,0.09);
+      const speed = rand(1.7,4.8);
+
+      particles.push({
+        x,
+        y,
+        px:x,
+        py:y,
+        vx:Math.cos(a)*speed,
+        vy:Math.sin(a)*speed,
+        life:1,
+        decay:rand(0.012,0.022),
+        gravity:0.045,
+        size:rand(1.1,2.6),
+        hue:(hue+rand(-22,22)+360)%360
+      });
     }
-    update(){
-      this.trail.push({x: this.x, y: this.y});
-      if(this.trail.length > 5) this.trail.shift();
-      this.x += Math.sin(this.angle) * this.speed;
-      this.y -= this.speed;
-      return this.y <= this.targetY;
+
+    if(particles.length>850){
+      particles.splice(0,particles.length-850);
     }
-    draw(){
-      ctx.beginPath();
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = 2;
-      if(this.trail.length > 0){
-        ctx.moveTo(this.trail[0].x, this.trail[0].y);
-        for(let i=1; i<this.trail.length; i++){
-          ctx.lineTo(this.trail[i].x, this.trail[i].y);
-        }
+  }
+
+  function burstRandom(){
+    const rect = canvas.getBoundingClientRect();
+
+    if(rect.width<120 || rect.height<120) return;
+
+    const side = Math.random();
+
+    const x =
+      side<.5
+      ? rand(rect.width*.16,rect.width*.48)
+      : rand(rect.width*.52,rect.width*.84);
+
+    const y =
+      rand(
+        rect.height*.12,
+        rect.height*.47
+      );
+
+    explode(x,y,rand(38,62));
+  }
+
+  function draw(){
+    const rect = canvas.getBoundingClientRect();
+
+    ctx.clearRect(
+      0,
+      0,
+      rect.width,
+      rect.height
+    );
+
+    ctx.globalCompositeOperation='lighter';
+
+    for(let i=particles.length-1;i>=0;i--){
+
+      const p=particles[i];
+
+      p.px=p.x;
+      p.py=p.y;
+
+      p.x+=p.vx;
+      p.y+=p.vy;
+
+      p.vx*=0.988;
+      p.vy=p.vy*0.988+p.gravity;
+
+      p.life-=p.decay;
+
+      if(p.life<=0){
+        particles.splice(i,1);
+        continue;
       }
+
+      ctx.beginPath();
+      ctx.moveTo(p.px,p.py);
+      ctx.lineTo(p.x,p.y);
+      ctx.lineWidth=p.size;
+      ctx.strokeStyle=
+        `hsla(${p.hue},95%,68%,${Math.max(0,p.life*.85)})`;
       ctx.stroke();
-    }
-  }
 
-  class Particle {
-    constructor(x, y, color){
-      this.x = x;
-      this.y = y;
-      const angle = random(0, Math.PI * 2);
-      const speed = random(1.2, 7.5);
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.gravity = 0.06;
-      this.friction = 0.96;
-      this.alpha = 1;
-      this.decay = random(0.012, 0.022);
-      this.color = color;
-      this.size = random(1.8, 3.6);
-    }
-    update(){
-      this.vx *= this.friction;
-      this.vy *= this.friction;
-      this.vy += this.gravity;
-      this.x += this.vx;
-      this.y += this.vy;
-      this.alpha -= this.decay;
-      return this.alpha <= 0;
-    }
-    draw(){
-      ctx.save();
-      ctx.globalAlpha = Math.max(this.alpha, 0);
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.shadowBlur = 10;
-      ctx.shadowColor = this.color;
+      ctx.arc(
+        p.x,
+        p.y,
+        p.size*.72,
+        0,
+        Math.PI*2
+      );
+
+      ctx.fillStyle=
+        `hsla(${p.hue},100%,78%,${Math.max(0,p.life*.55)})`;
+
       ctx.fill();
-      ctx.restore();
     }
+
+    raf=requestAnimationFrame(draw);
   }
 
-  function createExplosion(x, y, baseColor){
-    const count = Math.floor(random(28, 48));
-    for(let i=0; i<count; i++){
-      const c = Math.random() > 0.35 ? baseColor : colors[Math.floor(Math.random() * colors.length)];
-      particles.push(new Particle(x, y, c));
-    }
+  function start(){
+
+    cancelAnimationFrame(raf);
+
+    sizeCanvas();
+
+    particles=[];
+
+    requestAnimationFrame(draw);
+
+    setTimeout(
+      ()=>burstRandom(),
+      650
+    );
+
+    setTimeout(
+      ()=>burstRandom(),
+      950
+    );
+
+    setTimeout(
+      ()=>burstRandom(),
+      1450
+    );
+
+    const schedule=()=>{
+
+      const delay=
+        5200+
+        Math.random()*2600;
+
+      timer=setTimeout(()=>{
+
+        if(
+          document.getElementById('home')?.style.display==='none'
+        ){
+          return schedule();
+        }
+
+        burstRandom();
+
+        if(Math.random()>.55){
+          setTimeout(
+            burstRandom,
+            500
+          );
+        }
+
+        schedule();
+
+      },delay);
+
+    };
+
+    schedule();
+
   }
 
-  let lastLaunch = 0;
-  function loop(timestamp){
-    const home = document.getElementById('home');
-    if(!home || getComputedStyle(home).display === 'none'){
-      requestAnimationFrame(loop);
-      return;
-    }
+  function stop(){
 
-    ctx.clearRect(0, 0, width, height);
+    clearTimeout(timer);
 
-    if(timestamp - lastLaunch > random(900, 1700)){
-      rockets.push(new Rocket());
-      lastLaunch = timestamp;
-    }
+    cancelAnimationFrame(raf);
 
-    for(let i = rockets.length - 1; i >= 0; i--){
-      const r = rockets[i];
-      r.draw();
-      if(r.update()){
-        createExplosion(r.x, r.y, r.color);
-        rockets.splice(i, 1);
-      }
-    }
+    ctx.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
 
-    for(let i = particles.length - 1; i >= 0; i--){
-      const p = particles[i];
-      p.draw();
-      if(p.update()){
-        particles.splice(i, 1);
-      }
-    }
+    particles=[];
 
-    requestAnimationFrame(loop);
   }
 
-  window.fireworksBurst = function(){
-    const cx = width / 2 + random(-120, 120);
-    const cy = height * 0.28 + random(-40, 40);
-    createExplosion(cx, cy, colors[Math.floor(Math.random() * colors.length)]);
-  };
+  window.addEventListener(
+    'resize',
+    sizeCanvas,
+    {passive:true}
+  );
 
-  requestAnimationFrame(loop);
+  window.fireworksBurst = burstRandom;
+
+  window.startLibraryFireworks = start;
+
+  window.stopLibraryFireworks = stop;
+
+  start();
+
 })();
+
+
+buildCats();
+stats();
+featured();
+render();
 
 </script>
 
 </body>
-</html>
+   </html>
