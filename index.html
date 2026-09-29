@@ -216,7 +216,6 @@ button {
   gap: 1rem;
   position: relative;
   box-shadow: var(--shadow);
-
 }
 
 .book:hover {
@@ -452,7 +451,7 @@ button {
   <br>
   <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
     <li><a href="#" id="homeMenu" style="color: var(--text-main); text-decoration: none;">🏠 الصفحة الرئيسية</a></li>
-    <li><a href="#" id="favoritesMenu" style="color: var(--text-main); text-decoration: none;">❤️️ المفضلة</a></li>
+    <li><a href="#" id="favoritesMenu" style="color: var(--text-main); text-decoration: none;">❤ المفضلة</a></li>
     <li><button id="developerBtn" style="color: var(--text-main); text-decoration: none; padding: 0; font-size: 1rem;">👨‍💻 عن المطور</button></li>
   </ul>
 </nav>
@@ -558,7 +557,392 @@ button {
 </audio>
 
 <script>
-const LOGO='data:image/png;base64,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';
+const LOGO='data:image/png;base64,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';
+
+const booksData = [
+  {
+    id: 1,
+    title: "كتاب الامتحان - اللغة العربية (الجزء الأول)",
+    category: "كتب ومراجع",
+    subject: "اللغة العربية",
+    icon: "📕",
+    desc: "الشرح والأسئلة لجميع وحدات النحو والبلاغة والأدب وفق المنظومة الحديثة.",
+    openUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
+    downloadUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
+    popular: true,
+    newest: true,
+    series: true
+  },
+  {
+    id: 2,
+    title: "العمالقة English - Part 3",
+    category: "كتب ومراجع",
+    subject: "اللغة الإنجليزية",
+    icon: "📘",
+    desc: "كتاب العمالقة في اللغة الإنجليزية للثانوية العامة الجزء الثالث مع التدريبات المكثفة.",
+    openUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
+    downloadUrl: "https://drive.google.com/file/d/1O0JFW5vkMSa2Xk-bVo0kH4YFLbRGuwVw/view?usp=drivesdk",
+    popular: true,
+    newest: true,
+    series: false
+  },
+  {
+    id: 3,
+    title: "امتحانات التقييم الأسبوعي - وزارة التربية والتعليم",
+    category: "امتحانات",
+    subject: "جميع المواد",
+    icon: "📝",
+    desc: "جميع تقييمات الوزارة والأسئلة الأسبوعية لمختلف المواد الدراسية مع نماذج الإجابة.",
+    openUrl: "https://ellibrary.moe.gov.eg/",
+    downloadUrl: "https://ellibrary.moe.gov.eg/",
+    popular: true,
+    newest: false,
+    series: false
+  },
+  {
+    id: 4,
+    title: "كورس التأسيس الشامل في الفيزياء",
+    category: "كورسات",
+    subject: "الفيزياء",
+    icon: "🎓",
+    desc: "سلسلة محتويات تعليمية وشرح مبسط لأهم قوانين ومفاهيم الفيزياء الأساسية.",
+    openUrl: "https://mhmdrmdan.yobader.com",
+    downloadUrl: "https://mhmdrmdan.yobader.com",
+    popular: false,
+    newest: true,
+    series: false
+  }
+];
+
+let favorites = JSON.parse(localStorage.getItem('fav_books') || '[]');
+let currentSort = 'popular';
+let currentCategory = 'all';
+let searchQuery = '';
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('homeLogo').src = LOGO;
+  document.getElementById('headerLogo').src = LOGO;
+
+  initEvents();
+  renderFilters();
+  renderAll();
+  initFireworks();
+});
+
+function initEvents() {
+  document.getElementById('enter').addEventListener('click', () => {
+    document.getElementById('home').style.display = 'none';
+    document.getElementById('library').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.getElementById('themeBtn').addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    const btn = document.getElementById('themeBtn');
+    btn.textContent = document.body.classList.contains('light') ? '🌙' : '☀️';
+  });
+
+  const menu = document.getElementById('menu');
+  const overlay = document.getElementById('overlay');
+  
+  const toggleMenu = () => {
+    menu.classList.toggle('open');
+    overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
+  };
+
+  document.getElementById('menuBtn').addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', () => {
+    menu.classList.remove('open');
+    overlay.style.display = 'none';
+    closeModals();
+  });
+
+  document.getElementById('homeMenu').addEventListener('click', (e) => {
+    e.preventDefault();
+    menu.classList.remove('open');
+    overlay.style.display = 'none';
+    document.getElementById('library').style.display = 'none';
+    document.getElementById('home').style.display = 'grid';
+  });
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    searchQuery = e.target.value.toLowerCase().trim();
+    renderAll();
+  });
+
+  document.querySelectorAll('.sortBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.sortBtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSort = btn.dataset.sort;
+      renderAll();
+    });
+  });
+
+  document.getElementById('favoritesMenu').addEventListener('click', () => {
+    menu.classList.remove('open');
+    overlay.style.display = 'none';
+    currentCategory = 'المفضلة';
+    renderFilters();
+    renderAll();
+  });
+
+  window.addEventListener('scroll', () => {
+    const upBtn = document.getElementById('top');
+    upBtn.style.display = window.scrollY > 300 ? 'grid' : 'none';
+  });
+
+  document.getElementById('top').addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  document.getElementById('shareBtn').addEventListener('click', () => {
+    if (navigator.share) {
+      navigator.share({
+        title: 'مكتبة تانية بكالوريا',
+        text: 'تحميل الكتب والامتحانات والكورسات للصف الثاني البكالوريا/الثانوية العامة',
+        url: window.location.href
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert('تم نسخ رابط المكتبة بنجاح!');
+    }
+  });
+
+  document.getElementById('modalClose').addEventListener('click', closeModals);
+  document.getElementById('developerBtn').addEventListener('click', () => {
+    document.getElementById('developerModal').classList.add('open');
+  });
+  document.getElementById('developerModalClose').addEventListener('click', closeModals);
+
+  const audio = document.getElementById('libraryAudio');
+  const musicBtn = document.getElementById('musicBtn');
+  let isPlaying = false;
+
+  musicBtn.addEventListener('click', () => {
+    isPlaying = !isPlaying;
+    musicBtn.classList.toggle('on', isPlaying);
+    musicBtn.setAttribute('aria-pressed', isPlaying);
+    if (isPlaying) {
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+  });
+
+  document.querySelectorAll('.question').forEach(q => {
+    q.addEventListener('click', () => {
+      const parent = q.parentElement;
+      parent.classList.toggle('active');
+      q.querySelector('span').textContent = parent.classList.contains('active') ? '－' : '＋';
+    });
+  });
+}
+
+function closeModals() {
+  document.querySelectorAll('.modal').forEach(m => m.classList.remove('open'));
+  document.getElementById('overlay').style.display = 'none';
+}
+
+function renderFilters() {
+  const categories = ['الكل', 'كتب ومراجع', 'امتحانات', 'كورسات', 'المفضلة'];
+  const container = document.getElementById('filters');
+  container.innerHTML = categories.map(cat => `
+    <button class="filter ${currentCategory === cat || (cat === 'الكل' && currentCategory === 'all') ? 'active' : ''}" 
+            onclick="selectCategory('${cat}')">
+      ${cat === 'المفضلة' ? '❤️️ ' : ''}${cat}
+    </button>
+  `).join('');
+}
+
+function selectCategory(cat) {
+  currentCategory = cat === 'الكل' ? 'all' : cat;
+  renderFilters();
+  renderAll();
+}
+
+function getFilteredBooks() {
+  return booksData.filter(book => {
+    const matchesCategory = currentCategory === 'all' ? true :
+                            currentCategory === 'المفضلة' ? favorites.includes(book.id) :
+                            book.category === currentCategory || book.title.includes(currentCategory);
+    
+    const matchesSearch = !searchQuery || 
+                          book.title.toLowerCase().includes(searchQuery) ||
+                          book.desc.toLowerCase().includes(searchQuery) ||
+                          book.subject.toLowerCase().includes(searchQuery);
+
+    return matchesCategory && matchesSearch;
+  }).sort((a, b) => {
+    if (currentSort === 'popular') return b.popular - a.popular;
+    if (currentSort === 'newest') return b.newest - a.newest;
+    if (currentSort === 'name') return a.title.localeCompare(b.title, 'ar');
+    return 0;
+  });
+}
+
+function renderAll() {
+  const filtered = getFilteredBooks();
+  
+  document.getElementById('total').textContent = booksData.length;
+  document.getElementById('bookCount').textContent = booksData.filter(b => b.category === 'كتب ومراجع').length;
+  document.getElementById('examCount').textContent = booksData.filter(b => b.category === 'امتحانات').length;
+  document.getElementById('courseCount').textContent = booksData.filter(b => b.category === 'كورسات').length;
+
+  const latestList = [...booksData].filter(b => b.newest).slice(0, 4);
+  const popularList = [...booksData].filter(b => b.popular).slice(0, 4);
+  const seriesList = [...booksData].filter(b => b.series);
+
+  renderMiniGrid('latest', latestList);
+  renderSeriesGrid('series', seriesList);
+
+  const booksGrid = document.getElementById('books');
+  document.getElementById('results').textContent = `(عدد النتائج: ${filtered.length})`;
+
+  if (filtered.length === 0) {
+    booksGrid.innerHTML = `
+      <div class="empty">
+        <div class="emptyIcon">🔍</div>
+        <p>لا توجد نتائج تطابق بحثك أو تصنيفك المختار.</p>
+      </div>
+    `;
+    return;
+  }
+
+  booksGrid.innerHTML = filtered.map(book => {
+    const isFav = favorites.includes(book.id);
+    return `
+      <div class="book">
+        <div class="topline">
+          <div class="bookIcon">${book.icon}</div>
+          <button class="favBtn" onclick="toggleFavorite(${book.id}, event)">${isFav ? '❤️' : '🤍'}</button>
+        </div>
+        <h3>${book.title}</h3>
+        <p class="desc">${book.desc}</p>
+        <div class="actions">
+          <button class="action open" onclick="openBookModal(${book.id})">🔍 التفاصيل</button>
+          <a class="action open" href="${book.openUrl}" target="_blank" rel="noopener">📖 فتح</a>
+          <a class="action download" href="${book.downloadUrl}" target="_blank" rel="noopener">⬇ تحميل</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderMiniGrid(elementId, list) {
+  const container = document.getElementById(elementId);
+  container.innerHTML = list.map(item => `
+    <div class="mini" onclick="openBookModal(${item.id})">
+      <div class="miniIcon">${item.icon}</div>
+      <h4>${item.title}</h4>
+      <p>${item.subject}</p>
+    </div>
+  `).join('');
+}
+
+function renderSeriesGrid(elementId, list) {
+  const container = document.getElementById(elementId);
+  container.innerHTML = list.map(item => `
+    <div class="series">
+      <div class="miniIcon">${item.icon}</div>
+      <h4>${item.title}</h4>
+      <p>${item.desc}</p>
+      <div class="seriesActions">
+        <a class="seriesAction seriesOpen" href="${item.openUrl}" target="_blank" rel="noopener">📖 فتح</a>
+        <a class="seriesAction seriesDl" href="${item.downloadUrl}" target="_blank" rel="noopener">⬇ تحميل</a>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFavorite(id, event) {
+  if (event) event.stopPropagation();
+  if (favorites.includes(id)) {
+    favorites = favorites.filter(favId => favId !== id);
+  } else {
+    favorites.push(id);
+  }
+  localStorage.setItem('fav_books', JSON.stringify(favorites));
+  renderAll();
+}
+
+function openBookModal(id) {
+  const book = booksData.find(b => b.id === id);
+  if (!book) return;
+
+  document.getElementById('modalIcon').textContent = book.icon;
+  document.getElementById('modalTitle').textContent = book.title;
+  document.getElementById('modalCat').textContent = `${book.category} • ${book.subject}`;
+  document.getElementById('modalDesc').textContent = book.desc;
+  document.getElementById('modalOpen').href = book.openUrl;
+  document.getElementById('modalDownload').href = book.downloadUrl;
+
+  const favBtn = document.getElementById('modalFav');
+  const isFav = favorites.includes(book.id);
+  favBtn.textContent = isFav ? '❤️ إزالة من المفضلة' : '🤍 إضافة للمفضلة';
+  favBtn.onclick = () => {
+    toggleFavorite(book.id);
+    openBookModal(book.id);
+  };
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function initFireworks() {
+  const canvas = document.getElementById('fireworksCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  function resize() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.parentElement.clientHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  let particles = [];
+  
+  function createParticle() {
+    if (Math.random() > 0.15) return;
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * (canvas.height * 0.6);
+    const color = `hsl(${Math.random() * 60 + 35}, 100%, 60%)`;
+    
+    for (let i = 0; i < 12; i++) {
+      const angle = (Math.PI * 2 / 12) * i;
+      const speed = Math.random() * 2 + 1;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed,
+        alpha: 1,
+        color
+      });
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    createParticle();
+
+    particles.forEach((p, index) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.alpha -= 0.015;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.fill();
+
+      if (p.alpha <= 0) particles.splice(index, 1);
+    });
+
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
 </script>
 </body>
 </html>
