@@ -6,7 +6,459 @@
 <meta name="theme-color" content="#07111f">
 <title>مكتبة تانية بكالوريا</title>
 
-<style>
+/* =========================================================
+   تكبير الخط فقط
+   لا يتم تغيير الألوان أو التصميم أو توزيع العناصر
+   ========================================================= */
+
+body{
+  font-size:16px;
+}
+
+/* الصفحة الرئيسية */
+.badge{
+  font-size:13px;
+}
+
+.lead{
+  font-size:15px;
+}
+
+.pill{
+  font-size:12px;
+}
+
+.enter{
+  font-size:18px;
+}
+
+.note{
+  font-size:12px;
+}
+
+/* الهيدر */
+.brand h2{
+  font-size:21px;
+}
+
+.brand p{
+  font-size:11px;
+}
+
+.track{
+  font-size:13px;
+}
+
+/* الترحيب */
+.welcome small,
+.sectionHead small{
+  font-size:12px;
+}
+
+.welcome p{
+  font-size:14px;
+}
+
+/* البحث والتصنيفات */
+.sortBtn,
+.filter{
+  font-size:12px;
+}
+
+/* الإحصائيات */
+.small{
+  font-size:11px;
+}
+
+.num{
+  font-size:24px;
+}
+
+/* العناوين */
+.sectionHead h3{
+  font-size:22px;
+}
+
+.sectionBtn{
+  font-size:12px;
+}
+
+/* أحدث الإضافات والأكثر طلبًا */
+.mini h4,
+.series h4{
+  font-size:14px;
+}
+
+.mini p,
+.series p{
+  font-size:11px;
+}
+
+.tag{
+  font-size:10px;
+}
+
+.new{
+  font-size:10px;
+}
+
+/* الأزرار */
+.seriesAction,
+.action{
+  font-size:12px;
+}
+
+/* الكتب */
+.booksTitle h3{
+  font-size:25px;
+}
+
+.booksTitle > div > small.gold{
+  font-size:12px !important;
+}
+
+.book h3{
+  font-size:18px;
+}
+
+.desc{
+  font-size:13px;
+}
+
+/* الأسئلة الشائعة */
+.faq h2{
+  font-size:30px;
+}
+
+.question{
+  font-size:14px;
+}
+
+.answer{
+  font-size:13px;
+}
+
+/* الفوتر */
+.footerTitle{
+  font-size:22px;
+}
+
+.footerText{
+  font-size:12px;
+}
+
+.footerLinks a{
+  font-size:11px;
+}
+
+.footerCredit{
+  font-size:11px;
+}
+
+.developerName{
+  font-size:12px;
+}
+
+.developerBtn{
+  font-size:11px;
+}
+
+/* القائمة الجانبية */
+.menu>a{
+  font-size:14px;
+}
+
+.menuInfo{
+  font-size:12px;
+}
+
+/* النوافذ */
+.modal h2{
+  font-size:22px;
+}
+
+.modalCat{
+  font-size:12px;
+}
+
+.meta{
+  font-size:10px;
+}
+
+.modalDesc{
+  font-size:13px;
+}
+
+.modalAction{
+  font-size:12px;
+}
+
+.developerModalText{
+  font-size:13px;
+}
+
+.developerWhatsApp{
+  font-size:13px;
+}
+
+/* الموبايل */
+@media(max-width:600px){
+
+  .brand h2{
+    font-size:16px;
+  }
+
+  .lead{
+    font-size:14px;
+  }
+
+  .welcome p{
+    font-size:13px;
+  }
+
+  .question{
+    font-size:13px;
+  }
+
+  .answer{
+    font-size:12px;
+  }
+
+  .book h3{
+    font-size:17px;
+  }
+
+  .desc{
+    font-size:12px;
+  }
+
+}<style>/* =========================================================
+   تكبير الخط فقط
+   لا يتم تغيير الألوان أو التصميم أو توزيع العناصر
+   ========================================================= */
+
+body{
+  font-size:16px;
+}
+
+/* الصفحة الرئيسية */
+.badge{
+  font-size:13px;
+}
+
+.lead{
+  font-size:15px;
+}
+
+.pill{
+  font-size:12px;
+}
+
+.enter{
+  font-size:18px;
+}
+
+.note{
+  font-size:12px;
+}
+
+/* الهيدر */
+.brand h2{
+  font-size:21px;
+}
+
+.brand p{
+  font-size:11px;
+}
+
+.track{
+  font-size:13px;
+}
+
+/* الترحيب */
+.welcome small,
+.sectionHead small{
+  font-size:12px;
+}
+
+.welcome p{
+  font-size:14px;
+}
+
+/* البحث والتصنيفات */
+.sortBtn,
+.filter{
+  font-size:12px;
+}
+
+/* الإحصائيات */
+.small{
+  font-size:11px;
+}
+
+.num{
+  font-size:24px;
+}
+
+/* العناوين */
+.sectionHead h3{
+  font-size:22px;
+}
+
+.sectionBtn{
+  font-size:12px;
+}
+
+/* أحدث الإضافات والأكثر طلبًا */
+.mini h4,
+.series h4{
+  font-size:14px;
+}
+
+.mini p,
+.series p{
+  font-size:11px;
+}
+
+.tag{
+  font-size:10px;
+}
+
+.new{
+  font-size:10px;
+}
+
+/* الأزرار */
+.seriesAction,
+.action{
+  font-size:12px;
+}
+
+/* الكتب */
+.booksTitle h3{
+  font-size:25px;
+}
+
+.booksTitle > div > small.gold{
+  font-size:12px !important;
+}
+
+.book h3{
+  font-size:18px;
+}
+
+.desc{
+  font-size:13px;
+}
+
+/* الأسئلة الشائعة */
+.faq h2{
+  font-size:30px;
+}
+
+.question{
+  font-size:14px;
+}
+
+.answer{
+  font-size:13px;
+}
+
+/* الفوتر */
+.footerTitle{
+  font-size:22px;
+}
+
+.footerText{
+  font-size:12px;
+}
+
+.footerLinks a{
+  font-size:11px;
+}
+
+.footerCredit{
+  font-size:11px;
+}
+
+.developerName{
+  font-size:12px;
+}
+
+.developerBtn{
+  font-size:11px;
+}
+
+/* القائمة الجانبية */
+.menu>a{
+  font-size:14px;
+}
+
+.menuInfo{
+  font-size:12px;
+}
+
+/* النوافذ */
+.modal h2{
+  font-size:22px;
+}
+
+.modalCat{
+  font-size:12px;
+}
+
+.meta{
+  font-size:10px;
+}
+
+.modalDesc{
+  font-size:13px;
+}
+
+.modalAction{
+  font-size:12px;
+}
+
+.developerModalText{
+  font-size:13px;
+}
+
+.developerWhatsApp{
+  font-size:13px;
+}
+
+/* الموبايل */
+@media(max-width:600px){
+
+  .brand h2{
+    font-size:16px;
+  }
+
+  .lead{
+    font-size:14px;
+  }
+
+  .welcome p{
+    font-size:13px;
+  }
+
+  .question{
+    font-size:13px;
+  }
+
+  .answer{
+    font-size:12px;
+  }
+
+  .book h3{
+    font-size:17px;
+  }
+
+  .desc{
+    font-size:12px;
+  }
+
+}
 :root{
 --bg:#07111f;
 --bg2:#0b1728;
