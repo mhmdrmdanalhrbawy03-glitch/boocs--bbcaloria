@@ -1,3655 +1,3396 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#07111f">
-
 <title>مكتبة تانية بكالوريا</title>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(180deg,#07111f,#0b1728);color:#f8fafc}
+button,input{font:inherit}
+button{cursor:pointer}
+a{text-decoration:none;color:inherit}
 
-:root{
-    --bg:#07111f;
-    --bg2:#0b1728;
-    --card:#101e31;
-    --card2:#14253d;
-    --line:#263b58;
-    --text:#f8fafc;
-    --muted:#9aaabd;
-    --gold:#f3ca59;
-    --gold2:#dcae37;
-    --green:#25d366;
-    --blue:#3b82f6;
+.light{background:#f4f7fa;color:#182235}
+
+.home{
+min-height:100vh;
+display:grid;
+place-items:center;
+padding:20px;
+text-align:center;
+background:
+radial-gradient(circle at 15% 15%,#f4cb5926,transparent 28%),
+radial-gradient(circle at 85% 80%,#3b82f626,transparent 30%),
+linear-gradient(145deg,#040b15,#10223a)
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+.box{width:min(950px,100%)}
+
+.badge,.pill,.tag,.meta,.new{
+display:inline-block;
+border-radius:999px
 }
 
-html{
-    scroll-behavior:smooth;
+.badge{
+padding:8px 13px;
+background:#ffffff0b;
+border:1px solid #f4cb5938;
+font-size:11px
 }
 
-body{
-    font-family:"Noto Kufi Arabic",sans-serif;
-    background:linear-gradient(180deg,var(--bg),var(--bg2));
-    color:var(--text);
-    min-height:100vh;
-    overflow-x:hidden;
+.logo{
+width:210px;
+height:210px;
+padding:8px;
+margin:22px auto;
+border-radius:34px;
+background:linear-gradient(145deg,#f4cb5970,#ffffff12);
+box-shadow:0 25px 65px #0006
 }
 
-button,
-input{
-    font-family:inherit;
+.logo img,.brand img{
+width:100%;
+height:100%;
+object-fit:cover;
+background:#fff;
+border-radius:27px
 }
 
-button{
-    cursor:pointer;
+.title{
+font-size:clamp(34px,6vw,62px);
+line-height:1.3;
+margin:0
 }
 
-a{
-    text-decoration:none;
-    color:inherit;
+.title span,.section small,.book h3,.mini h4,.modal h2{
+color:#f4cb59
 }
 
-/* =========================
-   HOME
-========================= */
-
-#homePage{
-    min-height:100vh;
-    min-height:100svh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    padding:25px 15px;
-    position:relative;
-    overflow:hidden;
-
-    background:
-        radial-gradient(circle at 15% 15%,rgba(243,202,89,.15),transparent 28%),
-        radial-gradient(circle at 85% 80%,rgba(59,130,246,.15),transparent 30%),
-        linear-gradient(145deg,#050c17,#0a1728 55%,#102039);
+.sub,.welcome p,.section p,.desc,.mini p,.answer,.footerText{
+color:#9badc2;
+line-height:2
 }
 
-#homePage::before,
-#homePage::after{
-    content:"";
-    position:absolute;
-    border-radius:50%;
-    border:1px solid rgba(243,202,89,.10);
-    pointer-events:none;
+.mot{
+max-width:820px;
+margin:20px auto;
+padding:18px;
+border-radius:22px;
+background:#f4cb5918;
+border:1px solid #f4cb5938
 }
 
-#homePage::before{
-    width:450px;
-    height:450px;
-    top:-250px;
-    right:-220px;
-}
-
-#homePage::after{
-    width:550px;
-    height:550px;
-    bottom:-330px;
-    left:-270px;
-    border-color:rgba(59,130,246,.08);
-}
-
-.homeBox{
-    width:min(950px,100%);
-    position:relative;
-    z-index:2;
-}
-
-.topBadge{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:9px 14px;
-    border-radius:999px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(243,202,89,.20);
-    color:#dce6f1;
-    font-size:12px;
-    font-weight:800;
-}
-
-.logoFrame{
-    width:clamp(155px,25vw,220px);
-    height:clamp(155px,25vw,220px);
-    padding:8px;
-    margin:22px auto;
-    border-radius:35px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(243,202,89,.48),
-            rgba(255,255,255,.08)
-        );
-
-    box-shadow:
-        0 25px 65px rgba(0,0,0,.40),
-        0 0 0 1px rgba(243,202,89,.12);
-
-    animation:floatLogo 4s ease-in-out infinite;
-}
-
-.logoFrame img{
-    width:100%;
-    height:100%;
-    border-radius:28px;
-    object-fit:cover;
-    display:block;
-    background:#fff;
-}
-
-.homeTitle{
-    font-size:clamp(34px,6vw,63px);
-    line-height:1.3;
-    font-weight:900;
-}
-
-.homeTitle span{
-    color:var(--gold);
-}
-
-.homeSubtitle{
-    color:#cbd5e1;
-    font-size:clamp(14px,2vw,20px);
-    line-height:2;
-    max-width:850px;
-    margin:8px auto 0;
-}
-
-.motivation{
-    max-width:800px;
-    margin:24px auto 20px;
-
-    padding:20px;
-
-    border-radius:23px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(243,202,89,.13),
-            rgba(255,255,255,.04)
-        );
-
-    border:1px solid rgba(243,202,89,.20);
-
-    box-shadow:
-        0 20px 50px rgba(0,0,0,.20);
-}
-
-.motivation h3{
-    color:var(--gold);
-    font-size:clamp(18px,2.5vw,24px);
-    margin-bottom:6px;
-}
-
-.motivation p{
-    color:#e3eaf3;
-    font-size:clamp(13px,1.8vw,16px);
-    line-height:2;
+.mot h3{
+color:#f4cb59;
+margin:0 0 6px
 }
 
 .pills{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:8px;
-    margin-bottom:23px;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+justify-content:center;
+margin:20px 0
 }
 
 .pill{
-    padding:8px 12px;
-    border-radius:999px;
-    background:rgba(255,255,255,.05);
-    border:1px solid rgba(148,163,184,.13);
-    color:#d8e3ee;
-    font-size:11px;
-    font-weight:800;
+padding:8px 11px;
+background:#ffffff0b;
+border:1px solid #ffffff18;
+font-size:10px
 }
 
-.enterBtn{
-    min-width:min(360px,100%);
-    padding:15px 25px;
-    border:0;
-    border-radius:17px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #f8da72,
-            #dfae39
-        );
-
-    color:#111827;
-    font-size:18px;
-    font-weight:900;
-
-    box-shadow:
-        0 18px 40px rgba(243,202,89,.25);
-
-    transition:.25s;
+.enter{
+width:min(360px,100%);
+padding:15px;
+border:0;
+border-radius:16px;
+background:linear-gradient(135deg,#f8dc73,#dfae38);
+font-weight:900;
+font-size:17px
 }
 
-.enterBtn:hover{
-    transform:translateY(-3px) scale(1.02);
+.note{
+margin-top:10px;
+color:#7f91a6;
+font-size:10px
 }
 
-.homeNote{
-    margin-top:10px;
-    color:#7f91a6;
-    font-size:11px;
-}
-
-@keyframes floatLogo{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-8px)}
-}
-
-/* =========================
-   LIBRARY
-========================= */
-
-#libraryPage{
-    display:none;
-    min-height:100vh;
-    background:linear-gradient(180deg,var(--bg),#091526);
+.library{
+display:none;
+min-height:100vh
 }
 
 .header{
-    position:sticky;
-    top:0;
-    z-index:100;
-
-    background:rgba(7,17,31,.90);
-    backdrop-filter:blur(16px);
-
-    border-bottom:1px solid rgba(148,163,184,.12);
-    padding:10px 15px;
+position:sticky;
+top:0;
+z-index:50;
+padding:10px 13px;
+background:#07111fea;
+backdrop-filter:blur(14px);
+border-bottom:1px solid #94a3b820
 }
 
-.headerInner{
-    width:min(1350px,100%);
-    margin:auto;
-
-    display:grid;
-    grid-template-columns:1fr auto 1fr;
-    align-items:center;
-    gap:15px;
+.light .header{
+background:#ffffffed
 }
 
-.headerButtons{
-    display:flex;
-    gap:8px;
-    justify-content:flex-start;
+.head{
+width:min(1380px,100%);
+margin:auto;
+display:grid;
+grid-template-columns:1fr auto 1fr;
+align-items:center;
+gap:12px
+}
+
+.tools{
+display:flex;
+gap:7px
 }
 
 .iconBtn{
-    width:43px;
-    height:43px;
-    border-radius:13px;
-    border:1px solid var(--line);
-    background:#102038;
-    color:#fff;
-
-    display:grid;
-    place-items:center;
-    font-size:19px;
-
-    transition:.2s;
+width:43px;
+height:43px;
+border-radius:13px;
+border:1px solid #29415f;
+background:#102038;
+color:#fff
 }
 
-.iconBtn:hover{
-    transform:translateY(-2px);
-    border-color:var(--gold);
-    color:var(--gold);
+.light .iconBtn{
+background:#fff;
+color:#182235
 }
 
 .brand{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:10px;
+display:flex;
+align-items:center;
+gap:10px;
+justify-content:center
 }
 
 .brand img{
-    width:54px;
-    height:54px;
-    object-fit:cover;
-    background:#fff;
-    border-radius:15px;
-    padding:3px;
-
-    box-shadow:
-        0 10px 25px rgba(0,0,0,.25);
+width:52px;
+height:52px;
+padding:3px;
+border-radius:15px
 }
 
-.brandText h1{
-    font-size:clamp(16px,2.2vw,23px);
-    font-weight:900;
+.brand h2{
+font-size:22px;
+margin:0
 }
 
-.brandText p{
-    color:#8799ae;
-    font-size:10px;
+.brand p{
+font-size:9px;
+color:#9badc2;
+margin:2px 0 0
 }
-
-/* NEWS */
 
 .news{
-    background:#f2c84f;
-    color:#111827;
-    overflow:hidden;
-    white-space:nowrap;
+background:#f2c84f;
+color:#111827;
+overflow:hidden;
+white-space:nowrap
 }
 
-.newsTrack{
-    width:max-content;
-    display:flex;
-    animation:newsMove 26s linear infinite;
-    padding:9px 0;
-    font-size:11px;
-    font-weight:900;
+.track{
+width:max-content;
+display:flex;
+animation:n 25s linear infinite;
+padding:9px 0;
+font-size:11px;
+font-weight:900
 }
 
-.newsTrack span{
-    padding:0 30px;
+.track span{
+padding:0 28px
 }
 
-.newsTrack a{
-    text-decoration:underline;
+@keyframes n{
+from{transform:translateX(0)}
+to{transform:translateX(50%)}
 }
 
-@keyframes newsMove{
-    from{transform:translateX(0)}
-    to{transform:translateX(50%)}
+.wrap{
+width:min(1380px,100%);
+margin:auto;
+padding:18px 14px 70px
 }
 
-/* CONTENT */
+.controls,.stat,.mini,.book,.series,.faqItem{
+border:1px solid #29415f;
+background:linear-gradient(145deg,#14263e,#0f1b2d);
+border-radius:18px
+}
 
-.container{
-    width:min(1350px,100%);
-    margin:auto;
-    padding:18px 15px 70px;
+.light .controls,
+.light .stat,
+.light .mini,
+.light .book,
+.light .series,
+.light .faqItem{
+background:#fff;
+border-color:#d5dfeb
 }
 
 .welcome{
-    padding:20px 0 10px;
+padding:15px 0
 }
 
-.welcome small{
-    color:var(--gold);
-    font-weight:900;
-    font-size:11px;
+.welcome small,.section small{
+font-weight:900;
+font-size:10px;
+color:#f4cb59
 }
 
 .welcome h2{
-    font-size:clamp(22px,3vw,34px);
-    margin-top:5px;
-    font-weight:900;
+font-size:clamp(22px,3vw,33px);
+margin:5px 0
 }
 
 .welcome p{
-    color:var(--muted);
-    font-size:12px;
-    line-height:2;
+font-size:11px
 }
 
-/* CONTROLS */
-
 .controls{
-    padding:14px;
-    border:1px solid var(--line);
-    background:rgba(16,30,49,.78);
-    border-radius:21px;
-    box-shadow:0 16px 40px rgba(0,0,0,.13);
+padding:13px
 }
 
 .searchRow{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) auto;
-    gap:9px;
+display:grid;
+grid-template-columns:1fr auto;
+gap:9px
 }
 
 .search{
-    position:relative;
+position:relative
 }
 
 .search input{
-    width:100%;
-    height:52px;
-    border-radius:15px;
+width:100%;
+height:52px;
+border-radius:15px;
+border:1px solid #29415f;
+background:#0d192a;
+color:#fff;
+padding:0 44px 0 12px;
+outline:0;
+font-size:13px
+}
 
-    border:1px solid #29415f;
-    background:#0d192a;
-    color:#fff;
-
-    padding:0 48px 0 14px;
-
-    outline:0;
-    font-size:13px;
+.light .search input{
+background:#fff;
+color:#182235
 }
 
 .search input:focus{
-    border-color:var(--gold);
-    box-shadow:0 0 0 3px rgba(243,202,89,.09);
+border-color:#f4cb59
 }
 
-.searchIcon{
-    position:absolute;
-    top:50%;
-    right:15px;
-    transform:translateY(-50%);
-    font-size:18px;
-    color:#8293a8;
+.search span{
+position:absolute;
+right:14px;
+top:15px
 }
 
 .sort{
-    display:flex;
-    gap:7px;
+display:flex;
+gap:7px
 }
 
-.sortBtn{
-    height:52px;
-    padding:0 15px;
-
-    border-radius:15px;
-    border:1px solid #29415f;
-
-    background:#0d192a;
-    color:#9fb0c3;
-
-    font-size:11px;
-    font-weight:800;
+.sort button,.filter{
+border:1px solid #29415f;
+background:#0d192a;
+color:#9eb0c5;
+border-radius:14px;
+padding:0 14px;
+height:52px;
+font-weight:800;
+font-size:10px
 }
 
-.sortBtn.active{
-    color:#111827;
-    background:var(--gold);
-    border-color:var(--gold);
+.light .sort button,.light .filter{
+background:#fff;
+color:#64748b
+}
+
+.sort button.active,.filter.active{
+background:#f4cb59;
+color:#111827;
+border-color:#f4cb59
 }
 
 .filters{
-    display:flex;
-    gap:8px;
-
-    overflow-x:auto;
-    padding:13px 2px 3px;
-
-    scrollbar-width:none;
+display:flex;
+gap:8px;
+overflow:auto;
+padding-top:12px;
+scrollbar-width:none
 }
 
 .filters::-webkit-scrollbar{
-    display:none;
+display:none
 }
 
-.filterBtn{
-    white-space:nowrap;
-
-    padding:8px 13px;
-
-    border-radius:999px;
-    border:1px solid #29415f;
-
-    background:#0d192a;
-    color:#9fb0c3;
-
-    font-size:10px;
-    font-weight:800;
+.filter{
+height:auto;
+white-space:nowrap;
+padding:8px 12px;
+border-radius:999px
 }
-
-.filterBtn.active{
-    color:#111827;
-    background:var(--gold);
-    border-color:var(--gold);
-}
-
-/* STATS */
 
 .stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:12px;
-    margin:18px 0 28px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:11px;
+margin:18px 0 28px
 }
 
 .stat{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    min-height:88px;
-    padding:15px;
-
-    border-radius:19px;
-    border:1px solid var(--line);
-
-    background:
-        linear-gradient(
-            145deg,
-            #13243b,
-            #0f1c2e
-        );
+padding:14px;
+display:flex;
+align-items:center;
+gap:10px
 }
 
 .statIcon{
-    width:50px;
-    height:50px;
-
-    border-radius:15px;
-
-    background:rgba(243,202,89,.08);
-    display:grid;
-    place-items:center;
-
-    font-size:23px;
-    flex-shrink:0;
+width:48px;
+height:48px;
+border-radius:15px;
+background:#f4cb5912;
+display:grid;
+place-items:center;
+font-size:22px
 }
 
-.statNumber{
-    color:var(--gold);
-    font-size:24px;
-    font-weight:900;
+.num{
+font-size:23px;
+font-weight:900;
+color:#f4cb59
 }
 
-.statTitle{
-    color:#96a7ba;
-    font-size:10px;
-    margin-top:5px;
+.small{
+font-size:9px;
+color:#9badc2;
+margin-top:4px
 }
-
-/* SECTIONS */
 
 .section{
-    margin-bottom:28px;
+margin-bottom:30px
 }
 
 .sectionHead{
-    display:flex;
-    align-items:end;
-    justify-content:space-between;
-    gap:15px;
-
-    margin-bottom:13px;
-}
-
-.sectionHead small{
-    color:var(--gold);
-    font-weight:900;
-    font-size:10px;
+display:flex;
+justify-content:space-between;
+align-items:end;
+gap:12px;
+margin-bottom:12px
 }
 
 .sectionHead h3{
-    font-size:20px;
-    font-weight:900;
+font-size:20px;
+margin:5px 0 0
 }
 
-.sectionHead p{
-    color:#7f91a6;
-    font-size:10px;
+.sectionBtn{
+border:1px solid #29415f;
+background:#102038;
+color:#f4cb59;
+padding:8px 11px;
+border-radius:11px;
+font-size:10px;
+font-weight:900
 }
-
-.sectionAction{
-    border:1px solid #29415f;
-    background:#102038;
-    color:var(--gold);
-    padding:8px 11px;
-    border-radius:11px;
-    font-size:10px;
-    font-weight:900;
-}
-
-/* MINI CARDS */
 
 .miniGrid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:11px;
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:11px
 }
 
-.miniCard{
-    padding:14px;
-
-    border-radius:17px;
-    border:1px solid var(--line);
-
-    background:
-        linear-gradient(
-            145deg,
-            #14263e,
-            #0f1b2d
-        );
-
-    cursor:pointer;
-    transition:.22s;
-}
-
-.miniCard:hover{
-    transform:translateY(-4px);
-    border-color:rgba(243,202,89,.45);
+.mini{
+padding:14px;
+cursor:pointer
 }
 
 .miniIcon{
-    font-size:25px;
-    margin-bottom:7px;
+font-size:25px;
+margin-bottom:7px
 }
 
-.miniCard h4{
-    color:#f4d267;
-    font-size:12px;
-    line-height:1.8;
-
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
+.mini h4,.series h4{
+font-size:12px;
+line-height:1.8;
+margin:5px 0
 }
 
-.miniCard p{
-    color:#91a3b8;
-    font-size:9px;
-    line-height:1.7;
-
-    margin-top:3px;
-
-    display:-webkit-box;
-    -webkit-line-clamp:2;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
+.mini p,.series p{
+font-size:9px
 }
 
-.miniTag{
-    display:inline-block;
-
-    margin-top:7px;
-    padding:4px 7px;
-
-    border-radius:999px;
-
-    background:#091321;
-    color:#8fa3ba;
-
-    font-size:8px;
-    font-weight:900;
+.tag{
+padding:4px 7px;
+background:#0a1524;
+color:#8fa3ba;
+font-size:8px
 }
 
-/* BOOK GRID */
+.new{
+padding:5px 8px;
+background:#173b2f;
+color:#baf5d9;
+border:1px solid #2d735b;
+font-size:8px;
+font-weight:900
+}
+
+.seriesGrid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:11px
+}
+
+.series{
+padding:14px
+}
+
+.seriesActions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:7px;
+margin-top:9px
+}
+
+.seriesAction{
+height:40px;
+border-radius:11px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:900
+}
+
+.seriesOpen{
+background:#f2cc5c;
+color:#111827
+}
+
+.seriesDl{
+background:#123b30;
+color:#b8f5d7
+}
 
 .booksTitle{
-    display:flex;
-    justify-content:space-between;
-    align-items:end;
-
-    gap:10px;
-    margin:34px 0 13px;
+display:flex;
+justify-content:space-between;
+align-items:end;
+margin:35px 0 13px
 }
 
 .booksTitle h3{
-    font-size:23px;
-    font-weight:900;
-}
-
-#resultsCount{
-    color:#8092a7;
-    font-size:10px;
+margin:5px 0 0;
+font-size:23px
 }
 
 .booksGrid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px
 }
 
 .book{
-    padding:17px;
-    border-radius:22px;
-
-    border:1px solid var(--line);
-
-    background:
-        linear-gradient(
-            145deg,
-            #14253d,
-            #0f1c2e
-        );
-
-    box-shadow:0 13px 30px rgba(0,0,0,.13);
-
-    transition:.22s;
-    animation:cardIn .35s ease both;
+padding:17px
 }
 
-.book:hover{
-    transform:translateY(-5px);
-    border-color:rgba(243,202,89,.50);
-}
-
-@keyframes cardIn{
-    from{
-        opacity:0;
-        transform:translateY(10px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-.bookTop{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
+.topline{
+display:flex;
+justify-content:space-between
 }
 
 .bookIcon{
-    width:58px;
-    height:58px;
-
-    display:grid;
-    place-items:center;
-
-    border-radius:17px;
-
-    background:rgba(243,202,89,.08);
-    border:1px solid rgba(243,202,89,.12);
-
-    font-size:28px;
+width:57px;
+height:57px;
+border-radius:16px;
+background:#f4cb5912;
+display:grid;
+place-items:center;
+font-size:27px
 }
 
-.favorite{
-    width:40px;
-    height:40px;
-
-    border-radius:12px;
-    border:1px solid #2a415e;
-
-    background:#101f34;
-    color:#fff;
-
-    font-size:19px;
+.fav{
+width:40px;
+height:40px;
+border-radius:12px;
+border:1px solid #29415f;
+background:#101f34;
+color:#fff;
+font-size:19px
 }
 
-.book h4{
-    color:#f7d56d;
-
-    font-size:15px;
-    line-height:1.8;
-
-    margin:13px 0 5px;
+.light .fav{
+background:#f8fafc;
+color:#182235
 }
 
-.bookTag{
-    display:inline-block;
-
-    padding:5px 8px;
-
-    border-radius:999px;
-
-    background:#0a1524;
-    color:#94a8bd;
-
-    border:1px solid #203754;
-
-    font-size:9px;
-    font-weight:900;
+.book h3{
+font-size:15px;
+line-height:1.8;
+margin:13px 0 5px
 }
 
-.bookDesc{
-    color:#9badc1;
-
-    font-size:11px;
-    line-height:1.9;
-
-    margin-top:10px;
-
-    min-height:52px;
-
-    display:-webkit-box;
-    -webkit-line-clamp:3;
-    -webkit-box-orient:vertical;
-    overflow:hidden;
+.desc{
+font-size:11px;
+min-height:50px;
+display:-webkit-box;
+-webkit-line-clamp:3;
+-webkit-box-orient:vertical;
+overflow:hidden
 }
 
 .actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:7px;
-    margin-top:14px;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:7px;
+margin-top:14px
 }
 
 .action{
-    height:43px;
-
-    border-radius:12px;
-    border:0;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:10px;
-    font-weight:900;
+height:42px;
+border-radius:12px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:900
 }
 
-.detailsBtn{
-    background:linear-gradient(135deg,#f6d56d,#dfad35);
-    color:#111827;
+.details{
+background:linear-gradient(135deg,#f6d56d,#dfad35);
+color:#111827;
+border:0
 }
 
-.openBtn{
-    background:#12243a;
-    border:1px solid #29415f;
-    color:#dce5ef;
+.open{
+background:#12243a;
+color:#dce5ef;
+border:1px solid #29415f
 }
 
-.downloadBtn{
-    grid-column:1/-1;
-    background:#123a30;
-    border:1px solid #23644f;
-    color:#b6f2d3;
+.light .open{
+background:#f8fafc;
+color:#526276
 }
 
-/* EMPTY */
+.download{
+grid-column:1/-1;
+background:#123a30;
+color:#b6f2d3;
+border:1px solid #23644f
+}
 
 .empty{
-    grid-column:1/-1;
-    text-align:center;
-    padding:55px 15px;
-    color:#91a3b7;
+grid-column:1/-1;
+text-align:center;
+padding:55px 15px;
+color:#9badc2
 }
 
 .emptyIcon{
-    font-size:55px;
-    margin-bottom:10px;
+font-size:52px
 }
 
-/* FAQ */
-
 .faq{
-    width:min(950px,100%);
-    margin:50px auto 0;
+width:min(950px,100%);
+margin:50px auto 0
 }
 
 .faq h2{
-    text-align:center;
-    color:var(--gold);
-    font-size:28px;
-    margin-bottom:20px;
+text-align:center;
+color:#f4cb59;
+font-size:28px
 }
 
 .faqItem{
-    background:linear-gradient(145deg,#12233a,#0e1a2c);
-    border:1px solid var(--line);
-
-    border-radius:17px;
-    overflow:hidden;
-
-    margin-bottom:9px;
+margin-bottom:9px;
+overflow:hidden
 }
 
-.faqQuestion{
-    width:100%;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    background:none;
-    border:0;
-    color:#f3f7fb;
-
-    text-align:right;
-
-    padding:16px;
-
-    font-size:12px;
-    font-weight:900;
+.question{
+width:100%;
+display:flex;
+justify-content:space-between;
+padding:16px;
+background:none;
+border:0;
+color:var(--text,#fff);
+text-align:right;
+font-weight:900;
+font-size:11px
 }
 
-.faqQuestion span{
-    color:var(--gold);
-    font-size:22px;
-    transition:.2s;
+.question span{
+color:#f4cb59;
+font-size:22px
 }
 
-.faqAnswer{
-    display:none;
-
-    padding:0 16px 16px;
-
-    color:#99aabd;
-    font-size:11px;
-    line-height:2;
+.answer{
+display:none;
+padding:0 16px 16px;
+font-size:10px
 }
 
-.faqItem.active .faqAnswer{
-    display:block;
+.faqItem.active .answer{
+display:block
 }
 
-.faqItem.active .faqQuestion span{
-    transform:rotate(45deg);
+.faqItem.active .question span{
+transform:rotate(45deg)
 }
-
-/* FOOTER */
 
 footer{
-    margin-top:35px;
-
-    padding:34px 15px 25px;
-
-    text-align:center;
-
-    border-top:1px solid #1e3048;
-
-    background:rgba(5,12,22,.55);
+margin-top:34px;
+padding:33px 14px 23px;
+text-align:center;
+border-top:1px solid #1e3048
 }
 
 .footerTitle{
-    color:#f4d269;
-    font-size:20px;
-    font-weight:900;
+color:#f4d269;
+font-size:20px;
+font-weight:900
 }
 
 .footerText{
-    max-width:700px;
-    margin:7px auto 19px;
-
-    color:#8da0b5;
-    font-size:11px;
-    line-height:2;
+font-size:10px;
+max-width:720px;
+margin:7px auto 18px
 }
 
 .footerLinks{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:8px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:8px
 }
 
-.footerLink{
-    padding:10px 12px;
-
-    border-radius:11px;
-
-    font-size:10px;
-    font-weight:900;
+.footerLinks a{
+padding:9px 11px;
+border-radius:11px;
+font-size:9px;
+font-weight:900
 }
 
-.whatsappLink{
-    background:#0d5131;
-    color:#b6ffd4;
-}
-
-.channelLink{
-    background:#123c2a;
-    color:#b5ffd3;
-}
-
-.telegramLink{
-    background:#0e3a55;
-    color:#bde3ff;
-}
-
-.platformLink{
-    background:#513908;
-    color:#ffe7a0;
-}
+.w{background:#0d5131}
+.c{background:#123c2a}
+.t{background:#0e3a55}
+.p{background:#513908}
 
 .footerCredit{
-    margin-top:20px;
-    padding-top:17px;
-
-    border-top:1px solid #1c2c43;
-
-    color:#8394a8;
-    font-size:10px;
-    line-height:2.2;
+margin-top:20px;
+padding-top:16px;
+border-top:1px solid #1c2c43;
+color:#8394a8;
+font-size:9px;
+line-height:2.2
 }
 
 .footerCredit strong{
-    color:var(--gold);
+color:#f4cb59
 }
 
-/* FLOATING */
-
+/* الأزرار الجانبية */
 .floating{
-    position:fixed;
-    bottom:15px;
-    left:15px;
-
-    z-index:150;
-
-    display:flex;
-    flex-direction:column;
-    gap:8px;
+position:fixed;
+left:13px;
+bottom:13px;
+z-index:100;
+display:flex;
+flex-direction:column;
+gap:7px
 }
 
 .float{
-    width:45px;
-    height:45px;
-
-    border-radius:50%;
-    border:1px solid rgba(255,255,255,.10);
-
-    display:grid;
-    place-items:center;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.28);
-
-    font-size:19px;
+width:43px;
+height:43px;
+border-radius:50%;
+border:0;
+display:grid;
+place-items:center
 }
 
-.floatWhatsapp{
-    background:#25d366;
-    color:#fff;
+.wa{
+background:#25d366;
+color:#fff
 }
 
-.floatShare{
-    background:#2563eb;
-    color:#fff;
+.up{
+display:none;
+background:#f0c040;
+color:#111827
 }
 
-.floatTop{
-    display:none;
-    background:#f0c040;
-    color:#111827;
-}
-
-/* MENU */
-
+/* القائمة */
 .overlay{
-    position:fixed;
-    inset:0;
-
-    background:rgba(0,0,0,.60);
-    backdrop-filter:blur(3px);
-
-    display:none;
-    z-index:300;
+position:fixed;
+inset:0;
+background:#0009;
+display:none;
+z-index:200
 }
 
-.sideMenu{
-    position:fixed;
-
-    top:0;
-    right:-340px;
-
-    width:min(330px,88vw);
-    height:100vh;
-
-    background:#0a1524;
-
-    border-left:1px solid var(--line);
-
-    z-index:310;
-
-    transition:right .28s;
-
-    overflow:auto;
-
-    box-shadow:-20px 0 50px rgba(0,0,0,.40);
+.menu{
+position:fixed;
+top:0;
+right:-340px;
+width:min(330px,88vw);
+height:100vh;
+background:#0a1524;
+z-index:210;
+transition:right .25s;
+overflow:auto
 }
 
-.sideMenu.open{
-    right:0;
+.menu.open{
+right:0
 }
 
-.menuHeader{
-    padding:22px 17px;
-
-    text-align:center;
-
-    color:var(--gold);
-
-    font-size:16px;
-    font-weight:900;
-
-    background:#122239;
-
-    border-bottom:1px solid var(--line);
+.menuHead{
+padding:22px;
+text-align:center;
+color:#f4cb59;
+font-weight:900;
+background:#122239
 }
 
-.menuLink{
-    display:block;
-
-    padding:15px 17px;
-
-    color:#d5e0eb;
-
-    border-bottom:1px solid rgba(255,255,255,.05);
-
-    font-size:12px;
-}
-
-.menuLink:hover{
-    background:#102038;
-    color:var(--gold);
+.menu>a{
+display:block;
+padding:15px 17px;
+border-bottom:1px solid #ffffff0d;
+color:#d5e0eb;
+font-size:12px
 }
 
 .menuInfo{
-    margin:13px;
-    padding:15px;
-
-    background:#0f1d30;
-    border-radius:15px;
-
-    color:#99aabe;
-
-    font-size:10px;
-    line-height:2;
+margin:13px;
+padding:15px;
+border-radius:15px;
+background:#0f1d30;
+color:#99aabe;
+font-size:10px;
+line-height:2
 }
 
 .menuInfo strong{
-    color:var(--gold);
+color:#f4cb59
 }
 
-/* MODAL */
-
+/* نافذة التفاصيل */
 .modal{
-    position:fixed;
-    inset:0;
-
-    display:none;
-    align-items:center;
-    justify-content:center;
-
-    padding:15px;
-
-    background:rgba(0,0,0,.78);
-    backdrop-filter:blur(7px);
-
-    z-index:500;
+position:fixed;
+inset:0;
+display:none;
+align-items:center;
+justify-content:center;
+padding:14px;
+background:#000c;
+z-index:500
 }
 
 .modal.open{
-    display:flex;
+display:flex
 }
 
 .modalBox{
-    width:min(560px,100%);
-    max-height:90vh;
+width:min(570px,100%);
+max-height:90vh;
+overflow:auto;
+padding:23px;
+border-radius:24px;
+background:#152843;
+border:1px solid #f4cb5938;
+position:relative
+}
 
-    overflow:auto;
-
-    padding:23px;
-
-    position:relative;
-
-    border-radius:24px;
-
-    background:
-        linear-gradient(
-            145deg,
-            #152843,
-            #0a1626
-        );
-
-    border:1px solid rgba(243,202,89,.22);
-
-    box-shadow:0 30px 80px rgba(0,0,0,.50);
+.light .modalBox{
+background:#fff
 }
 
 .modalClose{
-    position:absolute;
-
-    top:11px;
-    left:11px;
-
-    width:40px;
-    height:40px;
-
-    border:0;
-    border-radius:50%;
-
-    background:#11243a;
-
-    color:var(--gold);
-
-    font-size:24px;
+position:absolute;
+top:10px;
+left:10px;
+width:40px;
+height:40px;
+border:0;
+border-radius:50%;
+background:#11243a;
+color:#f4cb59;
+font-size:23px
 }
 
 .modalIcon{
-    text-align:center;
-    font-size:58px;
+text-align:center;
+font-size:58px
 }
 
-.modalTitle{
-    text-align:center;
-
-    color:#f5d36d;
-
-    font-size:22px;
-    line-height:1.8;
-
-    margin:7px 30px 3px;
+.modal h2{
+text-align:center;
+font-size:22px;
+line-height:1.8;
+margin:8px 25px 2px
 }
 
 .modalCat{
-    text-align:center;
-    color:#91a3b7;
-    font-size:10px;
+text-align:center;
+color:#9badc2;
+font-size:10px
 }
 
-.modalMeta{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:7px;
-
-    margin-top:12px;
-}
-
-.meta{
-    padding:5px 8px;
-    border-radius:999px;
-
-    background:#102238;
-    color:#a4b5c8;
-
-    font-size:9px;
+.metaBox{
+display:flex;
+gap:7px;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:10px
 }
 
 .modalDesc{
-    text-align:center;
+text-align:center;
+color:#b9c6d4;
+font-size:12px;
+line-height:2;
+margin-top:13px
+}
 
-    color:#b7c5d4;
-
-    font-size:12px;
-    line-height:2;
-
-    margin-top:13px;
+.light .modalDesc{
+color:#64748b
 }
 
 .modalActions{
-    display:flex;
-    gap:8px;
-
-    margin-top:20px;
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+margin-top:20px
 }
 
 .modalAction{
-    flex:1;
-
-    min-height:45px;
-
-    border-radius:13px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:10px;
-    font-weight:900;
-
-    border:0;
+min-height:45px;
+border-radius:13px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:10px;
+font-weight:900
 }
 
-.modalOpen{
-    background:#f2cc5c;
-    color:#111827;
+.mOpen{
+background:#f2cc5c;
+color:#111827
 }
 
-.modalDownload{
-    background:#123b30;
-    color:#b8f5d7;
-    border:1px solid #22634f;
+.mDl{
+background:#123b30;
+color:#b8f5d7
 }
 
-.modalFavorite{
-    background:#11243a;
-    color:#ebf1f7;
-    border:1px solid #29415f;
+.mFav{
+background:#11243a;
+color:#ebf1f7;
+border:1px solid #29415f
 }
 
-/* LIGHT MODE */
-
-body.light{
-    background:#eef3f8;
-    color:#142033;
-}
-
-body.light #libraryPage{
-    background:#eef3f8;
-}
-
-body.light .header{
-    background:rgba(255,255,255,.94);
-}
-
-body.light .brandText h1{
-    color:#142033;
-}
-
-body.light .brandText p,
-body.light .welcome p,
-body.light .sectionHead p{
-    color:#64748b;
-}
-
-body.light .controls,
-body.light .stat,
-body.light .miniCard,
-body.light .book,
-body.light .faqItem{
-    background:#fff;
-    border-color:#d5deea;
-}
-
-body.light .search input,
-body.light .sortBtn,
-body.light .filterBtn,
-body.light .iconBtn,
-body.light .favorite,
-body.light .sectionAction,
-body.light .openBtn,
-body.light .modalFavorite{
-    background:#f8fafc;
-    color:#526276;
-    border-color:#d5deea;
-}
-
-body.light .bookDesc,
-body.light .miniCard p,
-body.light .faqAnswer{
-    color:#64748b;
-}
-
-body.light footer{
-    background:#e4eaf1;
-    border-color:#d4dde8;
-}
-
-/* RESPONSIVE */
-
+/* موبايل */
 @media(max-width:1100px){
-
-    .miniGrid{
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .booksGrid{
-        grid-template-columns:repeat(2,1fr);
-    }
+.miniGrid{grid-template-columns:repeat(3,1fr)}
+.booksGrid{grid-template-columns:repeat(2,1fr)}
 }
 
 @media(max-width:800px){
-
-    .headerInner{
-        grid-template-columns:auto 1fr;
-    }
-
-    .headerButtons{
-        grid-column:1;
-    }
-
-    .brand{
-        grid-column:2;
-    }
-
-    .brandText h1{
-        font-size:15px;
-    }
-
-    .brandText p{
-        font-size:8px;
-    }
-
-    .brand img{
-        width:47px;
-        height:47px;
-    }
-
-    .searchRow{
-        grid-template-columns:1fr;
-    }
-
-    .sort{
-        display:grid;
-        grid-template-columns:repeat(3,1fr);
-    }
-
-    .sortBtn{
-        width:100%;
-        padding:0 5px;
-    }
-
-    .stats{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .miniGrid{
-        grid-template-columns:repeat(2,1fr);
-    }
+.head{grid-template-columns:auto 1fr}
+.tools{grid-column:1}
+.brand{grid-column:2}
+.searchRow{grid-template-columns:1fr}
+.sort{display:grid;grid-template-columns:repeat(3,1fr)}
+.sort button{width:100%;padding:0 4px}
+.stats{grid-template-columns:repeat(2,1fr)}
+.miniGrid{grid-template-columns:repeat(2,1fr)}
+.seriesGrid{grid-template-columns:1fr}
 }
 
 @media(max-width:560px){
-
-    #homePage{
-        padding:18px 12px;
-    }
-
-    .topBadge{
-        font-size:9px;
-    }
-
-    .homeTitle{
-        font-size:32px;
-    }
-
-    .homeSubtitle{
-        font-size:13px;
-    }
-
-    .motivation{
-        padding:15px;
-        border-radius:18px;
-    }
-
-    .motivation h3{
-        font-size:16px;
-    }
-
-    .motivation p{
-        font-size:12px;
-    }
-
-    .pill{
-        font-size:9px;
-        padding:7px 9px;
-    }
-
-    .enterBtn{
-        width:100%;
-        font-size:15px;
-        padding:14px;
-    }
-
-    .container{
-        padding:14px 11px 55px;
-    }
-
-    .stats{
-        gap:8px;
-    }
-
-    .stat{
-        min-height:73px;
-        padding:11px;
-        gap:8px;
-    }
-
-    .statIcon{
-        width:39px;
-        height:39px;
-        border-radius:12px;
-        font-size:18px;
-    }
-
-    .statNumber{
-        font-size:19px;
-    }
-
-    .statTitle{
-        font-size:8px;
-    }
-
-    .miniGrid{
-        grid-template-columns:1fr;
-    }
-
-    .booksGrid{
-        grid-template-columns:1fr;
-        gap:12px;
-    }
-
-    .book{
-        padding:15px;
-        border-radius:19px;
-    }
-
-    .book h4{
-        font-size:14px;
-    }
-
-    .bookDesc{
-        font-size:10px;
-        min-height:0;
-    }
-
-    .actions{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .faq h2{
-        font-size:24px;
-    }
-
-    .faqQuestion{
-        font-size:10px;
-        padding:14px;
-    }
-
-    .faqAnswer{
-        font-size:10px;
-    }
-
-    .footerLinks{
-        display:grid;
-        grid-template-columns:1fr 1fr;
-    }
-
-    .footerLink{
-        font-size:9px;
-        padding:9px 5px;
-    }
-
-    .modalBox{
-        padding:19px;
-        border-radius:20px;
-    }
-
-    .modalActions{
-        flex-direction:column;
-    }
-
-    .sideMenu{
-        width:86vw;
-    }
+.logo{width:160px;height:160px}
+.homeTitle{font-size:31px}
+.homeSub{font-size:11px}
+.mot{padding:14px}
+.mot h3{font-size:15px}
+.mot p{font-size:10px}
+.pill{font-size:8px}
+.enter{font-size:15px}
+.wrap{padding:12px 10px 55px}
+.brand img{width:44px;height:44px}
+.brand h2{font-size:13px}
+.brand p{font-size:7px}
+.stat{padding:10px;min-height:72px}
+.statIcon{width:38px;height:38px;font-size:18px}
+.num{font-size:18px}
+.small{font-size:8px}
+.miniGrid,.booksGrid{grid-template-columns:1fr}
+.book{padding:15px}
+.book h3{font-size:14px}
+.desc{font-size:10px}
+.footerLinks{display:grid;grid-template-columns:1fr 1fr}
+.modalActions{grid-template-columns:1fr}
+.question{font-size:10px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================
-     HOME
-========================= -->
+<section id="home" class="home">
+<div class="homeWrap box">
 
-<section id="homePage">
+<div class="badge">
+🎓 مكتبة تانية بكالوريا • كل ما تحتاجه في مكان واحد
+</div>
 
-    <div class="homeBox">
+<div class="logo">
+<img id="homeLogo" alt="شعار مكتبة تانية بكالوريا">
+</div>
 
-        <div class="topBadge">
-            🎓 مكتبة تانية بكالوريا • كل ما تحتاجه في مكان واحد
-        </div>
+<h1 class="title">
+خطوتك اليوم… <span>تصنع تفوقك</span> غدًا
+</h1>
 
-        <div class="logoFrame">
-            <img
-                id="homeLogo"
-                alt="شعار مكتبة تانية بكالوريا"
-            >
-        </div>
+<p class="sub homeSub">
+كتب ومذكرات وامتحانات وكورسات مرتبة لتصل إلى ما تحتاجه بسرعة من الموبايل أو التابلت أو الكمبيوتر.
+</p>
 
-        <h1 class="homeTitle">
-            خطوتك اليوم… <span>تصنع تفوقك</span> غدًا
-        </h1>
+<div class="mot">
+<h3>💡 لا تؤجل خطوة مذاكرتك القادمة</h3>
+<p class="sub">
+ابدأ بالمادة التي تحتاجها الآن، اختر المحتوى المناسب لك، وواصل طريقك بثبات حتى تحقق هدفك.
+</p>
+</div>
 
-        <p class="homeSubtitle">
-            كتب ومذكرات وامتحانات وكورسات مرتبة لتصل إلى ما تحتاجه بسرعة
-            من الموبايل أو التابلت أو الكمبيوتر.
-        </p>
+<div class="pills">
+<span class="pill">📚 كتب ومراجع</span>
+<span class="pill">📝 امتحانات</span>
+<span class="pill">🎓 كورسات</span>
+<span class="pill">🔎 بحث سريع</span>
+<span class="pill">❤️ مفضلة</span>
+</div>
 
-        <div class="motivation">
+<button id="enter" class="enter">
+🚀 دخول المكتبة
+</button>
 
-            <h3>
-                💡 لا تؤجل خطوة مذاكرتك القادمة
-            </h3>
+<div class="note">
+متوافقة مع جميع الشاشات
+</div>
 
-            <p>
-                ابدأ بالمادة التي تحتاجها الآن، اختر المحتوى المناسب لك،
-                وواصل طريقك بثبات حتى تحقق هدفك.
-            </p>
-
-        </div>
-
-        <div class="pills">
-
-            <span class="pill">📚 كتب ومراجع</span>
-            <span class="pill">📝 امتحانات</span>
-            <span class="pill">🎓 كورسات</span>
-            <span class="pill">🔎 بحث سريع</span>
-            <span class="pill">❤️ مفضلة</span>
-
-        </div>
-
-        <button
-            class="enterBtn"
-            onclick="openLibrary()"
-        >
-            🚀 دخول المكتبة
-        </button>
-
-        <div class="homeNote">
-            متوافقة مع جميع الشاشات
-        </div>
-
-    </div>
-
+</div>
 </section>
 
-<!-- =========================
-     LIBRARY
-========================= -->
+<section id="library" class="library">
 
-<section id="libraryPage">
+<header class="header">
 
-    <header class="header">
+<div class="head">
 
-        <div class="headerInner">
+<div class="tools">
 
-            <div class="headerButtons">
+<button id="menuBtn" class="iconBtn">
+☰
+</button>
 
-                <button
-                    class="iconBtn"
-                    onclick="toggleMenu()"
-                    aria-label="القائمة"
-                >
-                    ☰
-                </button>
-
-                <button
-                    class="iconBtn"
-                    onclick="toggleTheme()"
-                    aria-label="الوضع"
-                >
-                    ☀️
-                </button>
-
-            </div>
-
-            <div class="brand">
-
-                <img
-                    id="headerLogo"
-                    alt="شعار المكتبة"
-                >
-
-                <div class="brandText">
-
-                    <h1>
-                        مكتبة تانية بكالوريا
-                    </h1>
-
-                    <p>
-                        كتب • امتحانات • كورسات • مذكرات
-                    </p>
-
-                </div>
-
-            </div>
-
-            <div></div>
-
-        </div>
-
-    </header>
-
-    <div class="news">
-
-        <div class="newsTrack">
-
-            <span>
-                🎓 المنصة التعليمية:
-                <a
-                    href="https://mhmdrmdan.yobader.com"
-                    target="_blank"
-                >
-                    mhmdrmdan.yobader.com
-                </a>
-            </span>
-
-            <span>
-                ⭐ جميع الكورسات والشرح والامتحانات متوفرة على المنصة.
-            </span>
-
-            <span>
-                📚 ابحث عن الكتاب الذي تحتاجه بسرعة.
-            </span>
-
-        </div>
-
-    </div>
-
-    <main class="container">
-
-        <section class="welcome">
-
-            <small>
-                مكتبتك في مكان واحد
-            </small>
-
-            <h2>
-                مرحبًا بك في مكتبة تانية بكالوريا 👋
-            </h2>
-
-            <p>
-                اختر المادة أو ابحث باسم الكتاب ثم افتح أو حمّل المحتوى مباشرة.
-            </p>
-
-        </section>
-
-        <!-- CONTROLS -->
-
-        <section class="controls">
-
-            <div class="searchRow">
-
-                <div class="search">
-
-                    <span class="searchIcon">
-                        🔎
-                    </span>
-
-                    <input
-                        id="searchInput"
-                        type="search"
-                        placeholder="ابحث باسم الكتاب أو المادة أو الوصف..."
-                        oninput="renderBooks()"
-                    >
-
-                </div>
-
-                <div class="sort">
-
-                    <button
-                        class="sortBtn"
-                        data-sort="name"
-                        onclick="sortBooks('name')"
-                    >
-                        أ–ي
-                    </button>
-
-                    <button
-                        class="sortBtn"
-                        data-sort="newest"
-                        onclick="sortBooks('newest')"
-                    >
-                        🆕 جديد
-                    </button>
-
-                    <button
-                        class="sortBtn active"
-                        data-sort="popular"
-                        onclick="sortBooks('popular')"
-                    >
-                        ⭐ شهير
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div
-                id="filters"
-                class="filters"
-            ></div>
-
-        </section>
-
-        <!-- STATS -->
-
-        <section class="stats">
-
-            <div class="stat">
-
-                <div class="statIcon">
-                    📚
-                </div>
-
-                <div>
-
-                    <div
-                        class="statNumber"
-                        id="booksCount"
-                    >
-                        0
-                    </div>
-
-                    <div class="statTitle">
-                        الكتب والمراجع
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="stat">
-
-                <div class="statIcon">
-                    📝
-                </div>
-
-                <div>
-
-                    <div
-                        class="statNumber"
-                        id="examCount"
-                    >
-                        0
-                    </div>
-
-                    <div class="statTitle">
-                        الامتحانات
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="stat">
-
-                <div class="statIcon">
-                    🎓
-                </div>
-
-                <div>
-
-                    <div
-                        class="statNumber"
-                        id="courseCount"
-                    >
-                        0
-                    </div>
-
-                    <div class="statTitle">
-                        الكورسات
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="stat">
-
-                <div class="statIcon">
-                    📄
-                </div>
-
-                <div>
-
-                    <div
-                        class="statNumber"
-                        id="notesCount"
-                    >
-                        0
-                    </div>
-
-                    <div class="statTitle">
-                        المذكرات
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- LATEST -->
-
-        <section class="section">
-
-            <div class="sectionHead">
-
-                <div>
-
-                    <small>
-                        مختارات المكتبة
-                    </small>
-
-                    <h3>
-                        أحدث ما تمت إضافته
-                    </h3>
-
-                </div>
-
-                <button
-                    class="sectionAction"
-                    onclick="scrollToBooks()"
-                >
-                    عرض الكل ↓
-                </button>
-
-            </div>
-
-            <div
-                id="latestGrid"
-                class="miniGrid"
-            ></div>
-
-        </section>
-
-        <!-- POPULAR -->
-
-        <section class="section">
-
-            <div class="sectionHead">
-
-                <div>
-
-                    <small>
-                        ابدأ من هنا
-                    </small>
-
-                    <h3>
-                        الأكثر استخدامًا
-                    </h3>
-
-                </div>
-
-            </div>
-
-            <div
-                id="popularGrid"
-                class="miniGrid"
-            ></div>
-
-        </section>
-
-        <!-- ALL BOOKS -->
-
-        <section id="allBooks">
-
-            <div class="booksTitle">
-
-                <div>
-
-                    <small
-                        style="
-                            color:var(--gold);
-                            font-size:10px;
-                            font-weight:900
-                        "
-                    >
-                        كل المحتوى
-                    </small>
-
-                    <h3>
-                        المكتبة كاملة
-                    </h3>
-
-                </div>
-
-                <span id="resultsCount"></span>
-
-            </div>
-
-            <div
-                id="booksGrid"
-                class="booksGrid"
-            ></div>
-
-        </section>
-
-        <!-- FAQ -->
-
-        <section
-            class="faq"
-            id="faq"
-        >
-
-            <h2>
-                ❓ الأسئلة الشائعة
-            </h2>
-
-            <div class="faqItem">
-
-                <button class="faqQuestion">
-                    📚 هل جميع الكتب مجانية؟
-                    <span>+</span>
-                </button>
-
-                <div class="faqAnswer">
-                    نعم، جميع الكتب والمذكرات والكورسات الموجودة داخل المكتبة مجانية بالكامل.
-                </div>
-
-            </div>
-
-            <div class="faqItem">
-
-                <button class="faqQuestion">
-                    📥 لا أجد كتابًا معينًا؟
-                    <span>+</span>
-                </button>
-
-                <div class="faqAnswer">
-                    يمكنك التواصل مع الدعم الفني وذكر اسم الكتاب المطلوب إضافته.
-                </div>
-
-            </div>
-
-            <div class="faqItem">
-
-                <button class="faqQuestion">
-                    🔄 هل يتم تحديث المكتبة؟
-                    <span>+</span>
-                </button>
-
-                <div class="faqAnswer">
-                    نعم، تتم إضافة الكتب والكورسات والامتحانات الجديدة باستمرار.
-                </div>
-
-            </div>
-
-            <div class="faqItem">
-
-                <button class="faqQuestion">
-                    🎓 هل سيتم إضافة جميع كتب المنهج؟
-                    <span>+</span>
-                </button>
-
-                <div class="faqAnswer">
-                    بإذن الله سيتم توفير جميع كتب المنهج الرسمي فور صدورها.
-                </div>
-
-            </div>
-
-            <div class="faqItem">
-
-                <button class="faqQuestion">
-                    💬 كيف أتواصل مع الدعم؟
-                    <span>+</span>
-                </button>
-
-                <div class="faqAnswer">
-                    يمكنك التواصل عبر واتساب على الرقم:
-                    <b>01500492203</b>
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- FOOTER -->
-
-        <footer>
-
-            <div class="footerTitle">
-                📚 مكتبة تانية بكالوريا
-            </div>
-
-            <div class="footerText">
-                مكتبة مجانية تضم الكتب والمذكرات والكورسات والامتحانات لخدمة طلاب تانية بكالوريا.
-            </div>
-
-            <div class="footerLinks">
-
-                <a
-                    class="footerLink whatsappLink"
-                    href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
-                    target="_blank"
-                >
-                    💬 جروب واتساب
-                </a>
-
-                <a
-                    class="footerLink channelLink"
-                    href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
-                    target="_blank"
-                >
-                    📢 قناة واتساب
-                </a>
-
-                <a
-                    class="footerLink telegramLink"
-                    href="https://t.me/geniuses_youssef"
-                    target="_blank"
-                >
-                    ✈️ قناة تليجرام
-                </a>
-
-                <a
-                    class="footerLink platformLink"
-                    href="https://mhmdrmdan.yobader.com"
-                    target="_blank"
-                >
-                    🎓 المنصة التعليمية
-                </a>
-
-            </div>
-
-            <div class="footerCredit">
-
-                💻 بالشراكة مع
-                <strong>
-                    مالك سامح
-                </strong>
-
-                • 🎓 برعاية وإشراف
-
-                <strong>
-                    محمد رمضان الحرباوي
-                </strong>
-
-                <br>
-
-                © 2026 جميع الحقوق محفوظة
-
-            </div>
-
-        </footer>
-
-    </main>
-
-</section>
-
-<!-- FLOATING -->
-
-<div class="floating">
-
-    <a
-        class="float floatWhatsapp"
-        href="https://wa.me/201500492203"
-        target="_blank"
-        aria-label="واتساب"
-    >
-        💬
-    </a>
-
-    <button
-        class="float floatShare"
-        onclick="shareLibrary()"
-        aria-label="مشاركة"
-    >
-        ↗
-    </button>
-
-    <button
-        id="topButton"
-        class="float floatTop"
-        onclick="scrollToTop()"
-        aria-label="أعلى الصفحة"
-    >
-        ↑
-    </button>
+<button id="themeBtn" class="iconBtn">
+☀️
+</button>
 
 </div>
 
-<!-- MENU -->
+<div class="brand">
+
+<img id="headerLogo" class="brandLogo" alt="شعار المكتبة">
+
+<div>
+<h2>مكتبة تانية بكالوريا</h2>
+<p>كتب • امتحانات • كورسات • مذكرات</p>
+</div>
+
+</div>
+
+<div></div>
+
+</div>
+
+</header>
+
+<div class="news">
+
+<div class="track">
+
+<span>
+🎓 المنصة التعليمية:
+<a href="https://mhmdrmdan.yobader.com" target="_blank">
+mhmdrmdan.yobader.com
+</a>
+</span>
+
+<span>
+⭐ جميع الكورسات والشرح والامتحانات متوفرة على المنصة.
+</span>
+
+<span>
+📚 ابحث عن الكتاب الذي تحتاجه بسرعة.
+</span>
+
+</div>
+
+</div>
+
+<main class="wrap">
+
+<section class="welcome">
+
+<small>
+مكتبتك في مكان واحد
+</small>
+
+<h2>
+مرحبًا بك في مكتبة تانية بكالوريا 👋
+</h2>
+
+<p>
+اختر المادة أو ابحث باسم الكتاب ثم افتح أو حمّل المحتوى مباشرة.
+</p>
+
+</section>
+
+<section class="controls">
+
+<div class="searchRow">
+
+<div class="search">
+
+<span>🔎</span>
+
+<input
+id="search"
+class="searchInput"
+type="search"
+placeholder="ابحث باسم الكتاب أو المادة أو الوصف..."
+>
+
+</div>
+
+<div class="sort">
+
+<button data-sort="popular" class="active">
+⭐ شهير
+</button>
+
+<button data-sort="newest">
+🆕 جديد
+</button>
+
+<button data-sort="name">
+أ–ي
+</button>
+
+</div>
+
+</div>
+
+<div id="filters" class="filters"></div>
+
+</section>
+
+<section class="stats">
+
+<div class="stat">
+
+<div class="statIcon">📚</div>
+
+<div>
+
+<div id="total" class="num">
+0
+</div>
+
+<div class="small">
+إجمالي المحتوى
+</div>
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="statIcon">📖</div>
+
+<div>
+
+<div id="bookCount" class="num">
+0
+</div>
+
+<div class="small">
+الكتب والمراجع
+</div>
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="statIcon">📝</div>
+
+<div>
+
+<div id="examCount" class="num">
+0
+</div>
+
+<div class="small">
+الامتحانات
+</div>
+
+</div>
+
+</div>
+
+<div class="stat">
+
+<div class="statIcon">🎓</div>
+
+<div>
+
+<div id="courseCount" class="num">
+0
+</div>
+
+<div class="small">
+الكورسات
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="section">
+
+<div class="sectionHead">
+
+<div>
+
+<small>
+وصل حديثًا
+</small>
+
+<h3>
+🆕 أحدث الإضافات
+</h3>
+
+</div>
+
+<button id="showAll" class="sectionBtn">
+عرض الكل ↓
+</button>
+
+</div>
 
 <div
-    id="overlay"
-    class="overlay"
-    onclick="closeMenu()"
+id="latest"
+class="miniGrid"
+></div>
+
+</section>
+
+<section
+class="section"
+id="examSeries"
+>
+
+<div class="sectionHead">
+
+<div>
+
+<small>
+سلسلة مميزة
+</small>
+
+<h3>
+📚 سلسلة كتاب الامتحان – اللغة العربية
+</h3>
+
+</div>
+
+<p>
+الأجزاء الثلاثة جاهزة للفتح والتحميل
+</p>
+
+</div>
+
+<div
+id="series"
+class="seriesGrid"
+></div>
+
+</section>
+
+<section class="section">
+
+<div class="sectionHead">
+
+<div>
+
+<small>
+ابدأ من هنا
+</small>
+
+<h3>
+🔥 الأكثر استخدامًا
+</h3>
+
+</div>
+
+</div>
+
+<div
+id="popular"
+class="miniGrid"
+></div>
+
+</section>
+
+<section id="allBooks">
+
+<div class="booksTitle">
+
+<div>
+
+<small
+style="
+color:#f4cb59;
+font-size:10px;
+font-weight:900
+"
+>
+كل المحتوى
+</small>
+
+<h3>
+المكتبة كاملة
+</h3>
+
+</div>
+
+<span
+id="results"
+class="results"
+></span>
+
+</div>
+
+<div
+id="books"
+class="booksGrid"
+></div>
+
+</section>
+
+<section
+id="faq"
+class="faq"
+>
+
+<h2>
+❓ الأسئلة الشائعة
+</h2>
+
+<div class="faqItem">
+
+<button class="question">
+📚 هل جميع الكتب مجانية؟
+<span>+</span>
+</button>
+
+<div class="answer">
+نعم، جميع الكتب والمذكرات والكورسات الموجودة داخل المكتبة مجانية بالكامل.
+</div>
+
+</div>
+
+<div class="faqItem">
+
+<button class="question">
+📥 لا أجد كتابًا معينًا؟
+<span>+</span>
+</button>
+
+<div class="answer">
+يمكنك التواصل مع الدعم الفني وذكر اسم الكتاب المطلوب إضافته.
+</div>
+
+</div>
+
+<div class="faqItem">
+
+<button class="question">
+🔄 هل يتم تحديث المكتبة؟
+<span>+</span>
+</button>
+
+<div class="answer">
+نعم، تتم إضافة الكتب والكورسات والامتحانات الجديدة باستمرار.
+</div>
+
+</div>
+
+<div class="faqItem">
+
+<button class="question">
+🎓 هل سيتم إضافة جميع كتب المنهج؟
+<span>+</span>
+</button>
+
+<div class="answer">
+بإذن الله سيتم توفير جميع كتب المنهج الرسمي فور صدورها.
+</div>
+
+</div>
+
+<div class="faqItem">
+
+<button class="question">
+💬 كيف أتواصل مع الدعم؟
+<span>+</span>
+</button>
+
+<div class="answer">
+يمكنك التواصل عبر واتساب على الرقم:
+<b>01500492203</b>
+</div>
+
+</div>
+
+</section>
+
+<footer>
+
+<div class="footerTitle">
+📚 مكتبة تانية بكالوريا
+</div>
+
+<div class="footerText">
+مكتبة مجانية تضم الكتب والمذكرات والكورسات والامتحانات لخدمة طلاب تانية بكالوريا.
+</div>
+
+<div class="footerLinks">
+
+<a
+class="w"
+href="https://chat.whatsapp.com/Ca3CKBKd2lyGppckCufA9c"
+target="_blank"
+>
+💬 جروب واتساب
+</a>
+
+<a
+class="c"
+href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+target="_blank"
+>
+📢 قناة واتساب
+</a>
+
+<a
+class="t"
+href="https://t.me/geniuses_youssef"
+target="_blank"
+>
+✈️ قناة تليجرام
+</a>
+
+<a
+class="p"
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+>
+🎓 المنصة التعليمية
+</a>
+
+</div>
+
+<div class="footerCredit">
+
+💻 بالشراكة مع
+<strong>
+مالك سامح
+</strong>
+
+•
+
+🎓 برعاية وإشراف
+<strong>
+محمد رمضان الحرباوي
+</strong>
+
+<br>
+
+© 2026 جميع الحقوق محفوظة
+
+</div>
+
+</footer>
+
+</main>
+
+</section>
+
+<div class="floating">
+
+<a
+class="float wa"
+href="https://wa.me/201500492203"
+target="_blank"
+>
+💬
+</a>
+
+<button
+id="top"
+class="float up"
+>
+↑
+</button>
+
+</div>
+
+<div
+id="overlay"
+class="overlay"
 ></div>
 
 <aside
-    id="sideMenu"
-    class="sideMenu"
+id="menu"
+class="menu"
 >
 
-    <div class="menuHeader">
-        📚 مكتبة تانية بكالوريا
-    </div>
+<div class="menuHead">
+📚 مكتبة تانية بكالوريا
+</div>
 
-    <a
-        class="menuLink"
-        href="#"
-        onclick="goHome()"
-    >
-        🏠 الرئيسية
-    </a>
+<a
+id="homeMenu"
+href="#"
+>
+🏠 الرئيسية
+</a>
 
-    <a
-        class="menuLink"
-        href="#allBooks"
-        onclick="closeMenu()"
-    >
-        📚 كل الكتب
-    </a>
+<a
+href="#allBooks"
+>
+📚 كل الكتب
+</a>
 
-    <a
-        class="menuLink"
-        href="#faq"
-        onclick="closeMenu()"
-    >
-        ❓ الأسئلة الشائعة
-    </a>
+<a
+href="#examSeries"
+>
+📕 سلسلة كتاب الامتحان
+</a>
 
-    <a
-        class="menuLink"
-        href="https://mhmdrmdan.yobader.com"
-        target="_blank"
-    >
-        🎓 المنصة التعليمية
-    </a>
+<a
+href="#faq"
+>
+❓ الأسئلة الشائعة
+</a>
 
-    <a
-        class="menuLink"
-        href="https://wa.me/201500492203"
-        target="_blank"
-    >
-        💬 الدعم الفني
-    </a>
+<a
+href="https://mhmdrmdan.yobader.com"
+target="_blank"
+>
+🎓 المنصة التعليمية
+</a>
 
-    <a
-        class="menuLink"
-        href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
-        target="_blank"
-    >
-        📢 قناة واتساب
-    </a>
+<a
+href="https://wa.me/201500492203"
+target="_blank"
+>
+💬 الدعم الفني
+</a>
 
-    <div class="menuInfo">
+<a
+href="https://whatsapp.com/channel/0029VbCl4G1ElagvOK4WZS2V"
+target="_blank"
+>
+📢 قناة واتساب
+</a>
 
-        <strong>
-            ℹ️ عن المكتبة
-        </strong>
+<div class="menuInfo">
 
-        <br>
+<strong>
+ℹ️ عن المكتبة
+</strong>
 
-        ✅ كتب ومراجع مرتبة.
-        <br>
+<br>
 
-        ✅ امتحانات وكورسات.
-        <br>
+✅ كتب ومراجع مرتبة.
 
-        ✅ بحث سريع.
-        <br>
+<br>
 
-        ✅ نظام مفضلة.
-        <br>
+✅ امتحانات وكورسات.
 
-        ✅ تعمل على جميع الشاشات.
+<br>
 
-    </div>
+✅ بحث سريع.
+
+<br>
+
+✅ نظام مفضلة.
+
+<br>
+
+✅ تعمل على جميع الشاشات.
+
+</div>
 
 </aside>
 
-<!-- DETAILS MODAL -->
-
 <div
-    id="modal"
-    class="modal"
+id="modal"
+class="modal"
 >
 
-    <div class="modalBox">
+<div class="modalBox">
 
-        <button
-            class="modalClose"
-            onclick="closeDetails()"
-        >
-            ×
-        </button>
+<button
+id="modalClose"
+class="modalClose"
+>
+×
+</button>
 
-        <div
-            id="modalIcon"
-            class="modalIcon"
-        >
-            📚
-        </div>
+<div
+id="modalIcon"
+class="modalIcon"
+>
+📚
+</div>
 
-        <h2
-            id="modalTitle"
-            class="modalTitle"
-        >
-            اسم الكتاب
-        </h2>
+<h2
+id="modalTitle"
+>
+</h2>
 
-        <div
-            id="modalCat"
-            class="modalCat"
-        >
-            المادة
-        </div>
+<div
+id="modalCat"
+class="modalCat"
+>
+</div>
 
-        <div
-            id="modalMeta"
-            class="modalMeta"
-        ></div>
+<div
+id="modalMeta"
+class="metaBox"
+>
+</div>
 
-        <p
-            id="modalDesc"
-            class="modalDesc"
-        >
-            وصف الكتاب
-        </p>
+<p
+id="modalDesc"
+class="modalDesc"
+>
+</p>
 
-        <div class="modalActions">
+<div class="modalActions">
 
-            <a
-                id="modalOpen"
-                class="modalAction modalOpen"
-                href="#"
-                target="_blank"
-            >
-                📖 فتح المحتوى
-            </a>
+<a
+id="modalOpen"
+class="modalAction mOpen"
+target="_blank"
+>
+📖 فتح المحتوى
+</a>
 
-            <a
-                id="modalDownload"
-                class="modalAction modalDownload"
-                href="#"
-                target="_blank"
-            >
-                ⬇ تحميل
-            </a>
+<a
+id="modalDownload"
+class="modalAction mDl"
+target="_blank"
+>
+⬇ تحميل
+</a>
 
-            <button
-                id="modalFavorite"
-                class="modalAction modalFavorite"
-            >
-                🤍 إضافة للمفضلة
-            </button>
+<button
+id="modalFav"
+class="modalAction mFav"
+>
+🤍 إضافة للمفضلة
+</button>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
 </div>
 
 <script>
 
-/* =========================================================
-   الصورة مدمجة داخل الكود
-========================================================= */
-
-const LOGO_DATA =
-"data:image/webp;base64,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";
-
 /* =========================
-   BOOKS DATA
+   الشعار
 ========================= */
 
-const books = [
+const LOGO='data:image/webp;base64,%%LOGO%%';
+
+document.getElementById('homeLogo').src=LOGO;
+document.getElementById('headerLogo').src=LOGO;
+
+
+/* =========================
+   الكتب والمحتوى
+========================= */
+
+const books=[
 
 {
-title:"كتاب التاريخ",
-icon:"📚",
-cat:"تاريخ",
-desc:"الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).",
-url:"https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+id:1,
+title:'كتاب التاريخ',
+icon:'📚',
+cat:'تاريخ',
+desc:'الكتاب الدراسي لمادة التاريخ للصف الثاني الثانوي (PDF).',
+url:'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link',
 date:20260305,
 popular:75
 },
 
 {
-title:"كتاب النحو",
-icon:"📖",
-cat:"لغة عربية",
-desc:"الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).",
-url:"https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+id:2,
+title:'كتاب النحو',
+icon:'📖',
+cat:'لغة عربية',
+desc:'الكتاب الدراسي لمادة النحو للصف الثاني الثانوي (PDF).',
+url:'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',
 date:20260305,
 popular:75
 },
 
 {
-title:"تأسيس رياضيات",
-icon:"📐",
-cat:"رياضيات",
-desc:"مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).",
-url:"https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
+id:3,
+title:'تأسيس رياضيات',
+icon:'📐',
+cat:'رياضيات',
+desc:'مذكرة تأسيس في الرياضيات للصف الثاني الثانوي (PDF).',
+url:'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
 date:20260305,
 popular:75
 },
 
 {
-title:"الميسر في أصول الفقه الإسلامي",
-icon:"📘",
-cat:"مواد شرعية",
-desc:"كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).",
-url:"https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing",
+id:4,
+title:'الميسر في أصول الفقه الإسلامي',
+icon:'📘',
+cat:'مواد شرعية',
+desc:'كتاب الميسر في أصول الفقه الإسلامي – إعداد: عمر أحمد (PDF).',
+url:'https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing',
 date:20260305,
 popular:75
 },
 
 {
-title:"ملخص الدرس الأول - التاريخ (بناء الدولة المصرية)",
-icon:"🏛️",
-cat:"تاريخ",
-desc:"ملخص الدرس الأول في مادة التاريخ: بناء الدولة المصرية للصف الثاني الثانوي (PDF).",
-url:"https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+id:5,
+title:'ملخص الدرس الأول - التاريخ (بناء الدولة المصرية)',
+icon:'🏛️',
+cat:'تاريخ',
+desc:'ملخص الدرس الأول في مادة التاريخ: بناء الدولة المصرية للصف الثاني الثانوي (PDF).',
+url:'https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing',
 date:20260305,
 popular:75
 },
 
 {
-title:"الثلاثة الذين خُلِّفوا",
-icon:"📘",
-cat:"مواد شرعية",
-desc:"كتاب الثلاثة الذين خُلِّفوا – إعداد: عمر أحمد المنشاوي (PDF).",
-url:"https://drive.google.com/file/d/1VH8UeFmU4hVWWrQCii4tYwscaspOfvX3/view?usp=sharing",
+id:6,
+title:'الثلاثة الذين خُلِّفوا',
+icon:'📘',
+cat:'مواد شرعية',
+desc:'كتاب الثلاثة الذين خُلِّفوا – إعداد: عمر أحمد المنشاوي (PDF).',
+url:'https://drive.google.com/file/d/1VH8UeFmU4hVWWrQCii4tYwscaspOfvX3/view?usp=sharing',
 date:20260305,
 popular:75
 },
 
 {
-title:"كورس تأسيس رياضة",
-icon:"🎥",
-cat:"رياضيات",
-desc:"كورس تأسيس الرياضيات للصف الثاني الثانوي.",
-url:"https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing",
+id:7,
+title:'كورس تأسيس رياضة',
+icon:'🎥',
+cat:'رياضيات',
+desc:'كورس تأسيس الرياضيات للصف الثاني الثانوي.',
+url:'https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing',
 date:20260712,
 popular:100
 },
 
 {
-title:"الفيزياء",
-icon:"⚛️",
-cat:"فيزياء",
-desc:"كتاب الفيزياء للصف الثاني الثانوي (PDF).",
-url:"https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing",
+id:8,
+title:'الفيزياء',
+icon:'⚛️',
+cat:'فيزياء',
+desc:'كتاب الفيزياء للصف الثاني الثانوي (PDF).',
+url:'https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing',
 date:20260712,
 popular:100
 },
 
 {
-title:"الجزء الأول من الكورس التأسيسي للبرمجة",
-icon:"💻",
-cat:"برمجة",
-desc:"الجزء الأول من الكورس التأسيسي للبرمجة – إعداد وتجهيز: محمد رمضان الحرباوي.",
-url:"https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing",
+id:9,
+title:'الجزء الأول من الكورس التأسيسي للبرمجة',
+icon:'💻',
+cat:'برمجة',
+desc:'الجزء الأول من الكورس التأسيسي للبرمجة – إعداد وتجهيز: محمد رمضان الحرباوي.',
+url:'https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing',
 date:20260713,
 popular:100
 },
 
 {
-title:"الكافي في علوم البلاغة العربية",
-icon:"📖",
-cat:"لغة عربية",
-desc:"كتاب الكافي في علوم البلاغة العربية (HTML).",
-url:"./الكافي_في_علوم_البلاغة_العربية.html",
+id:10,
+title:'الكافي في علوم البلاغة العربية',
+icon:'📖',
+cat:'لغة عربية',
+desc:'كتاب الكافي في علوم البلاغة العربية (HTML).',
+url:'./الكافي_في_علوم_البلاغة_العربية.html',
 date:20260714,
 popular:100
 },
 
 {
-title:"كورس اللغة العربية",
-icon:"📖",
-cat:"كورسات",
-desc:"كورس اللغة العربية.",
-url:"https://mhmdrmdan.yobader.com/course/kors-lghh-aarbyh",
+id:11,
+title:'كورس اللغة العربية',
+icon:'📖',
+cat:'كورسات',
+desc:'كورس اللغة العربية.',
+url:'https://mhmdrmdan.yobader.com/course/kors-lghh-aarbyh',
 date:20260714,
 popular:100
 },
 
 {
-title:"كورس اللغة الإنجليزية",
-icon:"🇬🇧",
-cat:"كورسات",
-desc:"كورس اللغة الإنجليزية.",
-url:"https://mhmdrmdan.yobader.com/course/lghh-anglyzyh",
+id:12,
+title:'كورس اللغة الإنجليزية',
+icon:'🇬🇧',
+cat:'كورسات',
+desc:'كورس اللغة الإنجليزية.',
+url:'https://mhmdrmdan.yobader.com/course/lghh-anglyzyh',
 date:20260714,
 popular:100
 },
 
 {
-title:"كورس الفيزياء",
-icon:"⚛️",
-cat:"كورسات",
-desc:"كورس الفيزياء.",
-url:"https://mhmdrmdan.yobader.com/course/fyzyaaa",
+id:13,
+title:'كورس الفيزياء',
+icon:'⚛️',
+cat:'كورسات',
+desc:'كورس الفيزياء.',
+url:'https://mhmdrmdan.yobader.com/course/fyzyaaa',
 date:20260714,
 popular:100
 },
 
 {
-title:"كورس التاريخ الوطني",
-icon:"🏛️",
-cat:"كورسات",
-desc:"كورس التاريخ الوطني.",
-url:"https://mhmdrmdan.yobader.com/course/tarykh-otny",
+id:14,
+title:'كورس التاريخ الوطني',
+icon:'🏛️',
+cat:'كورسات',
+desc:'كورس التاريخ الوطني.',
+url:'https://mhmdrmdan.yobader.com/course/tarykh-otny',
 date:20260714,
 popular:100
 },
 
 {
-title:"كورس البرمجة والذكاء الاصطناعي",
-icon:"💻",
-cat:"كورسات",
-desc:"الكورس التأسيسي للبرمجة والذكاء الاصطناعي.",
-url:"https://mhmdrmdan.yobader.com/course/kors-tasysy-brmgh",
+id:15,
+title:'كورس البرمجة والذكاء الاصطناعي',
+icon:'💻',
+cat:'كورسات',
+desc:'الكورس التأسيسي للبرمجة والذكاء الاصطناعي.',
+url:'https://mhmdrmdan.yobader.com/course/kors-tasysy-brmgh',
 date:20260714,
 popular:100
 },
 
 {
-title:"أخبار وزارة التربية والتعليم",
-icon:"📰",
-cat:"كورسات",
-desc:"آخر الأخبار والحوارات والمعلومات الرسمية.",
-url:"https://mhmdrmdan.yobader.com/course/ay-akhbar-bkhsos-ozarh-altrbyh-oaltaalym-ontham-albkalorya",
+id:16,
+title:'أخبار وزارة التربية والتعليم',
+icon:'📰',
+cat:'كورسات',
+desc:'آخر الأخبار والحوارات والمعلومات الرسمية.',
+url:'https://mhmdrmdan.yobader.com/course/ay-akhbar-bkhsos-ozarh-altrbyh-oaltaalym-ontham-albkalorya',
 date:20260714,
 popular:100
 },
 
 {
-title:"امتحان تاريخ - الدرس الأول",
-icon:"📝",
-cat:"امتحانات",
-desc:"امتحان على الدرس الأول في مادة التاريخ.",
-url:"./index (1).html",
+id:17,
+title:'امتحان تاريخ - الدرس الأول',
+icon:'📝',
+cat:'امتحانات',
+desc:'امتحان على الدرس الأول في مادة التاريخ.',
+url:'./index (1).html',
 date:20260713,
 popular:100
 },
 
 {
-title:"امتحان النحو",
-icon:"📝",
-cat:"امتحانات",
-desc:"امتحان تفاعلي على النحو.",
-url:"./exam_naho.html",
+id:18,
+title:'امتحان النحو',
+icon:'📝',
+cat:'امتحانات',
+desc:'امتحان تفاعلي على النحو.',
+url:'./exam_naho.html',
 date:20260715,
 popular:100
 },
 
 {
-title:"أجمل مذكرة بلاغة للثانوية العامة بصفوفها الثلاثة",
-icon:"📘",
-cat:"لغة عربية",
-desc:"مذكرة شاملة في البلاغة للثانوية العامة بجميع الصفوف، مناسبة للمراجعة والتأسيس.",
-url:"https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing",
+id:19,
+title:'أجمل مذكرة بلاغة للثانوية العامة بصفوفها الثلاثة',
+icon:'📘',
+cat:'لغة عربية',
+desc:'مذكرة شاملة في البلاغة للثانوية العامة بجميع الصفوف، مناسبة للمراجعة والتأسيس.',
+url:'https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing',
 date:20260716,
 popular:100
 },
 
 {
-title:"تأسيس إنجلش - العمالقة 2026",
-icon:"🇬🇧",
-cat:"إنجليزي",
-desc:"كتاب تأسيس اللغة الإنجليزية (العمالقة 2026) بصيغة PDF.",
-url:"https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing",
+id:20,
+title:'تأسيس إنجلش - العمالقة 2026',
+icon:'🇬🇧',
+cat:'إنجليزي',
+desc:'كتاب تأسيس اللغة الإنجليزية (العمالقة 2026) بصيغة PDF.',
+url:'https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing',
 date:20260716,
 popular:100
 },
 
 {
-title:"كورس تأسيس إنجليزي - مستر سعيد الهيت",
-icon:"🇬🇧",
-cat:"إنجليزي",
-desc:"ملف كورس تأسيسي في اللغة الإنجليزية بصيغة PDF.",
-url:"https://drive.google.com/file/d/1R7LLcvinGsCPZhK_TvKwvnoq_j9M09BM/view?usp=sharing",
+id:21,
+title:'كورس تأسيس إنجليزي - مستر سعيد الهيت',
+icon:'🇬🇧',
+cat:'إنجليزي',
+desc:'ملف كورس تأسيسي في اللغة الإنجليزية بصيغة PDF.',
+url:'https://drive.google.com/file/d/1R7LLcvinGsCPZhK_TvKwvnoq_j9M09BM/view?usp=sharing',
 date:20260717,
 popular:100
 },
 
 {
-title:"الحصة التمهيدية",
-icon:"🎥",
-cat:"برمجة",
-desc:"الحصة التمهيدية.",
-url:"https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing",
+id:22,
+title:'الحصة التمهيدية',
+icon:'🎥',
+cat:'برمجة',
+desc:'الحصة التمهيدية.',
+url:'https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing',
 date:20260718,
 popular:100
 },
 
 {
-title:"ترسيخ العقيدة الإسلامية - 2",
-icon:"📘",
-cat:"مواد شرعية",
-desc:"كتاب ترسيخ العقيدة الإسلامية - 2.",
-url:"./ترسيخ_العقيدة_الإسلامية-2.html",
+id:23,
+title:'ترسيخ العقيدة الإسلامية - 2',
+icon:'📘',
+cat:'مواد شرعية',
+desc:'كتاب ترسيخ العقيدة الإسلامية - 2.',
+url:'./ترسيخ_العقيدة_الإسلامية-2.html',
 date:20260718,
 popular:100
 },
 
 {
-title:"قاموس الفكيكه",
-icon:"📖",
-cat:"إنجليزي",
-desc:"قاموس الفكيكه.",
-url:"./قاموس الفكيكه.html",
+id:24,
+title:'قاموس الفكيكه',
+icon:'📖',
+cat:'إنجليزي',
+desc:'قاموس الفكيكه.',
+url:'./قاموس الفكيكه.html',
 date:20260718,
 popular:100
+},
+
+/* ===== الجديد ===== */
+
+{
+id:25,
+title:'كتاب كيان لغة عربية تانية بكالوريا',
+icon:'📖',
+cat:'لغة عربية',
+desc:'كتاب كيان للغة العربية لطلاب تانية بكالوريا.',
+url:'https://drive.google.com/file/d/1aXVTBXMEb7suoapqTZjHbLnBGPIWyPui/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:26,
+title:'كتاب العمالقة سنة تانية بكالوريا - الجزء الثاني 2027',
+icon:'🇬🇧',
+cat:'إنجليزي',
+desc:'كتاب العمالقة للصف الثاني الثانوي بكالوريا – الجزء الثاني 2027.',
+url:'https://drive.google.com/file/d/1mZIXzZD5DaskdzvVEGXrM0DZxCw7WhY3/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:27,
+title:'الثقافة المالية PDF تانية بكالوريا',
+icon:'💰',
+cat:'ثقافة مالية',
+desc:'ملف الثقافة المالية PDF لطلاب تانية بكالوريا.',
+url:'https://drive.google.com/file/d/1POmeADij1wPo-5c2FbusKZa3bYibfqPB/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:28,
+title:'إجابات_المعاصر_تانية_ثانوي_بكالوريا_الترم_الاول_2027',
+icon:'✅',
+cat:'إنجليزي',
+desc:'إجابات المعاصر تانية ثانوي بكالوريا – الترم الأول 2027.',
+url:'https://drive.google.com/file/d/1VXSqXuikXpknsXYEoQgCY4mIPj3LHjSd/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:29,
+title:'ملحق_المعاصر_انجليزي_2ث_بكالوريا_الترم_الاول_2027',
+icon:'📎',
+cat:'إنجليزي',
+desc:'ملحق المعاصر إنجليزي 2 ث بكالوريا – الترم الأول 2027.',
+url:'https://drive.google.com/file/d/1IxXRUpuJ-uzYiycTzFX33Qy8g43eE34I/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:30,
+title:'كتاب_المعاصر_انجليزي_2بكالوريا_2027_ترم1',
+icon:'📘',
+cat:'إنجليزي',
+desc:'كتاب المعاصر إنجليزي 2 بكالوريا 2027 – الترم الأول.',
+url:'https://drive.google.com/file/d/1uftB4n53TRWacPzTe7Kmv_HHGLLslZ7q/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:31,
+title:'كتاب الإنجليزي العمالقة - الجزء الأول',
+icon:'🇬🇧',
+cat:'إنجليزي',
+desc:'كتاب الإنجليزي العمالقة – الجزء الأول.',
+url:'https://drive.google.com/file/d/1WhYUKpIivmpWmLqf-h1idF2HcjJxlIWQ/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:32,
+title:'كتاب الأضواء تاريخ تانية بكالوريا',
+icon:'🏛️',
+cat:'تاريخ',
+desc:'كتاب الأضواء لمادة التاريخ لطلاب تانية بكالوريا.',
+url:'https://drive.google.com/file/d/1_BBe00y41IfyNfPWKYMvol_WqqPsDd_D/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true
+},
+
+{
+id:33,
+title:'كتاب الامتحان لغة عربية - الجزء الأول 2027',
+icon:'📕',
+cat:'لغة عربية',
+desc:'الجزء الأول من سلسلة كتاب الامتحان في اللغة العربية – 2027.',
+url:'https://drive.google.com/file/d/14W9FiVD8F1TVMlxlGMwfGqJw5USehBEJ/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true,
+series:'exam_arabic'
+},
+
+{
+id:34,
+title:'كتاب الامتحان لغة عربية - الجزء الثاني 2027',
+icon:'📕',
+cat:'لغة عربية',
+desc:'الجزء الثاني من سلسلة كتاب الامتحان في اللغة العربية – 2027.',
+url:'https://drive.google.com/file/d/107Obccz6RVtYLDwiHHYKUm8PwCzjQuh-/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true,
+series:'exam_arabic'
+},
+
+{
+id:35,
+title:'كتاب الامتحان لغة عربية - الجزء الثالث 2027',
+icon:'📕',
+cat:'لغة عربية',
+desc:'الجزء الثالث من سلسلة كتاب الامتحان في اللغة العربية – 2027.',
+url:'https://drive.google.com/file/d/1GvsB2L0-S9ZpZaGKwkF_txFOUXy6N78H/view?usp=sharing',
+date:20260929,
+popular:110,
+isNew:true,
+series:'exam_arabic'
+},
+
+{
+id:36,
+title:'المواد كاملة 🍒🫂 🤍',
+icon:'📚',
+cat:'المواد كاملة',
+desc:'مجلد Google Drive شامل يحتوي على المواد كاملة.',
+url:'https://drive.google.com/drive/folders/1mgk5MoazbJ1uUzL3zvvfzltQUOXQoTM2',
+date:20260929,
+popular:120,
+isNew:true,
+isFolder:true
 }
 
 ];
 
+
 /* =========================
-   STATE
+   الحالة
 ========================= */
 
-let favorites =
-    JSON.parse(
-        localStorage.getItem("libraryFavoritesV4") || "[]"
-    );
+let favorites=loadFav();
+let currentFilter='all';
+let currentSort='popular';
+let currentBookId=null;
+let lightMode=false;
 
-let currentFilter = "all";
-let currentSort = "popular";
-let lightMode = false;
 
-const categories = [
+/* =========================
+   التصنيفات
+========================= */
 
-["all","📚 الكل"],
-["لغة عربية","📖 اللغة العربية"],
-["مواد شرعية","🕌 مواد شرعية"],
-["تاريخ","🏛️ التاريخ"],
-["إنجليزي","🇬🇧 الإنجليزي"],
-["رياضيات","📐 الرياضيات"],
-["برمجة","💻 البرمجة"],
-["فيزياء","⚛️ الفيزياء"],
-["امتحانات","📝 الامتحانات"],
-["كورسات","🎓 الكورسات"],
-["favorites","❤️ المفضلة"]
+const categories=[
+
+['all','📚 الكل'],
+['لغة عربية','📖 اللغة العربية'],
+['مواد شرعية','🕌 مواد شرعية'],
+['تاريخ','🏛️ التاريخ'],
+['إنجليزي','🇬🇧 الإنجليزي'],
+['رياضيات','📐 الرياضيات'],
+['برمجة','💻 البرمجة'],
+['فيزياء','⚛️ الفيزياء'],
+['ثقافة مالية','💰 الثقافة المالية'],
+['المواد كاملة','📚 المواد كاملة'],
+['امتحانات','📝 الامتحانات'],
+['كورسات','🎓 الكورسات'],
+['favorites','❤️ المفضلة']
 
 ];
 
+
 /* =========================
-   INITIALIZE
+   المفضلة
 ========================= */
 
-window.addEventListener("DOMContentLoaded",()=>{
+function loadFav(){
 
-    document.getElementById("homeLogo").src = LOGO_DATA;
-    document.getElementById("headerLogo").src = LOGO_DATA;
+try{
 
-    buildFilters();
-    updateStats();
-    renderFeatured();
-    renderBooks();
+const data=
+JSON.parse(
+localStorage.getItem(
+'tb_favorites'
+) || '[]'
+);
 
-});
+return Array.isArray(data)
+? data.map(Number).filter(Number.isFinite)
+: [];
+
+}catch(e){
+
+return [];
+
+}
+
+}
+
+function saveFav(){
+
+localStorage.setItem(
+'tb_favorites',
+JSON.stringify(
+favorites
+)
+);
+
+}
+
 
 /* =========================
-   HELPERS
+   أدوات
 ========================= */
 
-function getBook(title){
+function getBook(id){
 
-    return books.find(
-        book => book.title === title
-    );
-
-}
-
-function isDrive(url){
-
-    return /drive\.google\.com/.test(
-        url || ""
-    );
+return books.find(
+book =>
+book.id === Number(id)
+);
 
 }
 
-function getDriveId(url){
+function esc(value){
 
-    const match =
-        String(url || "").match(
-            /\/d\/([^/]+)/
-        );
+const div=
+document.createElement('div');
 
-    return match
-        ? match[1]
-        : null;
+div.textContent=
+String(value ?? '');
 
-}
-
-function getDownloadUrl(url){
-
-    const id = getDriveId(url);
-
-    return id
-        ? `https://drive.google.com/uc?export=download&id=${id}`
-        : url;
+return div.innerHTML;
 
 }
 
-function escapeHTML(value){
+function driveId(url){
 
-    const div =
-        document.createElement("div");
+const match=
+String(url || '')
+.match(
+/\/d\/([^/]+)/
+);
 
-    div.textContent =
-        String(value ?? "");
-
-    return div.innerHTML;
+return match
+? match[1]
+: null;
 
 }
+
+function downloadUrl(url){
+
+const id=
+driveId(url);
+
+return id
+? `https://drive.google.com/uc?export=download&id=${id}`
+: url;
+
+}
+
 
 /* =========================
-   FILTERS
+   التصنيفات
 ========================= */
 
 function buildFilters(){
 
-    const box =
-        document.getElementById(
-            "filters"
-        );
+document.getElementById(
+'filters'
+).innerHTML=
 
-    box.innerHTML =
-        categories.map(
-            ([key,label]) => `
-                <button
-                    class="filterBtn ${key===currentFilter ? "active" : ""}"
-                    onclick='filterBooks(${JSON.stringify(key)})'
-                >
-                    ${label}
-                </button>
-            `
-        ).join("");
+categories.map(
+([key,label]) => `
+
+<button
+class="filter ${
+currentFilter===key
+? 'active'
+: ''
+}"
+data-filter="${esc(key)}"
+>
+${label}
+</button>
+
+`
+).join('');
 
 }
 
+
 /* =========================
-   GET FILTERED
+   فلترة
 ========================= */
 
-function getFilteredBooks(){
+function getFiltered(){
 
-    const input =
-        document
-        .getElementById("searchInput")
-        .value
-        .trim()
-        .toLowerCase();
+const q=
+document
+.getElementById('search')
+.value
+.trim()
+.toLowerCase();
 
-    let result =
-        books.filter(
-            book =>
-                book.grade === "2sec" ||
-                book.grade === undefined
-        );
+let result=
+[...books];
 
-    if(currentFilter === "favorites"){
+if(
+currentFilter ===
+'favorites'
+){
 
-        result =
-            result.filter(
-                book =>
-                    favorites.includes(
-                        book.title
-                    )
-            );
+result=
+result.filter(
+book =>
+favorites.includes(
+book.id
+)
+);
 
-    }else if(currentFilter !== "all"){
+}else if(
+currentFilter !==
+'all'
+){
 
-        result =
-            result.filter(
-                book =>
-                    book.cat === currentFilter
-            );
-
-    }
-
-    if(input){
-
-        result =
-            result.filter(
-                book =>
-                    [
-                        book.title,
-                        book.desc,
-                        book.cat
-                    ]
-                    .some(
-                        text =>
-                            String(text)
-                            .toLowerCase()
-                            .includes(input)
-                    )
-            );
-
-    }
-
-    return result;
+result=
+result.filter(
+book =>
+book.cat ===
+currentFilter
+);
 
 }
+
+if(q){
+
+result=
+result.filter(
+book =>
+(
+book.title+
+' '+
+book.desc+
+' '+
+book.cat
+)
+.toLowerCase()
+.includes(q)
+);
+
+}
+
+
+/* ترتيب */
+
+if(
+currentSort ===
+'name'
+){
+
+result.sort(
+(a,b)=>
+a.title.localeCompare(
+b.title,
+'ar'
+)
+);
+
+}else if(
+currentSort ===
+'newest'
+){
+
+result.sort(
+(a,b)=>
+(b.date||0)-
+(a.date||0)
+);
+
+}else{
+
+result.sort(
+(a,b)=>
+(b.popular||0)-
+(a.popular||0)
+||
+(b.date||0)-
+(a.date||0)
+);
+
+}
+
+return result;
+
+}
+
 
 /* =========================
-   SORT
-========================= */
-
-function sortBooks(type){
-
-    currentSort = type;
-
-    document
-        .querySelectorAll(".sortBtn")
-        .forEach(
-            button =>
-                button.classList.toggle(
-                    "active",
-                    button.dataset.sort === type
-                )
-        );
-
-    renderBooks();
-
-}
-
-function sortData(data){
-
-    const result =
-        [...data];
-
-    if(currentSort === "name"){
-
-        result.sort(
-            (a,b)=>
-                a.title.localeCompare(
-                    b.title,
-                    "ar"
-                )
-        );
-
-    }
-
-    if(currentSort === "newest"){
-
-        result.sort(
-            (a,b)=>
-                (b.date || 0) -
-                (a.date || 0)
-        );
-
-    }
-
-    if(currentSort === "popular"){
-
-        result.sort(
-            (a,b)=>
-                ((b.popular || 0) -
-                 (a.popular || 0))
-                ||
-                ((b.date || 0) -
-                 (a.date || 0))
-        );
-
-    }
-
-    return result;
-
-}
-
-/* =========================
-   FILTER
-========================= */
-
-function filterBooks(category){
-
-    currentFilter =
-        category;
-
-    buildFilters();
-
-    renderBooks();
-
-}
-
-/* =========================
-   RENDER BOOKS
+   عرض الكتب
 ========================= */
 
 function renderBooks(){
 
-    const grid =
-        document.getElementById(
-            "booksGrid"
-        );
+const grid=
+document.getElementById(
+'books'
+);
 
-    const data =
-        sortData(
-            getFilteredBooks()
-        );
+const result=
+getFiltered();
 
-    document.getElementById(
-        "resultsCount"
-    ).textContent =
-        `${data.length} نتيجة`;
+document.getElementById(
+'results'
+).textContent=
+`${result.length} نتيجة`;
 
-    if(!data.length){
+if(!result.length){
 
-        grid.innerHTML = `
+grid.innerHTML=`
 
-            <div class="empty">
+<div class="empty">
 
-                <div class="emptyIcon">
-                    🔎
-                </div>
+<div class="emptyIcon">
+🔎
+</div>
 
-                <h3
-                    style="
-                        color:var(--gold);
-                        margin-bottom:7px
-                    "
-                >
-                    لا توجد نتائج مطابقة
-                </h3>
+<h3
+style="
+color:#f4cb59;
+margin-bottom:8px
+"
+>
+لا توجد نتائج مطابقة
+</h3>
 
-                <p>
-                    جرّب البحث بكلمة أخرى أو اختر تصنيفًا مختلفًا.
-                </p>
+<p>
+جرّب كلمة أخرى أو تصنيفًا مختلفًا.
+</p>
 
-            </div>
+</div>
 
-        `;
+`;
 
-        return;
-
-    }
-
-    grid.innerHTML =
-        data.map(
-            (book,index)=>{
-
-                const fav =
-                    favorites.includes(
-                        book.title
-                    );
-
-                const drive =
-                    isDrive(
-                        book.url
-                    );
-
-                return `
-
-                <article
-                    class="book"
-                    style="
-                        animation-delay:${Math.min(
-                            index * 0.03,
-                            0.3
-                        )}s
-                    "
-                >
-
-                    <div class="bookTop">
-
-                        <div class="bookIcon">
-                            ${book.icon || "📚"}
-                        </div>
-
-                        <button
-                            class="favorite"
-                            onclick='event.stopPropagation();toggleFavorite(${JSON.stringify(book.title)})'
-                        >
-                            ${fav ? "❤️" : "🤍"}
-                        </button>
-
-                    </div>
-
-                    <h4>
-                        ${escapeHTML(book.title)}
-                    </h4>
-
-                    <span class="bookTag">
-                        ${escapeHTML(book.cat)}
-                    </span>
-
-                    <p class="bookDesc">
-                        ${escapeHTML(book.desc)}
-                    </p>
-
-                    <div class="actions">
-
-                        <button
-                            class="action detailsBtn"
-                            onclick='openDetails(${JSON.stringify(book.title)})'
-                        >
-                            📖 التفاصيل
-                        </button>
-
-                        <a
-                            class="action openBtn"
-                            href="${escapeHTML(book.url)}"
-                            target="_blank"
-                            rel="noopener"
-                        >
-                            ↗ فتح
-                        </a>
-
-                        ${
-                            drive
-                            ?
-                            `
-                            <a
-                                class="action downloadBtn"
-                                href="${escapeHTML(
-                                    getDownloadUrl(
-                                        book.url
-                                    )
-                                )}"
-                                target="_blank"
-                                rel="noopener"
-                            >
-                                ⬇ تحميل مباشر
-                            </a>
-                            `
-                            :
-                            ""
-                        }
-
-                    </div>
-
-                </article>
-
-                `;
-
-            }
-        ).join("");
+return;
 
 }
 
+grid.innerHTML=
+
+result
+.map(
+book => {
+
+const fav=
+favorites.includes(
+book.id
+);
+
+const canDownload=
+Boolean(
+driveId(book.url)
+)
+&&
+!book.isFolder;
+
+return `
+
+<article
+class="book"
+>
+
+<div class="topline">
+
+<div class="bookIcon">
+${book.icon}
+</div>
+
+<div>
+
+${
+book.isNew
+?
+'<span class="new">🆕 جديد للتنزيل</span>'
+:
+''
+}
+
+<br>
+
+<button
+class="fav"
+data-action="fav"
+data-id="${book.id}"
+>
+${
+fav
+?
+'❤️'
+:
+'🤍'
+}
+</button>
+
+</div>
+
+</div>
+
+<h3>
+${esc(book.title)}
+</h3>
+
+<span class="tag">
+${esc(book.cat)}
+</span>
+
+<p class="desc">
+${esc(book.desc)}
+</p>
+
+<div class="actions">
+
+<button
+class="action details"
+data-action="details"
+data-id="${book.id}"
+>
+📖 التفاصيل
+</button>
+
+<a
+class="action open"
+href="${esc(book.url)}"
+target="_blank"
+rel="noopener"
+>
+${
+book.isFolder
+?
+'📂 فتح المجلد'
+:
+'↗ فتح'
+}
+</a>
+
+${
+canDownload
+?
+`
+<a
+class="action download"
+href="${esc(
+downloadUrl(
+book.url
+)
+)}"
+target="_blank"
+rel="noopener"
+>
+🆕 تحميل جديد
+</a>
+`
+:
+''
+}
+
+</div>
+
+</article>
+
+`;
+
+}
+)
+.join('');
+
+}
+
+
 /* =========================
-   FEATURED
+   المختارات
 ========================= */
 
-function miniCard(book){
+function mini(book){
 
-    const div =
-        document.createElement(
-            "div"
-        );
+return `
 
-    div.className =
-        "miniCard";
+<article
+class="mini"
+data-id="${book.id}"
+>
 
-    div.onclick =
-        () =>
-            openDetails(
-                book.title
-            );
+<div class="miniIcon">
+${book.icon}
+</div>
 
-    div.innerHTML = `
+${
+book.isNew
+?
+'<span class="new">🆕 جديد</span>'
+:
+''
+}
 
-        <div class="miniIcon">
-            ${book.icon || "📚"}
-        </div>
+<h4>
+${esc(book.title)}
+</h4>
 
-        <h4>
-            ${escapeHTML(book.title)}
-        </h4>
+<p>
+${esc(book.desc)}
+</p>
 
-        <p>
-            ${escapeHTML(book.desc)}
-        </p>
+<span class="tag">
+${esc(book.cat)}
+</span>
 
-        <span class="miniTag">
-            ${escapeHTML(book.cat)}
-        </span>
+</article>
 
-    `;
-
-    return div;
+`;
 
 }
 
 function renderFeatured(){
 
-    const latest =
-        document.getElementById(
-            "latestGrid"
-        );
+const latest=
+[...books]
+.filter(
+book =>
+!book.series
+)
+.sort(
+(a,b)=>
+(b.date||0)-
+(a.date||0)
+)
+.slice(
+0,
+6
+);
 
-    const popular =
-        document.getElementById(
-            "popularGrid"
-        );
+const popular=
+[...books]
+.filter(
+book =>
+!book.series
+)
+.sort(
+(a,b)=>
+(b.popular||0)-
+(a.popular||0)
+||
+(b.date||0)-
+(a.date||0)
+)
+.slice(
+0,
+6
+);
 
-    latest.innerHTML = "";
-    popular.innerHTML = "";
+document.getElementById(
+'latest'
+).innerHTML=
+latest.map(
+mini
+).join('');
 
-    const list =
-        [...books];
+document.getElementById(
+'popular'
+).innerHTML=
+popular.map(
+mini
+).join('');
 
-    list
-        .sort(
-            (a,b)=>
-                (b.date || 0) -
-                (a.date || 0)
-        )
-        .slice(0,6)
-        .forEach(
-            book =>
-                latest.appendChild(
-                    miniCard(book)
-                )
-        );
 
-    list
-        .sort(
-            (a,b)=>
-                (b.popular || 0) -
-                (a.popular || 0)
-        )
-        .slice(0,6)
-        .forEach(
-            book =>
-                popular.appendChild(
-                    miniCard(book)
-                )
-        );
+/* سلسلة كتاب الامتحان */
+
+const series=
+books.filter(
+book =>
+book.series ===
+'exam_arabic'
+);
+
+document.getElementById(
+'series'
+).innerHTML=
+
+series.map(
+book => `
+
+<article class="series">
+
+<span class="new">
+🆕 جديد للتنزيل
+</span>
+
+<div class="miniIcon">
+${book.icon}
+</div>
+
+<h4>
+${esc(book.title)}
+</h4>
+
+<p>
+جاهز للفتح والتحميل مباشرة
+</p>
+
+<div class="seriesActions">
+
+<a
+class="seriesAction seriesOpen"
+href="${esc(book.url)}"
+target="_blank"
+rel="noopener"
+>
+📖 فتح
+</a>
+
+<a
+class="seriesAction seriesDl"
+href="${esc(
+downloadUrl(
+book.url
+)
+)}"
+target="_blank"
+rel="noopener"
+>
+⬇ تحميل
+</a>
+
+</div>
+
+</article>
+
+`
+)
+.join('');
 
 }
 
-/* =========================
-   FAVORITES
-========================= */
-
-function toggleFavorite(title){
-
-    if(
-        favorites.includes(title)
-    ){
-
-        favorites =
-            favorites.filter(
-                item =>
-                    item !== title
-            );
-
-    }else{
-
-        favorites.push(title);
-
-    }
-
-    localStorage.setItem(
-        "libraryFavoritesV4",
-        JSON.stringify(
-            favorites
-        )
-    );
-
-    renderBooks();
-    renderFeatured();
-
-}
 
 /* =========================
-   STATS
+   العدادات
 ========================= */
 
 function updateStats(){
 
-    const items =
-        books;
+document.getElementById(
+'total'
+).textContent=
+books.length;
 
-    document.getElementById(
-        "booksCount"
-    ).textContent =
-        items.filter(
-            item =>
-                item.cat !== "امتحانات" &&
-                item.cat !== "كورسات" &&
-                item.cat !== "مذكرات"
-        ).length;
+document.getElementById(
+'bookCount'
+).textContent=
 
-    document.getElementById(
-        "examCount"
-    ).textContent =
-        items.filter(
-            item =>
-                item.cat === "امتحانات"
-        ).length;
+books.filter(
+book =>
+![
+'امتحانات',
+'كورسات'
+]
+.includes(
+book.cat
+)
+).length;
 
-    document.getElementById(
-        "courseCount"
-    ).textContent =
-        items.filter(
-            item =>
-                item.cat === "كورسات"
-        ).length;
+document.getElementById(
+'examCount'
+).textContent=
 
-    document.getElementById(
-        "notesCount"
-    ).textContent =
-        items.filter(
-            item =>
-                item.cat === "مذكرات"
-        ).length;
+books.filter(
+book =>
+book.cat ===
+'امتحانات'
+).length;
+
+document.getElementById(
+'courseCount'
+).textContent=
+
+books.filter(
+book =>
+book.cat ===
+'كورسات'
+).length;
 
 }
 
+
 /* =========================
-   DETAILS MODAL
+   المفضلة
 ========================= */
 
-function openDetails(title){
+function toggleFavorite(id){
 
-    const book =
-        getBook(title);
+id=
+Number(id);
 
-    if(!book)
-        return;
+if(
+favorites.includes(id)
+){
 
-    document.getElementById(
-        "modalIcon"
-    ).textContent =
-        book.icon || "📚";
+favorites=
+favorites.filter(
+x =>
+x !== id
+);
 
-    document.getElementById(
-        "modalTitle"
-    ).textContent =
-        book.title;
+}else{
 
-    document.getElementById(
-        "modalCat"
-    ).textContent =
-        book.cat;
+favorites=[
+...favorites,
+id
+];
 
-    document.getElementById(
-        "modalDesc"
-    ).textContent =
-        book.desc;
+}
 
-    document.getElementById(
-        "modalOpen"
-    ).href =
-        book.url;
+saveFav();
+buildFilters();
+renderBooks();
+updateModalFavorite();
 
-    const downloadBtn =
-        document.getElementById(
-            "modalDownload"
-        );
+}
 
-    if(
-        isDrive(book.url)
-    ){
 
-        downloadBtn.style.display =
-            "flex";
+/* =========================
+   تفاصيل الكتاب
+========================= */
 
-        downloadBtn.href =
-            getDownloadUrl(
-                book.url
-            );
+function updateModalFavorite(){
 
-    }else{
+if(
+currentBookId ===
+null
+)
+return;
 
-        downloadBtn.style.display =
-            "none";
+document.getElementById(
+'modalFav'
+).textContent=
 
-        downloadBtn.removeAttribute(
-            "href"
-        );
+favorites.includes(
+Number(currentBookId)
+)
+?
+'❤️ إزالة من المفضلة'
+:
+'🤍 إضافة للمفضلة';
 
-    }
+}
 
-    document.getElementById(
-        "modalMeta"
-    ).innerHTML = `
+function openDetails(id){
 
-        <span class="meta">
-            🎓 ثانية ثانوي
-        </span>
+const book=
+getBook(id);
 
-        <span class="meta">
-            📌 ${escapeHTML(book.cat)}
-        </span>
+if(!book)
+return;
 
-        ${
-            isDrive(book.url)
-            ?
-            `
-            <span class="meta">
-                ☁️ Google Drive
-            </span>
-            `
-            :
-            ""
-        }
+currentBookId=
+book.id;
 
-    `;
+document.getElementById(
+'modalIcon'
+).textContent=
+book.icon;
 
-    const favoriteBtn =
-        document.getElementById(
-            "modalFavorite"
-        );
+document.getElementById(
+'modalTitle'
+).textContent=
+book.title;
 
-    favoriteBtn.textContent =
-        favorites.includes(book.title)
-        ?
-        "❤️ إزالة من المفضلة"
-        :
-        "🤍 إضافة للمفضلة";
+document.getElementById(
+'modalCat'
+).textContent=
+book.cat;
 
-    favoriteBtn.onclick =
-        () => {
+document.getElementById(
+'modalDesc'
+).textContent=
+book.desc;
 
-            toggleFavorite(
-                book.title
-            );
+document.getElementById(
+'modalOpen'
+).href=
+book.url;
 
-            favoriteBtn.textContent =
-                favorites.includes(
-                    book.title
-                )
-                ?
-                "❤️ إزالة من المفضلة"
-                :
-                "🤍 إضافة للمفضلة";
+const dlButton=
+document.getElementById(
+'modalDownload'
+);
 
-        };
+if(
+book.isFolder ||
+!driveId(book.url)
+){
 
-    document
-        .getElementById(
-            "modal"
-        )
-        .classList.add(
-            "open"
-        );
+dlButton.style.display=
+'none';
 
-    document.body.style.overflow =
-        "hidden";
+dlButton.removeAttribute(
+'href'
+);
+
+}else{
+
+dlButton.style.display=
+'flex';
+
+dlButton.href=
+downloadUrl(
+book.url
+);
+
+}
+
+document.getElementById(
+'modalMeta'
+).innerHTML=
+
+`
+
+<span class="meta">
+🎓 ثانية ثانوي
+</span>
+
+<span class="meta">
+📌 ${esc(book.cat)}
+</span>
+
+${
+book.isFolder
+?
+`
+<span class="meta">
+📂 مجلد Google Drive
+</span>
+`
+:
+driveId(book.url)
+?
+`
+<span class="meta">
+☁️ Google Drive
+</span>
+`
+:
+''
+}
+
+${
+book.isNew
+?
+`
+<span class="meta">
+🆕 جديد
+</span>
+`
+:
+''
+}
+
+`;
+
+updateModalFavorite();
+
+document.getElementById(
+'modal'
+).classList.add(
+'open'
+);
+
+document.body.style.overflow=
+'hidden';
 
 }
 
 function closeDetails(){
 
-    document
-        .getElementById(
-            "modal"
-        )
-        .classList.remove(
-            "open"
-        );
+document.getElementById(
+'modal'
+).classList.remove(
+'open'
+);
 
-    document.body.style.overflow =
-        "";
+document.body.style.overflow=
+'';
 
-}
-
-/* =========================
-   THEME
-========================= */
-
-function toggleTheme(){
-
-    lightMode =
-        !lightMode;
-
-    document.body.classList.toggle(
-        "light",
-        lightMode
-    );
+currentBookId=
+null;
 
 }
 
+
 /* =========================
-   MENU
+   القائمة
 ========================= */
 
 function toggleMenu(){
 
-    const menu =
-        document.getElementById(
-            "sideMenu"
-        );
+const menu=
+document.getElementById(
+'menu'
+);
 
-    const overlay =
-        document.getElementById(
-            "overlay"
-        );
+const overlay=
+document.getElementById(
+'overlay'
+);
 
-    menu.classList.toggle(
-        "open"
-    );
+const opened=
+!menu.classList.contains(
+'open'
+);
 
-    overlay.style.display =
-        menu.classList.contains(
-            "open"
-        )
-        ?
-        "block"
-        :
-        "none";
+menu.classList.toggle(
+'open',
+opened
+);
+
+overlay.style.display=
+opened
+?
+'block'
+:
+'none';
 
 }
 
 function closeMenu(){
 
-    document
-        .getElementById(
-            "sideMenu"
-        )
-        .classList.remove(
-            "open"
-        );
+document.getElementById(
+'menu'
+).classList.remove(
+'open'
+);
 
-    document
-        .getElementById(
-            "overlay"
-        )
-        .style.display =
-            "none";
+document.getElementById(
+'overlay'
+).style.display=
+'none';
 
 }
 
+
 /* =========================
-   HOME
+   Home
 ========================= */
 
 function openLibrary(){
 
-    document.getElementById(
-        "homePage"
-    ).style.display =
-        "none";
+document.getElementById(
+'home'
+).style.display=
+'none';
 
-    document.getElementById(
-        "libraryPage"
-    ).style.display =
-        "block";
+document.getElementById(
+'library'
+).style.display=
+'block';
 
-    window.scrollTo(
-        0,
-        0
-    );
-
-    renderBooks();
+window.scrollTo(
+0,
+0
+);
 
 }
 
 function goHome(){
 
-    closeMenu();
+closeMenu();
+closeDetails();
 
-    document.getElementById(
-        "libraryPage"
-    ).style.display =
-        "none";
+document.getElementById(
+'library'
+).style.display=
+'none';
 
-    document.getElementById(
-        "homePage"
-    ).style.display =
-        "flex";
+document.getElementById(
+'home'
+).style.display=
+'grid';
 
-    window.scrollTo(
-        0,
-        0
-    );
-
-}
-
-/* =========================
-   SHARE
-========================= */
-
-function shareLibrary(){
-
-    const data = {
-
-        title:
-            "مكتبة تانية بكالوريا",
-
-        text:
-            "📚 مكتبة تانية بكالوريا",
-
-        url:
-            location.href
-
-    };
-
-    if(
-        navigator.share
-    ){
-
-        navigator.share(
-            data
-        ).catch(
-            ()=>{}
-        );
-
-    }else if(
-        navigator.clipboard
-    ){
-
-        navigator.clipboard
-            .writeText(
-                location.href
-            )
-            .then(
-                () =>
-                    alert(
-                        "✅ تم نسخ رابط المكتبة."
-                    )
-            );
-
-    }else{
-
-        alert(
-            location.href
-        );
-
-    }
-
-}
-
-/* =========================
-   SCROLL
-========================= */
-
-function scrollToBooks(){
-
-    document
-        .getElementById(
-            "allBooks"
-        )
-        .scrollIntoView({
-            behavior:"smooth"
-        });
-
-}
-
-function scrollToTop(){
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
-
-}
-
-window.addEventListener(
-    "scroll",
-    () => {
-
-        const top =
-            document.getElementById(
-                "topButton"
-            );
-
-        top.style.display =
-            window.scrollY > 400
-            ?
-            "grid"
-            :
-            "none";
-
-    }
+window.scrollTo(
+0,
+0
 );
 
-/* =========================
-   FAQ
-========================= */
+}
 
-document
-    .querySelectorAll(
-        ".faqQuestion"
-    )
-    .forEach(
-        button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    const item =
-                        button.parentElement;
-
-                    document
-                        .querySelectorAll(
-                            ".faqItem"
-                        )
-                        .forEach(
-                            other => {
-
-                                if(
-                                    other !== item
-                                ){
-
-                                    other.classList.remove(
-                                        "active"
-                                    );
-
-                                }
-
-                            }
-                        );
-
-                    item.classList.toggle(
-                        "active"
-                    );
-
-                }
-            );
-
-        }
-    );
 
 /* =========================
-   MODAL CLOSE
+   الوضع
 ========================= */
 
+function toggleTheme(){
+
+lightMode=
+!lightMode;
+
+document.body.classList.toggle(
+'light',
+lightMode
+);
+
+document.getElementById(
+'themeBtn'
+).textContent=
+
+lightMode
+?
+'🌙'
+:
+'☀️';
+
+}
+
+
+/* =========================
+   Events
+========================= */
+
+document.getElementById(
+'enter'
+).onclick=
+openLibrary;
+
+document.getElementById(
+'menuBtn'
+).onclick=
+toggleMenu;
+
+document.getElementById(
+'themeBtn'
+).onclick=
+toggleTheme;
+
+document.getElementById(
+'overlay'
+).onclick=
+closeMenu;
+
+document.getElementById(
+'modalClose'
+).onclick=
+closeDetails;
+
+document.getElementById(
+'modalFav'
+).onclick=
+()=>{
+
+if(
+currentBookId !==
+null
+){
+
+toggleFavorite(
+currentBookId
+);
+
+}
+
+};
+
+document.getElementById(
+'top'
+).onclick=
+()=>{
+
+window.scrollTo({
+top:0,
+behavior:'smooth'
+});
+
+};
+
+document.getElementById(
+'showAll'
+).onclick=
+()=>{
+
+document.getElementById(
+'allBooks'
+).scrollIntoView({
+behavior:'smooth'
+});
+
+};
+
+document.getElementById(
+'homeMenu'
+).onclick=
+event=>{
+
+event.preventDefault();
+
+goHome();
+
+};
+
+document.getElementById(
+'search'
+).oninput=
+renderBooks;
+
+
+/* Filter click */
+
+document.getElementById(
+'filters'
+).onclick=
+event=>{
+
+const button=
+event.target.closest(
+'[data-filter]'
+);
+
+if(!button)
+return;
+
+currentFilter=
+button.dataset.filter;
+
+buildFilters();
+renderBooks();
+
+};
+
+
+/* Sort click */
+
+document.querySelector(
+'.sort'
+).onclick=
+event=>{
+
+const button=
+event.target.closest(
+'[data-sort]'
+);
+
+if(!button)
+return;
+
+currentSort=
+button.dataset.sort;
+
 document
-    .getElementById(
-        "modal"
-    )
-    .addEventListener(
-        "click",
-        event => {
+.querySelectorAll(
+'.sortBtn'
+)
+.forEach(
+item =>
+item.classList.toggle(
+'active',
+item.dataset.sort ===
+currentSort
+)
+);
 
-            if(
-                event.target.id ===
-                "modal"
-            ){
+renderBooks();
 
-                closeDetails();
+};
 
-            }
 
-        }
-    );
+/* Book actions */
+
+document.getElementById(
+'books'
+).onclick=
+event=>{
+
+const button=
+event.target.closest(
+'[data-action]'
+);
+
+if(!button)
+return;
+
+if(
+button.dataset.action ===
+'fav'
+){
+
+toggleFavorite(
+button.dataset.id
+);
+
+}else if(
+button.dataset.action ===
+'details'
+){
+
+openDetails(
+button.dataset.id
+);
+
+}
+
+};
+
+
+/* Mini cards */
+
+[
+'latest',
+'popular'
+].forEach(
+id=>{
+
+document.getElementById(
+id
+).onclick=
+event=>{
+
+const card=
+event.target.closest(
+'[data-id]'
+);
+
+if(card)
+openDetails(
+card.dataset.id
+);
+
+};
+
+});
+
+
+/* FAQ */
+
+document
+.querySelectorAll(
+'.question'
+)
+.forEach(
+button=>{
+
+button.onclick=
+()=>{
+
+const item=
+button.parentElement;
+
+document
+.querySelectorAll(
+'.faqItem'
+)
+.forEach(
+other=>{
+
+if(
+other !==
+item
+){
+
+other.classList.remove(
+'active'
+);
+
+}
+
+}
+);
+
+item.classList.toggle(
+'active'
+);
+
+};
+
+}
+);
+
+
+/* Modal click */
+
+document.getElementById(
+'modal'
+).onclick=
+event=>{
+
+if(
+event.target.id ===
+'modal'
+){
+
+closeDetails();
+
+}
+
+};
+
+
+/* ESC */
 
 document.addEventListener(
-    "keydown",
-    event => {
+'keydown',
+event=>{
 
-        if(
-            event.key ===
-            "Escape"
-        ){
+if(
+event.key ===
+'Escape'
+){
 
-            closeDetails();
-            closeMenu();
+closeDetails();
+closeMenu();
 
-        }
+}
 
-    }
+}
 );
+
+
+/* زر الأعلى */
+
+window.addEventListener(
+'scroll',
+()=>{
+
+document.getElementById(
+'top'
+).style.display=
+window.scrollY >
+420
+?
+'grid'
+:
+'none';
+
+}
+);
+
+
+/* بدء الموقع */
+
+buildFilters();
+updateStats();
+renderFeatured();
+renderBooks();
 
 </script>
 
 </body>
-              </html>
+</html>
