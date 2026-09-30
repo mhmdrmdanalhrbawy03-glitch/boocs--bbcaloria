@@ -2135,6 +2135,147 @@ footer{
 @keyframes audioPulse{0%,100%{box-shadow:0 14px 34px #0008,0 0 18px #f4cb5928;}50%{box-shadow:0 16px 38px #0009,0 0 30px #f4cb5955;}}
 @media(max-width:700px){.floating{left:10px;right:10px;bottom:12px;}.audioBtn,.float{width:52px;height:52px;}.audioPicker{left:60px;width:190px;}}
 
+
+/* =========================================================
+   المحتوى الديني — مدمج داخل المكتبة
+   ========================================================= */
+.religiousSection{
+    margin:34px 0 30px;
+    padding:22px;
+    border:1px solid #f4cb5938;
+    border-radius:24px;
+    background:
+        radial-gradient(circle at 50% 0%,#f4cb5910,transparent 38%),
+        linear-gradient(145deg,#12243a,#0b1728);
+    box-shadow:0 18px 45px #0003;
+    scroll-margin-top:90px;
+}
+.light .religiousSection{
+    background:linear-gradient(145deg,#fff,#f5f8fb);
+}
+.religiousHeader{
+    text-align:center;
+    margin-bottom:18px;
+}
+.religiousBadge{
+    display:inline-block;
+    padding:7px 13px;
+    border-radius:999px;
+    border:1px solid #f4cb5945;
+    background:#f4cb5910;
+    color:var(--gold);
+    font-size:10px;
+    font-weight:900;
+}
+.religiousHeader h3{
+    margin:9px 0 5px;
+    font-size:clamp(23px,4vw,32px);
+}
+.religiousHeader p{
+    max-width:720px;
+    margin:0 auto;
+    color:var(--muted);
+    font-size:11px;
+    line-height:2;
+}
+.religiousQuote{
+    margin:18px 0;
+    padding:17px;
+    text-align:center;
+    border:1px solid #ffffff12;
+    border-radius:18px;
+    background:#ffffff05;
+    line-height:2;
+    font-size:11px;
+}
+.religiousQuote strong{color:var(--gold);}
+.religiousGrid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+}
+.religiousCard{
+    padding:17px;
+    border:1px solid #ffffff10;
+    border-radius:18px;
+    background:#07111f66;
+}
+.light .religiousCard{background:#ffffffaa;}
+.religiousCard.full{grid-column:1/-1;}
+.religiousCard h4{
+    margin:0 0 10px;
+    color:var(--gold);
+    font-size:14px;
+}
+.religiousCard p{
+    margin:0;
+    color:var(--text);
+    font-size:10px;
+    line-height:2;
+}
+.religiousAyah,
+.religiousDua{
+    text-align:center;
+    color:#fff8df;
+    font-family:Georgia,"Times New Roman",serif;
+    line-height:2;
+}
+.light .religiousAyah,
+.light .religiousDua{color:#253044;}
+.religiousAyah{font-size:24px;}
+.religiousDua{font-size:21px;}
+.religiousRef{
+    margin-top:7px;
+    text-align:center;
+    color:#b7a46a;
+    font-size:9px;
+}
+.religiousTips{
+    margin:0;
+    padding-right:20px;
+    color:var(--text);
+    font-size:10px;
+    line-height:2;
+}
+.religiousTips li{margin:4px 0;}
+.religiousMessage{
+    min-height:62px;
+    display:grid;
+    place-items:center;
+    text-align:center;
+    padding:10px;
+    color:var(--text);
+    font-size:11px;
+    line-height:1.9;
+}
+.religiousActions{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:12px;
+}
+.religiousAction{
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:9px 14px;
+    background:#f2cc5c;
+    color:#111827;
+    font-size:10px;
+    font-weight:900;
+}
+.religiousAction.secondary{
+    background:#102038;
+    color:var(--gold);
+}
+@media(max-width:700px){
+    .religiousSection{padding:15px;}
+    .religiousGrid{grid-template-columns:1fr;}
+    .religiousCard.full{grid-column:auto;}
+    .religiousAyah{font-size:20px;}
+    .religiousDua{font-size:18px;}
+}
+
 </style>
 
 <style id="quran-sidebar-style">
@@ -2365,7 +2506,7 @@ footer{
 </span>
 
 </h1>
-<a href="./قران.html" class="quranMenuItem" aria-label="فتح الجزء الديني">
+<a href="#religiousSection" class="quranMenuItem" aria-label="فتح الجزء الديني">
     <span class="quranMenuIcon">🕌</span>
     <span class="quranMenuText">
         <strong>الجزء الديني</strong>
@@ -2901,6 +3042,65 @@ mhmdrmdan.yobader.com
     class="booksGrid">
 </div>
 
+</section>
+
+
+
+<section id="religiousSection" class="religiousSection">
+    <div class="religiousHeader">
+        <span class="religiousBadge">🕌 الجزء الديني • قبل المذاكرة</span>
+        <h3>تهيئة العقل <span class="gold">للمذاكرة</span></h3>
+        <p>دقائق بسيطة للهدوء واستحضار النية وطلب التوفيق من الله، ثم ابدأ مذاكرتك بهدوء وتركيز.</p>
+    </div>
+
+    <div class="religiousQuote">
+        <strong>بسم الله نبدأ</strong><br>
+        اجعل طلب العلم نافعًا، واجتهد فيما تستطيع، واستعن بالله.
+    </div>
+
+    <div class="religiousGrid">
+        <section class="religiousCard full">
+            <h4>📖 آية اليوم</h4>
+            <div class="religiousAyah">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
+            <div class="religiousRef">سورة طه • الآية 114</div>
+        </section>
+
+        <section class="religiousCard">
+            <h4>🤲 دعاء</h4>
+            <div class="religiousDua">رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي</div>
+            <div class="religiousRef">سورة طه • الآيتان 25–26</div>
+        </section>
+
+        <section class="religiousCard">
+            <h4>🌿 تذكير قبل البداية</h4>
+            <p>لا تجعل صعوبة البداية توقفك. ابدأ بالجزء الذي تستطيع إنجازه الآن، وخذ بالأسباب، واستعن بالله، واستمر خطوة بخطوة.</p>
+        </section>
+
+        <section class="religiousCard">
+            <h4>📿 ذكر قصير</h4>
+            <div class="religiousDua">سُبْحَانَ اللهِ • وَالْحَمْدُ لِلَّهِ • وَاللهُ أَكْبَرُ</div>
+            <p style="text-align:center;margin-top:9px;">خذ لحظة هدوء، ثم ابدأ.</p>
+        </section>
+
+        <section class="religiousCard">
+            <h4>🧠 قبل أن تفتح الكتاب</h4>
+            <ul class="religiousTips">
+                <li>صحّح نيتك واجعل هدفك نافعًا.</li>
+                <li>أبعد المشتتات عنك قدر الإمكان.</li>
+                <li>حدد ما ستنجزه في جلسة المذاكرة.</li>
+                <li>ابدأ الآن بدل انتظار الوقت المثالي.</li>
+            </ul>
+        </section>
+
+        <section class="religiousCard full">
+            <h4>💬 رسالة لك</h4>
+            <div class="religiousMessage" id="religiousMessage">الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.</div>
+            <div class="religiousActions">
+                <button type="button" class="religiousAction" id="newReligiousMessage">رسالة أخرى</button>
+                <button type="button" class="religiousAction secondary" id="religiousBackTop">العودة للأعلى ↑</button>
+            </div>
+        </section>
+    </div>
 </section>
 
 
@@ -6142,6 +6342,39 @@ updateStats();
 renderFeatured();
 
 renderBooks();
+
+
+/* =========================================================
+   تفاعل المحتوى الديني المدمج
+   ========================================================= */
+const religiousMessages = [
+    "ابدأ بما تستطيع، ولا تنتظر أن تكون الظروف مثالية.",
+    "خطوة صغيرة اليوم قد تصنع فرقًا كبيرًا في مستواك غدًا.",
+    "اجتهد وخذ بالأسباب، واستعن بالله في كل خطوة.",
+    "إذا شعرت بالتشتت، خذ لحظة هدوء ثم عد إلى هدفك.",
+    "العلم يحتاج إلى صبر واستمرار، فلا تستعجل النتيجة.",
+    "رتب وقتك، وابدأ بأهم ما عليك، ثم أكمل خطوة بخطوة."
+];
+
+const newReligiousMessage = document.getElementById("newReligiousMessage");
+const religiousMessage = document.getElementById("religiousMessage");
+if(newReligiousMessage && religiousMessage){
+    newReligiousMessage.addEventListener("click",()=>{
+        const old = religiousMessage.textContent.trim();
+        let next = old;
+        while(next === old){
+            next = religiousMessages[Math.floor(Math.random()*religiousMessages.length)];
+        }
+        religiousMessage.textContent = next;
+    });
+}
+
+const religiousBackTop = document.getElementById("religiousBackTop");
+if(religiousBackTop){
+    religiousBackTop.addEventListener("click",()=>{
+        window.scrollTo({top:0,behavior:"smooth"});
+    });
+}
 
 </script>
 
