@@ -918,6 +918,10 @@ svg{
 .notificationItem:hover{transform:translateY(-1px);border-color:var(--gold);}
 .notificationItem strong{display:block;color:var(--gold);font-size:11px;line-height:1.8;margin:4px 0;}
 .notificationItem span{display:block;color:var(--muted);font-size:9px;line-height:1.8;}
+.notificationItem.religiousNotification{background:linear-gradient(135deg,rgba(214,180,74,.16),rgba(255,255,255,.035));border-color:#d6b44a88;}
+.notificationItem.religiousNotification strong{color:var(--gold);font-size:12px;}
+.notificationMore{width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--gold);border-radius:12px;background:transparent;color:var(--gold);font-weight:900;cursor:pointer;}
+.notificationMore:hover{background:#d6b44a18;}
 .notificationEmpty{padding:22px 10px;text-align:center;color:var(--muted);font-size:10px;}
 .notificationBadge{position:absolute;top:-3px;left:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:#d94b4b;color:#fff;font-size:8px;font-weight:900;display:grid;place-items:center;border:2px solid var(--bg);}
 #updatesBtn{position:relative;}
@@ -5296,30 +5300,66 @@ card.dataset.id
 );
 
 
+let notificationsExpanded=false;
+
+/* إشعارات الجرس مستقلة عن حالة isNew داخل المكتبة.
+   القائمة التالية هي الإشعارات الأصلية فقط، وليست كل الكتب الجديدة. */
+const notificationBookIds=[1,2,3,4];
+
+function getLibraryNotifications(){
+return notificationBookIds
+.map(id=>books.find(book=>String(book.id)===String(id)))
+.filter(Boolean)
+.map(book=>({type:'book',id:String(book.id),date:book.date||0,title:book.title,cat:book.cat||'محتوى جديد',desc:book.desc||'تمت إضافة محتوى جديد إلى المكتبة.'}));
+}
+
 function renderNotifications(){
 const list=$('notificationList');
 const badge=$('notificationBadge');
 if(!list)return;
-const latest=[...books]
-.filter(book=>book.isNew)
-.sort((a,b)=>(b.date||0)-(a.date||0)||(b.id||0)-(a.id||0))
-.slice(0,8);
+const bookNotifications=getLibraryNotifications();
+const all=[
+{type:'religious',id:'religious-section',date:Number.MAX_SAFE_INTEGER,title:'الجزء الديني',cat:'🕌 محتوى مهم',desc:'أدعية قبل وبعد المذاكرة، خطوات المذاكرة، نظام البريك، أذكار ونصائح لتهيئة العقل.'},
+...bookNotifications
+];
+const visible=notificationsExpanded?all:all.slice(0,4);
 if(badge){
- badge.textContent=latest.length;
- badge.hidden=!latest.length;
+ badge.textContent=all.length;
+ badge.hidden=!all.length;
 }
-list.innerHTML=latest.length?latest.map(book=>`
-<article class="notificationItem" data-notification-id="${book.id}">
-<span>🆕 ${escapeHTML(book.cat||'محتوى جديد')}</span>
-<strong>${escapeHTML(book.title)}</strong>
-<span>${escapeHTML(book.desc||'تمت إضافة محتوى جديد إلى المكتبة.')}</span>
+list.innerHTML=all.length?visible.map(item=>item.type==='religious'?`
+<article class="notificationItem religiousNotification" data-notification-type="religious">
+<span>🕌 محتوى مهم للطلاب</span>
+<strong>الجزء الديني • تهيئة العقل للمذاكرة</strong>
+<span>${escapeHTML(item.desc)}</span>
+</article>`:`
+<article class="notificationItem" data-notification-id="${item.id}">
+<span>🆕 ${escapeHTML(item.cat)}</span>
+<strong>${escapeHTML(item.title)}</strong>
+<span>${escapeHTML(item.desc)}</span>
 </article>`).join(''):
 '<div class="notificationEmpty">لا توجد إشعارات جديدة حاليًا.</div>';
+if(all.length>4){
+ list.innerHTML+=`<button class="notificationMore" type="button" id="notificationMoreBtn">${notificationsExpanded?'عرض أقل':'عرض المزيد'}</button>`;
+}
 }
 
 renderNotifications();
 
 $('notificationList').onclick=event=>{
+const more=event.target.closest('#notificationMoreBtn');
+if(more){
+notificationsExpanded=!notificationsExpanded;
+renderNotifications();
+return;
+}
+const religious=event.target.closest('[data-notification-type="religious"]');
+if(religious){
+const section=$('religiousSection');
+if(section){section.scrollIntoView({behavior:'smooth',block:'start'});}
+closeNotifications();
+return;
+}
 const item=event.target.closest('[data-notification-id]');
 if(!item)return;
 openDetails(item.dataset.notificationId);
