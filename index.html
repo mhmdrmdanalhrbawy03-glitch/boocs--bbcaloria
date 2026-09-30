@@ -2136,6 +2136,65 @@ footer{
 @media(max-width:700px){.floating{left:10px;right:10px;bottom:12px;}.audioBtn,.float{width:52px;height:52px;}.audioPicker{left:60px;width:190px;}}
 
 </style>
+
+<style id="quran-sidebar-style">
+.quranMenuItem{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:11px;
+    width:calc(100% - 20px);
+    margin:10px auto 14px;
+    padding:13px 12px;
+    text-decoration:none;
+    color:#fff7dc;
+    border:1px solid rgba(230,189,77,.42);
+    border-radius:16px;
+    background:linear-gradient(135deg,rgba(230,189,77,.18),rgba(13,29,47,.96));
+    box-shadow:0 8px 24px rgba(0,0,0,.22),0 0 18px rgba(230,189,77,.08);
+    transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+    z-index:2;
+}
+.quranMenuItem:hover{
+    transform:translateY(-2px);
+    border-color:rgba(230,189,77,.75);
+    box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 24px rgba(230,189,77,.13);
+}
+.quranMenuIcon{
+    width:40px;
+    height:40px;
+    flex:0 0 40px;
+    display:grid;
+    place-items:center;
+    border-radius:12px;
+    background:rgba(230,189,77,.13);
+    font-size:22px;
+}
+.quranMenuText{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    line-height:1.35;
+}
+.quranMenuText strong{
+    color:#f1ce68;
+    font-size:15px;
+    font-weight:900;
+}
+.quranMenuText small{
+    margin-top:2px;
+    color:#cbd4df;
+    font-size:10px;
+    white-space:nowrap;
+}
+.quranMenuArrow{
+    margin-right:auto;
+    color:#e6bd4d;
+    font-size:18px;
+    font-weight:900;
+}
+</style>
+
 </head>
 
 <body>
@@ -2306,6 +2365,15 @@ footer{
 </span>
 
 </h1>
+<a href="./قران.html" class="quranMenuItem" aria-label="فتح الجزء الديني">
+    <span class="quranMenuIcon">🕌</span>
+    <span class="quranMenuText">
+        <strong>الجزء الديني</strong>
+        <small>تهيئة العقل للمذاكرة</small>
+    </span>
+    <span class="quranMenuArrow">←</span>
+</a>
+
 
 
 <p class="sub">
@@ -2365,7 +2433,6 @@ footer{
 ❤️ المفضلة
 
 </button>
-
 </div>
 
 
@@ -2548,6 +2615,22 @@ mhmdrmdan.yobader.com
 
 
 <main class="wrap">
+
+
+<section class="welcome" id="religiousSectionLink">
+
+<small>
+🕌 مساحة جديدة في المكتبة
+</small>
+
+<h2>
+الجزء الديني — تهيئة العقل للمذاكرة 🌿
+</h2>
+
+<p>
+آيات وأدعية وأذكار وتذكيرات قصيرة تساعدك على أخذ لحظة هدوء قبل بداية المذاكرة.
+</p>
+</section>
 
 
 <section class="welcome">
@@ -3057,7 +3140,6 @@ Developer
 <aside
     id="menu"
     class="menu">
-
 <div class="menuHead">
 📚 مكتبة تانية بكالوريا
 </div>
@@ -3086,8 +3168,6 @@ Developer
 ❤️ المفضلة فقط
 
 </a>
-
-
 <a href="#examSeries">
 
 📕 سلسلة كتاب الامتحان
