@@ -892,32 +892,39 @@ svg{
 
 @keyframes toastIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 
-.bookShare{
+.notificationPanel{
+    position:fixed;
+    top:78px;
+    right:18px;
+    z-index:10020;
+    width:min(390px,calc(100vw - 36px));
+    max-height:min(70vh,520px);
+    overflow:auto;
+    padding:14px;
     border:1px solid var(--line);
-    background:transparent;
-    color:var(--text);
-    cursor:pointer;
-}
-
-.newPanel{
-    display:grid;
-    grid-template-columns:repeat(3,minmax(0,1fr));
-    gap:10px;
-}
-
-.newItem{
-    padding:13px;
-    border:1px solid var(--line);
-    border-radius:14px;
+    border-radius:20px;
     background:var(--card);
-    cursor:pointer;
+    color:var(--text);
+    box-shadow:0 22px 60px #0007;
+    display:none;
 }
-
-.newItem strong{display:block;color:var(--gold);font-size:11px;line-height:1.8;margin:5px 0;}
-.newItem span{color:var(--muted);font-size:9px;}
+.notificationPanel.open{display:block;animation:notificationDrop .22s ease both;}
+.notificationHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.notificationHead h3{margin:0;font-size:14px;}
+.notificationHead small{color:var(--muted);font-size:9px;}
+.notificationClose{border:0;background:transparent;color:var(--muted);font-size:20px;cursor:pointer;}
+.notificationList{display:grid;gap:9px;}
+.notificationItem{padding:12px;border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.025);cursor:pointer;}
+.notificationItem:hover{transform:translateY(-1px);border-color:var(--gold);}
+.notificationItem strong{display:block;color:var(--gold);font-size:11px;line-height:1.8;margin:4px 0;}
+.notificationItem span{display:block;color:var(--muted);font-size:9px;line-height:1.8;}
+.notificationEmpty{padding:22px 10px;text-align:center;color:var(--muted);font-size:10px;}
+.notificationBadge{position:absolute;top:-3px;left:-3px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:#d94b4b;color:#fff;font-size:8px;font-weight:900;display:grid;place-items:center;border:2px solid var(--bg);}
+#updatesBtn{position:relative;}
+@keyframes notificationDrop{from{opacity:0;transform:translateY(-10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 @media(max-width:700px){
-    .newPanel{grid-template-columns:1fr;}
+    .notificationPanel{top:68px;right:10px;width:calc(100vw - 20px);max-height:72vh;}
     .updateToast{top:10px;right:10px;width:calc(100vw - 20px);}
 }
 
@@ -2418,9 +2425,11 @@ footer{
     id="updatesBtn"
     class="ib"
     type="button"
-    aria-label="آخر تحديثات المكتبة">
+    aria-label="الإشعارات"
+    aria-expanded="false">
 
 🔔
+<span id="notificationBadge" class="notificationBadge" hidden>0</span>
 
 </button>
 
@@ -2720,27 +2729,7 @@ mhmdrmdan.yobader.com
 </section>
 
 
-<section class="section">
 
-<div class="sectionHead">
-
-<div>
-
-<small>
-آخر التحديثات
-</small>
-
-<h3>
-🚀 ما الجديد؟
-</h3>
-
-</div>
-
-</div>
-
-<div id="whatsNew" class="newPanel"></div>
-
-</section>
 
 
 <section class="section">
@@ -2988,6 +2977,18 @@ Developer
 </section>
 
 
+
+
+<div id="notificationPanel" class="notificationPanel" role="dialog" aria-label="إشعارات المكتبة" aria-hidden="true">
+<div class="notificationHead">
+<div>
+<h3>🔔 إشعارات المكتبة</h3>
+<small>آخر الإضافات والتحديثات</small>
+</div>
+<button id="notificationClose" class="notificationClose" type="button" aria-label="إغلاق الإشعارات">×</button>
+</div>
+<div id="notificationList" class="notificationList"></div>
+</div>
 
 
 <div id="updateToast" class="updateToast" role="status" aria-live="polite">
@@ -4499,20 +4500,6 @@ $('latest').innerHTML=
 .join('');
 
 
-$('whatsNew').innerHTML=
-books
-.filter(book=>book.isNew)
-.sort((a,b)=>(b.date||0)-(a.date||0) || (b.id||0)-(a.id||0))
-.slice(0,5)
-.map(book=>`
-<article class="newItem" data-new-id="${book.id}">
-<span>🆕 ${escapeHTML(book.cat)}</span>
-<strong>${escapeHTML(book.title)}</strong>
-<span>${escapeHTML(book.desc)}</span>
-</article>
-`).join('');
-
-
 $('popular').innerHTML=
 
 books
@@ -5156,17 +5143,61 @@ card.dataset.id
 );
 
 
-$('whatsNew').onclick=event=>{
-const item=event.target.closest('[data-new-id]');
-if(item)openDetails(item.dataset.newId);
+function renderNotifications(){
+const list=$('notificationList');
+const badge=$('notificationBadge');
+if(!list)return;
+const latest=[...books]
+.filter(book=>book.isNew)
+.sort((a,b)=>(b.date||0)-(a.date||0)||(b.id||0)-(a.id||0))
+.slice(0,8);
+if(badge){
+ badge.textContent=latest.length;
+ badge.hidden=!latest.length;
+}
+list.innerHTML=latest.length?latest.map(book=>`
+<article class="notificationItem" data-notification-id="${book.id}">
+<span>🆕 ${escapeHTML(book.cat||'محتوى جديد')}</span>
+<strong>${escapeHTML(book.title)}</strong>
+<span>${escapeHTML(book.desc||'تمت إضافة محتوى جديد إلى المكتبة.')}</span>
+</article>`).join(''):
+'<div class="notificationEmpty">لا توجد إشعارات جديدة حاليًا.</div>';
+}
+
+renderNotifications();
+
+$('notificationList').onclick=event=>{
+const item=event.target.closest('[data-notification-id]');
+if(!item)return;
+openDetails(item.dataset.notificationId);
+closeNotifications();
 };
 
+function closeNotifications(){
+const panel=$('notificationPanel');
+if(!panel)return;
+panel.classList.remove('open');
+panel.setAttribute('aria-hidden','true');
+$('updatesBtn').setAttribute('aria-expanded','false');
+}
 
+function toggleNotifications(){
+const panel=$('notificationPanel');
+if(!panel)return;
+const open=panel.classList.toggle('open');
+panel.setAttribute('aria-hidden',String(!open));
+$('updatesBtn').setAttribute('aria-expanded',String(open));
+if(open)renderNotifications();
+}
 
+$('updatesBtn').onclick=toggleNotifications;
+$('notificationClose').onclick=closeNotifications;
 
-$('updatesBtn').onclick=()=>{
-$('whatsNew').scrollIntoView({behavior:'smooth',block:'center'});
-};
+document.addEventListener('click',event=>{
+const panel=$('notificationPanel');
+if(!panel||!panel.classList.contains('open'))return;
+if(!event.target.closest('#notificationPanel')&&!event.target.closest('#updatesBtn'))closeNotifications();
+});
 
 
 /* FAQ */
@@ -5423,6 +5454,7 @@ event.key==='Escape'
 ){
 
 closeDetails();
+closeNotifications();
 
 $('menu')
 .classList
