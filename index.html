@@ -2136,206 +2136,32 @@ footer{
 @media(max-width:700px){.floating{left:10px;right:10px;bottom:12px;}.audioBtn,.float{width:52px;height:52px;}.audioPicker{left:60px;width:190px;}}
 
 
-/* =========================================================
-   المحتوى الديني — مدمج داخل المكتبة
-   ========================================================= */
-.religiousSection{
-    margin:34px 0 30px;
-    padding:22px;
-    border:1px solid #f4cb5938;
-    border-radius:24px;
-    background:
-        radial-gradient(circle at 50% 0%,#f4cb5910,transparent 38%),
-        linear-gradient(145deg,#12243a,#0b1728);
-    box-shadow:0 18px 45px #0003;
-    scroll-margin-top:90px;
-}
-.light .religiousSection{
-    background:linear-gradient(145deg,#fff,#f5f8fb);
-}
-.religiousHeader{
-    text-align:center;
-    margin-bottom:18px;
-}
-.religiousBadge{
-    display:inline-block;
-    padding:7px 13px;
-    border-radius:999px;
-    border:1px solid #f4cb5945;
-    background:#f4cb5910;
-    color:var(--gold);
-    font-size:10px;
-    font-weight:900;
-}
-.religiousHeader h3{
-    margin:9px 0 5px;
-    font-size:clamp(23px,4vw,32px);
-}
-.religiousHeader p{
-    max-width:720px;
-    margin:0 auto;
-    color:var(--muted);
-    font-size:11px;
-    line-height:2;
-}
-.religiousQuote{
-    margin:18px 0;
-    padding:17px;
-    text-align:center;
-    border:1px solid #ffffff12;
-    border-radius:18px;
-    background:#ffffff05;
-    line-height:2;
-    font-size:11px;
-}
-.religiousQuote strong{color:var(--gold);}
-.religiousGrid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:12px;
-}
-.religiousCard{
-    padding:17px;
-    border:1px solid #ffffff10;
-    border-radius:18px;
-    background:#07111f66;
-}
-.light .religiousCard{background:#ffffffaa;}
-.religiousCard.full{grid-column:1/-1;}
-.religiousCard h4{
-    margin:0 0 10px;
-    color:var(--gold);
-    font-size:14px;
-}
-.religiousCard p{
-    margin:0;
-    color:var(--text);
-    font-size:10px;
-    line-height:2;
-}
-.religiousAyah,
-.religiousDua{
-    text-align:center;
-    color:#fff8df;
-    font-family:Georgia,"Times New Roman",serif;
-    line-height:2;
-}
-.light .religiousAyah,
-.light .religiousDua{color:#253044;}
-.religiousAyah{font-size:24px;}
-.religiousDua{font-size:21px;}
-.religiousRef{
-    margin-top:7px;
-    text-align:center;
-    color:#b7a46a;
-    font-size:9px;
-}
-.religiousTips{
-    margin:0;
-    padding-right:20px;
-    color:var(--text);
-    font-size:10px;
-    line-height:2;
-}
-.religiousTips li{margin:4px 0;}
-.religiousMessage{
-    min-height:62px;
-    display:grid;
-    place-items:center;
-    text-align:center;
-    padding:10px;
-    color:var(--text);
-    font-size:11px;
-    line-height:1.9;
-}
-.religiousActions{
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-top:12px;
-}
-.religiousAction{
-    border:1px solid var(--line);
-    border-radius:11px;
-    padding:9px 14px;
-    background:#f2cc5c;
-    color:#111827;
-    font-size:10px;
-    font-weight:900;
-}
-.religiousAction.secondary{
-    background:#102038;
-    color:var(--gold);
-}
-@media(max-width:700px){
-    .religiousSection{padding:15px;}
-    .religiousGrid{grid-template-columns:1fr;}
-    .religiousCard.full{grid-column:auto;}
-    .religiousAyah{font-size:20px;}
-    .religiousDua{font-size:18px;}
-}
-
+/* ===== الجزء الديني المدمج — بدون تغيير هيكل المكتبة ===== */
+.quranMenuItem{display:flex;align-items:center;gap:10px;margin:10px 12px;padding:11px 12px;border:1px solid #d8b44a66;border-radius:14px;text-decoration:none;color:#fff7dc;background:linear-gradient(135deg,#172b43,#0b1728);}
+.quranMenuItem span{display:flex;flex-direction:column;gap:2px}.quranMenuItem strong{font-size:12px}.quranMenuItem small{font-size:9px;color:#c9b77c}
+.religiousNote{margin:14px 0 0;padding:12px 14px;border-radius:12px;background:#ffffff0d;color:#d9e4f0;font-size:13px;line-height:1.8}.light .religiousNote{background:#f4f7fa;color:#53657a}.religiousSection{margin:30px 0;padding:22px;border:1px solid #d8b44a55;border-radius:24px;background:linear-gradient(145deg,#12263f,#091525);scroll-margin-top:90px;box-shadow:0 18px 45px #0003;}
+.religiousHeader{text-align:center;margin-bottom:18px}.religiousBadge{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid #d8b44a55;color:var(--gold);font-size:10px;font-weight:900}.religiousHeader h3{margin:10px 0 5px;font-size:clamp(23px,4vw,34px)}.religiousHeader p{margin:0 auto;color:var(--muted);font-size:11px;line-height:2;max-width:760px}.religiousIntro{text-align:center;margin:0 auto 16px;padding:13px;border-radius:16px;background:#ffffff07;border:1px solid #ffffff10;color:var(--muted);font-size:10px;line-height:2}
+.religiousGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.religiousCard{padding:16px;border:1px solid #ffffff10;border-radius:18px;background:#07111f88}.religiousCard.full{grid-column:1/-1}.religiousCard h4{margin:0 0 10px;color:var(--gold);font-size:13px}.religiousCard p{margin:0;color:var(--text);font-size:10px;line-height:2}.religiousAyah,.religiousDua{text-align:center;line-height:2;color:#fff8df;font-family:Georgia,"Times New Roman",serif}.religiousAyah{font-size:22px}.religiousDua{font-size:18px}.religiousRef{text-align:center;margin-top:5px;color:#b7a46a;font-size:9px}.studySteps,.breakPlan,.afterStudy{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.breakPlan,.afterStudy{grid-template-columns:repeat(3,minmax(0,1fr))}.afterStudy{grid-template-columns:1fr 1fr}.studyStep,.breakBox,.afterBox{padding:11px;border:1px solid #ffffff10;border-radius:14px;background:#ffffff04}.studyStep b,.breakBox strong,.afterBox strong{display:block;color:var(--gold);font-size:10px;margin-bottom:4px}.studyStep span,.breakBox span,.afterBox p{color:var(--muted);font-size:9px;line-height:1.8}.afterBox p{margin:0}.religiousChecklist{margin:0;padding-right:20px;display:grid;gap:5px}.religiousChecklist li{color:var(--text);font-size:10px;line-height:1.8}.religiousChecklist li::marker{color:var(--gold)}.religiousMessage{text-align:center;min-height:48px;display:grid;place-items:center;color:var(--text);font-size:11px;line-height:1.9;margin-bottom:9px}.religiousAction{display:block;margin:auto;border:1px solid #d8b44a55;border-radius:10px;padding:8px 13px;background:#e9c45c;color:#182033;font-size:10px;font-weight:900}
+/* ===== تحسينات الوضع النهاري فقط ===== */
+body.light{--text:#172033;--muted:#53657a;--line:#cbd6e3;--card:#fff;background:var(--bg);color:var(--text)}
+body.light .header,body.light .controls,body.light .stat,body.light .book,body.light .mini,body.light .series,body.light .faqItem{color:var(--text)}
+body.light .search input,body.light .sectionBtn,body.light .sortBtn,body.light .filter,body.light .ib{background:#fff;color:#26364b;border-color:#c8d4e1}
+body.light .tag{background:#eef3f8;color:#40536a;border-color:#d3dee9}body.light .new{background:#e8f7ef;color:#17663f;border-color:#9ed5b9}
+body.light .mini h4,body.light .series h4,body.light .book h3{color:#8a6410}
+body.light .header{background:rgba(255,255,255,.94);border-bottom:1px solid #d5dfeb;box-shadow:0 4px 18px rgba(24,34,53,.06)}
+body.light .brand h2{color:#172033 !important}
+body.light .brand p{color:#53657a !important}
+body.light .brand .gold{color:#a87812 !important}
+.themeSwitch{position:relative;display:grid;place-items:center;overflow:hidden}
+.themeSwitch .themeGlyph{width:22px;height:22px;display:block;transition:transform .25s ease}
+.themeSwitch:hover .themeGlyph{transform:rotate(18deg) scale(1.06)}
+body.light .themeSwitch{background:#f8fafc;border-color:#cbd6e3;color:#172033}
+body.light .mini p,body.light .series p,body.light .book .desc,body.light .small{color:#53657a}
+body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);border-color:#d6b54d88}.light .religiousCard{background:#fff;border-color:#d7e0ea}.light .religiousIntro{background:#f8fafc;border-color:#d7e0ea}.light .religiousAyah,.light .religiousDua{color:#243247}.light .religiousAction{color:#172033}
+#themeIcon{display:inline-block;font-size:19px;line-height:1;transform:translateY(1px)}
+@media(max-width:850px){.studySteps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.religiousSection{padding:15px}.religiousGrid{grid-template-columns:1fr}.religiousCard.full{grid-column:auto}.breakPlan,.afterStudy{grid-template-columns:1fr}.religiousAyah{font-size:19px}.religiousDua{font-size:16px}}
 </style>
-
-<style id="quran-sidebar-style">
-.quranMenuItem{
-    position:relative;
-    display:flex;
-    align-items:center;
-    gap:11px;
-    width:calc(100% - 20px);
-    margin:10px auto 14px;
-    padding:13px 12px;
-    text-decoration:none;
-    color:#fff7dc;
-    border:1px solid rgba(230,189,77,.42);
-    border-radius:16px;
-    background:linear-gradient(135deg,rgba(230,189,77,.18),rgba(13,29,47,.96));
-    box-shadow:0 8px 24px rgba(0,0,0,.22),0 0 18px rgba(230,189,77,.08);
-    transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
-    z-index:2;
-}
-.quranMenuItem:hover{
-    transform:translateY(-2px);
-    border-color:rgba(230,189,77,.75);
-    box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 24px rgba(230,189,77,.13);
-}
-.quranMenuIcon{
-    width:40px;
-    height:40px;
-    flex:0 0 40px;
-    display:grid;
-    place-items:center;
-    border-radius:12px;
-    background:rgba(230,189,77,.13);
-    font-size:22px;
-}
-.quranMenuText{
-    min-width:0;
-    display:flex;
-    flex-direction:column;
-    line-height:1.35;
-}
-.quranMenuText strong{
-    color:#f1ce68;
-    font-size:15px;
-    font-weight:900;
-}
-.quranMenuText small{
-    margin-top:2px;
-    color:#cbd4df;
-    font-size:10px;
-    white-space:nowrap;
-}
-.quranMenuArrow{
-    margin-right:auto;
-    color:#e6bd4d;
-    font-size:18px;
-    font-weight:900;
-}
-</style>
-
 </head>
 
 <body>
@@ -2506,15 +2332,6 @@ footer{
 </span>
 
 </h1>
-<a href="#religiousSection" class="quranMenuItem" aria-label="فتح الجزء الديني">
-    <span class="quranMenuIcon">🕌</span>
-    <span class="quranMenuText">
-        <strong>الجزء الديني</strong>
-        <small>تهيئة العقل للمذاكرة</small>
-    </span>
-    <span class="quranMenuArrow">←</span>
-</a>
-
 
 
 <p class="sub">
@@ -2574,6 +2391,7 @@ footer{
 ❤️ المفضلة
 
 </button>
+
 </div>
 
 
@@ -2620,14 +2438,7 @@ footer{
 </button>
 
 
-<button
-    id="themeBtn"
-    class="ib"
-    type="button">
-
-☀️
-
-</button>
+<button id="themeBtn" class="ib themeSwitch" type="button" aria-label="التبديل بين الوضعين"><span id="themeIcon" class="themeGlyph" aria-hidden="true"></span></button>
 
 <button
     id="updatesBtn"
@@ -2758,22 +2569,6 @@ mhmdrmdan.yobader.com
 <main class="wrap">
 
 
-<section class="welcome" id="religiousSectionLink">
-
-<small>
-🕌 مساحة جديدة في المكتبة
-</small>
-
-<h2>
-الجزء الديني — تهيئة العقل للمذاكرة 🌿
-</h2>
-
-<p>
-آيات وأدعية وأذكار وتذكيرات قصيرة تساعدك على أخذ لحظة هدوء قبل بداية المذاكرة.
-</p>
-</section>
-
-
 <section class="welcome">
 
 <small>
@@ -2789,6 +2584,9 @@ mhmdrmdan.yobader.com
 </p>
 
 </section>
+
+
+
 
 
 <section class="controls">
@@ -3045,64 +2843,142 @@ mhmdrmdan.yobader.com
 </section>
 
 
-
 <section id="religiousSection" class="religiousSection">
-    <div class="religiousHeader">
-        <span class="religiousBadge">🕌 الجزء الديني • قبل المذاكرة</span>
-        <h3>تهيئة العقل <span class="gold">للمذاكرة</span></h3>
-        <p>دقائق بسيطة للهدوء واستحضار النية وطلب التوفيق من الله، ثم ابدأ مذاكرتك بهدوء وتركيز.</p>
-    </div>
+<div class="religiousHeader">
+<span class="religiousBadge">🕌 الجزء الديني • ركن مهم داخل المكتبة</span>
+<h3>تهيئة العقل <span class="gold">للمذاكرة والإنجاز</span></h3>
+<p>مساحة منظمة تساعدك قبل المذاكرة وأثناءها وبعدها: نية، دعاء، تنظيم، تركيز، بريك، مراجعة، وطمأنينة.</p>
+</div>
 
-    <div class="religiousQuote">
-        <strong>بسم الله نبدأ</strong><br>
-        اجعل طلب العلم نافعًا، واجتهد فيما تستطيع، واستعن بالله.
-    </div>
+<div class="religiousIntro"><strong class="gold">بسم الله نبدأ</strong><br>ابدأ بخطوة واضحة، وخذ بالأسباب، واجعل وقتك منظمًا قدر استطاعتك. ليس المطلوب يومًا مثاليًا؛ المطلوب أن تستمر.</div>
 
-    <div class="religiousGrid">
-        <section class="religiousCard full">
-            <h4>📖 آية اليوم</h4>
-            <div class="religiousAyah">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
-            <div class="religiousRef">سورة طه • الآية 114</div>
-        </section>
-
-        <section class="religiousCard">
-            <h4>🤲 دعاء</h4>
-            <div class="religiousDua">رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي</div>
-            <div class="religiousRef">سورة طه • الآيتان 25–26</div>
-        </section>
-
-        <section class="religiousCard">
-            <h4>🌿 تذكير قبل البداية</h4>
-            <p>لا تجعل صعوبة البداية توقفك. ابدأ بالجزء الذي تستطيع إنجازه الآن، وخذ بالأسباب، واستعن بالله، واستمر خطوة بخطوة.</p>
-        </section>
-
-        <section class="religiousCard">
-            <h4>📿 ذكر قصير</h4>
-            <div class="religiousDua">سُبْحَانَ اللهِ • وَالْحَمْدُ لِلَّهِ • وَاللهُ أَكْبَرُ</div>
-            <p style="text-align:center;margin-top:9px;">خذ لحظة هدوء، ثم ابدأ.</p>
-        </section>
-
-        <section class="religiousCard">
-            <h4>🧠 قبل أن تفتح الكتاب</h4>
-            <ul class="religiousTips">
-                <li>صحّح نيتك واجعل هدفك نافعًا.</li>
-                <li>أبعد المشتتات عنك قدر الإمكان.</li>
-                <li>حدد ما ستنجزه في جلسة المذاكرة.</li>
-                <li>ابدأ الآن بدل انتظار الوقت المثالي.</li>
-            </ul>
-        </section>
-
-        <section class="religiousCard full">
-            <h4>💬 رسالة لك</h4>
-            <div class="religiousMessage" id="religiousMessage">الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.</div>
-            <div class="religiousActions">
-                <button type="button" class="religiousAction" id="newReligiousMessage">رسالة أخرى</button>
-                <button type="button" class="religiousAction secondary" id="religiousBackTop">العودة للأعلى ↑</button>
-            </div>
-        </section>
-    </div>
+<div class="religiousGrid">
+<section class="religiousCard">
+<h4>🤲 دعاء قبل المذاكرة</h4>
+<div class="religiousDua">﴿رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي﴾</div>
+<div class="religiousRef">سورة طه • الآيتان 25–26</div>
 </section>
 
+<section class="religiousCard">
+<h4>📖 آية للعلم</h4>
+<div class="religiousAyah">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
+<div class="religiousRef">سورة طه • الآية 114</div>
+</section>
+
+<section class="religiousCard full">
+<h4>🧭 قبل أن تبدأ — جهّز جلسة المذاكرة</h4>
+<div class="studySteps">
+<div class="studyStep"><b>① حدّد هدف الجلسة</b><span>اكتب مهمة واضحة مثل: إنهاء درس، حل مجموعة أسئلة، أو مراجعة جزء محدد.</span></div>
+<div class="studyStep"><b>② جهّز أدواتك</b><span>الكتاب، الكراسة، الأقلام، والماء؛ حتى لا تضطر لترك مكانك كل دقائق.</span></div>
+<div class="studyStep"><b>③ أغلق المشتتات</b><span>أبعد الإشعارات والتطبيقات غير الضرورية، واجعل الهاتف بعيدًا أثناء التركيز.</span></div>
+<div class="studyStep"><b>④ ابدأ فورًا</b><span>لا تنتظر أن تشعر بالحماس؛ ابدأ بأول خطوة صغيرة وستتضح الصورة أثناء العمل.</span></div>
+</div>
+</section>
+
+<section class="religiousCard full">
+<h4>📚 طريقة مذاكرة منظمة من أول الدرس لآخره</h4>
+<div class="studySteps">
+<div class="studyStep"><b>① افهم</b><span>اقرأ الفكرة أو الشرح بهدوء، وحدد الكلمات والمفاهيم الأساسية.</span></div>
+<div class="studyStep"><b>② لخّص</b><span>اكتب النقاط المهمة بكلماتك بدل إعادة نسخ الدرس كاملًا.</span></div>
+<div class="studyStep"><b>③ استرجع</b><span>أغلق الكتاب وحاول تذكر ما قرأته من الذاكرة.</span></div>
+<div class="studyStep"><b>④ طبّق</b><span>حل أسئلة على الجزء مباشرة، وسجّل الأخطاء التي تحتاج مراجعة.</span></div>
+</div>
+</section>
+
+<section class="religiousCard full">
+<h4>⏱️ نظام البريك أثناء المذاكرة</h4>
+<div class="breakPlan">
+<div class="breakBox"><strong>25–30 دقيقة</strong><span>جلسة تركيز حقيقية على مهمة واحدة.</span></div>
+<div class="breakBox"><strong>5 دقائق</strong><span>قم وتحرك واشرب ماء وخذ راحة قصيرة بعيدًا عن المذاكرة.</span></div>
+<div class="breakBox"><strong>بعد 3–4 جلسات</strong><span>خذ راحة أطول قليلًا ثم ارجع لدورة جديدة.</span></div>
+</div>
+<p class="religiousNote">البريك ليس وقتًا لفتح عشرات التطبيقات؛ هدفه أن تستعيد تركيزك ثم تعود.</p>
+</section>
+
+<section class="religiousCard">
+<h4>🧠 أثناء المذاكرة</h4>
+<ul class="religiousChecklist">
+<li>ذاكر جزءًا محددًا ثم اختبر نفسك.</li>
+<li>اكتب النقاط التي تنساها كثيرًا.</li>
+<li>حل بعد كل جزء بدل تأجيل التدريب كله.</li>
+<li>ضع علامة على النقاط الصعبة للعودة إليها.</li>
+<li>إذا توقفت عند سؤال، انتقل مؤقتًا ثم ارجع إليه.</li>
+</ul>
+</section>
+
+<section class="religiousCard">
+<h4>🔁 كيف تثبّت المعلومات؟</h4>
+<ul class="religiousChecklist">
+<li>راجع المعلومة بعد تعلمها بوقت مناسب.</li>
+<li>استخدم الأسئلة والاسترجاع بدل القراءة المتكررة فقط.</li>
+<li>اجمع أخطاءك في قائمة قصيرة للمراجعة.</li>
+<li>ابدأ كل جلسة بمراجعة سريعة لما سبق.</li>
+</ul>
+</section>
+
+<section class="religiousCard">
+<h4>🚫 أشياء تسرق وقت المذاكرة</h4>
+<ul class="religiousChecklist">
+<li>التنقل المستمر بين المواد بدون هدف.</li>
+<li>فتح الهاتف مع كل إشعار.</li>
+<li>المذاكرة الطويلة بدون فواصل.</li>
+<li>الاهتمام بعدد الساعات أكثر من الإنجاز.</li>
+<li>تأجيل حل الأسئلة إلى نهاية الأسبوع.</li>
+</ul>
+</section>
+
+<section class="religiousCard">
+<h4>📵 الهاتف والمذاكرة</h4>
+<p>ضع الهاتف على وضع عدم الإزعاج أو بعيدًا عن متناول يدك أثناء الجلسة. استخدمه فقط عندما تكون هناك حاجة فعلية مرتبطة بالمذاكرة.</p>
+</section>
+
+<section class="religiousCard full">
+<h4>🎯 لو يومك مضغوط</h4>
+<div class="studySteps">
+<div class="studyStep"><b>ابدأ بالأولوية</b><span>اختر أهم مهمة تحتاج إنجازًا اليوم.</span></div>
+<div class="studyStep"><b>قسّمها</b><span>حوّل المهمة الكبيرة إلى أجزاء صغيرة يمكن تنفيذها.</span></div>
+<div class="studyStep"><b>أنجز ثم انتقل</b><span>لا تشتت نفسك بين مهام كثيرة في نفس الوقت.</span></div>
+<div class="studyStep"><b>راجع ما أنجزته</b><span>حتى لو كان الإنجاز أقل من خطتك، سجّله وابنِ عليه غدًا.</span></div>
+</div>
+</section>
+
+<section class="religiousCard">
+<h4>🌙 بعد المذاكرة</h4>
+<div class="afterStudy">
+<div class="afterBox"><strong>📝 سجّل الإنجاز</strong><p>اكتب ما انتهيت منه وما بقي عليك.</p></div>
+<div class="afterBox"><strong>🗂️ جهّز الغد</strong><p>حدد أول مهمة ستبدأ بها في الجلسة القادمة.</p></div>
+</div>
+</section>
+
+<section class="religiousCard">
+<h4>🤲 دعاء وخاتمة</h4>
+<p>اختم وقتك بالدعاء بما تحب من الخير والتوفيق، واشكر الله على ما استطعت إنجازه.</p>
+<div class="religiousDua">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
+</section>
+
+<section class="religiousCard full">
+<h4>📿 ذكر وطمأنينة</h4>
+<div class="religiousDua">سُبْحَانَ اللهِ • الْحَمْدُ لِلَّهِ • اللهُ أَكْبَرُ</div>
+<p class="religiousNote">خذ لحظة هدوء بين جلساتك، وابدأ من جديد دون توتر أو استعجال.</p>
+</section>
+
+<section class="religiousCard">
+<h4>😴 النوم جزء من الاستعداد</h4>
+<p>حافظ قدر الإمكان على وقت نوم مناسب وروتين يساعدك على الاستيقاظ والتركيز. لا تجعل السهر المستمر هو الخطة الأساسية للمذاكرة.</p>
+</section>
+
+<section class="religiousCard">
+<h4>💪 لو فقدت الحماس</h4>
+<p>لا تنتظر الحماس حتى تبدأ. اختر مهمة صغيرة جدًا، أنجزها، ثم انتقل إلى التي بعدها. الاستمرار يتكوّن من خطوات متتابعة.</p>
+</section>
+
+<section class="religiousCard full">
+<h4>💬 رسائل لك أثناء الرحلة</h4>
+<div class="religiousMessage" id="religiousMessage">الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.</div>
+<button type="button" class="religiousAction" id="newReligiousMessage">رسالة أخرى</button>
+</section>
+</div>
+</section>
 
 <section
     id="faq"
@@ -3340,9 +3216,14 @@ Developer
 <aside
     id="menu"
     class="menu">
+
 <div class="menuHead">
 📚 مكتبة تانية بكالوريا
 </div>
+
+<a href="#religiousSection" class="quranMenuItem" aria-label="فتح الجزء الديني">
+🕌 <span><strong>الجزء الديني</strong><small>تهيئة العقل للمذاكرة</small></span>
+</a>
 
 
 <a
@@ -3368,6 +3249,8 @@ Developer
 ❤️ المفضلة فقط
 
 </a>
+
+
 <a href="#examSeries">
 
 📕 سلسلة كتاب الامتحان
@@ -5082,23 +4965,13 @@ scrollTo(
    الثيم
    ========================================================= */
 
+function updateThemeIcon(){ const icon=$('themeIcon'); const btn=$('themeBtn'); if(!icon||!btn)return; const light=document.body.classList.contains('light'); icon.innerHTML=light?'<svg viewBox="0 0 24 24" fill="none"><path d="M20.5 15.2A8.5 8.5 0 0 1 8.8 3.5 8.6 8.6 0 1 0 20.5 15.2Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>':'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>'; btn.title=light?'الوضع الحالي: نهاري — اضغط لليل':'الوضع الحالي: ليلي — اضغط للنهار'; btn.setAttribute('aria-label',light?'الانتقال إلى الوضع الليلي':'الانتقال إلى الوضع النهاري'); }
+
 function toggleTheme(){
-
-document.body
-.classList
-.toggle('light');
-
-$('themeBtn').textContent=
-
-document.body
-.classList
-.contains('light')
-?
-'🌙'
-:
-'☀️';
-
+document.body.classList.toggle('light');
+updateThemeIcon();
 }
+updateThemeIcon();
 
 
 /* =========================================================
@@ -6344,38 +6217,16 @@ renderFeatured();
 renderBooks();
 
 
-/* =========================================================
-   تفاعل المحتوى الديني المدمج
-   ========================================================= */
-const religiousMessages = [
-    "ابدأ بما تستطيع، ولا تنتظر أن تكون الظروف مثالية.",
-    "خطوة صغيرة اليوم قد تصنع فرقًا كبيرًا في مستواك غدًا.",
-    "اجتهد وخذ بالأسباب، واستعن بالله في كل خطوة.",
-    "إذا شعرت بالتشتت، خذ لحظة هدوء ثم عد إلى هدفك.",
-    "العلم يحتاج إلى صبر واستمرار، فلا تستعجل النتيجة.",
-    "رتب وقتك، وابدأ بأهم ما عليك، ثم أكمل خطوة بخطوة."
+const religiousMessages=[
+'ابدأ بما تستطيع، ولا تنتظر أن تكون الظروف مثالية.',
+'اجتهد وخذ بالأسباب، واستعن بالله في كل خطوة.',
+'إذا شعرت بالتشتت، خذ لحظة هدوء ثم عد إلى هدفك.',
+'العلم يحتاج إلى صبر واستمرار، فلا تستعجل النتيجة.',
+'البريك جزء من الخطة؛ خذه بوعي ثم عد للمذاكرة.'
 ];
-
-const newReligiousMessage = document.getElementById("newReligiousMessage");
-const religiousMessage = document.getElementById("religiousMessage");
-if(newReligiousMessage && religiousMessage){
-    newReligiousMessage.addEventListener("click",()=>{
-        const old = religiousMessage.textContent.trim();
-        let next = old;
-        while(next === old){
-            next = religiousMessages[Math.floor(Math.random()*religiousMessages.length)];
-        }
-        religiousMessage.textContent = next;
-    });
-}
-
-const religiousBackTop = document.getElementById("religiousBackTop");
-if(religiousBackTop){
-    religiousBackTop.addEventListener("click",()=>{
-        window.scrollTo({top:0,behavior:"smooth"});
-    });
-}
-
+const newReligiousMessage=$('newReligiousMessage');
+const religiousMessage=$('religiousMessage');
+if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n=religiousMessage.textContent;do{n=religiousMessages[Math.floor(Math.random()*religiousMessages.length)]}while(n===religiousMessage.textContent&&religiousMessages.length>1);religiousMessage.textContent=n;};}
 </script>
 
 </body>
