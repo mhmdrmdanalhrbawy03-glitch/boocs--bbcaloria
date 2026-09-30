@@ -7,6 +7,8 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="مكتبة تانية بكالوريا">
 <meta property="og:description" content="جميع كتب الوزارة والتقييمات لطلاب تانية بكالوريا في مكان واحد.">
+<meta property="og:url" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/">
+<link rel="canonical" href="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/">
 <meta property="og:image" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/preview.png">
 <meta property="og:image:alt" content="مكتبة تانية بكالوريا 2026/2027">
 <meta name="twitter:card" content="summary_large_image">
@@ -860,6 +862,64 @@ svg{
     font-weight:900;
 }
 
+
+/* =========================================================
+   إضافات ذكية للمكتبة — بنفس الهوية الحالية
+   ========================================================= */
+
+.updateToast{
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:9999;
+    width:min(360px,calc(100vw - 36px));
+    padding:13px 15px;
+    border:1px solid var(--line);
+    border-radius:15px;
+    background:var(--card);
+    color:var(--text);
+    box-shadow:0 18px 45px #0005;
+    display:none;
+    align-items:center;
+    gap:10px;
+}
+
+.updateToast.show{display:flex;animation:toastIn .3s ease both;}
+.updateToast .toastIcon{font-size:22px;flex:0 0 auto;}
+.updateToast .toastText{font-size:11px;line-height:1.8;}
+.updateToast strong{color:var(--gold);display:block;}
+.updateToast button{margin-inline-start:auto;border:0;background:transparent;color:var(--muted);font-size:18px;}
+
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+
+.bookShare{
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--text);
+    cursor:pointer;
+}
+
+.newPanel{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:10px;
+}
+
+.newItem{
+    padding:13px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:var(--card);
+    cursor:pointer;
+}
+
+.newItem strong{display:block;color:var(--gold);font-size:11px;line-height:1.8;margin:5px 0;}
+.newItem span{color:var(--muted);font-size:9px;}
+
+@media(max-width:700px){
+    .newPanel{grid-template-columns:1fr;}
+    .updateToast{top:10px;right:10px;width:calc(100vw - 20px);}
+}
 
 /* =========================================================
    سلسلة الامتحان
@@ -2354,6 +2414,16 @@ footer{
 
 </button>
 
+<button
+    id="updatesBtn"
+    class="ib"
+    type="button"
+    aria-label="آخر تحديثات المكتبة">
+
+🔔
+
+</button>
+
 </div>
 
 
@@ -2657,6 +2727,29 @@ mhmdrmdan.yobader.com
 <div>
 
 <small>
+آخر التحديثات
+</small>
+
+<h3>
+🚀 ما الجديد؟
+</h3>
+
+</div>
+
+</div>
+
+<div id="whatsNew" class="newPanel"></div>
+
+</section>
+
+
+<section class="section">
+
+<div class="sectionHead">
+
+<div>
+
+<small>
 مختارات المكتبة
 </small>
 
@@ -2895,6 +2988,13 @@ Developer
 </section>
 
 
+
+
+<div id="updateToast" class="updateToast" role="status" aria-live="polite">
+<span class="toastIcon">🔔</span>
+<div class="toastText"><strong>تحديث جديد في المكتبة</strong><span id="toastText">تمت إضافة محتويات جديدة.</span></div>
+<button id="toastClose" type="button" aria-label="إغلاق">×</button>
+</div>
 
 
 <!-- =======================================================
@@ -3898,6 +3998,37 @@ ${category[1]}
    الحصول على القائمة الحالية
    ========================================================= */
 
+function normalizeArabic(value){
+return String(value||'')
+.toLowerCase()
+.replace(/[أإآ]/g,'ا')
+.replace(/ة/g,'ه')
+.replace(/ى/g,'ي')
+.replace(/[ًٌٍَُِّْـ]/g,'')
+.replace(/[^\u0600-\u06FFa-z0-9\s]/gi,' ')
+.replace(/\s+/g,' ')
+.trim();
+}
+
+function searchScore(book,query){
+const q=normalizeArabic(query);
+if(!q)return 0;
+const title=normalizeArabic(book.title);
+const cat=normalizeArabic(book.cat);
+const desc=normalizeArabic(book.desc);
+let score=0;
+if(title===q)score+=100;
+if(title.includes(q))score+=60;
+if(cat.includes(q))score+=35;
+if(desc.includes(q))score+=15;
+q.split(' ').filter(Boolean).forEach(word=>{
+if(title.includes(word))score+=18;
+else if(cat.includes(word))score+=10;
+else if(desc.includes(word))score+=5;
+});
+return score;
+}
+
 function getCurrentBooks(){
 
 let result=
@@ -3944,18 +4075,11 @@ book=>book.cat===activeFilter
 if(search){
 
 result=
-result.filter(
-book=>
-(
-book.title+
-' '+
-book.desc+
-' '+
-book.cat
-)
-.toLowerCase()
-.includes(search)
-);
+result
+.map(book=>({book,score:searchScore(book,search)}))
+.filter(item=>item.score>0)
+.sort((a,b)=>b.score-a.score || (b.book.date||0)-(a.book.date||0) || (b.book.id||0)-(a.book.id||0))
+.map(item=>item.book);
 
 }
 
@@ -4217,7 +4341,6 @@ type="button">
 
 </button>
 
-
 <a
 class="action open"
 href="${escapeHTML(book.url)}"
@@ -4376,6 +4499,20 @@ $('latest').innerHTML=
 .join('');
 
 
+$('whatsNew').innerHTML=
+books
+.filter(book=>book.isNew)
+.sort((a,b)=>(b.date||0)-(a.date||0) || (b.id||0)-(a.id||0))
+.slice(0,5)
+.map(book=>`
+<article class="newItem" data-new-id="${book.id}">
+<span>🆕 ${escapeHTML(book.cat)}</span>
+<strong>${escapeHTML(book.title)}</strong>
+<span>${escapeHTML(book.desc)}</span>
+</article>
+`).join('');
+
+
 $('popular').innerHTML=
 
 books
@@ -4511,6 +4648,7 @@ return;
 
 currentBook=
 book.id;
+
 
 
 $('modalIcon').textContent=
@@ -4697,7 +4835,7 @@ document.body
 
 
 /* =========================================================
-   المشاركة - الشكل القديم
+   مشاركة المكتبة
    ========================================================= */
 
 function shareLibrary(){
@@ -4711,7 +4849,7 @@ text:
 '📚 مكتبة تانية بكالوريا: كتب ومذكرات وكورسات وامتحانات.',
 
 url:
-'https://zadalmrfh-create.github.io/LibraryThe-Distinguished/'
+'https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/'
 
 };
 
@@ -5018,6 +5156,19 @@ card.dataset.id
 );
 
 
+$('whatsNew').onclick=event=>{
+const item=event.target.closest('[data-new-id]');
+if(item)openDetails(item.dataset.newId);
+};
+
+
+
+
+$('updatesBtn').onclick=()=>{
+$('whatsNew').scrollIntoView({behavior:'smooth',block:'center'});
+};
+
+
 /* FAQ */
 
 document
@@ -5041,6 +5192,31 @@ question
 
 }
 );
+
+
+function showNewContentNotification(){
+const latest=[...books]
+.filter(book=>book.isNew)
+.sort((a,b)=>(b.date||0)-(a.date||0)||(b.id||0)-(a.id||0));
+if(!latest.length)return;
+const newest=latest[0];
+const key=`tb_seen_new_${newest.id}`;
+try{
+ if(localStorage.getItem(key))return;
+ localStorage.setItem(key,'1');
+}catch(error){}
+const toast=$('updateToast');
+const text=$('toastText');
+if(toast&&text){
+ text.textContent=`تمت إضافة: ${newest.title}`;
+ toast.classList.add('show');
+ setTimeout(()=>toast.classList.remove('show'),7000);
+}
+}
+
+$('toastClose').onclick=()=>$('updateToast').classList.remove('show');
+
+showNewContentNotification();
 
 
 /* المطور */
