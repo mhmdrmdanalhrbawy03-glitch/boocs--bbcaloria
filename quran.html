@@ -1,6 +1,20 @@
 <!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>الجزء الديني | مكتبة تانية بكالوريا</title><style>
 :root{--bg:#07111f;--card:#0d1b2c;--text:#f5f7fb;--muted:#aab6c5;--gold:#f4cb59;--line:#ffffff18}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#122641 0,#07111f 48%,#050b13 100%);color:var(--text);font-family:Tahoma,Arial,sans-serif}.quranPage{width:min(1050px,calc(100% - 28px));margin:0 auto;padding:82px 0 45px}.backBtn{position:fixed;top:18px;right:18px;z-index:20;width:48px;height:48px;border-radius:50%;border:1px solid #f4cb5966;background:#0d1b2cee;color:var(--gold);font-size:25px;font-weight:900;cursor:pointer;box-shadow:0 10px 30px #0006}.backBtn:hover{transform:translateY(-2px);border-color:var(--gold)}.pageTitle{text-align:center;margin:0 0 28px}.pageTitle .badge{display:inline-block;padding:8px 15px;border:1px solid #f4cb5944;border-radius:999px;color:var(--gold);font-weight:900;font-size:11px;background:#f4cb5910}.pageTitle h1{margin:14px 0 7px;font-size:clamp(26px,5vw,42px)}.pageTitle p{margin:0;color:var(--muted);line-height:2;font-size:12px}.gold{color:var(--gold)}
 .religiousSection{display:block;margin:0;border:1px solid #d6b54d66;border-radius:26px;padding:22px;background:linear-gradient(145deg,#0d1c2d,#091525);box-shadow:0 25px 70px #0007}.religiousHeader{text-align:center;margin-bottom:16px}.religiousBadge{display:inline-block;padding:7px 12px;border-radius:999px;background:#f4cb5912;border:1px solid #f4cb5940;color:var(--gold);font-size:10px;font-weight:900}.religiousHeader h3{font-size:27px;margin:12px 0 6px}.religiousHeader p,.religiousIntro{color:var(--muted);line-height:2;font-size:11px}.religiousIntro{padding:15px;border:1px solid var(--line);border-radius:16px;background:#ffffff06;margin-bottom:12px}.religiousGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.religiousCard{border:1px solid var(--line);border-radius:17px;padding:16px;background:#ffffff05}.religiousCard.full{grid-column:1/-1}.religiousCard h4{margin:0 0 10px;color:var(--gold);font-size:14px}.religiousDua,.religiousAyah{font-size:20px;line-height:2;text-align:center;color:#fff5cf}.religiousRef{margin-top:8px;text-align:center;color:var(--muted);font-size:9px}.studySteps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.studyStep,.breakBox,.afterBox{padding:12px;border:1px solid var(--line);border-radius:13px;background:#ffffff05}.studyStep b,.breakBox strong,.afterBox strong{display:block;color:var(--gold);font-size:11px;margin-bottom:5px}.studyStep span,.breakBox span,.afterBox span{display:block;color:var(--muted);font-size:10px;line-height:1.9}.breakPlan,.afterStudy{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.religiousAction{padding:12px;border-radius:13px;background:#f4cb5910;border:1px solid #f4cb5930;color:var(--text);line-height:2;font-size:10px}.quranFooter{text-align:center;color:var(--muted);font-size:10px;margin-top:22px}@media(max-width:700px){.quranPage{width:min(100% - 18px,700px);padding-top:78px}.religiousSection{padding:15px;border-radius:20px}.religiousGrid,.studySteps,.breakPlan,.afterStudy{grid-template-columns:1fr}.religiousCard.full{grid-column:auto}.religiousAyah,.religiousDua{font-size:18px}}
+
+/* ===== تحسينات الواجهة ===== */
+:root{--gold2:#ffe59a;--gold3:#b8891d;--glass:#ffffff08}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 15% 20%,#f4cb5910 0 1px,transparent 2px),radial-gradient(circle at 80% 65%,#f4cb590c 0 1px,transparent 2px);background-size:120px 120px,170px 170px;opacity:.7}
+.backBtn{display:grid;place-items:center;transition:.25s;overflow:hidden}.backBtn:after{content:"";position:absolute;width:120%;height:35%;background:linear-gradient(90deg,transparent,#ffe59a88,transparent);transform:translateX(-120%) rotate(-25deg);animation:shine 3.8s infinite}.backBtn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 34px #0008,0 0 24px #f4cb5933}
+@keyframes shine{0%,55%{transform:translateX(-130%) rotate(-25deg)}75%,100%{transform:translateX(130%) rotate(-25deg)}}
+.pageTitle .badge,.religiousBadge{box-shadow:0 0 0 1px #f4cb5910,0 0 22px #f4cb5910}
+.religiousSection{position:relative;overflow:hidden}.religiousSection:before{content:"";position:absolute;inset:-2px;background:linear-gradient(120deg,transparent 20%,#f4cb590d 45%,transparent 70%);transform:translateX(-100%);animation:panelGlow 7s infinite;pointer-events:none}@keyframes panelGlow{0%,55%{transform:translateX(-100%)}75%,100%{transform:translateX(100%)}}
+.religiousHeader h3{letter-spacing:.2px}.religiousCard{position:relative;transition:transform .25s,border-color .25s,box-shadow .25s}.religiousCard:hover{transform:translateY(-3px);border-color:#f4cb5940;box-shadow:0 12px 30px #0004}.religiousCard h4{display:flex;align-items:center;gap:8px}
+.religiousCard h4:first-letter{filter:drop-shadow(0 0 7px #f4cb59)}
+.studyStep,.breakBox,.afterBox{transition:.22s}.studyStep:hover,.breakBox:hover,.afterBox:hover{border-color:#f4cb5938;background:#f4cb590b;transform:translateY(-2px)}
+.religiousDua,.religiousAyah{color:var(--gold2);text-shadow:0 0 18px #f4cb5920}.religiousChecklist{list-style:none;padding:0;margin:0;display:grid;gap:9px}.religiousChecklist li{position:relative;padding:9px 28px 9px 10px;color:var(--muted);font-size:10px;line-height:1.9;border-radius:10px;background:#ffffff04}.religiousChecklist li:before{content:"✦";position:absolute;right:10px;top:8px;color:var(--gold);text-shadow:0 0 10px #f4cb59;animation:iconPulse 2.4s infinite}.religiousNote{margin:12px 0 0;color:var(--muted);font-size:10px;line-height:1.9;text-align:center}.afterStudy{grid-template-columns:repeat(2,minmax(0,1fr))}.afterBox p{margin:0;color:var(--muted);font-size:10px;line-height:1.9}.religiousMessage{min-height:58px;display:grid;place-items:center;text-align:center;padding:15px;border-radius:15px;border:1px solid #f4cb5930;background:linear-gradient(135deg,#f4cb590b,#ffffff04);color:var(--gold2);font-size:13px;font-weight:800;line-height:2;box-shadow:inset 0 0 25px #f4cb5905}.religiousAction{display:block;margin:12px auto 0;min-width:150px;cursor:pointer;font-family:inherit;font-weight:900;transition:.25s;box-shadow:0 8px 24px #0003}.religiousAction:hover{transform:translateY(-2px);background:#f4cb591b;border-color:#f4cb5960;box-shadow:0 10px 30px #0005,0 0 18px #f4cb5914}.religiousAction:active{transform:scale(.97)}
+.iconGold{color:var(--gold);filter:drop-shadow(0 0 8px #f4cb5955);animation:iconPulse 2.4s ease-in-out infinite}.religiousCard h4 .iconGold{display:inline-block}@keyframes iconPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 5px #f4cb5933)}50%{transform:scale(1.12);filter:drop-shadow(0 0 13px #f4cb59aa)}}
+@media(max-width:700px){.afterStudy{grid-template-columns:1fr}.religiousMessage{font-size:12px}.religiousAction{min-width:140px}}
 </style></head><body><button class="backBtn" type="button" onclick="location.href='./index.html'" aria-label="العودة إلى المكتبة">←</button><main class="quranPage"><header class="pageTitle"><span class="badge">🕌 الجزء الديني</span><h1>ركن <span class="gold">الطمأنينة والمذاكرة</span></h1><p>محتوى مستقل يساعدك على بدء المذاكرة وتنظيم الوقت والمحافظة على التركيز.</p></header><section id="religiousSection" class="religiousSection">
 <div class="religiousHeader">
 <span class="religiousBadge">🕌 الجزء الديني • ركن مهم داخل المكتبة</span>
@@ -136,4 +150,28 @@
 <button type="button" class="religiousAction" id="newReligiousMessage">رسالة أخرى</button>
 </section>
 </div>
-</section><div class="quranFooter">📚 مكتبة تانية بكالوريا • للعودة للمكتبة اضغط سهم الرجوع أعلى الصفحة</div></main></body></html>
+</section><div class="quranFooter">📚 مكتبة تانية بكالوريا • للعودة للمكتبة اضغط سهم الرجوع أعلى الصفحة</div></main><script>
+const religiousMessages=[
+  'الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.',
+  'ابدأ بما تستطيع اليوم، ولا تجعل انتظار اليوم المثالي يؤخر إنجازك.',
+  'خطوة صغيرة كل يوم تصنع فرقًا كبيرًا مع الوقت.',
+  'إذا تعثرت في جزء، لا تتوقف عن الرحلة كلها؛ عد وحاول مرة أخرى.',
+  'نظّم وقتك، خذ بالأسباب، واستعن بالله ثم واصل العمل.',
+  'اجعل هدف جلسة المذاكرة واضحًا، وستجد البداية أسهل.',
+  'لا تقارن بدايتك بإنجاز غيرك؛ ركّز على تقدمك أنت.',
+  'الإنجاز الحقيقي ليس في عدد الساعات، بل فيما خرجت به من كل جلسة.'
+];
+let messageIndex=0;
+const messageEl=document.getElementById('religiousMessage');
+const messageBtn=document.getElementById('newReligiousMessage');
+if(messageEl && messageBtn){
+  messageBtn.addEventListener('click',()=>{
+    messageIndex=(messageIndex+1)%religiousMessages.length;
+    messageEl.animate([
+      {opacity:.2,transform:'translateY(6px)'},
+      {opacity:1,transform:'translateY(0)'}
+    ],{duration:280,easing:'ease-out'});
+    messageEl.textContent=religiousMessages[messageIndex];
+  });
+}
+</script></body></html>
