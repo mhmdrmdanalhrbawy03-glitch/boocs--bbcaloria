@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta name="google-site-verification" content="uvXXX8a6FTtjdTYeaW6RHbkWXyeQkbLUxeMatO3Ab7U" />
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="مكتبة تانية بكالوريا 2026/2027: مكتبة إلكترونية تجمع كتب الوزارة والتقييمات والكتب التعليمية لطلاب تانية بكالوريا في مكان واحد، مع البحث والتصنيف والإشعارات.">
-<meta name="robots" content="index, follow, max-image-preview:large">
-<meta name="googlebot" content="index, follow">
-<meta name="author" content="مكتبة تانية بكالوريا">
-<meta name="language" content="Arabic">
 <meta name="theme-color" content="#07111f">
 <meta property="og:type" content="website">
 <meta property="og:title" content="مكتبة تانية بكالوريا">
 <meta property="og:description" content="جميع كتب الوزارة والتقييمات لطلاب تانية بكالوريا في مكان واحد.">
-<meta property="og:url" content="https://boocs-bbcaloria.vercel.app/">
-<link rel="canonical" href="https://boocs-bbcaloria.vercel.app/">
-<meta property="og:image" content="https://boocs-bbcaloria.vercel.app/preview.png">
+<meta property="og:url" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/">
+<link rel="canonical" href="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/">
+<meta property="og:image" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/preview.png">
 <meta property="og:image:alt" content="مكتبة تانية بكالوريا 2026/2027">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="مكتبة تانية بكالوريا">
 <meta name="twitter:description" content="جميع كتب الوزارة والتقييمات لطلاب تانية بكالوريا في مكان واحد.">
-<meta name="twitter:image" content="https://boocs-bbcaloria.vercel.app/preview.png">
-<title>مكتبة تانية بكالوريا 2026/2027 | كتب الوزارة والتقييمات</title>
+<meta name="twitter:image" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/preview.png">
+<title>مكتبة تانية بكالوريا</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%2707111f%27/%3E%3Cpath d=%27M13 16c10-5 18-5 25 0v34c-7-5-15-5-25 0z%27 fill=%27%23f4cb59%27/%3E%3Cpath d=%27M51 16c-10-5-18-5-25 0v34c7-5 15-5 25 0z%27 fill=%27%23dcae32%27/%3E%3Cpath d=%27M28 17v32%27 stroke=%27%2307111f%27 stroke-width=%273%27/%3E%3C/svg%3E">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1160,139 +1154,69 @@ svg{
 
 
 /* =========================================================
-   FAQ — قسم الأسئلة الشائعة المطوّر
+   FAQ
    ========================================================= */
 
 .faq{
-    width:min(1050px,100%);
-    margin:64px auto 35px;
-    padding:0 2px;
-}
-
-.faqIntro{
-    text-align:center;
-    margin-bottom:22px;
-}
-
-.faqIntro .faqBadge{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    padding:7px 13px;
-    border-radius:999px;
-    background:#f4cb5912;
-    border:1px solid #f4cb5940;
-    color:var(--gold);
-    font-size:10px;
-    font-weight:900;
+    width:min(950px,100%);
+    margin:50px auto;
 }
 
 .faq h2{
-    margin:10px 0 5px;
     text-align:center;
     color:var(--gold);
-    font-size:clamp(25px,4vw,34px);
-}
-
-.faqIntro p{
-    margin:0 auto;
-    max-width:720px;
-    color:var(--muted);
-    font-size:11px;
-    line-height:2;
-}
-
-.faqGrid{
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    gap:11px;
+    font-size:28px;
 }
 
 .faqItem{
-    margin:0;
+    margin-bottom:9px;
     overflow:hidden;
-    transition:.25s ease;
-    box-shadow:0 10px 30px #00000010;
-}
-
-.faqItem:hover{
-    transform:translateY(-2px);
-    border-color:#f4cb5955;
 }
 
 .question{
     width:100%;
-    min-height:67px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:12px;
-    padding:14px 16px;
+
+    padding:16px;
+
     background:none;
     border:0;
+
     color:var(--text);
+
     text-align:right;
+
     font-size:11px;
     font-weight:900;
-    line-height:1.8;
-    cursor:pointer;
 }
 
-.questionText{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.questionIcon{
-    width:34px;
-    height:34px;
-    flex:0 0 34px;
-    display:grid;
-    place-items:center;
-    border-radius:10px;
-    background:#f4cb5912;
-    border:1px solid #f4cb5928;
-    font-size:15px;
-}
-
-.question span:last-child{
-    width:29px;
-    height:29px;
-    flex:0 0 29px;
-    display:grid;
-    place-items:center;
-    border-radius:9px;
-    background:#f4cb5910;
+.question span{
     color:var(--gold);
-    font-size:18px;
-    transition:.25s;
+    font-size:22px;
+    transition:.2s;
 }
 
 .answer{
     display:none;
-    padding:0 16px 17px 60px;
-    color:var(--muted);
-    font-size:10px;
-    line-height:2.15;
-}
 
-.faqItem.active{
-    border-color:#f4cb5966;
+    padding:
+        0 16px 16px;
+
+    color:var(--muted);
+
+    font-size:10px;
+    line-height:2;
 }
 
 .faqItem.active .answer{
     display:block;
 }
 
-.faqItem.active .question span:last-child{
+.faqItem.active .question span{
     transform:rotate(45deg);
-    background:#f4cb5920;
-}
-
-@media(max-width:760px){
-    .faqGrid{grid-template-columns:1fr;}
-    .answer{padding-right:16px;padding-left:58px;}
 }
 
 
@@ -2242,17 +2166,10 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 @media(max-width:850px){.studySteps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.religiousSection{padding:15px}.religiousGrid{grid-template-columns:1fr}.religiousCard.full{grid-column:auto}.breakPlan,.afterStudy{grid-template-columns:1fr}.religiousAyah{font-size:19px}.religiousDua{font-size:16px}}
 </style>
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebSite",
-  "name":"مكتبة تانية بكالوريا",
-  "alternateName":"مكتبة تانية بكالوريا 2026/2027",
-  "url":"https://boocs-bbcaloria.vercel.app/",
-  "inLanguage":"ar",
-  "description":"مكتبة إلكترونية تجمع كتب الوزارة والتقييمات والكتب التعليمية لطلاب تانية بكالوريا في مكان واحد."
-}
-</script>
+
+<style id="octoberMiniBannerStyles">
+.october-mini-banner{width:min(1100px,calc(100% - 28px));margin:14px auto;padding:10px 16px;border-radius:16px;border:1px solid rgba(212,175,55,.28);background:linear-gradient(100deg,#0b1627,#14263d 55%,#101923);display:flex;align-items:center;justify-content:center;gap:14px;box-shadow:0 8px 24px rgba(0,0,0,.12);position:relative;overflow:hidden}.october-mini-banner:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.07),transparent);transform:translateX(-100%);animation:octoberSweep 5s linear infinite}.october-mini-flag{width:54px;height:34px;border-radius:5px;overflow:hidden;flex:0 0 auto;box-shadow:0 2px 8px rgba(0,0,0,.25);background:linear-gradient(#ce1126 0 33.33%,#fff 33.33% 66.66%,#000 66.66%)}.october-mini-flag:after{content:"★";display:grid;place-items:center;height:100%;font-size:12px;color:#c99b2e}.october-mini-text{text-align:right;line-height:1.35;position:relative;z-index:1}.october-mini-title{font-size:15px;font-weight:900;color:#f3d36b}.october-mini-sub{font-size:11px;color:#c6d0dc;margin-top:2px}@keyframes octoberSweep{to{transform:translateX(100%)}}@media(max-width:600px){.october-mini-banner{width:calc(100% - 20px);margin:10px auto;padding:9px 11px;gap:10px}.october-mini-flag{width:46px;height:29px}.october-mini-title{font-size:13px}.october-mini-sub{font-size:10px}}body.light .october-mini-banner{background:linear-gradient(100deg,#fffdf5,#f4f0df);border-color:rgba(150,112,20,.22);box-shadow:0 7px 20px rgba(60,45,10,.08)}body.light .october-mini-title{color:#765b12}body.light .october-mini-sub{color:#667085}
+</style>
 </head>
 
 <body>
@@ -2271,6 +2188,11 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 
 <div class="homeGlow one"></div>
 <div class="homeGlow two"></div>
+
+<div class="october-mini-banner" aria-label="ذكرى حرب أكتوبر المجيدة">
+<div class="october-mini-flag" aria-hidden="true"></div>
+<div class="october-mini-text"><div class="october-mini-title">ذكرى انتصارات أكتوبر 🇪🇬</div><div class="october-mini-sub">6 أكتوبر 1973 • ذكرى العبور</div></div>
+</div>
 
 <div class="hero">
 
@@ -2676,9 +2598,10 @@ mhmdrmdan.yobader.com
 
 </section>
 
-
-
-
+<div class="october-mini-banner" aria-label="ذكرى حرب أكتوبر المجيدة">
+<div class="october-mini-flag" aria-hidden="true"></div>
+<div class="october-mini-text"><div class="october-mini-title">ذكرى انتصارات أكتوبر 🇪🇬</div><div class="october-mini-sub">6 أكتوبر 1973 • ذكرى العبور</div></div>
+</div>
 
 <section class="controls">
 
@@ -2934,89 +2857,195 @@ mhmdrmdan.yobader.com
 </section>
 
 
-
-
-<section id="faq" class="faq">
-
-<div class="faqIntro">
-<span class="faqBadge">❓ إجابات سريعة</span>
-<h2>الأسئلة الشائعة</h2>
-<p>كل ما تحتاج معرفته عن المكتبة، البحث، فتح الكتب، التحميل، المفضلة، الإشعارات واستخدام المحتوى بشكل أسهل.</p>
+<section id="religiousSection" class="religiousSection">
+<div class="religiousHeader">
+<span class="religiousBadge">🕌 الجزء الديني • ركن مهم داخل المكتبة</span>
+<h3>تهيئة العقل <span class="gold">للمذاكرة والإنجاز</span></h3>
+<p>مساحة منظمة تساعدك قبل المذاكرة وأثناءها وبعدها: نية، دعاء، تنظيم، تركيز، بريك، مراجعة، وطمأنينة.</p>
 </div>
 
-<div class="faqGrid">
+<div class="religiousIntro"><strong class="gold">بسم الله نبدأ</strong><br>ابدأ بخطوة واضحة، وخذ بالأسباب، واجعل وقتك منظمًا قدر استطاعتك. ليس المطلوب يومًا مثاليًا؛ المطلوب أن تستمر.</div>
+
+<div class="religiousGrid">
+<section class="religiousCard">
+<h4>🤲 دعاء قبل المذاكرة</h4>
+<div class="religiousDua">﴿رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي﴾</div>
+<div class="religiousRef">سورة طه • الآيتان 25–26</div>
+</section>
+
+<section class="religiousCard">
+<h4>📖 آية للعلم</h4>
+<div class="religiousAyah">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
+<div class="religiousRef">سورة طه • الآية 114</div>
+</section>
+
+<section class="religiousCard full">
+<h4>🧭 قبل أن تبدأ — جهّز جلسة المذاكرة</h4>
+<div class="studySteps">
+<div class="studyStep"><b>① حدّد هدف الجلسة</b><span>اكتب مهمة واضحة مثل: إنهاء درس، حل مجموعة أسئلة، أو مراجعة جزء محدد.</span></div>
+<div class="studyStep"><b>② جهّز أدواتك</b><span>الكتاب، الكراسة، الأقلام، والماء؛ حتى لا تضطر لترك مكانك كل دقائق.</span></div>
+<div class="studyStep"><b>③ أغلق المشتتات</b><span>أبعد الإشعارات والتطبيقات غير الضرورية، واجعل الهاتف بعيدًا أثناء التركيز.</span></div>
+<div class="studyStep"><b>④ ابدأ فورًا</b><span>لا تنتظر أن تشعر بالحماس؛ ابدأ بأول خطوة صغيرة وستتضح الصورة أثناء العمل.</span></div>
+</div>
+</section>
+
+<section class="religiousCard full">
+<h4>📚 طريقة مذاكرة منظمة من أول الدرس لآخره</h4>
+<div class="studySteps">
+<div class="studyStep"><b>① افهم</b><span>اقرأ الفكرة أو الشرح بهدوء، وحدد الكلمات والمفاهيم الأساسية.</span></div>
+<div class="studyStep"><b>② لخّص</b><span>اكتب النقاط المهمة بكلماتك بدل إعادة نسخ الدرس كاملًا.</span></div>
+<div class="studyStep"><b>③ استرجع</b><span>أغلق الكتاب وحاول تذكر ما قرأته من الذاكرة.</span></div>
+<div class="studyStep"><b>④ طبّق</b><span>حل أسئلة على الجزء مباشرة، وسجّل الأخطاء التي تحتاج مراجعة.</span></div>
+</div>
+</section>
+
+<section class="religiousCard full">
+<h4>⏱️ نظام البريك أثناء المذاكرة</h4>
+<div class="breakPlan">
+<div class="breakBox"><strong>25–30 دقيقة</strong><span>جلسة تركيز حقيقية على مهمة واحدة.</span></div>
+<div class="breakBox"><strong>5 دقائق</strong><span>قم وتحرك واشرب ماء وخذ راحة قصيرة بعيدًا عن المذاكرة.</span></div>
+<div class="breakBox"><strong>بعد 3–4 جلسات</strong><span>خذ راحة أطول قليلًا ثم ارجع لدورة جديدة.</span></div>
+</div>
+<p class="religiousNote">البريك ليس وقتًا لفتح عشرات التطبيقات؛ هدفه أن تستعيد تركيزك ثم تعود.</p>
+</section>
+
+<section class="religiousCard">
+<h4>🧠 أثناء المذاكرة</h4>
+<ul class="religiousChecklist">
+<li>ذاكر جزءًا محددًا ثم اختبر نفسك.</li>
+<li>اكتب النقاط التي تنساها كثيرًا.</li>
+<li>حل بعد كل جزء بدل تأجيل التدريب كله.</li>
+<li>ضع علامة على النقاط الصعبة للعودة إليها.</li>
+<li>إذا توقفت عند سؤال، انتقل مؤقتًا ثم ارجع إليه.</li>
+</ul>
+</section>
+
+<section class="religiousCard">
+<h4>🔁 كيف تثبّت المعلومات؟</h4>
+<ul class="religiousChecklist">
+<li>راجع المعلومة بعد تعلمها بوقت مناسب.</li>
+<li>استخدم الأسئلة والاسترجاع بدل القراءة المتكررة فقط.</li>
+<li>اجمع أخطاءك في قائمة قصيرة للمراجعة.</li>
+<li>ابدأ كل جلسة بمراجعة سريعة لما سبق.</li>
+</ul>
+</section>
+
+<section class="religiousCard">
+<h4>🚫 أشياء تسرق وقت المذاكرة</h4>
+<ul class="religiousChecklist">
+<li>التنقل المستمر بين المواد بدون هدف.</li>
+<li>فتح الهاتف مع كل إشعار.</li>
+<li>المذاكرة الطويلة بدون فواصل.</li>
+<li>الاهتمام بعدد الساعات أكثر من الإنجاز.</li>
+<li>تأجيل حل الأسئلة إلى نهاية الأسبوع.</li>
+</ul>
+</section>
+
+<section class="religiousCard">
+<h4>📵 الهاتف والمذاكرة</h4>
+<p>ضع الهاتف على وضع عدم الإزعاج أو بعيدًا عن متناول يدك أثناء الجلسة. استخدمه فقط عندما تكون هناك حاجة فعلية مرتبطة بالمذاكرة.</p>
+</section>
+
+<section class="religiousCard full">
+<h4>🎯 لو يومك مضغوط</h4>
+<div class="studySteps">
+<div class="studyStep"><b>ابدأ بالأولوية</b><span>اختر أهم مهمة تحتاج إنجازًا اليوم.</span></div>
+<div class="studyStep"><b>قسّمها</b><span>حوّل المهمة الكبيرة إلى أجزاء صغيرة يمكن تنفيذها.</span></div>
+<div class="studyStep"><b>أنجز ثم انتقل</b><span>لا تشتت نفسك بين مهام كثيرة في نفس الوقت.</span></div>
+<div class="studyStep"><b>راجع ما أنجزته</b><span>حتى لو كان الإنجاز أقل من خطتك، سجّله وابنِ عليه غدًا.</span></div>
+</div>
+</section>
+
+<section class="religiousCard">
+<h4>🌙 بعد المذاكرة</h4>
+<div class="afterStudy">
+<div class="afterBox"><strong>📝 سجّل الإنجاز</strong><p>اكتب ما انتهيت منه وما بقي عليك.</p></div>
+<div class="afterBox"><strong>🗂️ جهّز الغد</strong><p>حدد أول مهمة ستبدأ بها في الجلسة القادمة.</p></div>
+</div>
+</section>
+
+<section class="religiousCard">
+<h4>🤲 دعاء وخاتمة</h4>
+<p>اختم وقتك بالدعاء بما تحب من الخير والتوفيق، واشكر الله على ما استطعت إنجازه.</p>
+<div class="religiousDua">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
+</section>
+
+<section class="religiousCard full">
+<h4>📿 ذكر وطمأنينة</h4>
+<div class="religiousDua">سُبْحَانَ اللهِ • الْحَمْدُ لِلَّهِ • اللهُ أَكْبَرُ</div>
+<p class="religiousNote">خذ لحظة هدوء بين جلساتك، وابدأ من جديد دون توتر أو استعجال.</p>
+</section>
+
+<section class="religiousCard">
+<h4>😴 النوم جزء من الاستعداد</h4>
+<p>حافظ قدر الإمكان على وقت نوم مناسب وروتين يساعدك على الاستيقاظ والتركيز. لا تجعل السهر المستمر هو الخطة الأساسية للمذاكرة.</p>
+</section>
+
+<section class="religiousCard">
+<h4>💪 لو فقدت الحماس</h4>
+<p>لا تنتظر الحماس حتى تبدأ. اختر مهمة صغيرة جدًا، أنجزها، ثم انتقل إلى التي بعدها. الاستمرار يتكوّن من خطوات متتابعة.</p>
+</section>
+
+<section class="religiousCard full">
+<h4>💬 رسائل لك أثناء الرحلة</h4>
+<div class="religiousMessage" id="religiousMessage">الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.</div>
+<button type="button" class="religiousAction" id="newReligiousMessage">رسالة أخرى</button>
+</section>
+</div>
+</section>
+
+<section
+    id="faq"
+    class="faq">
+
+<h2>
+❓ الأسئلة الشائعة
+</h2>
+
 
 <div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">📥</span>هل الكتب قابلة للتحميل؟</span><span>＋</span></button>
-<div class="answer">نعم، الكتب التي يتوفر لها رابط تحميل مباشر يمكن تنزيلها من زر التحميل، بينما بعض المحتويات قد تكون مجلدات أو روابط فتح حسب نوع الملف.</div>
+
+<button
+    class="question"
+    type="button">
+
+هل الكتب قابلة للتحميل؟
+
+<span>＋</span>
+
+</button>
+
+
+<div class="answer">
+
+نعم، ملفات Google Drive التي يتوفر لها تحميل يمكن تنزيلها، والمجلدات تُفتح كمجلد.
+
 </div>
+
+</div>
+
 
 <div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🔎</span>كيف أجد كتابًا أو مادة معينة بسرعة؟</span><span>＋</span></button>
-<div class="answer">استخدم مربع البحث واكتب اسم الكتاب أو المادة أو جزءًا من الاسم، ثم يمكنك تضييق النتائج من التصنيفات الموجودة في المكتبة.</div>
-</div>
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">📚</span>ما المواد الموجودة في المكتبة؟</span><span>＋</span></button>
-<div class="answer">المكتبة تجمع الكتب والمراجعات والمصادر المضافة للطلاب في تصنيفات مختلفة، ويمكنك استعراضها من خلال الأقسام أو البحث المباشر.</div>
-</div>
+<button
+    class="question"
+    type="button">
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🆕</span>كيف أعرف أحدث الإضافات؟</span><span>＋</span></button>
-<div class="answer">قسم «أحدث الإضافات» يعرض المحتوى الذي تمت إضافته حديثًا، بينما إشعارات الجرس مخصصة للتحديثات التي تم تسجيلها كإشعارات فقط.</div>
-</div>
+كيف أجد مادة معينة؟
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🔔</span>ما وظيفة زر الإشعارات؟</span><span>＋</span></button>
-<div class="answer">يعرض التحديثات المهمة المسجلة للمكتبة. يظهر أحدث أربعة أولًا، وإذا كان هناك المزيد يمكنك الضغط على «عرض المزيد» لرؤية بقية الإشعارات.</div>
-</div>
+<span>＋</span>
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">⬇️</span>ماذا يحدث عند الضغط على إشعار كتاب؟</span><span>＋</span></button>
-<div class="answer">إشعار الكتاب يوصلك مباشرة إلى رابط تنزيل الكتاب، بدل فتح صفحة عامة، لتصل إلى المحتوى المطلوب بأقل عدد من الخطوات.</div>
-</div>
+</button>
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">⭐</span>كيف أستخدم المفضلة؟</span><span>＋</span></button>
-<div class="answer">اضغط على علامة المفضلة الموجودة على بطاقة الكتاب لإضافته إلى قائمة المفضلة، ويمكنك الرجوع إليه بسهولة بدل البحث عنه من جديد.</div>
-</div>
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🕌</span>ما هو الجزء الديني؟</span><span>＋</span></button>
-<div class="answer">هو قسم مخصص لتهيئة الطالب للمذاكرة، ويضم أدعية وآيات وأذكارًا ونصائح لتنظيم جلسة المذاكرة والبريك والمراجعة والاستمرار.</div>
-</div>
+<div class="answer">
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🌙</span>هل يوجد وضع ليلي ونهاري؟</span><span>＋</span></button>
-<div class="answer">نعم، يمكنك التبديل بين الوضعين من زر المظهر، وقد تم تصميم النصوص والعناصر لتظل واضحة في الوضعين.</div>
-</div>
+استخدم البحث أو اختر التصنيف المناسب من شريط التصنيفات.
 
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">📱</span>هل المكتبة تعمل على الهاتف؟</span><span>＋</span></button>
-<div class="answer">نعم، تصميم المكتبة متجاوب مع الشاشات المختلفة، ويمكنك استخدامها من الهاتف أو الكمبيوتر مع الحفاظ على أدوات البحث والتصفح الأساسية.</div>
-</div>
-
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🔗</span>هل أحتاج إلى فتح الكتاب من داخل المكتبة أولًا؟</span><span>＋</span></button>
-<div class="answer">ليس دائمًا. عندما يكون هناك إشعار مخصص لكتاب، يمكنك الضغط على الإشعار للوصول مباشرة إلى رابط التنزيل الخاص بالكتاب.</div>
-</div>
-
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">📖</span>ماذا أفعل إذا لم يعمل رابط كتاب معين؟</span><span>＋</span></button>
-<div class="answer">إذا كان الرابط لا يعمل، يُفضّل تحديث الرابط من المصدر. ويمكن استبداله داخل بيانات الكتاب دون الحاجة إلى تغيير تصميم المكتبة أو بقية الكتب.</div>
-</div>
-
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">⚡</span>كيف أصل إلى كتاب تمت إضافته حديثًا؟</span><span>＋</span></button>
-<div class="answer">يمكنك الوصول إليه من «أحدث الإضافات» أو من إشعاره إذا كان مسجلًا ضمن نظام الإشعارات.</div>
-</div>
-
-<div class="faqItem">
-<button class="question" type="button"><span class="questionText"><span class="questionIcon">🎯</span>كيف أستفيد من المكتبة بأفضل شكل؟</span><span>＋</span></button>
-<div class="answer">ابدأ بالبحث عن المادة التي تذاكرها، احفظ الكتب المهمة في المفضلة، تابع الإشعارات للتحديثات المسجلة، واستفد من الجزء الديني لتنظيم بداية ونهاية جلسة المذاكرة.</div>
 </div>
 
 </div>
+
 </section>
 
 
@@ -3206,7 +3235,7 @@ Developer
 📚 مكتبة تانية بكالوريا
 </div>
 
-<a href="./quran.html" class="quranMenuItem" aria-label="فتح الجزء الديني">
+<a href="#religiousSection" class="quranMenuItem" aria-label="فتح الجزء الديني">
 🕌 <span><strong>الجزء الديني</strong><small>تهيئة العقل للمذاكرة</small></span>
 </a>
 
@@ -3999,18 +4028,6 @@ desc:'كتاب المستر مهاب سلامة في مادة التاريخ ا�
 url:'https://drive.google.com/file/d/17c5i9X5ByrbGk8lHmr94B_zIQSED4ZKT/view?usp=sharing',
 date:20260930,
 popular:0,
-isNew:true
-},
-
-{
-id:47,
-title:'كتاب الفائز - برمجه تانيه بكالوريا',
-icon:'💻',
-cat:'برمجة',
-desc:'كتاب الفائز - برمجه تانيه بكالوريا، برعاية محمد رمضان الحرباوي.',
-url:'https://drive.google.com/file/d/1Qkszte2tWQQ14rHyPgtJEYbQEEVCuaAS/view?usp=sharing',
-date:20261001,
-popular:155,
 isNew:true
 },
 
@@ -4986,7 +5003,7 @@ text:
 '📚 مكتبة تانية بكالوريا: كتب ومذكرات وكورسات وامتحانات.',
 
 url:
-'https://boocs-bbcaloria.vercel.app/'
+'https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/'
 
 };
 
@@ -5297,7 +5314,7 @@ let notificationsExpanded=false;
 
 /* إشعارات الجرس مستقلة عن حالة isNew داخل المكتبة.
    القائمة التالية هي الإشعارات الأصلية فقط، وليست كل الكتب الجديدة. */
-const notificationBookIds=[1,2,3,4,47];
+const notificationBookIds=[1,2,3,4];
 
 function getLibraryNotifications(){
 return notificationBookIds
@@ -5340,25 +5357,23 @@ if(all.length>4){
 renderNotifications();
 
 $('notificationList').onclick=event=>{
+event.stopPropagation();
 const more=event.target.closest('#notificationMoreBtn');
 if(more){
-event.stopPropagation();
-notificationsExpanded=!notificationsExpanded;
+notificationsExpanded=true;
 renderNotifications();
 return;
 }
 const religious=event.target.closest('[data-notification-type="religious"]');
 if(religious){
-window.location.href='./quran.html';
+const section=$('religiousSection');
+if(section){section.scrollIntoView({behavior:'smooth',block:'start'});}
+closeNotifications();
 return;
 }
 const item=event.target.closest('[data-notification-id]');
 if(!item)return;
-const book=books.find(b=>String(b.id)===String(item.dataset.notificationId));
-if(book){
-  const destination=downloadURL(book.url);
-  window.open(destination,'_blank','noopener');
-}
+openDetails(item.dataset.notificationId);
 closeNotifications();
 };
 
