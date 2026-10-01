@@ -2235,96 +2235,21 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 #themeIcon{display:inline-block;font-size:19px;line-height:1;transform:translateY(1px)}
 @media(max-width:850px){.studySteps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.religiousSection{padding:15px}.religiousGrid{grid-template-columns:1fr}.religiousCard.full{grid-column:auto}.breakPlan,.afterStudy{grid-template-columns:1fr}.religiousAyah{font-size:19px}.religiousDua{font-size:16px}}
-.octoberMemory{position:relative;width:min(100%,1080px);margin:18px auto 10px;min-height:225px;overflow:hidden;border:1px solid rgba(225,190,77,.42);border-radius:28px;background:radial-gradient(circle at 18% 25%,rgba(206,43,55,.16),transparent 28%),radial-gradient(circle at 82% 70%,rgba(24,153,88,.14),transparent 30%),linear-gradient(135deg,#07111f,#0b1b2b 52%,#101b24);box-shadow:0 20px 55px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.06);isolation:isolate}
-.octoberMemory:before{content:"";position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.07) 50%,transparent 60%);animation:octSweep 8s ease-in-out infinite}
-.octoberInner{position:relative;z-index:2;min-height:225px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;padding:24px 30px}
-.octoberCopy{text-align:center;grid-column:2}.octoberKicker{display:inline-flex;padding:7px 13px;border-radius:999px;color:#f8e7a0;background:rgba(255,255,255,.055);border:1px solid rgba(226,191,75,.34);font-size:11px;font-weight:900}
-.octoberTitle{margin:12px 0 4px;font-size:clamp(27px,4.2vw,46px);line-height:1.1;font-weight:1000;color:#fff;text-shadow:0 5px 25px rgba(0,0,0,.45)}
-.octoberTitle span{background:linear-gradient(90deg,#f5d56a,#fff2b4,#d9aa35);-webkit-background-clip:text;background-clip:text;color:transparent}
-.octoberDate{margin:0;color:#e8edf4;font-size:13px;font-weight:800}.octoberSub{margin:10px auto 0;max-width:620px;color:#b9c7d7;font-size:12px;line-height:1.9}
-.octoberFlag{position:relative;width:180px;height:116px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 35px rgba(0,0,0,.35),0 0 35px rgba(225,190,77,.08);transform:rotate(-2deg)}
-.octoberFlag:before,.octoberFlag:after{content:"";position:absolute;left:0;right:0;height:33.333%}.octoberFlag:before{top:0;background:#CE1126}.octoberFlag:after{bottom:0;background:#000.octoberFlagMid{position:absolute;left:0;right:0;top:33.333%;height:33.333%;background:#fff}.octoberEagle{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:45px;height:32px}.octoberEagle:before{content:"🦅";position:absolute;inset:0;display:grid;place-items:center;color:#c89b32;font-size:30px;font-weight:1000;font-family:Arial,sans-serif}
-.octoberSoldiers{display:flex;align-items:flex-end;justify-content:center;gap:7px;height:140px;opacity:.95}.octoberSoldier{position:relative;width:39px;height:116px;filter:drop-shadow(0 12px 12px rgba(0,0,0,.35))}.octoberSoldier .head{position:absolute;top:5px;left:50%;width:20px;height:20px;transform:translateX(-50%);border-radius:50%;background:#0a1118;border:1px solid rgba(244,203,89,.28)}.octoberSoldier .helmet{position:absolute;top:1px;left:50%;width:27px;height:11px;transform:translateX(-50%);border-radius:14px 14px 5px 5px;background:#172733;border:1px solid rgba(244,203,89,.22)}.octoberSoldier .body{position:absolute;top:27px;left:50%;width:29px;height:55px;transform:translateX(-50%);border-radius:11px 11px 5px 5px;background:linear-gradient(180deg,#1a2a32,#0c151c)}.octoberSoldier .leg{position:absolute;top:77px;width:10px;height:39px;border-radius:8px;background:#091118}.octoberSoldier .leg.l{left:8px}.octoberSoldier .leg.r{right:8px}.octoberSoldier .arm{position:absolute;top:31px;width:9px;height:45px;border-radius:8px;background:#0b141b}.octoberSoldier .arm.l{left:1px;transform:rotate(12deg)}.octoberSoldier .arm.r{right:1px;transform:rotate(-12deg)}.octoberSoldier.small{transform:scale(.84);transform-origin:bottom}.octoberSoldier.tall{transform:scale(1.08);transform-origin:bottom}.octoberRibbon{position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#ce2b37 0 33.33%,#fff 33.33% 66.66%,#111 66.66%)}
-.octoberMemory.compact{min-height:150px;margin:12px 0 18px;border-radius:22px}.octoberMemory.compact .octoberInner{min-height:150px;padding:18px 22px}.octoberMemory.compact .octoberTitle{font-size:clamp(22px,3.5vw,34px)}.octoberMemory.compact .octoberSub{font-size:11px;margin-top:6px}.octoberMemory.compact .octoberFlag{width:125px;height:80px}.octoberMemory.compact .octoberSoldiers{height:100px}
-@keyframes octSweep{0%,45%{transform:translateX(-55%)}70%,100%{transform:translateX(55%)}}body.light .octoberMemory{background:radial-gradient(circle at 18% 25%,rgba(206,43,55,.1),transparent 28%),radial-gradient(circle at 82% 70%,rgba(24,153,88,.09),transparent 30%),linear-gradient(135deg,#172536,#23384a 52%,#17232d)}
-
-.octoberMemory{min-height:112px;width:min(100%,1080px);margin:14px auto 10px;border-radius:22px}
-.octoberInner{min-height:112px;padding:12px 18px;grid-template-columns:110px 1fr 110px;gap:12px}
-.octoberTitle{font-size:clamp(20px,3.2vw,32px);margin:6px 0 2px}.octoberDate{font-size:10px}.octoberSub{font-size:9px;line-height:1.7;margin-top:5px}.octoberKicker{font-size:8px;padding:5px 9px}.octoberFlag{width:88px;height:58px}.octoberEagle:before{font-size:24px}.octoberSoldiers{height:76px;gap:3px}.octoberSoldier{transform:scale(.65);transform-origin:bottom center;margin:0 -7px}
-@media(max-width:650px){.octoberMemory{min-height:92px;margin:10px auto 8px;border-radius:18px}.octoberInner{min-height:92px;grid-template-columns:60px 1fr 60px;padding:9px 10px;gap:6px}.octoberFlag{width:56px;height:37px}.octoberSoldiers{height:58px}.octoberSoldier{transform:scale(.48);margin:0 -10px}.octoberTitle{font-size:19px}.octoberDate{font-size:8px}.octoberSub{display:none}.octoberKicker{font-size:7px;padding:4px 7px}}
-
-
-/* ===== OCTOBER MEMORY — PREMIUM REDESIGN ONLY ===== */
-.octoberMemory{
-  position:relative!important; width:min(100%,1120px)!important; min-height:118px!important;
-  margin:16px auto 12px!important; overflow:hidden!important; border:1px solid rgba(245,203,77,.45)!important;
-  border-radius:24px!important; isolation:isolate!important;
-  background:
-    radial-gradient(circle at 12% 20%,rgba(220,30,45,.22),transparent 24%),
-    radial-gradient(circle at 88% 85%,rgba(28,160,92,.20),transparent 25%),
-    linear-gradient(115deg,#030912 0%,#091727 48%,#111a20 100%)!important;
-  box-shadow:0 18px 45px rgba(0,0,0,.30),inset 0 1px 0 rgba(255,255,255,.08)!important;
-}
-.octoberMemory:after{
-  content:"";position:absolute;z-index:1;left:-8%;right:-8%;bottom:-58px;height:95px;
-  background:linear-gradient(90deg,transparent,rgba(205,163,49,.22),transparent);
-  transform:rotate(-3deg);pointer-events:none;
-}
-.octoberMemory:before{
-  content:"";position:absolute;z-index:0;inset:0;pointer-events:none;
-  background:linear-gradient(90deg,rgba(206,43,55,.12) 0 2px,transparent 2px 33%,rgba(255,255,255,.035) 33% 33.2%,transparent 33.2% 66.6%,rgba(255,255,255,.035) 66.6% 66.8%,transparent 66.8%);
-}
-.octoberInner{
-  position:relative!important;z-index:3!important;min-height:118px!important;
-  display:grid!important;grid-template-columns:145px 1fr 175px!important;align-items:center!important;
-  gap:18px!important;padding:12px 24px!important;
-}
-.octoberCopy{position:relative;text-align:center;min-width:0}
-.octoberKicker{
-  display:inline-flex!important;align-items:center;justify-content:center;gap:5px;
-  padding:5px 11px!important;border:1px solid rgba(245,203,77,.32)!important;border-radius:999px!important;
-  background:rgba(245,203,77,.08)!important;color:#f8d66b!important;font-weight:900!important;
-  letter-spacing:.2px;box-shadow:inset 0 0 18px rgba(245,203,77,.04)
-}
-.octoberTitle{
-  margin:5px 0 0!important;font-size:clamp(23px,3.5vw,38px)!important;line-height:1.08!important;
-  font-weight:1000!important;color:#fff!important;letter-spacing:-.5px!important;
-  text-shadow:0 4px 20px rgba(0,0,0,.55)!important
-}
-.octoberTitle span{
-  background:linear-gradient(90deg,#d6a92d,#fff0a3 48%,#c99322)!important;
-  -webkit-background-clip:text!important;background-clip:text!important;color:transparent!important;
-}
-.octoberDate{margin:3px 0 0!important;color:#f4f4f4!important;font-weight:800!important;font-size:11px!important;opacity:.88}
-.octoberSub{margin:3px 0 0!important;color:rgba(255,255,255,.66)!important;font-size:9px!important}
-.octoberFlag{
-  position:relative!important;width:105px!important;height:69px!important;margin:auto!important;
-  border-radius:8px!important;overflow:hidden!important;border:1px solid rgba(255,255,255,.22)!important;
-  box-shadow:0 10px 25px rgba(0,0,0,.28)!important;transform:rotate(-2deg)!important;
-}
-.octoberFlagMid{height:33.33%!important}.octoberFlagMid:nth-child(1){background:#CE1126!important}.octoberFlagMid:nth-child(2){background:#FFFFFF!important}.octoberFlagMid:nth-child(3){background:#000000!important}
-.octoberEagle:before{font-size:27px!important;color:#c99c32!important;text-shadow:0 2px 5px rgba(0,0,0,.35)!important}
-.octoberSoldiers{height:80px!important;display:flex!important;align-items:flex-end!important;justify-content:center!important;gap:1px!important;opacity:.9}
-.octoberSoldier{transform:scale(.72)!important;transform-origin:bottom center!important;margin:0 -7px!important;filter:drop-shadow(0 4px 5px rgba(0,0,0,.5))}
-.octoberLibraryBanner{min-height:98px!important;margin:10px auto 16px!important;border-radius:20px!important}
-.octoberLibraryBanner .octoberInner{min-height:98px!important;grid-template-columns:120px 1fr 150px!important;padding:9px 20px!important}
-.octoberLibraryBanner .octoberTitle{font-size:clamp(20px,3vw,31px)!important}
-.octoberLibraryBanner .octoberFlag{width:86px!important;height:56px!important}
-.octoberLibraryBanner .octoberSoldiers{height:66px!important}
-@media(max-width:650px){
-  .octoberMemory{min-height:92px!important;margin:9px auto 8px!important;border-radius:18px!important}
-  .octoberInner{min-height:92px!important;grid-template-columns:56px 1fr 56px!important;gap:5px!important;padding:7px 8px!important}
-  .octoberFlag{width:52px!important;height:35px!important;border-radius:6px!important}.octoberEagle:before{font-size:19px!important}
-  .octoberSoldiers{height:52px!important}.octoberSoldier{transform:scale(.46)!important;margin:0 -11px!important}
-  .octoberKicker{font-size:7px!important;padding:4px 6px!important}.octoberTitle{font-size:18px!important;margin-top:3px!important}
-  .octoberDate{font-size:7px!important}.octoberSub{display:none!important}
-  .octoberLibraryBanner{min-height:86px!important}.octoberLibraryBanner .octoberInner{min-height:86px!important;grid-template-columns:48px 1fr 48px!important;padding:6px!important}
-  .octoberLibraryBanner .octoberFlag{width:44px!important;height:30px!important}.octoberLibraryBanner .octoberSoldiers{height:47px!important}.octoberLibraryBanner .octoberTitle{font-size:17px!important}
-}
-body.light .octoberMemory{
-  background:radial-gradient(circle at 12% 20%,rgba(206,43,55,.16),transparent 24%),radial-gradient(circle at 88% 85%,rgba(24,153,88,.14),transparent 25%),linear-gradient(115deg,#101b29,#1c3041 50%,#18232c)!important;
-}
-
+/* October Victory — premium compact banner */
+.octoberMemory{position:relative;width:min(100%,1120px);margin:16px auto 12px;min-height:118px;overflow:hidden;border:1px solid rgba(224,184,74,.45);border-radius:20px;background:linear-gradient(105deg,#070b10 0%,#111a20 48%,#090d12 100%);box-shadow:0 14px 38px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.08);isolation:isolate}
+.octoberMemory:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 50%,rgba(196,35,45,.16),transparent 30%),radial-gradient(circle at 85% 40%,rgba(218,171,53,.12),transparent 28%);pointer-events:none}
+.octoberMemory:after{content:"";position:absolute;top:0;bottom:0;left:0;width:4px;background:linear-gradient(#c92532 0 33%,#fff 33% 66%,#101010 66%);box-shadow:0 0 22px rgba(201,37,50,.28)}
+.octoberInner{position:relative;z-index:2;min-height:118px;display:grid;grid-template-columns:150px 1fr 170px;align-items:center;gap:18px;padding:14px 22px}
+.octoberCopy{text-align:center}.octoberKicker{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid rgba(226,188,79,.35);border-radius:999px;background:rgba(226,188,79,.08);color:#e7c65f;font-size:9px;font-weight:900;letter-spacing:.2px}.octoberTitle{margin:7px 0 2px;font-size:clamp(22px,3.2vw,35px);line-height:1.08;font-weight:1000;color:#fff;text-shadow:0 3px 18px rgba(0,0,0,.4)}.octoberTitle span{color:#e5bd4e}.octoberDate{margin:0;color:#d8dce0;font-size:10px;font-weight:700}.octoberSub{margin:4px 0 0;color:#9fa8b0;font-size:9px}
+/* Correct Egyptian flag: red / white / black, with a simple gold eagle mark */
+.octoberFlag{position:relative;width:132px;height:82px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 25px rgba(0,0,0,.35);justify-self:center;background:#fff}
+.octoberFlag:before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,#ce2b37 0 33.333%,#fff 33.333% 66.666%,#111 66.666% 100%)}
+.octoberFlagMid{display:none}.octoberEagle{position:absolute;left:50%;top:50%;width:30px;height:23px;transform:translate(-50%,-50%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.28))}.octoberEagle:before{content:"✦";position:absolute;inset:0;display:grid;place-items:center;color:#d7a92f;font-size:29px;font-weight:1000;line-height:1}
+.octoberHistory{justify-self:center;text-align:center;color:#d8dde1}.octoberHistory strong{display:block;color:#e5bd4e;font-size:28px;line-height:1;font-weight:1000}.octoberHistory span{display:block;margin-top:6px;font-size:9px;color:#aeb6bd;font-weight:800}
+.octoberSoldiers{display:none}
+.octoberLibraryBanner{margin:12px auto 16px}
+body.light .octoberMemory{background:linear-gradient(105deg,#182128,#25333b 48%,#172026);box-shadow:0 12px 30px rgba(0,0,0,.14)}
+@media(max-width:700px){.octoberMemory{min-height:94px;margin:10px auto 8px;border-radius:16px}.octoberInner{min-height:94px;grid-template-columns:64px 1fr 70px;gap:7px;padding:9px 10px}.octoberFlag{width:62px;height:39px;border-radius:4px}.octoberEagle{transform:translate(-50%,-50%) scale(.68)}.octoberKicker{font-size:7px;padding:4px 7px}.octoberTitle{font-size:18px;margin:5px 0 2px}.octoberDate{font-size:8px}.octoberSub{display:none}.octoberHistory strong{font-size:20px}.octoberHistory span{font-size:7px;margin-top:4px}}
 </style>
 </head>
 
@@ -2337,17 +2262,14 @@ body.light .octoberMemory{
 
 <section id="home" class="home">
 
-<div class="octoberMemory" aria-label="ذكرى انتصارات أكتوبر المصرية">
+<div class="octoberMemory" aria-label="ذكرى انتصارات أكتوبر">
   <div class="octoberInner">
-    <div class="octoberSoldiers" aria-hidden="true">
-      <div class="octoberSoldier"><span class="head"></span><span class="helmet"></span><span class="body"></span><span class="arm left"></span><span class="arm right"></span><span class="leg left"></span><span class="leg right"></span></div>
-      <div class="octoberSoldier"><span class="head"></span><span class="helmet"></span><span class="body"></span><span class="arm left"></span><span class="arm right"></span><span class="leg left"></span><span class="leg right"></span></div>
-    </div>
+    <div class="octoberHistory"><strong>1973</strong><span>أكتوبر المجيد</span></div>
     <div class="octoberCopy">
-      <span class="octoberKicker">🇪🇬 ذكرى خالدة</span>
+      <span class="octoberKicker">🇪🇬 ذكرى 6 أكتوبر</span>
       <h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2>
-      <p class="octoberDate">6 أكتوبر 1973 • ذكرى العبور والنصر</p>
-      <p class="octoberSub">نستحضر ذكرى العبور العظيم ونحيّي تضحيات أبطال القوات المسلحة المصرية.</p>
+      <p class="octoberDate">يوم العبور العظيم</p>
+      <p class="octoberSub">ذكرى خالدة في تاريخ مصر</p>
     </div>
     <div class="octoberFlag" aria-hidden="true"><div class="octoberFlagMid"></div><div class="octoberEagle"></div></div>
   </div>
@@ -2992,10 +2914,10 @@ mhmdrmdan.yobader.com
 
 
 
-<div class="octoberMemory octoberLibraryBanner" aria-label="ذكرى انتصارات أكتوبر المصرية">
+<div class="octoberMemory octoberLibraryBanner" aria-label="ذكرى انتصارات أكتوبر">
   <div class="octoberInner">
-    <div class="octoberSoldiers" aria-hidden="true"><div class="octoberSoldier"><span class="head"></span><span class="helmet"></span><span class="body"></span><span class="arm left"></span><span class="arm right"></span><span class="leg left"></span><span class="leg right"></span></div></div>
-    <div class="octoberCopy"><span class="octoberKicker">🇪🇬 6 أكتوبر 1973</span><h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2><p class="octoberDate">ذكرى العبور العظيم</p></div>
+    <div class="octoberHistory"><strong>1973</strong><span>أكتوبر المجيد</span></div>
+    <div class="octoberCopy"><span class="octoberKicker">🇪🇬 ذكرى 6 أكتوبر</span><h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2><p class="octoberDate">يوم العبور العظيم</p><p class="octoberSub">ذكرى خالدة في تاريخ مصر</p></div>
     <div class="octoberFlag" aria-hidden="true"><div class="octoberFlagMid"></div><div class="octoberEagle"></div></div>
   </div>
 </div>
