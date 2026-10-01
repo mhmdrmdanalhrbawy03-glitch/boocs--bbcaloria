@@ -7,14 +7,14 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="مكتبة تانية بكالوريا">
 <meta property="og:description" content="جميع كتب الوزارة والتقييمات لطلاب تانية بكالوريا في مكان واحد.">
-<meta property="og:url" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/">
-<link rel="canonical" href="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/">
-<meta property="og:image" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/preview.png">
+<meta property="og:url" content="https://boocs-bbcaloria.vercel.app/">
+<link rel="canonical" href="https://boocs-bbcaloria.vercel.app/">
+<meta property="og:image" content="https://boocs-bbcaloria.vercel.app/preview.png">
 <meta property="og:image:alt" content="مكتبة تانية بكالوريا 2026/2027">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="مكتبة تانية بكالوريا">
 <meta name="twitter:description" content="جميع كتب الوزارة والتقييمات لطلاب تانية بكالوريا في مكان واحد.">
-<meta name="twitter:image" content="https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/preview.png">
+<meta name="twitter:image" content="https://boocs-bbcaloria.vercel.app/preview.png">
 <title>مكتبة تانية بكالوريا</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2716%27 fill=%2707111f%27/%3E%3Cpath d=%27M13 16c10-5 18-5 25 0v34c-7-5-15-5-25 0z%27 fill=%27%23f4cb59%27/%3E%3Cpath d=%27M51 16c-10-5-18-5-25 0v34c7-5 15-5 25 0z%27 fill=%27%23dcae32%27/%3E%3Cpath d=%27M28 17v32%27 stroke=%27%2307111f%27 stroke-width=%273%27/%3E%3C/svg%3E">
 
@@ -1154,69 +1154,139 @@ svg{
 
 
 /* =========================================================
-   FAQ
+   FAQ — قسم الأسئلة الشائعة المطوّر
    ========================================================= */
 
 .faq{
-    width:min(950px,100%);
-    margin:50px auto;
+    width:min(1050px,100%);
+    margin:64px auto 35px;
+    padding:0 2px;
+}
+
+.faqIntro{
+    text-align:center;
+    margin-bottom:22px;
+}
+
+.faqIntro .faqBadge{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:7px 13px;
+    border-radius:999px;
+    background:#f4cb5912;
+    border:1px solid #f4cb5940;
+    color:var(--gold);
+    font-size:10px;
+    font-weight:900;
 }
 
 .faq h2{
+    margin:10px 0 5px;
     text-align:center;
     color:var(--gold);
-    font-size:28px;
+    font-size:clamp(25px,4vw,34px);
+}
+
+.faqIntro p{
+    margin:0 auto;
+    max-width:720px;
+    color:var(--muted);
+    font-size:11px;
+    line-height:2;
+}
+
+.faqGrid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:11px;
 }
 
 .faqItem{
-    margin-bottom:9px;
+    margin:0;
     overflow:hidden;
+    transition:.25s ease;
+    box-shadow:0 10px 30px #00000010;
+}
+
+.faqItem:hover{
+    transform:translateY(-2px);
+    border-color:#f4cb5955;
 }
 
 .question{
     width:100%;
-
+    min-height:67px;
     display:flex;
     justify-content:space-between;
     align-items:center;
-
-    padding:16px;
-
+    gap:12px;
+    padding:14px 16px;
     background:none;
     border:0;
-
     color:var(--text);
-
     text-align:right;
-
     font-size:11px;
     font-weight:900;
+    line-height:1.8;
+    cursor:pointer;
 }
 
-.question span{
+.questionText{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.questionIcon{
+    width:34px;
+    height:34px;
+    flex:0 0 34px;
+    display:grid;
+    place-items:center;
+    border-radius:10px;
+    background:#f4cb5912;
+    border:1px solid #f4cb5928;
+    font-size:15px;
+}
+
+.question span:last-child{
+    width:29px;
+    height:29px;
+    flex:0 0 29px;
+    display:grid;
+    place-items:center;
+    border-radius:9px;
+    background:#f4cb5910;
     color:var(--gold);
-    font-size:22px;
-    transition:.2s;
+    font-size:18px;
+    transition:.25s;
 }
 
 .answer{
     display:none;
-
-    padding:
-        0 16px 16px;
-
+    padding:0 16px 17px 60px;
     color:var(--muted);
-
     font-size:10px;
-    line-height:2;
+    line-height:2.15;
+}
+
+.faqItem.active{
+    border-color:#f4cb5966;
 }
 
 .faqItem.active .answer{
     display:block;
 }
 
-.faqItem.active .question span{
+.faqItem.active .question span:last-child{
     transform:rotate(45deg);
+    background:#f4cb5920;
+}
+
+@media(max-width:760px){
+    .faqGrid{grid-template-columns:1fr;}
+    .answer{padding-right:16px;padding-left:58px;}
 }
 
 
@@ -2984,58 +3054,87 @@ mhmdrmdan.yobader.com
 </div>
 </section>
 
-<section
-    id="faq"
-    class="faq">
+<section id="faq" class="faq">
 
-<h2>
-❓ الأسئلة الشائعة
-</h2>
+<div class="faqIntro">
+<span class="faqBadge">❓ إجابات سريعة</span>
+<h2>الأسئلة الشائعة</h2>
+<p>كل ما تحتاج معرفته عن المكتبة، البحث، فتح الكتب، التحميل، المفضلة، الإشعارات واستخدام المحتوى بشكل أسهل.</p>
+</div>
 
+<div class="faqGrid">
 
 <div class="faqItem">
-
-<button
-    class="question"
-    type="button">
-
-هل الكتب قابلة للتحميل؟
-
-<span>＋</span>
-
-</button>
-
-
-<div class="answer">
-
-نعم، ملفات Google Drive التي يتوفر لها تحميل يمكن تنزيلها، والمجلدات تُفتح كمجلد.
-
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">📥</span>هل الكتب قابلة للتحميل؟</span><span>＋</span></button>
+<div class="answer">نعم، الكتب التي يتوفر لها رابط تحميل مباشر يمكن تنزيلها من زر التحميل، بينما بعض المحتويات قد تكون مجلدات أو روابط فتح حسب نوع الملف.</div>
 </div>
-
-</div>
-
 
 <div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🔎</span>كيف أجد كتابًا أو مادة معينة بسرعة؟</span><span>＋</span></button>
+<div class="answer">استخدم مربع البحث واكتب اسم الكتاب أو المادة أو جزءًا من الاسم، ثم يمكنك تضييق النتائج من التصنيفات الموجودة في المكتبة.</div>
+</div>
 
-<button
-    class="question"
-    type="button">
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">📚</span>ما المواد الموجودة في المكتبة؟</span><span>＋</span></button>
+<div class="answer">المكتبة تجمع الكتب والمراجعات والمصادر المضافة للطلاب في تصنيفات مختلفة، ويمكنك استعراضها من خلال الأقسام أو البحث المباشر.</div>
+</div>
 
-كيف أجد مادة معينة؟
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🆕</span>كيف أعرف أحدث الإضافات؟</span><span>＋</span></button>
+<div class="answer">قسم «أحدث الإضافات» يعرض المحتوى الذي تمت إضافته حديثًا، بينما إشعارات الجرس مخصصة للتحديثات التي تم تسجيلها كإشعارات فقط.</div>
+</div>
 
-<span>＋</span>
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🔔</span>ما وظيفة زر الإشعارات؟</span><span>＋</span></button>
+<div class="answer">يعرض التحديثات المهمة المسجلة للمكتبة. يظهر أحدث أربعة أولًا، وإذا كان هناك المزيد يمكنك الضغط على «عرض المزيد» لرؤية بقية الإشعارات.</div>
+</div>
 
-</button>
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">⬇️</span>ماذا يحدث عند الضغط على إشعار كتاب؟</span><span>＋</span></button>
+<div class="answer">إشعار الكتاب يوصلك مباشرة إلى رابط تنزيل الكتاب، بدل فتح صفحة عامة، لتصل إلى المحتوى المطلوب بأقل عدد من الخطوات.</div>
+</div>
 
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">⭐</span>كيف أستخدم المفضلة؟</span><span>＋</span></button>
+<div class="answer">اضغط على علامة المفضلة الموجودة على بطاقة الكتاب لإضافته إلى قائمة المفضلة، ويمكنك الرجوع إليه بسهولة بدل البحث عنه من جديد.</div>
+</div>
 
-<div class="answer">
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🕌</span>ما هو الجزء الديني؟</span><span>＋</span></button>
+<div class="answer">هو قسم مخصص لتهيئة الطالب للمذاكرة، ويضم أدعية وآيات وأذكارًا ونصائح لتنظيم جلسة المذاكرة والبريك والمراجعة والاستمرار.</div>
+</div>
 
-استخدم البحث أو اختر التصنيف المناسب من شريط التصنيفات.
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🌙</span>هل يوجد وضع ليلي ونهاري؟</span><span>＋</span></button>
+<div class="answer">نعم، يمكنك التبديل بين الوضعين من زر المظهر، وقد تم تصميم النصوص والعناصر لتظل واضحة في الوضعين.</div>
+</div>
 
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">📱</span>هل المكتبة تعمل على الهاتف؟</span><span>＋</span></button>
+<div class="answer">نعم، تصميم المكتبة متجاوب مع الشاشات المختلفة، ويمكنك استخدامها من الهاتف أو الكمبيوتر مع الحفاظ على أدوات البحث والتصفح الأساسية.</div>
+</div>
+
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🔗</span>هل أحتاج إلى فتح الكتاب من داخل المكتبة أولًا؟</span><span>＋</span></button>
+<div class="answer">ليس دائمًا. عندما يكون هناك إشعار مخصص لكتاب، يمكنك الضغط على الإشعار للوصول مباشرة إلى رابط التنزيل الخاص بالكتاب.</div>
+</div>
+
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">📖</span>ماذا أفعل إذا لم يعمل رابط كتاب معين؟</span><span>＋</span></button>
+<div class="answer">إذا كان الرابط لا يعمل، يُفضّل تحديث الرابط من المصدر. ويمكن استبداله داخل بيانات الكتاب دون الحاجة إلى تغيير تصميم المكتبة أو بقية الكتب.</div>
+</div>
+
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">⚡</span>كيف أصل إلى كتاب تمت إضافته حديثًا؟</span><span>＋</span></button>
+<div class="answer">يمكنك الوصول إليه من «أحدث الإضافات» أو من إشعاره إذا كان مسجلًا ضمن نظام الإشعارات.</div>
+</div>
+
+<div class="faqItem">
+<button class="question" type="button"><span class="questionText"><span class="questionIcon">🎯</span>كيف أستفيد من المكتبة بأفضل شكل؟</span><span>＋</span></button>
+<div class="answer">ابدأ بالبحث عن المادة التي تذاكرها، احفظ الكتب المهمة في المفضلة، تابع الإشعارات للتحديثات المسجلة، واستفد من الجزء الديني لتنظيم بداية ونهاية جلسة المذاكرة.</div>
 </div>
 
 </div>
-
 </section>
 
 
@@ -5005,7 +5104,7 @@ text:
 '📚 مكتبة تانية بكالوريا: كتب ومذكرات وكورسات وامتحانات.',
 
 url:
-'https://mhmdrmdanalhrbawy03-glitch.github.io/boocs--bbcaloria/'
+'https://boocs-bbcaloria.vercel.app/'
 
 };
 
@@ -5374,7 +5473,11 @@ return;
 }
 const item=event.target.closest('[data-notification-id]');
 if(!item)return;
-openDetails(item.dataset.notificationId);
+const book=books.find(b=>String(b.id)===String(item.dataset.notificationId));
+if(book){
+  const destination=downloadURL(book.url);
+  window.open(destination,'_blank','noopener');
+}
 closeNotifications();
 };
 
