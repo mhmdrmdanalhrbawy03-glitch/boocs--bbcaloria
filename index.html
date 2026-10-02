@@ -2210,6 +2210,16 @@ footer{
 @media(max-width:700px){.floating{left:10px;right:10px;bottom:12px;}.audioBtn,.float{width:52px;height:52px;}.audioPicker{left:60px;width:190px;}}
 
 
+/* ===== روابط الحقوق والتواصل ===== */
+.legalMenuItem,.contactMenuItem{display:flex;align-items:center;gap:10px;margin:10px 12px;padding:11px 12px;border:1px solid #d8b44a66;border-radius:14px;text-decoration:none;color:#fff7dc;background:linear-gradient(135deg,#172b43,#0b1728);transition:.25s ease;box-shadow:0 8px 20px #0002}
+.legalMenuItem:hover,.contactMenuItem:hover{transform:translateY(-2px);border-color:#d8b44aaa;box-shadow:0 10px 24px #0003}
+.legalMenuItem span,.contactMenuItem span{display:flex;flex-direction:column;gap:2px}
+.legalMenuItem strong,.contactMenuItem strong{font-size:12px}.legalMenuItem small,.contactMenuItem small{font-size:9px;color:#c9b77c}
+.footerLegal{margin-top:18px;padding-top:14px;border-top:1px solid #d8b44a33;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
+.footerLegal a{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;color:inherit;text-decoration:none;border:1px solid #d8b44a44;background:#ffffff08;transition:.2s}
+.footerLegal a:hover{transform:translateY(-1px);border-color:#d8b44aaa}
+.footerRights{margin-top:12px;text-align:center;font-size:12px;line-height:1.9;color:#c9b77c}
+
 /* ===== الجزء الديني المدمج — بدون تغيير هيكل المكتبة ===== */
 .quranMenuItem{display:flex;align-items:center;gap:10px;margin:10px 12px;padding:11px 12px;border:1px solid #d8b44a66;border-radius:14px;text-decoration:none;color:#fff7dc;background:linear-gradient(135deg,#172b43,#0b1728);}
 .quranMenuItem span{display:flex;flex-direction:column;gap:2px}.quranMenuItem strong{font-size:12px}.quranMenuItem small{font-size:9px;color:#c9b77c}
@@ -2235,21 +2245,19 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 #themeIcon{display:inline-block;font-size:19px;line-height:1;transform:translateY(1px)}
 @media(max-width:850px){.studySteps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.religiousSection{padding:15px}.religiousGrid{grid-template-columns:1fr}.religiousCard.full{grid-column:auto}.breakPlan,.afterStudy{grid-template-columns:1fr}.religiousAyah{font-size:19px}.religiousDua{font-size:16px}}
-/* October Victory — premium compact banner */
-.octoberMemory{position:relative;width:min(100%,1120px);margin:16px auto 12px;min-height:118px;overflow:hidden;border:1px solid rgba(224,184,74,.45);border-radius:20px;background:linear-gradient(105deg,#070b10 0%,#111a20 48%,#090d12 100%);box-shadow:0 14px 38px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.08);isolation:isolate}
-.octoberMemory:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 15% 50%,rgba(196,35,45,.16),transparent 30%),radial-gradient(circle at 85% 40%,rgba(218,171,53,.12),transparent 28%);pointer-events:none}
-.octoberMemory:after{content:"";position:absolute;top:0;bottom:0;left:0;width:4px;background:linear-gradient(#c92532 0 33%,#fff 33% 66%,#101010 66%);box-shadow:0 0 22px rgba(201,37,50,.28)}
-.octoberInner{position:relative;z-index:2;min-height:118px;display:grid;grid-template-columns:150px 1fr 170px;align-items:center;gap:18px;padding:14px 22px}
-.octoberCopy{text-align:center}.octoberKicker{display:inline-flex;align-items:center;gap:7px;padding:5px 11px;border:1px solid rgba(226,188,79,.35);border-radius:999px;background:rgba(226,188,79,.08);color:#e7c65f;font-size:9px;font-weight:900;letter-spacing:.2px}.octoberTitle{margin:7px 0 2px;font-size:clamp(22px,3.2vw,35px);line-height:1.08;font-weight:1000;color:#fff;text-shadow:0 3px 18px rgba(0,0,0,.4)}.octoberTitle span{color:#e5bd4e}.octoberDate{margin:0;color:#d8dce0;font-size:10px;font-weight:700}.octoberSub{margin:4px 0 0;color:#9fa8b0;font-size:9px}
-/* Correct Egyptian flag: red / white / black, with a simple gold eagle mark */
-.octoberFlag{position:relative;width:132px;height:82px;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,.22);box-shadow:0 10px 25px rgba(0,0,0,.35);justify-self:center;background:#fff}
-.octoberFlag:before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,#ce2b37 0 33.333%,#fff 33.333% 66.666%,#111 66.666% 100%)}
-.octoberFlagMid{display:none}.octoberEagle{position:absolute;left:50%;top:50%;width:30px;height:23px;transform:translate(-50%,-50%);filter:drop-shadow(0 2px 2px rgba(0,0,0,.28))}.octoberEagle:before{content:"✦";position:absolute;inset:0;display:grid;place-items:center;color:#d7a92f;font-size:29px;font-weight:1000;line-height:1}
-.octoberHistory{justify-self:center;text-align:center;color:#d8dde1}.octoberHistory strong{display:block;color:#e5bd4e;font-size:28px;line-height:1;font-weight:1000}.octoberHistory span{display:block;margin-top:6px;font-size:9px;color:#aeb6bd;font-weight:800}
-.octoberSoldiers{display:none}
-.octoberLibraryBanner{margin:12px auto 16px}
-body.light .octoberMemory{background:linear-gradient(105deg,#182128,#25333b 48%,#172026);box-shadow:0 12px 30px rgba(0,0,0,.14)}
-@media(max-width:700px){.octoberMemory{min-height:94px;margin:10px auto 8px;border-radius:16px}.octoberInner{min-height:94px;grid-template-columns:64px 1fr 70px;gap:7px;padding:9px 10px}.octoberFlag{width:62px;height:39px;border-radius:4px}.octoberEagle{transform:translate(-50%,-50%) scale(.68)}.octoberKicker{font-size:7px;padding:4px 7px}.octoberTitle{font-size:18px;margin:5px 0 2px}.octoberDate{font-size:8px}.octoberSub{display:none}.octoberHistory strong{font-size:20px}.octoberHistory span{font-size:7px;margin-top:4px}}
+
+
+/* ===== ذكرى أكتوبر — بانر صغير داخل المكتبة ===== */
+.octoberMiniBanner{width:min(980px,calc(100% - 28px));margin:14px auto;padding:10px 14px;border:1px solid rgba(218,177,63,.28);border-radius:16px;background:linear-gradient(135deg,#0b1a2b,#101923);display:flex;align-items:center;justify-content:center;gap:14px;position:relative;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.16)}
+.octoberMiniBanner:after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-120%);animation:octoberSweep 5s linear infinite}
+@keyframes octoberSweep{to{transform:translateX(120%)}}
+.octoberFlag{width:58px;height:34px;border-radius:5px;overflow:hidden;display:flex;flex-direction:column;flex:none;box-shadow:0 3px 12px rgba(0,0,0,.28);position:relative;z-index:1}
+.octoberFlag i{display:block;flex:1}.octoberFlag .r{background:#ce2028}.octoberFlag .w{background:#fff}.octoberFlag .b{background:#111}
+.octoberFlag .w:after{content:"✦";display:block;text-align:center;color:#c69a2b;font-style:normal;font-size:13px;line-height:34px}
+.octoberText{position:relative;z-index:1;text-align:center}.octoberText strong{display:block;color:#e8c45d;font-size:15px}.octoberText span{display:block;color:#d6dde7;font-size:11px;margin-top:1px}
+.octoberSoldier{width:34px;height:42px;position:relative;flex:none;z-index:1}.octoberSoldier:before{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:#0b0f13;top:1px;left:10px;box-shadow:0 -3px 0 3px #18222c}.octoberSoldier:after{content:"";position:absolute;width:24px;height:27px;border-radius:9px 9px 5px 5px;background:#0b0f13;top:15px;left:5px;box-shadow:-7px 10px 0 -4px #0b0f13,7px 10px 0 -4px #0b0f13}
+@media(max-width:560px){.octoberMiniBanner{gap:9px;padding:9px 10px}.octoberFlag{width:48px;height:29px}.octoberText strong{font-size:13px}.octoberText span{font-size:10px}.octoberSoldier{transform:scale(.82)}}
+
 </style>
 </head>
 
@@ -2262,24 +2270,17 @@ body.light .octoberMemory{background:linear-gradient(105deg,#182128,#25333b 48%,
 
 <section id="home" class="home">
 
-<div class="octoberMemory" aria-label="ذكرى انتصارات أكتوبر">
-  <div class="octoberInner">
-    <div class="octoberHistory"><strong>1973</strong><span>أكتوبر المجيد</span></div>
-    <div class="octoberCopy">
-      <span class="octoberKicker">🇪🇬 ذكرى 6 أكتوبر</span>
-      <h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2>
-      <p class="octoberDate">يوم العبور العظيم</p>
-      <p class="octoberSub">ذكرى خالدة في تاريخ مصر</p>
-    </div>
-    <div class="octoberFlag" aria-hidden="true"><div class="octoberFlagMid"></div><div class="octoberEagle"></div></div>
-  </div>
-</div>
-
-
 <canvas
     id="fireworksCanvas"
     aria-hidden="true">
 </canvas>
+
+<div class="octoberMiniBanner" aria-label="ذكرى انتصارات أكتوبر">
+  <div class="octoberSoldier" aria-hidden="true"></div>
+  <div class="octoberText"><strong>🇪🇬 ذكرى انتصارات أكتوبر</strong><span>6 أكتوبر 1973 • ذكرى العبور والنصر</span></div>
+  <div class="octoberFlag" aria-hidden="true"><i class="r"></i><i class="w"></i><i class="b"></i></div>
+</div>
+
 
 <div class="homeGlow one"></div>
 <div class="homeGlow two"></div>
@@ -2914,12 +2915,10 @@ mhmdrmdan.yobader.com
 
 
 
-<div class="octoberMemory octoberLibraryBanner" aria-label="ذكرى انتصارات أكتوبر">
-  <div class="octoberInner">
-    <div class="octoberHistory"><strong>1973</strong><span>أكتوبر المجيد</span></div>
-    <div class="octoberCopy"><span class="octoberKicker">🇪🇬 ذكرى 6 أكتوبر</span><h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2><p class="octoberDate">يوم العبور العظيم</p><p class="octoberSub">ذكرى خالدة في تاريخ مصر</p></div>
-    <div class="octoberFlag" aria-hidden="true"><div class="octoberFlagMid"></div><div class="octoberEagle"></div></div>
-  </div>
+<div class="octoberMiniBanner" aria-label="ذكرى انتصارات أكتوبر">
+  <div class="octoberSoldier" aria-hidden="true"></div>
+  <div class="octoberText"><strong>🇪🇬 ذكرى انتصارات أكتوبر</strong><span>6 أكتوبر 1973 • ذكرى العبور والنصر</span></div>
+  <div class="octoberFlag" aria-hidden="true"><i class="r"></i><i class="w"></i><i class="b"></i></div>
 </div>
 
 <section id="allBooks">
@@ -3137,6 +3136,15 @@ Developer
 
 </div>
 
+<div class="footerLegal">
+<a href="./privacy.html">🔒 سياسة الخصوصية والملكية الفكرية</a>
+<a href="./contact.html">📩 تواصل معنا</a>
+</div>
+
+<div class="footerRights">
+© جميع الحقوق محفوظة لـ <strong>محمد رمضان الحرباوي</strong> — مكتبة تانية بكالوريا
+</div>
+
 </footer>
 
 </section>
@@ -3229,6 +3237,10 @@ Developer
 
 <a href="./quran.html" class="quranMenuItem" aria-label="فتح الجزء الديني">
 🕌 <span><strong>الجزء الديني</strong><small>تهيئة العقل للمذاكرة</small></span>
+</a>
+
+<a href="./contact.html" class="contactMenuItem" aria-label="تواصل معنا">
+📩 <span><strong>تواصل معنا</strong><small>الدعم والاستفسارات والتواصل</small></span>
 </a>
 
 
@@ -5355,7 +5367,15 @@ list.innerHTML=all.length?visible.map(item=>item.type==='religious'?`
 '<div class="notificationEmpty">لا توجد إشعارات جديدة حاليًا.</div>';
 if(all.length>4){
  list.innerHTML+=`<button class="notificationMore" type="button" id="notificationMoreBtn">${notificationsExpanded?'عرض أقل':'عرض المزيد'}</button>`;
-}
+ const moreButton=$('notificationMoreBtn');
+ if(moreButton){
+   moreButton.onclick=(event)=>{
+     event.preventDefault();
+     event.stopPropagation();
+     notificationsExpanded=!notificationsExpanded;
+     renderNotifications();
+   };
+ }
 }
 
 renderNotifications();
@@ -5363,10 +5383,8 @@ renderNotifications();
 $('notificationList').onclick=event=>{
 const more=event.target.closest('#notificationMoreBtn');
 if(more){
-event.stopPropagation();
-notificationsExpanded=!notificationsExpanded;
-renderNotifications();
-return;
+ event.stopPropagation();
+ return;
 }
 const religious=event.target.closest('[data-notification-type="religious"]');
 if(religious){
