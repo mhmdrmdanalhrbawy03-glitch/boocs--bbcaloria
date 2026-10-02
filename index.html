@@ -1543,6 +1543,8 @@ footer{
     z-index:2;
 }
 
+.wa,.up{position:relative;top:-55px;}
+
 .up{
     display:none;
     background:#f0c040;
@@ -2192,8 +2194,8 @@ footer{
    أزرار الصوت العائمة
    ========================================================= */
 .floating{position:fixed;left:15px;right:15px;bottom:15px;z-index:150;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none;}
-.floatRight{display:flex;flex-direction:column;align-items:center;gap:10px;pointer-events:none;}
-.audioFloat{position:relative;left:auto;bottom:auto;z-index:152;pointer-events:auto;}
+.floatRight{display:flex;flex-direction:column;align-items:center;gap:12px;pointer-events:none;}
+.audioFloat{position:relative;left:auto;bottom:auto;top:-55px;z-index:152;pointer-events:auto;}
 .audioBtn{width:56px;height:56px;border:1px solid #f4cb5970;border-radius:50%;display:grid;place-items:center;cursor:pointer;color:#07111f;background:linear-gradient(145deg,#fff1a8,#e6bd4d,#a8791f);box-shadow:0 14px 34px #0008,0 0 24px #f4cb5930;transition:.25s;position:relative;overflow:visible;pointer-events:auto;}
 .audioBtn:hover{transform:translateY(-3px) scale(1.05);}
 .audioBtn::before{content:"";position:absolute;inset:-5px;border:1px solid #f4cb5955;border-radius:50%;opacity:0;transform:scale(.8);pointer-events:none;}
