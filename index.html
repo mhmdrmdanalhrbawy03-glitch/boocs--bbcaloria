@@ -2210,16 +2210,6 @@ footer{
 @media(max-width:700px){.floating{left:10px;right:10px;bottom:12px;}.audioBtn,.float{width:52px;height:52px;}.audioPicker{left:60px;width:190px;}}
 
 
-/* ===== روابط الحقوق والتواصل ===== */
-.legalMenuItem,.contactMenuItem{display:flex;align-items:center;gap:10px;margin:10px 12px;padding:11px 12px;border:1px solid #d8b44a66;border-radius:14px;text-decoration:none;color:#fff7dc;background:linear-gradient(135deg,#172b43,#0b1728);transition:.25s ease;box-shadow:0 8px 20px #0002}
-.legalMenuItem:hover,.contactMenuItem:hover{transform:translateY(-2px);border-color:#d8b44aaa;box-shadow:0 10px 24px #0003}
-.legalMenuItem span,.contactMenuItem span{display:flex;flex-direction:column;gap:2px}
-.legalMenuItem strong,.contactMenuItem strong{font-size:12px}.legalMenuItem small,.contactMenuItem small{font-size:9px;color:#c9b77c}
-.footerLegal{margin-top:18px;padding-top:14px;border-top:1px solid #d8b44a33;display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.footerLegal a{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:12px;color:inherit;text-decoration:none;border:1px solid #d8b44a44;background:#ffffff08;transition:.2s}
-.footerLegal a:hover{transform:translateY(-1px);border-color:#d8b44aaa}
-.footerRights{margin-top:12px;text-align:center;font-size:12px;line-height:1.9;color:#c9b77c}
-
 /* ===== الجزء الديني المدمج — بدون تغيير هيكل المكتبة ===== */
 .quranMenuItem{display:flex;align-items:center;gap:10px;margin:10px 12px;padding:11px 12px;border:1px solid #d8b44a66;border-radius:14px;text-decoration:none;color:#fff7dc;background:linear-gradient(135deg,#172b43,#0b1728);}
 .quranMenuItem span{display:flex;flex-direction:column;gap:2px}.quranMenuItem strong{font-size:12px}.quranMenuItem small{font-size:9px;color:#c9b77c}
@@ -2245,19 +2235,25 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 #themeIcon{display:inline-block;font-size:19px;line-height:1;transform:translateY(1px)}
 @media(max-width:850px){.studySteps{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.religiousSection{padding:15px}.religiousGrid{grid-template-columns:1fr}.religiousCard.full{grid-column:auto}.breakPlan,.afterStudy{grid-template-columns:1fr}.religiousAyah{font-size:19px}.religiousDua{font-size:16px}}
+.octoberMemory{position:relative;width:min(100%,1080px);margin:18px auto 10px;min-height:225px;overflow:hidden;border:1px solid rgba(225,190,77,.42);border-radius:28px;background:radial-gradient(circle at 18% 25%,rgba(206,43,55,.16),transparent 28%),radial-gradient(circle at 82% 70%,rgba(24,153,88,.14),transparent 30%),linear-gradient(135deg,#07111f,#0b1b2b 52%,#101b24);box-shadow:0 20px 55px rgba(0,0,0,.25),inset 0 1px rgba(255,255,255,.06);isolation:isolate}
+.octoberMemory:before{content:"";position:absolute;inset:-50%;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.07) 50%,transparent 60%);animation:octSweep 8s ease-in-out infinite}
+.octoberInner{position:relative;z-index:2;min-height:225px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;padding:24px 30px}
+.octoberCopy{text-align:center;grid-column:2}.octoberKicker{display:inline-flex;padding:7px 13px;border-radius:999px;color:#f8e7a0;background:rgba(255,255,255,.055);border:1px solid rgba(226,191,75,.34);font-size:11px;font-weight:900}
+.octoberTitle{margin:12px 0 4px;font-size:clamp(27px,4.2vw,46px);line-height:1.1;font-weight:1000;color:#fff;text-shadow:0 5px 25px rgba(0,0,0,.45)}
+.octoberTitle span{background:linear-gradient(90deg,#f5d56a,#fff2b4,#d9aa35);-webkit-background-clip:text;background-clip:text;color:transparent}
+.octoberDate{margin:0;color:#e8edf4;font-size:13px;font-weight:800}.octoberSub{margin:10px auto 0;max-width:620px;color:#b9c7d7;font-size:12px;line-height:1.9}
+.octoberFlag{position:relative;width:180px;height:116px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.18);box-shadow:0 18px 35px rgba(0,0,0,.35),0 0 35px rgba(225,190,77,.08);transform:rotate(-2deg)}
+.octoberFlag:before,.octoberFlag:after{content:"";position:absolute;left:0;right:0;height:33.333%}.octoberFlag:before{top:0;background:#ce2b37}.octoberFlag:after{bottom:0;background:#111}.octoberFlagMid{position:absolute;left:0;right:0;top:33.333%;height:33.333%;background:#fff}.octoberEagle{position:absolute;z-index:2;left:50%;top:50%;transform:translate(-50%,-50%);width:45px;height:32px}.octoberEagle:before{content:"✦";position:absolute;inset:0;display:grid;place-items:center;color:#c89b32;font-size:37px;font-weight:1000}
+.octoberSoldiers{display:flex;align-items:flex-end;justify-content:center;gap:7px;height:140px;opacity:.95}.octoberSoldier{position:relative;width:39px;height:116px;filter:drop-shadow(0 12px 12px rgba(0,0,0,.35))}.octoberSoldier .head{position:absolute;top:5px;left:50%;width:20px;height:20px;transform:translateX(-50%);border-radius:50%;background:#0a1118;border:1px solid rgba(244,203,89,.28)}.octoberSoldier .helmet{position:absolute;top:1px;left:50%;width:27px;height:11px;transform:translateX(-50%);border-radius:14px 14px 5px 5px;background:#172733;border:1px solid rgba(244,203,89,.22)}.octoberSoldier .body{position:absolute;top:27px;left:50%;width:29px;height:55px;transform:translateX(-50%);border-radius:11px 11px 5px 5px;background:linear-gradient(180deg,#1a2a32,#0c151c)}.octoberSoldier .leg{position:absolute;top:77px;width:10px;height:39px;border-radius:8px;background:#091118}.octoberSoldier .leg.l{left:8px}.octoberSoldier .leg.r{right:8px}.octoberSoldier .arm{position:absolute;top:31px;width:9px;height:45px;border-radius:8px;background:#0b141b}.octoberSoldier .arm.l{left:1px;transform:rotate(12deg)}.octoberSoldier .arm.r{right:1px;transform:rotate(-12deg)}.octoberSoldier.small{transform:scale(.84);transform-origin:bottom}.octoberSoldier.tall{transform:scale(1.08);transform-origin:bottom}.octoberRibbon{position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#ce2b37 0 33.33%,#fff 33.33% 66.66%,#111 66.66%)}
+.octoberMemory.compact{min-height:150px;margin:12px 0 18px;border-radius:22px}.octoberMemory.compact .octoberInner{min-height:150px;padding:18px 22px}.octoberMemory.compact .octoberTitle{font-size:clamp(22px,3.5vw,34px)}.octoberMemory.compact .octoberSub{font-size:11px;margin-top:6px}.octoberMemory.compact .octoberFlag{width:125px;height:80px}.octoberMemory.compact .octoberSoldiers{height:100px}
+@keyframes octSweep{0%,45%{transform:translateX(-55%)}70%,100%{transform:translateX(55%)}}body.light .octoberMemory{background:radial-gradient(circle at 18% 25%,rgba(206,43,55,.1),transparent 28%),radial-gradient(circle at 82% 70%,rgba(24,153,88,.09),transparent 30%),linear-gradient(135deg,#172536,#23384a 52%,#17232d)}
 
+.octoberMemory{min-height:112px;width:min(100%,1080px);margin:14px auto 10px;border-radius:22px}
+.octoberInner{min-height:112px;padding:12px 18px;grid-template-columns:110px 1fr 110px;gap:12px}
+.octoberTitle{font-size:clamp(20px,3.2vw,32px);margin:6px 0 2px}.octoberDate{font-size:10px}.octoberSub{font-size:9px;line-height:1.7;margin-top:5px}.octoberKicker{font-size:8px;padding:5px 9px}.octoberFlag{width:88px;height:58px}.octoberEagle:before{font-size:24px}.octoberSoldiers{height:76px;gap:3px}.octoberSoldier{transform:scale(.65);transform-origin:bottom center;margin:0 -7px}
+@media(max-width:650px){.octoberMemory{min-height:92px;margin:10px auto 8px;border-radius:18px}.octoberInner{min-height:92px;grid-template-columns:60px 1fr 60px;padding:9px 10px;gap:6px}.octoberFlag{width:56px;height:37px}.octoberSoldiers{height:58px}.octoberSoldier{transform:scale(.48);margin:0 -10px}.octoberTitle{font-size:19px}.octoberDate{font-size:8px}.octoberSub{display:none}.octoberKicker{font-size:7px;padding:4px 7px}}
 
-/* ===== ذكرى أكتوبر — بانر صغير داخل المكتبة ===== */
-.octoberMiniBanner{width:min(980px,calc(100% - 28px));margin:14px auto;padding:10px 14px;border:1px solid rgba(218,177,63,.28);border-radius:16px;background:linear-gradient(135deg,#0b1a2b,#101923);display:flex;align-items:center;justify-content:center;gap:14px;position:relative;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.16)}
-.octoberMiniBanner:after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.07) 50%,transparent 65%);transform:translateX(-120%);animation:octoberSweep 5s linear infinite}
-@keyframes octoberSweep{to{transform:translateX(120%)}}
-.octoberFlag{width:58px;height:34px;border-radius:5px;overflow:hidden;display:flex;flex-direction:column;flex:none;box-shadow:0 3px 12px rgba(0,0,0,.28);position:relative;z-index:1}
-.octoberFlag i{display:block;flex:1}.octoberFlag .r{background:#ce2028}.octoberFlag .w{background:#fff}.octoberFlag .b{background:#111}
-.octoberFlag .w:after{content:"✦";display:block;text-align:center;color:#c69a2b;font-style:normal;font-size:13px;line-height:34px}
-.octoberText{position:relative;z-index:1;text-align:center}.octoberText strong{display:block;color:#e8c45d;font-size:15px}.octoberText span{display:block;color:#d6dde7;font-size:11px;margin-top:1px}
-.octoberSoldier{width:34px;height:42px;position:relative;flex:none;z-index:1}.octoberSoldier:before{content:"";position:absolute;width:15px;height:15px;border-radius:50%;background:#0b0f13;top:1px;left:10px;box-shadow:0 -3px 0 3px #18222c}.octoberSoldier:after{content:"";position:absolute;width:24px;height:27px;border-radius:9px 9px 5px 5px;background:#0b0f13;top:15px;left:5px;box-shadow:-7px 10px 0 -4px #0b0f13,7px 10px 0 -4px #0b0f13}
-@media(max-width:560px){.octoberMiniBanner{gap:9px;padding:9px 10px}.octoberFlag{width:48px;height:29px}.octoberText strong{font-size:13px}.octoberText span{font-size:10px}.octoberSoldier{transform:scale(.82)}}
-
+.rightsLine{letter-spacing:.2px}
 </style>
 </head>
 
@@ -2270,17 +2266,27 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 
 <section id="home" class="home">
 
+<div class="octoberMemory" aria-label="ذكرى انتصارات أكتوبر">
+  <div class="octoberInner">
+    <div class="octoberSoldiers" aria-hidden="true">
+      <div class="octoberSoldier"><span class="head"></span><span class="helmet"></span><span class="body"></span><span class="arm left"></span><span class="arm right"></span><span class="leg left"></span><span class="leg right"></span></div>
+      <div class="octoberSoldier"><span class="head"></span><span class="helmet"></span><span class="body"></span><span class="arm left"></span><span class="arm right"></span><span class="leg left"></span><span class="leg right"></span></div>
+    </div>
+    <div class="octoberCopy">
+      <span class="octoberKicker">🇪🇬 ذكرى خالدة</span>
+      <h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2>
+      <p class="octoberDate">6 أكتوبر 1973 • ذكرى العبور والنصر</p>
+      <p class="octoberSub">نستحضر ذكرى العبور العظيم ونحيّي تضحيات أبطال القوات المسلحة المصرية.</p>
+    </div>
+    <div class="octoberFlag" aria-hidden="true"><div class="octoberFlagMid"></div><div class="octoberEagle"></div></div>
+  </div>
+</div>
+
+
 <canvas
     id="fireworksCanvas"
     aria-hidden="true">
 </canvas>
-
-<div class="octoberMiniBanner" aria-label="ذكرى انتصارات أكتوبر">
-  <div class="octoberSoldier" aria-hidden="true"></div>
-  <div class="octoberText"><strong>🇪🇬 ذكرى انتصارات أكتوبر</strong><span>6 أكتوبر 1973 • ذكرى العبور والنصر</span></div>
-  <div class="octoberFlag" aria-hidden="true"><i class="r"></i><i class="w"></i><i class="b"></i></div>
-</div>
-
 
 <div class="homeGlow one"></div>
 <div class="homeGlow two"></div>
@@ -2502,7 +2508,8 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 <button
     id="enter"
     class="enter"
-    type="button">
+    type="button"
+    onclick="openLibrary()">
 
 🚀 دخول المكتبة
 
@@ -2915,10 +2922,12 @@ mhmdrmdan.yobader.com
 
 
 
-<div class="octoberMiniBanner" aria-label="ذكرى انتصارات أكتوبر">
-  <div class="octoberSoldier" aria-hidden="true"></div>
-  <div class="octoberText"><strong>🇪🇬 ذكرى انتصارات أكتوبر</strong><span>6 أكتوبر 1973 • ذكرى العبور والنصر</span></div>
-  <div class="octoberFlag" aria-hidden="true"><i class="r"></i><i class="w"></i><i class="b"></i></div>
+<div class="octoberMemory octoberLibraryBanner" aria-label="ذكرى انتصارات أكتوبر">
+  <div class="octoberInner">
+    <div class="octoberSoldiers" aria-hidden="true"><div class="octoberSoldier"><span class="head"></span><span class="helmet"></span><span class="body"></span><span class="arm left"></span><span class="arm right"></span><span class="leg left"></span><span class="leg right"></span></div></div>
+    <div class="octoberCopy"><span class="octoberKicker">🇪🇬 6 أكتوبر 1973</span><h2 class="octoberTitle">ذكرى <span>انتصارات أكتوبر</span></h2><p class="octoberDate">ذكرى العبور العظيم</p></div>
+    <div class="octoberFlag" aria-hidden="true"><div class="octoberFlagMid"></div><div class="octoberEagle"></div></div>
+  </div>
 </div>
 
 <section id="allBooks">
@@ -3136,15 +3145,8 @@ Developer
 
 </div>
 
-<div class="footerLegal">
-<a href="./privacy.html">🔒 سياسة الخصوصية والملكية الفكرية</a>
-<a href="./contact.html">📩 تواصل معنا</a>
-</div>
 
-<div class="footerRights">
-© جميع الحقوق محفوظة لـ <strong>محمد رمضان الحرباوي</strong> — مكتبة تانية بكالوريا
-</div>
-
+<div class="rightsLine" style="margin-top:12px;text-align:left;padding-left:12px;font-size:12px;font-weight:700;color:#d6b15a;opacity:.92;direction:rtl;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-start;gap:8px">© جميع الحقوق محفوظة لـ محمد رمضان الحرباوي <span style="opacity:.45">•</span> <a href="./privacy.html" style="text-decoration:none;font-size:12px;font-weight:700;color:#d6b15a;opacity:.9">سياسة الخصوصية والملكية الفكرية</a></div>
 </footer>
 
 </section>
@@ -3239,8 +3241,8 @@ Developer
 🕌 <span><strong>الجزء الديني</strong><small>تهيئة العقل للمذاكرة</small></span>
 </a>
 
-<a href="./contact.html" class="contactMenuItem" aria-label="تواصل معنا">
-📩 <span><strong>تواصل معنا</strong><small>الدعم والاستفسارات والتواصل</small></span>
+<a href="./contact.html" class="quranMenuItem" aria-label="تواصل معنا">
+📩 <span><strong>تواصل معنا</strong><small>الدعم والاستفسارات والاقتراحات</small></span>
 </a>
 
 
@@ -5367,15 +5369,7 @@ list.innerHTML=all.length?visible.map(item=>item.type==='religious'?`
 '<div class="notificationEmpty">لا توجد إشعارات جديدة حاليًا.</div>';
 if(all.length>4){
  list.innerHTML+=`<button class="notificationMore" type="button" id="notificationMoreBtn">${notificationsExpanded?'عرض أقل':'عرض المزيد'}</button>`;
- const moreButton=$('notificationMoreBtn');
- if(moreButton){
-   moreButton.onclick=(event)=>{
-     event.preventDefault();
-     event.stopPropagation();
-     notificationsExpanded=!notificationsExpanded;
-     renderNotifications();
-   };
- }
+}
 }
 
 renderNotifications();
@@ -5383,8 +5377,10 @@ renderNotifications();
 $('notificationList').onclick=event=>{
 const more=event.target.closest('#notificationMoreBtn');
 if(more){
- event.stopPropagation();
- return;
+event.stopPropagation();
+notificationsExpanded=!notificationsExpanded;
+renderNotifications();
+return;
 }
 const religious=event.target.closest('[data-notification-type="religious"]');
 if(religious){
