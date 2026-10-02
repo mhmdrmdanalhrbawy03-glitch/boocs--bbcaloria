@@ -6354,10 +6354,21 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 </script>
 
 
+<script
+  defer
+  crossorigin="anonymous"
+  src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js"
+  type="text/javascript"
+></script>
+<script
+  defer
+  crossorigin="anonymous"
+  data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk"
+  src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"
+  type="text/javascript"
+></script>
 <script>
 (function(){
-  const PUBLISHABLE_KEY='pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk';
-  const CLERK_DOMAIN='sacred-sawfish-5099.clerk.accounts.dev';
   const HOME_URL='https://boocs-bbcaloria.vercel.app/';
   const authBtn=document.getElementById('clerkAuthBtn');
   const authModal=document.getElementById('clerkAuthModal');
@@ -6365,30 +6376,38 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   const signInMount=document.getElementById('clerkSignInMount');
   const userMount=document.getElementById('clerkUserButton');
   if(!authBtn||!authModal||!signInMount)return;
-  let clerkReadyPromise=null;
+  let clerkReady=null;
   function openAuth(){authModal.classList.add('open');authModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
   function closeAuth(){authModal.classList.remove('open');authModal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-  function loadScript(src){return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=true;s.crossOrigin='anonymous';s.onload=resolve;s.onerror=()=>reject(new Error('تعذر تحميل '+src));document.head.appendChild(s);});}
+  function waitForClerk(timeout=20000){
+    if(window.Clerk)return Promise.resolve(window.Clerk);
+    return new Promise((resolve,reject)=>{
+      const t=Date.now();
+      const check=()=>{
+        if(window.Clerk)return resolve(window.Clerk);
+        if(Date.now()-t>timeout)return reject(new Error('ClerkJS لم يتم تحميله'));
+        setTimeout(check,100);
+      };
+      check();
+    });
+  }
   async function getClerk(){
-    if(clerkReadyPromise)return clerkReadyPromise;
-    clerkReadyPromise=(async()=>{
-      if(!window.__internal_ClerkUICtor) await loadScript('https://'+CLERK_DOMAIN+'/npm/@clerk/ui@1/dist/ui.browser.js');
-      if(!window.Clerk) await loadScript('https://'+CLERK_DOMAIN+'/npm/@clerk/clerk-js@6/dist/clerk.browser.js');
-      await window.Clerk.load({
+    if(clerkReady)return clerkReady;
+    clerkReady=(async()=>{
+      const clerk=await waitForClerk();
+      await clerk.load({
         ui:{ClerkUI:window.__internal_ClerkUICtor},
-        signInForceRedirectUrl:HOME_URL,
-        signUpForceRedirectUrl:HOME_URL,
         signInFallbackRedirectUrl:HOME_URL,
         signUpFallbackRedirectUrl:HOME_URL
       });
-      return window.Clerk;
-    })().catch(err=>{clerkReadyPromise=null;throw err;});
-    return clerkReadyPromise;
+      return clerk;
+    })().catch(e=>{clerkReady=null;throw e;});
+    return clerkReady;
   }
   async function mountAccount(clerk){
     if(clerk.isSignedIn){
       authBtn.style.display='none';
-      if(userMount&&!userMount.firstChild){userMount.innerHTML='';clerk.mountUserButton(userMount);}
+      if(userMount){userMount.innerHTML='';clerk.mountUserButton(userMount);}
     }else{
       authBtn.style.display='inline-flex';
       if(userMount)userMount.innerHTML='';
@@ -6402,16 +6421,22 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
       if(clerk.isSignedIn){closeAuth();await mountAccount(clerk);return;}
       signInMount.innerHTML='';
       clerk.mountSignIn(signInMount,{
-        forceRedirectUrl:HOME_URL,
         fallbackRedirectUrl:HOME_URL,
-        signUpForceRedirectUrl:HOME_URL,
-        signUpFallbackRedirectUrl:HOME_URL
+        forceRedirectUrl:HOME_URL
       });
-    }catch(e){console.error('Clerk initialization error:',e);signInMount.innerHTML='<div style="padding:22px;text-align:center;color:#b42318;font-weight:800">تعذر تشغيل تسجيل الدخول حاليًا. جرّب تحديث الصفحة مرة أخرى.</div>';}
+    }catch(e){
+      console.error('Clerk initialization error:',e);
+      signInMount.innerHTML='<div style="padding:22px;text-align:center"><div style="font-size:28px;margin-bottom:8px">⚠️</div><div style="color:#b42318;font-weight:900">تعذر تشغيل تسجيل الدخول حاليًا</div><div style="font-size:12px;opacity:.65;margin-top:7px">تأكد من اتصال الإنترنت ثم جرّب مرة أخرى.</div><button type="button" id="clerkRetryBtn" style="margin-top:14px;border:0;border-radius:12px;padding:10px 18px;background:#c9a227;color:#111;font-weight:900;cursor:pointer">إعادة المحاولة</button></div>';
+      const retry=document.getElementById('clerkRetryBtn');
+      if(retry)retry.onclick=()=>authBtn.click();
+    }
   });
   authClose&&authClose.addEventListener('click',closeAuth);
   authModal.addEventListener('click',e=>{if(e.target===authModal)closeAuth();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAuth();});
+  window.addEventListener('load',async()=>{
+    try{const clerk=await getClerk();await mountAccount(clerk);}catch(e){console.warn('Clerk background init:',e);}
+  });
 })();
 </script>
 
