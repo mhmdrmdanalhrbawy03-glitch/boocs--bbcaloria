@@ -2268,7 +2268,7 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 .clerkControls.isSignedIn #clerkUserButton{display:flex!important;}
 .clerkControls:not(.isSignedIn) #clerkUserButton{display:none;}
 .clerkLoginBtn:hover{transform:translateY(-2px);box-shadow:0 12px 25px #f4cb5930;}
-#clerkUserButton{min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:flex-end;}
+#clerkUserButton{min-width:46px;min-height:46px;display:flex!important;align-items:center;justify-content:flex-end;visibility:visible!important;opacity:1!important;}
 #clerkUserButton .cl-userButtonTrigger{border-radius:13px!important;}
 .clerkModal{position:fixed;inset:0;z-index:20000;background:#020712b8;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;}
 .clerkModal.open{display:flex;}
@@ -6389,104 +6389,48 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 
 
 <script>
-/* =========================================================
-   Clerk — تسجيل الدخول والحساب
-   ========================================================= */
+/* Clerk — تسجيل الدخول والحساب: مزامنة ثابتة للحساب */
 (function(){
   const loginBtn=document.getElementById('clerkLoginBtn');
-  const clerkControls=document.querySelector('.clerkControls');
+  const controls=document.querySelector('.clerkControls');
   const userMount=document.getElementById('clerkUserButton');
   const modal=document.getElementById('clerkModal');
   const closeBtn=document.getElementById('clerkModalClose');
   const signInMount=document.getElementById('clerkSignInMount');
-
-  function openModal(){
-    if(!modal) return;
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden','false');
-    document.body.style.overflow='hidden';
-  }
-  function closeModal(){
-    if(!modal) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden','true');
-    document.body.style.overflow='';
-  }
-  closeBtn && closeBtn.addEventListener('click',closeModal);
-  modal && modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-
-  async function initClerk(){
-    if(!window.Clerk){
-      console.error('Clerk SDK لم يتم تحميله');
-      if(clerkControls) clerkControls.classList.remove('isSignedIn');
-      if(loginBtn){ loginBtn.textContent='👤 حسابي'; loginBtn.style.display='inline-flex'; }
-      return;
+  function closeModal(){if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+  function openModal(){if(!modal)return;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+  function isSigned(){try{return !!(window.Clerk&&(Clerk.user||Clerk.isSignedIn));}catch(e){return false;}}
+  function sync(){
+    const ok=isSigned();
+    if(controls)controls.classList.toggle('isSignedIn',ok);
+    if(loginBtn){loginBtn.style.display=ok?'none':'inline-flex';loginBtn.setAttribute('aria-hidden',ok?'true':'false');}
+    if(userMount){
+      userMount.style.display=ok?'flex':'none';
+      if(ok&&window.Clerk&&typeof Clerk.mountUserButton==='function'&&!userMount.dataset.mounted){
+        try{Clerk.mountUserButton(userMount);userMount.dataset.mounted='1';}catch(e){console.error('UserButton mount error',e);}
+      }
     }
+    if(ok)closeModal();
+  }
+  closeBtn&&closeBtn.addEventListener('click',closeModal);
+  modal&&modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+  async function init(){
+    if(!window.Clerk){if(loginBtn)loginBtn.style.display='inline-flex';if(userMount)userMount.style.display='none';return;}
     try{
       await Clerk.load({ui:{ClerkUI:window.__internal_ClerkUICtor}});
-      const signedIn=!!Clerk.isSignedIn;
-      if(clerkControls) clerkControls.classList.toggle('isSignedIn', signedIn);
-      if(signedIn){
-        if(loginBtn) loginBtn.style.display='none';
-        if(userMount){
-          userMount.innerHTML='';
-          Clerk.mountUserButton(userMount);
-        }
-      }else{
-        if(clerkControls) clerkControls.classList.remove('isSignedIn');
-        if(loginBtn) loginBtn.style.display='inline-flex';
-        if(userMount) userMount.innerHTML='';
-      }
-      if(loginBtn){
-        loginBtn.onclick=async()=>{
-          if(Clerk.isSignedIn){return;}
-          openModal();
-          if(signInMount && !signInMount.dataset.mounted){
-            Clerk.mountSignIn(signInMount,{routing:'hash'});
-            signInMount.dataset.mounted='1';
-          }
-        };
-      }
-      Clerk.addListener?.(({user})=>{
-        if(user){
-          if(clerkControls) clerkControls.classList.add('isSignedIn');
-          if(loginBtn) loginBtn.style.display='none';
-          if(userMount){userMount.innerHTML='';Clerk.mountUserButton(userMount);}
-          closeModal();
-        }else{
-          if(clerkControls) clerkControls.classList.remove('isSignedIn');
-          if(loginBtn) loginBtn.style.display='inline-flex';
-          if(userMount) userMount.innerHTML='';
-        }
-      });
-    }catch(err){
-      console.error('Clerk initialization error:',err);
-    }
+      sync();
+      if(loginBtn)loginBtn.onclick=function(){if(isSigned()){sync();return;}openModal();if(signInMount&&!signInMount.dataset.mounted){Clerk.mountSignIn(signInMount,{routing:'hash'});signInMount.dataset.mounted='1';}};
+      if(typeof Clerk.addListener==='function')Clerk.addListener(function(){setTimeout(sync,50);setTimeout(sync,400);});
+      setInterval(sync,3000);
+    }catch(e){console.error('Clerk initialization error:',e);if(loginBtn)loginBtn.style.display='inline-flex';if(userMount)userMount.style.display='none';}
   }
-  window.addEventListener('load',initClerk);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 
 
-<script>
-/* FINAL CLERK VISIBILITY FIX */
-(function(){
-  function syncAccountButton(){
-    try{
-      var btn=document.getElementById('clerkLoginBtn');
-      if(!btn || typeof Clerk==='undefined') return;
-      if(Clerk.user){ btn.style.display='none'; }
-      else { btn.style.display='inline-flex'; }
-    }catch(e){}
-  }
-  window.addEventListener('load',function(){
-    setTimeout(syncAccountButton,800);
-    setTimeout(syncAccountButton,2000);
-    setTimeout(syncAccountButton,4000);
-  });
-})();
-</script>
+
 
 <script>
 </script>
