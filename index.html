@@ -6434,5 +6434,45 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 
 <script>
 </script>
+
+<script>
+/* =========================================================
+   حماية محتوى المكتبة — يلزم تسجيل الدخول عبر Clerk قبل فتح/تحميل أي كتاب
+   ========================================================= */
+(function(){
+  function signedIn(){
+    try{return !!(window.Clerk && (Clerk.user || Clerk.isSignedIn));}catch(e){return false;}
+  }
+  function showLogin(){
+    const modal=document.getElementById('clerkModal');
+    const mount=document.getElementById('clerkSignInMount');
+    if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+    if(mount && window.Clerk && typeof Clerk.mountSignIn==='function' && !mount.dataset.mounted){
+      try{Clerk.mountSignIn(mount,{routing:'hash'});mount.dataset.mounted='1';}catch(e){console.error('Clerk SignIn mount error',e);}
+    }
+  }
+  function guard(event){
+    const link=event.target.closest('a.action.open, a.action.download, a.seriesAction.seriesOpen, a.seriesAction.seriesDl');
+    if(!link)return;
+    if(signedIn())return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    showLogin();
+  }
+  document.addEventListener('click',guard,true);
+
+  /* حماية الإشعارات التي تفتح محتوى الكتب */
+  const list=document.getElementById('notificationList');
+  if(list){
+    list.addEventListener('click',function(event){
+      const item=event.target.closest('[data-notification-id]');
+      if(!item || signedIn())return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      showLogin();
+    },true);
+  }
+})();
+</script>
 </body>
  </html>
