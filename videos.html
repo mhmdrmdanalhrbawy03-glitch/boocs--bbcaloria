@@ -19,7 +19,7 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><a class="back" href="./index_with_videos.html">← العودة إلى المكتبة</a></div>
+  <div class="top"><a class="back" href="./index.html" onclick="return backToLibrary(event)">← العودة إلى المكتبة</a></div>
   <section class="hero">
     <small>مكتبة تانية بكالوريا • مشغل احترافي</small>
     <h1>🎬 مركز الفيديوهات</h1>
@@ -63,12 +63,39 @@ const videos = [
     description: 'فيديو تعليمي مضاف إلى مكتبة تانية بكالوريا.',
     url: 'https://youtu.be/ZF7WMdoBdO8?si=yNjB7hTj58dsf7fd',
     type: 'youtube'
+  },
+  {
+    title: 'الفيديو التعليمي الثاني',
+    description: 'فيديو تعليمي مضاف إلى مكتبة تانية بكالوريا.',
+    url: 'https://youtu.be/VVZy0y6xJcc?si=0W7Vbc_TD-D7lfZK',
+    type: 'youtube'
+  },
+  {
+    title: 'الفيديو التعليمي الثالث',
+    description: 'فيديو YouTube مضاف إلى مكتبة تانية بكالوريا.',
+    url: 'https://www.youtube.com/embed/9D9GmbkdkME?si=6MUCwqMp4zu_EAvK',
+    type: 'youtube'
   }
 ];
 
 const $=id=>document.getElementById(id);
 const video=$('video'), yt=$('yt'), empty=$('emptyScreen'), list=$('list');
 let current=-1;
+function backToLibrary(e){
+  if(e)e.preventDefault();
+  try{
+    const ref=document.referrer||'';
+    if(ref){
+      const u=new URL(ref,location.href);
+      if(u.origin===location.origin && /\/(index|index_with_videos)\.html$/i.test(u.pathname)){
+        history.back();
+        return false;
+      }
+    }
+  }catch(_){ }
+  window.location.assign('./index.html');
+  return false;
+}
 function youtubeId(url){try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1);if(u.hostname.includes('youtube.com'))return u.searchParams.get('v')||((u.pathname.match(/\/embed\/([^/]+)/)||[])[1]);}catch(e){}return null}
 function format(t){if(!Number.isFinite(t))return '00:00';t=Math.max(0,Math.floor(t));const m=Math.floor(t/60),s=t%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
 function isYT(v){return (v.type||'').toLowerCase()==='youtube'||!!youtubeId(v.url)}
