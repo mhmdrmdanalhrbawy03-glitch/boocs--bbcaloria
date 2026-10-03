@@ -2,53 +2,104 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
-<title>الفيديوهات | مكتبة تانية بكالوريا</title>
+<title>مشغل الفيديوهات | مكتبة تانية بكالوريا</title>
 <style>
-:root{--bg:#07111f;--panel:#0d1b2e;--panel2:#10243b;--gold:#e6bd4d;--gold2:#fff0a3;--text:#f7f8fb;--muted:#aeb9c8;--line:rgba(255,255,255,.09)}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 20% 0%,rgba(230,189,77,.10),transparent 28%),radial-gradient(circle at 90% 20%,rgba(55,120,200,.10),transparent 30%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}.wrap{width:min(1120px,calc(100% - 28px));margin:auto}
-.top{padding:16px 0}.back{display:inline-flex;align-items:center;gap:8px;color:#07111f;background:var(--gold);text-decoration:none;padding:10px 15px;border-radius:13px;font-weight:900}.hero{margin-top:18px;border:1px solid rgba(230,189,77,.25);border-radius:30px;padding:36px 28px;background:linear-gradient(135deg,rgba(15,31,54,.98),rgba(7,17,31,.98));box-shadow:0 25px 70px rgba(0,0,0,.25);position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(230,189,77,.09);left:-90px;top:-100px;filter:blur(10px)}.hero small{color:var(--gold);font-weight:900}.hero h1{font-size:clamp(30px,5vw,52px);margin:8px 0 12px}.hero p{max-width:750px;color:var(--muted);line-height:1.9;margin:0}.heroIcon{position:absolute;left:35px;bottom:25px;font-size:80px;opacity:.12}
-.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:28px 0 16px}.toolbar h2{margin:0;font-size:24px}.count{color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:linear-gradient(145deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:22px;padding:20px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 15px 40px rgba(0,0,0,.16);transition:.2s}.card:hover{transform:translateY(-4px);border-color:rgba(230,189,77,.35)}.thumb{height:120px;border-radius:17px;background:linear-gradient(135deg,#142d48,#091525);display:grid;place-items:center;font-size:44px;margin-bottom:16px;border:1px solid rgba(255,255,255,.06)}.card h3{margin:0 0 8px;font-size:19px}.card p{margin:0;color:var(--muted);line-height:1.7;font-size:13px}.watch{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:17px;text-decoration:none;background:var(--gold);color:#07111f;padding:11px;border-radius:12px;font-weight:900}.empty{grid-column:1/-1;text-align:center;padding:50px 20px;border:1px dashed rgba(230,189,77,.25);border-radius:22px;background:rgba(255,255,255,.025);color:var(--muted)}.empty strong{display:block;color:var(--text);font-size:20px;margin-bottom:8px}.footer{text-align:center;color:#7f8da0;padding:35px 0 45px;font-size:13px}
-@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.wrap{width:min(100% - 18px,1120px)}.hero{padding:27px 20px}.heroIcon{font-size:60px;left:18px}.grid{grid-template-columns:1fr}.toolbar{align-items:flex-start;flex-direction:column}.card{min-height:235px}}
+:root{--bg:#050b14;--panel:#0b1625;--panel2:#101f33;--gold:#e6bd4d;--gold2:#fff0a3;--text:#f7f8fb;--muted:#9eacbd;--line:rgba(255,255,255,.09);--danger:#ef5350}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 10% 0%,rgba(230,189,77,.10),transparent 25%),radial-gradient(circle at 90% 10%,rgba(45,115,190,.12),transparent 30%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}.wrap{width:min(1220px,calc(100% - 24px));margin:auto}.top{padding:15px 0}.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#07111f;background:linear-gradient(135deg,var(--gold),var(--gold2));padding:10px 15px;border-radius:13px;font-weight:900;box-shadow:0 8px 25px rgba(230,189,77,.12)}
+.hero{margin:4px 0 20px;padding:25px 24px;border:1px solid rgba(230,189,77,.18);border-radius:25px;background:linear-gradient(135deg,rgba(14,28,48,.98),rgba(5,12,22,.98));box-shadow:0 20px 60px rgba(0,0,0,.25)}.hero small{color:var(--gold);font-weight:900}.hero h1{margin:7px 0;font-size:clamp(28px,5vw,46px)}.hero p{margin:0;color:var(--muted);line-height:1.8}
+.playerLayout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.7fr);gap:18px;align-items:start}.playerBox,.playlist{background:linear-gradient(145deg,rgba(13,27,46,.98),rgba(7,16,29,.98));border:1px solid var(--line);border-radius:23px;box-shadow:0 20px 55px rgba(0,0,0,.25);overflow:hidden}.screen{position:relative;background:#000;aspect-ratio:16/9;display:grid;place-items:center}.screen video{width:100%;height:100%;display:block;background:#000}.screen iframe{width:100%;height:100%;border:0;background:#000}.emptyScreen{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(230,189,77,.08),transparent 45%),#03070d}.emptyScreen .playBig{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111f;font-size:34px;margin:auto;box-shadow:0 15px 45px rgba(230,189,77,.2)}.emptyScreen strong{display:block;font-size:21px;margin-top:14px}.emptyScreen span{display:block;color:var(--muted);font-size:13px;margin-top:7px}
+.info{padding:17px 19px}.badge{display:inline-flex;padding:6px 9px;border-radius:9px;background:rgba(230,189,77,.10);color:var(--gold);font-size:11px;font-weight:900}.info h2{margin:10px 0 7px;font-size:22px}.info p{margin:0;color:var(--muted);line-height:1.7;font-size:13px}.controls{padding:13px 17px 17px;border-top:1px solid var(--line);background:rgba(0,0,0,.12)}.progress{width:100%;height:5px;appearance:none;background:rgba(255,255,255,.15);border-radius:99px;cursor:pointer;accent-color:var(--gold);margin-bottom:12px}.controlRow{display:flex;align-items:center;gap:8px}.ctrl{border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);width:38px;height:36px;border-radius:10px;cursor:pointer;font-size:15px}.ctrl:hover{border-color:rgba(230,189,77,.45)}.time{font-size:12px;color:var(--muted);min-width:92px;text-align:center}.volume{width:80px;accent-color:var(--gold)}.speed{background:#0a1422;color:var(--text);border:1px solid var(--line);height:36px;border-radius:10px;padding:0 8px}.spacer{flex:1}
+.playlist{padding:17px}.playlistHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.playlistHead h3{margin:0;font-size:18px}.count{color:var(--muted);font-size:11px}.list{display:grid;gap:9px;max-height:560px;overflow:auto;padding-left:2px}.item{width:100%;display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;text-align:right;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--text);padding:9px;border-radius:14px;cursor:pointer}.item:hover,.item.active{border-color:rgba(230,189,77,.42);background:rgba(230,189,77,.07)}.thumb{width:52px;height:40px;border-radius:9px;background:linear-gradient(135deg,#172f4c,#091525);display:grid;place-items:center;color:var(--gold);font-size:17px}.item strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.item .num{color:var(--gold);font-size:11px}.emptyList{text-align:center;padding:30px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:15px;line-height:1.8}
+.note{margin:18px 0 35px;padding:15px 17px;border-radius:17px;border:1px solid rgba(230,189,77,.15);background:rgba(230,189,77,.045);color:var(--muted);font-size:12px;line-height:1.8}.note b{color:var(--text)}
+@media(max-width:900px){.playerLayout{grid-template-columns:1fr}.list{max-height:360px}}@media(max-width:600px){.wrap{width:min(100% - 14px,1220px)}.hero{padding:20px 17px}.playerBox,.playlist{border-radius:18px}.controlRow{flex-wrap:wrap}.spacer{display:none}.volume{width:65px}.time{min-width:78px}.speed{margin-right:auto}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><a class="back" href="./index_final_ordered.html">← العودة إلى المكتبة</a></div>
+  <div class="top"><a class="back" href="./index_with_videos.html">← العودة إلى المكتبة</a></div>
   <section class="hero">
-    <small>مكتبة تانية بكالوريا</small>
-    <h1>🎬 قسم الفيديوهات</h1>
-    <p>مكان مستقل للفيديوهات والشروحات التعليمية، مرتب بطريقة بسيطة وسريعة لتقدر توصل للمحتوى المرئي من غير ما تتوه داخل صفحات المكتبة.</p>
-    <div class="heroIcon">▶</div>
+    <small>مكتبة تانية بكالوريا • مشغل احترافي</small>
+    <h1>🎬 مركز الفيديوهات</h1>
+    <p>مشغل واحد داخل المكتبة لتشغيل الدروس والمراجعات، مع قائمة تشغيل، تحكم في السرعة والصوت، ملء الشاشة، وانتقال سريع بين الفيديوهات.</p>
   </section>
 
-  <div class="toolbar">
-    <h2>الفيديوهات التعليمية</h2>
-    <span class="count">قسم الفيديوهات</span>
-  </div>
+  <main class="playerLayout">
+    <section class="playerBox" aria-label="مشغل الفيديو">
+      <div class="screen" id="screen">
+        <div class="emptyScreen" id="emptyScreen">
+          <div><div class="playBig">▶</div><strong>المشغل جاهز</strong><span>أضف روابط الفيديوهات في مصفوفة videos داخل الكود وسيتم تشغيلها هنا.</span></div>
+        </div>
+        <video id="video" playsinline preload="metadata" controlslist="nodownload"></video>
+        <iframe id="yt" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe>
+      </div>
+      <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">عند إضافة الفيديوهات ستظهر هنا بيانات الفيديو الحالي.</p></div>
+      <div class="controls" id="customControls">
+        <input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم">
+        <div class="controlRow">
+          <button class="ctrl" id="play" title="تشغيل / إيقاف">▶</button><button class="ctrl" id="back10" title="رجوع 10 ثوانٍ">↶</button><button class="ctrl" id="next" title="الفيديو التالي">⏭</button>
+          <span class="time" id="time">00:00 / 00:00</span><span>🔊</span><input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="الصوت">
+          <select id="speed" class="speed" aria-label="سرعة التشغيل"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select><span class="spacer"></span><button class="ctrl" id="full" title="ملء الشاشة">⛶</button>
+        </div>
+      </div>
+    </section>
 
-  <section class="grid" id="videosGrid">
-    <div class="empty">
-      <strong>🎥 قسم الفيديوهات جاهز</strong>
-      سيتم وضع روابط الفيديوهات التعليمية هنا، وكل فيديو سيظهر في بطاقة مستقلة مع زر مشاهدة مباشر.
-    </div>
-  </section>
+    <aside class="playlist">
+      <div class="playlistHead"><h3>📋 قائمة الفيديوهات</h3><span class="count" id="count">0 فيديو</span></div>
+      <div class="list" id="list"><div class="emptyList">لا توجد فيديوهات مضافة حتى الآن.<br>ضع روابطك داخل <b>videos</b> في أسفل الملف.</div></div>
+    </aside>
+  </main>
 
-  <div class="footer">© مكتبة تانية بكالوريا — قسم الفيديوهات</div>
+  <div class="note"><b>طريقة إضافة الفيديو:</b> افتح الكود وابحث عن <b>const videos = [</b> ثم أضف العنوان والوصف والرابط. يدعم المشغل روابط الفيديو المباشرة، ويدعم YouTube تلقائيًا داخل المشغل.</div>
 </div>
 
 <script>
-/* أضف الفيديوهات هنا لاحقًا بهذا الشكل:
+/* =========================================================
+   قاعدة الفيديوهات — أضف فيديوهاتك هنا
+   type اختياري: direct أو youtube
+   ========================================================= */
 const videos = [
-  {title:'شرح الدرس الأول', description:'شرح ومراجعة', url:'https://www.youtube.com/watch?v=...'}
+  // مثال فيديو مباشر:
+  // {title:'شرح الدرس الأول', description:'شرح ومراجعة', url:'https://example.com/video.mp4', type:'direct'},
+  // مثال YouTube:
+  // {title:'مراجعة الوحدة الأولى', description:'مراجعة شاملة', url:'https://www.youtube.com/watch?v=VIDEO_ID', type:'youtube'}
 ];
-*/
-const videos=[];
-const grid=document.getElementById('videosGrid');
-if(videos.length){
-  grid.innerHTML=videos.map(v=>`<article class="card"><div><div class="thumb">▶</div><h3>${v.title}</h3><p>${v.description||'فيديو تعليمي'}</p></div><a class="watch" href="${v.url}" target="_blank" rel="noopener">▶ مشاهدة الفيديو</a></article>`).join('');
+
+const $=id=>document.getElementById(id);
+const video=$('video'), yt=$('yt'), empty=$('emptyScreen'), list=$('list');
+let current=-1;
+function youtubeId(url){try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1);if(u.hostname.includes('youtube.com'))return u.searchParams.get('v')||((u.pathname.match(/\/embed\/([^/]+)/)||[])[1]);}catch(e){}return null}
+function format(t){if(!Number.isFinite(t))return '00:00';t=Math.max(0,Math.floor(t));const m=Math.floor(t/60),s=t%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function isYT(v){return (v.type||'').toLowerCase()==='youtube'||!!youtubeId(v.url)}
+function renderList(){
+  $('count').textContent=videos.length+' فيديو';
+  if(!videos.length){list.innerHTML='<div class="emptyList">لا توجد فيديوهات مضافة حتى الآن.<br>ضع روابطك داخل <b>videos</b> في أسفل الملف.</div>';return;}
+  list.innerHTML=videos.map((v,i)=>`<button class="item ${i===current?'active':''}" data-i="${i}"><span class="thumb">▶</span><span><strong>${escapeHtml(v.title||'فيديو بدون عنوان')}</strong><small>${escapeHtml(v.description||'فيديو تعليمي')}</small></span><span class="num">${String(i+1).padStart(2,'0')}</span></button>`).join('');
 }
+function escapeHtml(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function load(i,autoplay=true){
+  if(!videos[i])return; current=i; const v=videos[i];
+  $('title').textContent=v.title||'فيديو'; $('desc').textContent=v.description||'فيديو تعليمي'; $('typeBadge').textContent=isYT(v)?'YouTube داخل المشغل':'فيديو مباشر'; renderList();
+  if(isYT(v)){
+    video.pause();video.removeAttribute('src');video.style.display='none';yt.hidden=false;empty.style.display='none';
+    const id=youtubeId(v.url);yt.src='https://www.youtube.com/embed/'+encodeURIComponent(id)+'?rel=0&modestbranding=1&playsinline=1&autoplay='+(autoplay?1:0);
+    $('customControls').style.display='none';
+  }else{
+    yt.hidden=true;yt.src='';video.style.display='block';empty.style.display='none';$('customControls').style.display='block';video.src=v.url;video.load();if(autoplay)video.play().catch(()=>{});
+  }
+}
+list.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)load(Number(b.dataset.i));});
+$('play').onclick=()=>{if(current<0&&videos.length)load(0);else if(video.paused)video.play();else video.pause();};
+$('back10').onclick=()=>{video.currentTime=Math.max(0,video.currentTime-10)};
+$('next').onclick=()=>{if(videos.length)load((current+1)%videos.length)};
+$('volume').oninput=e=>video.volume=Number(e.target.value);
+$('speed').onchange=e=>video.playbackRate=Number(e.target.value);
+$('progress').oninput=e=>{if(video.duration)video.currentTime=(Number(e.target.value)/100)*video.duration};
+video.addEventListener('timeupdate',()=>{const pct=video.duration?(video.currentTime/video.duration)*100:0;$('progress').value=pct;$('time').textContent=format(video.currentTime)+' / '+format(video.duration)});
+video.addEventListener('play',()=>$('play').textContent='⏸');video.addEventListener('pause',()=>$('play').textContent='▶');video.addEventListener('ended',()=>{if(videos.length)load((current+1)%videos.length)});
+$('full').onclick=()=>{const el=$('screen');if(document.fullscreenElement)document.exitFullscreen();else if(el.requestFullscreen)el.requestFullscreen();};
+renderList();
 </script>
 </body>
 </html>
