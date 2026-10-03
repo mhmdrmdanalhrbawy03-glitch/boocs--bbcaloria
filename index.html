@@ -6540,11 +6540,14 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
         }
       }
 
-      if(!response.ok || !data.access_granted || !data.download_url){
-        alert(data.message || 'تعذر فتح أو تحميل الكتاب حاليًا. حاول مرة أخرى.');
+      // Xano قد يعيد اسم الحقل كرابط تنزيل مباشر أو كرابط ملف عام حسب إعداد الـ Endpoint.
+      const resolvedUrl = data.download_url || data.url || data.file_url || data.signed_url || data.fileUrl;
+      if(!response.ok || data.access_granted === false || !resolvedUrl){
+        console.error('Book access response:', {status:response.status, data});
+        alert(data.message || 'تعذر تجهيز رابط الكتاب حاليًا. حاول مرة أخرى.');
         return null;
       }
-      return String(data.download_url);
+      return String(resolvedUrl);
     })().catch(error=>{
       console.error('Book access error:',error);
       alert('حدث خطأ أثناء التحقق من صلاحية الوصول للكتاب.');
@@ -6555,10 +6558,69 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     return promise;
   }
 
-  window.openProtectedBook=async function(bookId,mode){
+  function setDownloadState(link,loading){
+    if(!link)return;
+    if(loading){
+      if(!link.dataset.originalText)link.dataset.originalText=link.textContent.trim();
+      link.textContent='⏳ جاري تجهيز الكتاب...';
+      link.style.pointerEvents='none';
+      link.setAttribute('aria-busy','true');
+    }else{
+      if(link.dataset.originalText)link.textContent=link.dataset.originalText;
+      link.style.pointerEvents='';
+      link.removeAttribute('aria-busy');
+    }
+  }
+
+  async function downloadFile(url,link){
+    setDownloadState(link,true);
+    try{
+      // أولًا: تنزيل حقيقي كـ Blob. هذا هو المسار الأفضل عندما يسمح رابط الملف بـ CORS.
+      const controller=new AbortController();
+      const timeout=setTimeout(()=>controller.abort(),20000);
+      let response;
+      try{
+        response=await fetch(url,{method:'GET',mode:'cors',credentials:'omit',cache:'no-store',signal:controller.signal});
+      }finally{
+        clearTimeout(timeout);
+      }
+
+      if(!response.ok)throw new Error('File response '+response.status);
+      const blob=await response.blob();
+      if(!blob.size)throw new Error('Empty file');
+
+      const type=blob.type || 'application/pdf';
+      const finalBlob=blob.type ? blob : new Blob([blob],{type});
+      const blobUrl=URL.createObjectURL(finalBlob);
+      const a=document.createElement('a');
+      a.href=blobUrl;
+      a.download='كتاب-تانية-بكالوريا.pdf';
+      a.style.display='none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(blobUrl),60000);
+      return true;
+    }catch(error){
+      console.warn('Blob download unavailable:',error);
+
+      // إذا كان مصدر الملف خارجيًا ولا يسمح CORS، لا نحاول التحايل على المتصفح.
+      // نفتح الرابط المباشر في تبويب جديد حتى لا يعلق زر التحميل.
+      try{
+        const w=window.open(url,'_blank','noopener,noreferrer');
+        if(!w) window.location.href=url;
+      }catch(e){
+        window.location.href=url;
+      }
+      return false;
+    }finally{
+      setDownloadState(link,false);
+    }
+  }
+
+  window.openProtectedBook=async function(bookId,mode,sourceLink){
     let popup=null;
 
-    // للفتح: ننشئ النافذة أثناء النقرة نفسها حتى لا يمنعها المتصفح.
     if(mode==='open'){
       try{
         popup=window.open('about:blank','_blank');
@@ -6569,48 +6631,23 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
       }catch(e){}
     }
 
+    if(mode==='download')setDownloadState(sourceLink,true);
+
     const url=await requestBookAccess(bookId);
 
     if(!url){
       if(popup && !popup.closed)popup.close();
+      if(mode==='download')setDownloadState(sourceLink,false);
       return null;
     }
 
     if(mode==='download'){
-      // نحاول تنزيل الملف كـ Blob أولًا؛ هذا يضمن التنزيل عندما يسمح خادم الملف بـ CORS.
-      // وإذا كان الخادم يمنع CORS نستخدم الرابط المباشر بدل إظهار خطأ للطالب.
-      try{
-        const fileResponse=await fetch(url,{mode:'cors',credentials:'omit'});
-        if(fileResponse.ok){
-          const blob=await fileResponse.blob();
-          const blobUrl=URL.createObjectURL(blob);
-          const a=document.createElement('a');
-          a.href=blobUrl;
-          a.download='book.pdf';
-          a.rel='noopener';
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-          setTimeout(()=>URL.revokeObjectURL(blobUrl),30000);
-          return url;
-        }
-      }catch(error){
-        console.warn('Direct blob download unavailable; using direct file URL.',error);
-      }
-      const a=document.createElement('a');
-      a.href=url;
-      a.target='_blank';
-      a.rel='noopener noreferrer';
-      a.download='';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      await downloadFile(url,sourceLink);
       return url;
     }
 
     if(popup && !popup.closed)popup.location.href=url;
     else window.open(url,'_blank','noopener,noreferrer');
-
     return url;
   };
 
@@ -6620,7 +6657,7 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     event.preventDefault();
     event.stopImmediatePropagation();
     const mode=(link.classList.contains('download') || link.classList.contains('seriesDl'))?'download':'open';
-    window.openProtectedBook(link.dataset.protectedBook,mode);
+    window.openProtectedBook(link.dataset.protectedBook,mode,link);
   },true);
 
   // تحديث حالة الوصول عند تغيّر جلسة Clerk.
