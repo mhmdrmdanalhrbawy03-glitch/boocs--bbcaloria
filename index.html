@@ -6927,19 +6927,25 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 })();
 </script>
 <script>
-/* بوابة قسم الفيديوهات: لا يتم فتح المشغل إلا بعد تسجيل الدخول */
+/* بوابة قسم الفيديوهات — الدخول من المكتبة فقط بعد تسجيل الدخول */
 (function(){
-  const btn=document.getElementById('videosSectionBtn');
-  if(!btn)return;
-  btn.addEventListener('click',function(e){
-    const signed=!!(window.Clerk && (Clerk.user || Clerk.isSignedIn));
-    if(!signed){
-      e.preventDefault();
+  function signedIn(){
+    try{return !!(window.Clerk && (Clerk.user || Clerk.isSignedIn));}catch(e){return false;}
+  }
+  function goVideos(e){
+    if(e)e.preventDefault();
+    if(!signedIn()){
       if(typeof showLogin==='function') showLogin();
       else if(typeof openClerkModal==='function') openClerkModal();
-      return;
+      return false;
     }
     window.location.href='./videos.html';
+    return false;
+  }
+  document.addEventListener('click',function(e){
+    const link=e.target.closest('a[href="./videos.html"]');
+    if(!link)return;
+    goVideos(e);
   });
 })();
 </script>

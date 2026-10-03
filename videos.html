@@ -15,8 +15,42 @@
 .note{margin:18px 0 35px;padding:15px 17px;border-radius:17px;border:1px solid rgba(230,189,77,.15);background:rgba(230,189,77,.045);color:var(--muted);font-size:12px;line-height:1.8}.note b{color:var(--text)}
 @media(max-width:900px){.playerLayout{grid-template-columns:1fr}.list{max-height:360px}}@media(max-width:600px){.wrap{width:min(100% - 14px,1220px)}.hero{padding:20px 17px}.playerBox,.playlist{border-radius:18px}.controlRow{flex-wrap:wrap}.spacer{display:none}.volume{width:65px}.time{min-width:78px}.speed{margin-right:auto}}
 </style>
+<!-- حماية مشغل الفيديوهات بنفس حساب المكتبة -->
+<script defer crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"></script>
+<style>
+#videoAuthGate{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(2,7,18,.96);backdrop-filter:blur(12px)}
+#videoAuthGate .box{width:min(430px,100%);padding:28px;border:1px solid rgba(230,189,77,.25);border-radius:24px;background:linear-gradient(145deg,#0d1b2e,#07101d);text-align:center;box-shadow:0 25px 80px rgba(0,0,0,.45)}
+#videoAuthGate h2{margin:0 0 10px;font-size:25px}
+#videoAuthGate p{color:#9eacbd;line-height:1.8;margin:0 0 18px}
+#videoAuthGate a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:linear-gradient(135deg,#e6bd4d,#fff0a3);color:#07111f;padding:12px 20px;border-radius:13px;font-weight:900}
+</style>
 </head>
 <body>
+<div id="videoAuthGate">
+  <div class="box">
+    <div style="font-size:48px">🔐</div>
+    <h2>تسجيل الدخول مطلوب</h2>
+    <p>افتح قسم الفيديوهات من داخل المكتبة بعد تسجيل الدخول إلى حسابك.</p>
+    <a href="./index_with_videos.html">← العودة إلى المكتبة وتسجيل الدخول</a>
+  </div>
+</div>
+<script>
+(function(){
+  const gate=document.getElementById('videoAuthGate');
+  const started=Date.now();
+  function check(){
+    try{
+      if(window.Clerk && (Clerk.user || Clerk.isSignedIn)){
+        gate.style.display='none';
+        return;
+      }
+    }catch(e){}
+    if(Date.now()-started>7000){ gate.style.display='grid'; return; }
+    setTimeout(check,180);
+  }
+  check();
+})();
+</script>
 <div class="wrap">
   <div class="top"><a class="back" href="./index_with_videos.html">← العودة إلى المكتبة</a></div>
   <section class="hero">
@@ -60,10 +94,12 @@
    type اختياري: direct أو youtube
    ========================================================= */
 const videos = [
-  // مثال فيديو مباشر:
-  // {title:'شرح الدرس الأول', description:'شرح ومراجعة', url:'https://example.com/video.mp4', type:'direct'},
-  // مثال YouTube:
-  // {title:'مراجعة الوحدة الأولى', description:'مراجعة شاملة', url:'https://www.youtube.com/watch?v=VIDEO_ID', type:'youtube'}
+  {
+    title: 'الفيديو التعليمي الأول',
+    description: 'فيديو تعليمي مضاف إلى مكتبة تانية بكالوريا.',
+    url: 'https://youtu.be/ZF7WMdoBdO8',
+    type: 'youtube'
+  }
 ];
 
 const $=id=>document.getElementById(id);
