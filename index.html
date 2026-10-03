@@ -6454,8 +6454,16 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     }
     const isDownload=mode==='download';
     const finalUrl=isDownload?driveDownloadUrl(url):url;
-    try{window.open(finalUrl,'_blank','noopener,noreferrer');}
-    catch(e){window.location.href=finalUrl;}
+    try{
+      if(isDownload){
+        // التحميل المباشر: افتح رابط Google Drive الخاص بالتحميل في نفس الصفحة
+        // حتى يتعامل المتصفح معه كتنزيل بدل فتح معاينة جديدة.
+        window.location.href=finalUrl;
+      }else{
+        // زر فتح يظل للمعاينة في تبويب جديد.
+        window.open(finalUrl,'_blank','noopener,noreferrer');
+      }
+    }catch(e){window.location.href=finalUrl;}
     return finalUrl;
   };
 
