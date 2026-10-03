@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 <title>مشغل الفيديوهات | مكتبة تانية بكالوريا</title>
@@ -15,60 +16,26 @@
 .note{margin:18px 0 35px;padding:15px 17px;border-radius:17px;border:1px solid rgba(230,189,77,.15);background:rgba(230,189,77,.045);color:var(--muted);font-size:12px;line-height:1.8}.note b{color:var(--text)}
 @media(max-width:900px){.playerLayout{grid-template-columns:1fr}.list{max-height:360px}}@media(max-width:600px){.wrap{width:min(100% - 14px,1220px)}.hero{padding:20px 17px}.playerBox,.playlist{border-radius:18px}.controlRow{flex-wrap:wrap}.spacer{display:none}.volume{width:65px}.time{min-width:78px}.speed{margin-right:auto}}
 </style>
-<!-- حماية مشغل الفيديوهات بنفس حساب المكتبة -->
-<script defer crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"></script>
-<style>
-#videoAuthGate{position:fixed;inset:0;z-index:99999;display:grid;place-items:center;padding:20px;background:rgba(2,7,18,.96);backdrop-filter:blur(12px)}
-#videoAuthGate .box{width:min(430px,100%);padding:28px;border:1px solid rgba(230,189,77,.25);border-radius:24px;background:linear-gradient(145deg,#0d1b2e,#07101d);text-align:center;box-shadow:0 25px 80px rgba(0,0,0,.45)}
-#videoAuthGate h2{margin:0 0 10px;font-size:25px}
-#videoAuthGate p{color:#9eacbd;line-height:1.8;margin:0 0 18px}
-#videoAuthGate a{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;background:linear-gradient(135deg,#e6bd4d,#fff0a3);color:#07111f;padding:12px 20px;border-radius:13px;font-weight:900}
-</style>
 </head>
 <body>
-<div id="videoAuthGate">
-  <div class="box">
-    <div style="font-size:48px">🔐</div>
-    <h2>تسجيل الدخول مطلوب</h2>
-    <p>افتح قسم الفيديوهات من داخل المكتبة بعد تسجيل الدخول إلى حسابك.</p>
-    <a href="./index_with_videos.html">← العودة إلى المكتبة وتسجيل الدخول</a>
-  </div>
-</div>
-<script>
-(function(){
-  const gate=document.getElementById('videoAuthGate');
-  const started=Date.now();
-  function check(){
-    try{
-      if(window.Clerk && (Clerk.user || Clerk.isSignedIn)){
-        gate.style.display='none';
-        return;
-      }
-    }catch(e){}
-    if(Date.now()-started>7000){ gate.style.display='grid'; return; }
-    setTimeout(check,180);
-  }
-  check();
-})();
-</script>
 <div class="wrap">
   <div class="top"><a class="back" href="./index_with_videos.html">← العودة إلى المكتبة</a></div>
   <section class="hero">
     <small>مكتبة تانية بكالوريا • مشغل احترافي</small>
     <h1>🎬 مركز الفيديوهات</h1>
-    <p>مشغل واحد داخل المكتبة لتشغيل الدروس والمراجعات، مع قائمة تشغيل، تحكم في السرعة والصوت، ملء الشاشة، وانتقال سريع بين الفيديوهات.</p>
+    <p>مشغل واحد داخل المكتبة لتشغيل الدروس والمراجعات، مع قائمة فيديوهات وملء الشاشة وانتقال سريع بين الفيديوهات.</p>
   </section>
 
   <main class="playerLayout">
     <section class="playerBox" aria-label="مشغل الفيديو">
       <div class="screen" id="screen">
         <div class="emptyScreen" id="emptyScreen">
-          <div><div class="playBig">▶</div><strong>المشغل جاهز</strong><span>أضف روابط الفيديوهات في مصفوفة videos داخل الكود وسيتم تشغيلها هنا.</span></div>
+          <div><div class="playBig">▶</div><strong>المشغل جاهز</strong><span>اختر الفيديو من القائمة لبدء المشاهدة.</span></div>
         </div>
         <video id="video" playsinline preload="metadata" controlslist="nodownload"></video>
-        <iframe id="yt" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen hidden></iframe>
+        <iframe id="yt" title="مشغل YouTube" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen hidden></iframe>
       </div>
-      <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">عند إضافة الفيديوهات ستظهر هنا بيانات الفيديو الحالي.</p></div>
+      <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">بيانات الفيديو الحالي ومشاهدته مباشرة من المشغل.</p></div>
       <div class="controls" id="customControls">
         <input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم">
         <div class="controlRow">
@@ -81,23 +48,20 @@
 
     <aside class="playlist">
       <div class="playlistHead"><h3>📋 قائمة الفيديوهات</h3><span class="count" id="count">0 فيديو</span></div>
-      <div class="list" id="list"><div class="emptyList">لا توجد فيديوهات مضافة حتى الآن.<br>ضع روابطك داخل <b>videos</b> في أسفل الملف.</div></div>
+      <div class="list" id="list"><div class="emptyList">لا توجد فيديوهات متاحة حاليًا.</div></div>
     </aside>
   </main>
 
-  <div class="note"><b>طريقة إضافة الفيديو:</b> افتح الكود وابحث عن <b>const videos = [</b> ثم أضف العنوان والوصف والرابط. يدعم المشغل روابط الفيديو المباشرة، ويدعم YouTube تلقائيًا داخل المشغل.</div>
+  
 </div>
 
 <script>
-/* =========================================================
-   قاعدة الفيديوهات — أضف فيديوهاتك هنا
-   type اختياري: direct أو youtube
-   ========================================================= */
+/* قائمة الفيديوهات */
 const videos = [
   {
     title: 'الفيديو التعليمي الأول',
     description: 'فيديو تعليمي مضاف إلى مكتبة تانية بكالوريا.',
-    url: 'https://youtu.be/ZF7WMdoBdO8',
+    url: 'https://youtu.be/ZF7WMdoBdO8?si=yNjB7hTj58dsf7fd',
     type: 'youtube'
   }
 ];
@@ -110,7 +74,7 @@ function format(t){if(!Number.isFinite(t))return '00:00';t=Math.max(0,Math.floor
 function isYT(v){return (v.type||'').toLowerCase()==='youtube'||!!youtubeId(v.url)}
 function renderList(){
   $('count').textContent=videos.length+' فيديو';
-  if(!videos.length){list.innerHTML='<div class="emptyList">لا توجد فيديوهات مضافة حتى الآن.<br>ضع روابطك داخل <b>videos</b> في أسفل الملف.</div>';return;}
+  if(!videos.length){list.innerHTML='<div class="emptyList">لا توجد فيديوهات متاحة حاليًا.</div>';return;}
   list.innerHTML=videos.map((v,i)=>`<button class="item ${i===current?'active':''}" data-i="${i}"><span class="thumb">▶</span><span><strong>${escapeHtml(v.title||'فيديو بدون عنوان')}</strong><small>${escapeHtml(v.description||'فيديو تعليمي')}</small></span><span class="num">${String(i+1).padStart(2,'0')}</span></button>`).join('');
 }
 function escapeHtml(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
@@ -119,7 +83,12 @@ function load(i,autoplay=true){
   $('title').textContent=v.title||'فيديو'; $('desc').textContent=v.description||'فيديو تعليمي'; $('typeBadge').textContent=isYT(v)?'YouTube داخل المشغل':'فيديو مباشر'; renderList();
   if(isYT(v)){
     video.pause();video.removeAttribute('src');video.style.display='none';yt.hidden=false;empty.style.display='none';
-    const id=youtubeId(v.url);yt.src='https://www.youtube.com/embed/'+encodeURIComponent(id)+'?rel=0&modestbranding=1&playsinline=1&autoplay='+(autoplay?1:0);
+    const id=youtubeId(v.url);
+    if(!id){ yt.src='about:blank'; return; }
+    const origin=(location.protocol==='http:'||location.protocol==='https:')?location.origin:'';
+    let params='rel=0&modestbranding=1&playsinline=1&enablejsapi=1&autoplay=0';
+    if(origin) params+='&origin='+encodeURIComponent(origin)+'&widget_referrer='+encodeURIComponent(location.href);
+    yt.src='https://www.youtube.com/embed/'+encodeURIComponent(id)+'?'+params;
     $('customControls').style.display='none';
   }else{
     yt.hidden=true;yt.src='';video.style.display='block';empty.style.display='none';$('customControls').style.display='block';video.src=v.url;video.load();if(autoplay)video.play().catch(()=>{});
@@ -136,6 +105,7 @@ video.addEventListener('timeupdate',()=>{const pct=video.duration?(video.current
 video.addEventListener('play',()=>$('play').textContent='⏸');video.addEventListener('pause',()=>$('play').textContent='▶');video.addEventListener('ended',()=>{if(videos.length)load((current+1)%videos.length)});
 $('full').onclick=()=>{const el=$('screen');if(document.fullscreenElement)document.exitFullscreen();else if(el.requestFullscreen)el.requestFullscreen();};
 renderList();
+if(videos.length) load(0,false);
 </script>
 </body>
 </html>

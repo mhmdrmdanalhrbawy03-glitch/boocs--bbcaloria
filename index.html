@@ -6926,29 +6926,7 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   }
 })();
 </script>
-<script>
-/* بوابة قسم الفيديوهات — الدخول من المكتبة فقط بعد تسجيل الدخول */
-(function(){
-  function signedIn(){
-    try{return !!(window.Clerk && (Clerk.user || Clerk.isSignedIn));}catch(e){return false;}
-  }
-  function goVideos(e){
-    if(e)e.preventDefault();
-    if(!signedIn()){
-      if(typeof showLogin==='function') showLogin();
-      else if(typeof openClerkModal==='function') openClerkModal();
-      return false;
-    }
-    window.location.href='./videos.html';
-    return false;
-  }
-  document.addEventListener('click',function(e){
-    const link=e.target.closest('a[href="./videos.html"]');
-    if(!link)return;
-    goVideos(e);
-  });
-})();
-</script>
+
 </body>
  </html>
 <style id="final-floating-left-small">
