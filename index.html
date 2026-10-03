@@ -2312,8 +2312,8 @@ body.light .religiousNote{background:#f4f7fa!important;color:#53657a!important;}
 </style>
 
 <!-- Clerk Authentication -->
-<script defer crossorigin="anonymous" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js" type="text/javascript"></script>
-<script defer crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js" type="text/javascript"></script>
+<script crossorigin="anonymous" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js" type="text/javascript"></script>
+<script crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 window.$crisp=window.$crisp||[];window.CRISP_WEBSITE_ID="b5b8607e-6d45-4399-ae09-94ecc65ad712";
@@ -6354,7 +6354,9 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 
 
 <script>
-/* Clerk — تسجيل الدخول والحساب: مزامنة ثابتة للحساب */
+/* =========================================================
+   Clerk + المكتبة — طبقة مصادقة موحدة وثابتة
+   ========================================================= */
 (function(){
   const loginBtn=document.getElementById('clerkLoginBtn');
   const controls=document.querySelector('.clerkControls');
@@ -6362,42 +6364,92 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   const modal=document.getElementById('clerkModal');
   const closeBtn=document.getElementById('clerkModalClose');
   const signInMount=document.getElementById('clerkSignInMount');
-  function closeModal(){if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-  function openModal(){if(!modal)return;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-  function isSigned(){try{return !!(window.Clerk&&(Clerk.user||Clerk.isSignedIn));}catch(e){return false;}}
+
+  window.__libraryAuthReady = (async function(){
+    const deadline=Date.now()+20000;
+    while(!window.Clerk && Date.now()<deadline){
+      await new Promise(r=>setTimeout(r,50));
+    }
+    if(!window.Clerk) throw new Error('Clerk لم يتم تحميله خلال المهلة المحددة');
+    await Clerk.load();
+    return Clerk;
+  })();
+
+  function closeModal(){
+    if(!modal)return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.style.overflow='';
+  }
+  function openModal(){
+    if(!modal)return;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden';
+  }
+  function isSigned(){
+    try{return !!(window.Clerk && Clerk.isSignedIn && Clerk.user && Clerk.session);}
+    catch(e){return false;}
+  }
+  function mountSignIn(){
+    if(!signInMount || !window.Clerk || typeof Clerk.mountSignIn!=='function' || signInMount.dataset.mounted==='1') return;
+    try{Clerk.mountSignIn(signInMount,{routing:'hash'});signInMount.dataset.mounted='1';}
+    catch(e){console.error('Clerk SignIn mount error',e);}
+  }
+  function mountUser(){
+    if(!userMount || !window.Clerk || typeof Clerk.mountUserButton!=='function' || userMount.dataset.mounted==='1') return;
+    try{Clerk.mountUserButton(userMount);userMount.dataset.mounted='1';}
+    catch(e){console.error('Clerk UserButton mount error',e);}
+  }
   function sync(){
     const ok=isSigned();
     if(controls)controls.classList.toggle('isSignedIn',ok);
-    if(loginBtn){loginBtn.style.display=ok?'none':'inline-flex';loginBtn.setAttribute('aria-hidden',ok?'true':'false');}
+    if(loginBtn){
+      loginBtn.style.display=ok?'none':'inline-flex';
+      loginBtn.setAttribute('aria-hidden',ok?'true':'false');
+    }
     if(userMount){
       userMount.style.display=ok?'flex':'none';
-      if(ok&&window.Clerk&&typeof Clerk.mountUserButton==='function'&&!userMount.dataset.mounted){
-        try{Clerk.mountUserButton(userMount);userMount.dataset.mounted='1';}catch(e){console.error('UserButton mount error',e);}
-      }
+      if(ok)mountUser();
     }
     if(ok)closeModal();
   }
-  closeBtn&&closeBtn.addEventListener('click',closeModal);
-  modal&&modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+
+  closeBtn?.addEventListener('click',closeModal);
+  modal?.addEventListener('click',e=>{if(e.target===modal)closeModal();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-  async function init(){
-    if(!window.Clerk){if(loginBtn)loginBtn.style.display='inline-flex';if(userMount)userMount.style.display='none';return;}
+
+  loginBtn?.addEventListener('click',async()=>{
     try{
-      await Clerk.load({ui:{ClerkUI:window.__internal_ClerkUICtor}});
+      await window.__libraryAuthReady;
+      if(isSigned()){sync();return;}
+      openModal();
+      mountSignIn();
+    }catch(e){
+      console.error('Clerk ready error:',e);
+      alert('تعذر تجهيز تسجيل الدخول الآن. حاول تحديث الصفحة مرة أخرى.');
+    }
+  });
+
+  (async()=>{
+    try{
+      await window.__libraryAuthReady;
       sync();
-      if(loginBtn)loginBtn.onclick=function(){if(isSigned()){sync();return;}openModal();if(signInMount&&!signInMount.dataset.mounted){Clerk.mountSignIn(signInMount,{routing:'hash'});signInMount.dataset.mounted='1';}};
-      if(typeof Clerk.addListener==='function')Clerk.addListener(function(){setTimeout(sync,50);setTimeout(sync,400);});
-      setInterval(sync,3000);
-    }catch(e){console.error('Clerk initialization error:',e);if(loginBtn)loginBtn.style.display='inline-flex';if(userMount)userMount.style.display='none';}
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+      if(typeof Clerk.addListener==='function'){
+        Clerk.addListener(()=>{
+          setTimeout(sync,0);
+          setTimeout(sync,250);
+          setTimeout(sync,1000);
+        });
+      }
+      setInterval(sync,1500);
+    }catch(e){
+      console.error('Clerk initialization error:',e);
+      if(loginBtn)loginBtn.style.display='inline-flex';
+      if(userMount)userMount.style.display='none';
+    }
+  })();
 })();
-</script>
-
-
-
-
-<script>
 </script>
 
 <script>
@@ -6406,68 +6458,87 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
    ========================================================= */
 (function(){
   const XANO_BOOK_ACCESS_URL='https://x8ki-letl-twmt.n7.xano.io/api:library/book-access';
-  let accessInFlight=new Map();
+  const accessInFlight=new Map();
 
-  function signedIn(){
-    try{return !!(window.Clerk && Clerk.session && (Clerk.user || Clerk.isSignedIn));}
-    catch(e){return false;}
+  async function waitForAuth(){
+    try{return await window.__libraryAuthReady;}
+    catch(e){console.error('Auth ready error:',e);return null;}
   }
-
+  async function getValidSession(){
+    const clerk=await waitForAuth();
+    if(!clerk || !clerk.isSignedIn || !clerk.user || !clerk.session)return null;
+    return clerk.session;
+  }
   function showLogin(){
     const modal=document.getElementById('clerkModal');
     const mount=document.getElementById('clerkSignInMount');
-    if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-    if(mount && window.Clerk && typeof Clerk.mountSignIn==='function' && !mount.dataset.mounted){
+    if(modal){
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
+    if(mount && window.Clerk && typeof Clerk.mountSignIn==='function' && mount.dataset.mounted!=='1'){
       try{Clerk.mountSignIn(mount,{routing:'hash'});mount.dataset.mounted='1';}
-      catch(e){console.error('Clerk SignIn mount error',e);}
+      catch(e){console.error('SignIn mount error:',e);}
     }
   }
-
-  async function getClerkToken(){
-    if(!window.Clerk || !Clerk.session) return null;
+  async function getClerkToken(forceRefresh=false){
+    const session=await getValidSession();
+    if(!session)return null;
     try{
-      return await Clerk.session.getToken();
-    }catch(error){
-      console.error('Clerk token error:',error);
-      return null;
-    }
+      if(forceRefresh && typeof session.getToken==='function'){
+        try{return await session.getToken({skipCache:true});}catch(e){}
+      }
+      return await session.getToken();
+    }catch(error){console.error('Clerk token error:',error);return null;}
   }
 
   async function requestBookAccess(bookId){
-    if(!signedIn()){
-      showLogin();
-      return;
-    }
+    const session=await getValidSession();
+    if(!session){showLogin();return null;}
 
     const key=String(bookId);
-    if(accessInFlight.has(key)) return accessInFlight.get(key);
+    if(accessInFlight.has(key))return accessInFlight.get(key);
 
     const promise=(async()=>{
-      const token=await getClerkToken();
+      let token=await getClerkToken();
       if(!token){showLogin();return null;}
 
-      const response=await fetch(XANO_BOOK_ACCESS_URL,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':`Bearer ${token}`
-        },
-        body:JSON.stringify({book_id:Number(bookId)})
-      });
-
+      let response;
       let data={};
-      try{data=await response.json();}catch(e){}
 
-      if(!response.ok || !data.access_granted || !data.download_url){
-        if(response.status===401 || response.status===403){
-          alert('انتهت جلسة الدخول أو لم يتم التحقق منها. سجّل الدخول مرة أخرى ثم حاول.');
-        }else{
-          alert(data.message || 'تعذر فتح الكتاب حاليًا. حاول مرة أخرى.');
-        }
+      try{
+        response=await fetch(XANO_BOOK_ACCESS_URL,{
+          method:'POST',
+          headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+          body:JSON.stringify({book_id:Number(bookId)})
+        });
+        try{data=await response.json();}catch(e){}
+      }catch(error){
+        console.error('Xano network error:',error);
+        alert('تعذر الاتصال بخدمة الكتب. تأكد من الإنترنت ثم حاول مرة أخرى.');
         return null;
       }
 
-      return data.download_url;
+      if(response.status===401 || response.status===403){
+        token=await getClerkToken(true);
+        if(token){
+          try{
+            response=await fetch(XANO_BOOK_ACCESS_URL,{
+              method:'POST',
+              headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},
+              body:JSON.stringify({book_id:Number(bookId)})
+            });
+            try{data=await response.json();}catch(e){}
+          }catch(error){console.error('Xano retry error:',error);}
+        }
+      }
+
+      if(!response.ok || !data.access_granted || !data.download_url){
+        alert(data.message || 'تعذر فتح أو تحميل الكتاب حاليًا. حاول مرة أخرى.');
+        return null;
+      }
+      return String(data.download_url);
     })().catch(error=>{
       console.error('Book access error:',error);
       alert('حدث خطأ أثناء التحقق من صلاحية الوصول للكتاب.');
@@ -6478,9 +6549,63 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     return promise;
   }
 
-  window.openProtectedBook=async function(bookId){
+  window.openProtectedBook=async function(bookId,mode){
+    let popup=null;
+
+    // للفتح: ننشئ النافذة أثناء النقرة نفسها حتى لا يمنعها المتصفح.
+    if(mode==='open'){
+      try{
+        popup=window.open('about:blank','_blank');
+        if(popup){
+          popup.document.title='جاري تجهيز الكتاب...';
+          popup.document.body.innerHTML='<div style="font-family:Arial,sans-serif;text-align:center;padding:40px;direction:rtl">جاري تجهيز الكتاب...</div>';
+        }
+      }catch(e){}
+    }
+
     const url=await requestBookAccess(bookId);
-    if(url) window.open(url,'_blank','noopener,noreferrer');
+
+    if(!url){
+      if(popup && !popup.closed)popup.close();
+      return null;
+    }
+
+    if(mode==='download'){
+      // نحاول تنزيل الملف كـ Blob أولًا؛ هذا يضمن التنزيل عندما يسمح خادم الملف بـ CORS.
+      // وإذا كان الخادم يمنع CORS نستخدم الرابط المباشر بدل إظهار خطأ للطالب.
+      try{
+        const fileResponse=await fetch(url,{mode:'cors',credentials:'omit'});
+        if(fileResponse.ok){
+          const blob=await fileResponse.blob();
+          const blobUrl=URL.createObjectURL(blob);
+          const a=document.createElement('a');
+          a.href=blobUrl;
+          a.download='book.pdf';
+          a.rel='noopener';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(()=>URL.revokeObjectURL(blobUrl),30000);
+          return url;
+        }
+      }catch(error){
+        console.warn('Direct blob download unavailable; using direct file URL.',error);
+      }
+      const a=document.createElement('a');
+      a.href=url;
+      a.target='_blank';
+      a.rel='noopener noreferrer';
+      a.download='';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      return url;
+    }
+
+    if(popup && !popup.closed)popup.location.href=url;
+    else window.open(url,'_blank','noopener,noreferrer');
+
+    return url;
   };
 
   document.addEventListener('click',function(event){
@@ -6488,25 +6613,17 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     if(!link)return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    window.openProtectedBook(link.dataset.protectedBook);
+    const mode=(link.classList.contains('download') || link.classList.contains('seriesDl'))?'download':'open';
+    window.openProtectedBook(link.dataset.protectedBook,mode);
   },true);
 
-  // حماية أي رابط كتاب متبقٍ بالخطأ في عناصر الواجهة.
-  document.addEventListener('click',function(event){
-    const link=event.target.closest('a.action.open,a.action.download,a.seriesAction.seriesOpen,a.seriesAction.seriesDl');
-    if(!link || link.hasAttribute('data-protected-book'))return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    const id=link.dataset.id || link.closest('[data-book-id]')?.dataset.bookId;
-    if(id) window.openProtectedBook(id); else showLogin();
-  },true);
-
-  // عند تسجيل الخروج، لا نحتفظ بأي صلاحيات كتاب في الذاكرة.
-  if(window.Clerk && typeof Clerk.addListener==='function'){
-    Clerk.addListener(function(){
-      if(!signedIn()) accessInFlight.clear();
-    });
-  }
+  // تحديث حالة الوصول عند تغيّر جلسة Clerk.
+  (async()=>{
+    const clerk=await waitForAuth();
+    if(clerk && typeof clerk.addListener==='function'){
+      clerk.addListener(()=>accessInFlight.clear());
+    }
+  })();
 })();
 </script>
 </body>
