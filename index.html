@@ -6570,13 +6570,36 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
       }
 
       const data=result.data||{};
-      const url=data.download_url||data.url||data.file_url||data.signed_url||data.fileUrl;
+      let url=data.download_url||data.url||data.file_url||data.signed_url||data.fileUrl;
 
       if(!result.response.ok || data.access_granted===false || !url){
         console.error('Xano book-access response:',result.response.status,data);
         alert(data.message||'لم يتم إرجاع رابط الكتاب من خدمة المكتبة.');
         return null;
       }
+
+      /*
+       * حماية إضافية: لو رجع Xano بالخطأ مسار Vault نسبي مثل /vault/...
+       * لا نسمح للمتصفح بتحويله إلى نطاق Vercel الحالي.
+       * نحوله تلقائيًا إلى نطاق Xano الأساسي.
+       */
+      try{
+        const raw=String(url).trim();
+        if(raw.startsWith('/vault/')){
+          const base=new URL(XANO_BOOK_ACCESS_URL).origin;
+          url=base+raw;
+        }else if(!/^https?:\/\//i.test(raw)){
+          const base=new URL(XANO_BOOK_ACCESS_URL).origin;
+          url=new URL(raw,base).href;
+        }else{
+          url=raw;
+        }
+      }catch(e){
+        console.error('Invalid book URL returned by Xano:',url,e);
+        alert('رابط الكتاب الذي أرجعته خدمة المكتبة غير صالح.');
+        return null;
+      }
+
       return String(url);
     })().finally(()=>accessInFlight.delete(key));
 
