@@ -10,16 +10,38 @@
 :root{--bg:#050b14;--panel:#0b1625;--panel2:#101f33;--gold:#e6bd4d;--gold2:#fff0a3;--text:#f7f8fb;--muted:#9eacbd;--line:rgba(255,255,255,.09);--danger:#ef5350}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 10% 0%,rgba(230,189,77,.10),transparent 25%),radial-gradient(circle at 90% 10%,rgba(45,115,190,.12),transparent 30%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}.wrap{width:min(1220px,calc(100% - 24px));margin:auto}.top{padding:15px 0}.back{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:#07111f;background:linear-gradient(135deg,var(--gold),var(--gold2));padding:10px 15px;border-radius:13px;font-weight:900;box-shadow:0 8px 25px rgba(230,189,77,.12)}
 .hero{margin:4px 0 20px;padding:25px 24px;border:1px solid rgba(230,189,77,.18);border-radius:25px;background:linear-gradient(135deg,rgba(14,28,48,.98),rgba(5,12,22,.98));box-shadow:0 20px 60px rgba(0,0,0,.25)}.hero small{color:var(--gold);font-weight:900}.hero h1{margin:7px 0;font-size:clamp(28px,5vw,46px)}.hero p{margin:0;color:var(--muted);line-height:1.8}
-.playerLayout{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(300px,.7fr);gap:18px;align-items:start}.playerBox,.playlist{background:linear-gradient(145deg,rgba(13,27,46,.98),rgba(7,16,29,.98));border:1px solid var(--line);border-radius:23px;box-shadow:0 20px 55px rgba(0,0,0,.25);overflow:hidden}.screen{position:relative;background:#000;aspect-ratio:16/9;display:grid;place-items:center}.screen video{width:100%;height:100%;display:block;background:#000}.screen iframe{width:100%;height:100%;border:0;background:#000}.emptyScreen{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(230,189,77,.08),transparent 45%),#03070d}.emptyScreen .playBig{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111f;font-size:34px;margin:auto;box-shadow:0 15px 45px rgba(230,189,77,.2)}.emptyScreen strong{display:block;font-size:21px;margin-top:14px}.emptyScreen span{display:block;color:var(--muted);font-size:13px;margin-top:7px}
+.playerLayout{display:grid;grid-template-columns:minmax(0,1fr) 225px;gap:18px;align-items:start}.playerArea{display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.55fr);gap:18px;align-items:start}.playerBox,.playlist{background:linear-gradient(145deg,rgba(13,27,46,.98),rgba(7,16,29,.98));border:1px solid var(--line);border-radius:23px;box-shadow:0 20px 55px rgba(0,0,0,.25);overflow:hidden}.screen{position:relative;background:#000;aspect-ratio:16/9;display:grid;place-items:center}.screen video{width:100%;height:100%;display:block;background:#000}.screen iframe{width:100%;height:100%;border:0;background:#000}.emptyScreen{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(230,189,77,.08),transparent 45%),#03070d}.emptyScreen .playBig{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111f;font-size:34px;margin:auto;box-shadow:0 15px 45px rgba(230,189,77,.2)}.emptyScreen strong{display:block;font-size:21px;margin-top:14px}.emptyScreen span{display:block;color:var(--muted);font-size:13px;margin-top:7px}
 .info{padding:17px 19px}.badge{display:inline-flex;padding:6px 9px;border-radius:9px;background:rgba(230,189,77,.10);color:var(--gold);font-size:11px;font-weight:900}.info h2{margin:10px 0 7px;font-size:22px}.info p{margin:0;color:var(--muted);line-height:1.7;font-size:13px}.controls{padding:13px 17px 17px;border-top:1px solid var(--line);background:rgba(0,0,0,.12)}.progress{width:100%;height:5px;appearance:none;background:rgba(255,255,255,.15);border-radius:99px;cursor:pointer;accent-color:var(--gold);margin-bottom:12px}.controlRow{display:flex;align-items:center;gap:8px}.ctrl{border:1px solid var(--line);background:rgba(255,255,255,.045);color:var(--text);width:38px;height:36px;border-radius:10px;cursor:pointer;font-size:15px}.ctrl:hover{border-color:rgba(230,189,77,.45)}.time{font-size:12px;color:var(--muted);min-width:92px;text-align:center}.volume{width:80px;accent-color:var(--gold)}.speed{background:#0a1422;color:var(--text);border:1px solid var(--line);height:36px;border-radius:10px;padding:0 8px}.spacer{flex:1}
 .playlist{padding:17px}.playlistHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.playlistHead h3{margin:0;font-size:18px}.count{color:var(--muted);font-size:11px}.list{display:grid;gap:9px;max-height:560px;overflow:auto;padding-left:2px}.item{width:100%;display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;text-align:right;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--text);padding:9px;border-radius:14px;cursor:pointer}.item:hover,.item.active{border-color:rgba(230,189,77,.42);background:rgba(230,189,77,.07)}.thumb{width:52px;height:40px;border-radius:9px;background:linear-gradient(135deg,#172f4c,#091525);display:grid;place-items:center;color:var(--gold);font-size:17px}.item strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.item .num{color:var(--gold);font-size:11px}.emptyList{text-align:center;padding:30px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:15px;line-height:1.8}
 .note{margin:18px 0 35px;padding:15px 17px;border-radius:17px;border:1px solid rgba(230,189,77,.15);background:rgba(230,189,77,.045);color:var(--muted);font-size:12px;line-height:1.8}.note b{color:var(--text)}
-@media(max-width:900px){.playerLayout{grid-template-columns:1fr}.list{max-height:360px}}@media(max-width:600px){.wrap{width:min(100% - 14px,1220px)}.hero{padding:20px 17px}.playerBox,.playlist{border-radius:18px}.controlRow{flex-wrap:wrap}.spacer{display:none}.volume{width:65px}.time{min-width:78px}.speed{margin-right:auto}}
+@media(max-width:600px){.wrap{width:min(100% - 14px,1220px)}.hero{padding:20px 17px}.playerBox,.playlist{border-radius:18px}.controlRow{flex-wrap:wrap}.spacer{display:none}.volume{width:65px}.time{min-width:78px}.speed{margin-right:auto}}
+
+/* الأقسام الجانبية + فلتر المرحلة */
+.videoSideBar{position:sticky;top:15px;display:grid;gap:12px;min-width:0}
+.sideSections{display:grid;gap:10px}
+.sideSection{width:100%;border:1px solid var(--line);background:linear-gradient(145deg,#14263e,#0f1b2d);border-radius:16px;padding:15px 12px;text-align:right;color:var(--text);cursor:pointer;transition:.25s;font-weight:900;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.sideSection:hover{transform:translateX(-3px);border-color:rgba(230,189,77,.5)}
+.sideSection.active{border-color:var(--gold);background:linear-gradient(145deg,rgba(230,189,77,.18),#0f1b2d);box-shadow:0 12px 32px rgba(230,189,77,.10)}
+.sideSection .sideIcon{font-size:24px;display:block;margin-bottom:7px}.sideSection small{display:block;color:var(--muted);font-size:9px;font-weight:700;margin-top:4px;line-height:1.7}
+.sideStage{padding:12px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#101f33,#0b1625)}
+.stageBar{display:grid;gap:7px;margin:0 0 10px}.stageBtn{width:100%;border:1px solid var(--line);background:#102038;color:var(--muted);border-radius:11px;padding:9px 8px;font-weight:900;font-size:10px;cursor:pointer}.stageBtn.active{background:var(--gold);color:#111827;border-color:var(--gold)}
+.sectionMessage{display:none;padding:18px 10px;text-align:center;border:1px dashed rgba(230,189,77,.35);border-radius:14px;background:rgba(230,189,77,.045);color:var(--muted);line-height:1.9;font-size:10px}.sectionMessage strong{display:block;color:var(--gold);font-size:12px;margin-bottom:5px}.sectionMessage.show{display:block}
+@media(max-width:1100px){.playerLayout{grid-template-columns:1fr}.playerArea{grid-template-columns:minmax(0,1fr) minmax(245px,.62fr)}.videoSideBar{position:static}}
+@media(max-width:760px){.playerLayout{grid-template-columns:1fr}.playerArea{grid-template-columns:1fr}.videoSideBar{position:static}.sideSections{grid-template-columns:repeat(3,minmax(0,1fr))}.sideSection{text-align:center;padding:11px 8px}.sideSection small{display:none}}
+@media(max-width:760px){.sideSections{grid-template-columns:1fr}.sideSection{text-align:right}.sideSection small{display:block}}
+
+.themeBtn{border:1px solid var(--line);background:var(--panel);color:var(--text);width:44px;height:44px;border-radius:12px;cursor:pointer;font-size:18px;margin-right:8px;}
+body.day{--bg:#eef3f8;--panel:#fff;--panel2:#f7f9fc;--text:#172033;--muted:#607086;--line:rgba(23,32,51,.14);background:linear-gradient(180deg,#f7f9fc,#e9eef5);}
+body.day .playerBox,body.day .playlist,body.day .sideSection{background:linear-gradient(145deg,#fff,#f1f5f9);}
+body.day .stageBtn{background:#fff;color:#526276;}
+body.day .ctrl{background:#f5f7fa;color:#172033;}
+body.day .speed{background:#fff;color:#172033;}
+.videoSideBar{display:grid;gap:12px;position:sticky;top:15px;align-self:start}.sideStage{border:1px solid var(--line);border-radius:16px;padding:10px;background:linear-gradient(145deg,#14263e,#0f1b2d)}.videoSideBar .stageBar{display:grid}.videoSideBar .sectionMessage{display:none;padding:15px 10px;text-align:center;border:1px dashed rgba(230,189,77,.35);border-radius:14px;color:var(--muted);font-size:10px;line-height:1.8}.videoSideBar .sectionMessage.show{display:block}.videoSideBar .sectionMessage strong{display:block;color:var(--gold);font-size:13px;margin-bottom:4px}.sideSection{border:1px solid var(--line);background:linear-gradient(145deg,#14263e,#0f1b2d);color:var(--text);border-radius:16px;padding:13px;text-align:right;cursor:pointer;font-weight:900}.sideSection.active{border-color:var(--gold);background:linear-gradient(145deg,rgba(230,189,77,.18),#0f1b2d)}.sideIcon{font-size:22px;margin-left:7px}.sideSection small{display:block;color:var(--muted);font-size:9px;margin-top:4px}.sideSections{display:grid;gap:9px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="top"><a class="back" href="./index.html" onclick="return backToLibrary(event)">← العودة إلى المكتبة</a></div>
+  <div class="top"><button class="themeBtn" id="themeBtn" type="button" title="تفعيل الوضع النهاري">☀️</button><a class="back" href="./index.html" onclick="return backToLibrary(event)">← العودة إلى المكتبة</a></div>
   <section class="hero">
     <small>مكتبة تانية بكالوريا • مشغل احترافي</small>
     <h1>🎬 مركز الفيديوهات</h1>
@@ -27,6 +49,7 @@
   </section>
 
   <main class="playerLayout">
+    <div class="playerArea">
     <section class="playerBox" aria-label="مشغل الفيديو">
       <div class="screen" id="screen">
         <div class="emptyScreen" id="emptyScreen">
@@ -50,37 +73,38 @@
       <div class="playlistHead"><h3>📋 قائمة الفيديوهات</h3><span class="count" id="count">0 فيديو</span></div>
       <div class="list" id="list"><div class="emptyList">لا توجد فيديوهات متاحة حاليًا.</div></div>
     </aside>
-  </main>
+    </div>
 
-  
-</div>
+    <aside class="videoSideBar" aria-label="اختيار القسم والفئة">
+      <div class="sideSections">
+        <button class="sideSection active" data-section="motivation"><span class="sideIcon">💪</span>الجزء التحفيزي<small>شحن الهمة والاستمرار</small></button>
+        <button class="sideSection" data-section="evaluations"><span class="sideIcon">📝</span>حل تقييمات الوزارة<small>شرح وحل التقييمات</small></button>
+        <button class="sideSection" data-section="revision"><span class="sideIcon">🚀</span>المراجعة والاستعداد<small>مراجعة قبل الاختبارات</small></button>
+      </div>
+      <div class="sideStage">
+        <div class="stageBar" aria-label="اختيار الفئة">
+          <button class="stageBtn active" data-stage="baccalaureate">🎓 البكالوريا</button>
+          <button class="stageBtn" data-stage="general">📚 الثانوية العامة</button>
+        </div>
+        <div class="sectionMessage" id="sectionMessage"><strong>سيتم إضافة الفيديوهات قريبًا جدًا</strong><span>هذا الجزء مخصص لهذه الفئة، وسيتم إضافة محتواه فور تجهيزه.</span></div>
+      </div>
+    </aside>
+  </main>
 
 <script>
 /* قائمة الفيديوهات */
 const videos = [
-  {
-    title: 'الفيديو التعليمي الأول',
-    description: 'فيديو تعليمي مضاف إلى مكتبة تانية بكالوريا.',
-    url: 'https://youtu.be/ZF7WMdoBdO8?si=yNjB7hTj58dsf7fd',
-    type: 'youtube'
-  },
-  {
-    title: 'الفيديو التعليمي الثاني',
-    description: 'فيديو تعليمي مضاف إلى مكتبة تانية بكالوريا.',
-    url: 'https://youtu.be/VVZy0y6xJcc?si=0W7Vbc_TD-D7lfZK',
-    type: 'youtube'
-  },
-  {
-    title: 'الفيديو التعليمي الثالث',
-    description: 'فيديو YouTube مضاف إلى مكتبة تانية بكالوريا.',
-    url: 'https://www.youtube.com/embed/9D9GmbkdkME?si=6MUCwqMp4zu_EAvK',
-    type: 'youtube'
-  }
+  {title:'الفيديو التعليمي الأول',description:'فيديو تحفيزي لطلاب البكالوريا.',url:'https://youtu.be/ZF7WMdoBdO8?si=yNjB7hTj58dsf7fd',type:'youtube',stage:'baccalaureate',section:'motivation'},
+  {title:'الفيديو التعليمي الثاني',description:'فيديو تحفيزي لطلاب البكالوريا.',url:'https://youtu.be/VVZy0y6xJcc?si=0W7Vbc_TD-D7lfZK',type:'youtube',stage:'baccalaureate',section:'motivation'},
+  {title:'الفيديو التعليمي الثالث',description:'فيديو تحفيزي لطلاب البكالوريا.',url:'https://www.youtube.com/embed/9D9GmbkdkME?si=6MUCwqMp4zu_EAvK',type:'youtube',stage:'baccalaureate',section:'motivation'}
 ];
 
 const $=id=>document.getElementById(id);
 const video=$('video'), yt=$('yt'), empty=$('emptyScreen'), list=$('list');
 let current=-1;
+let selectedStage='baccalaureate';
+let selectedSection='motivation';
+function getVisibleVideos(){return videos.filter(v=>v.stage===selectedStage && v.section===selectedSection);}
 function backToLibrary(e){
   if(e)e.preventDefault();
   try{
@@ -93,20 +117,22 @@ function backToLibrary(e){
       }
     }
   }catch(_){ }
-  window.location.assign('./index.html');
+  window.location.href='./index.html';
   return false;
 }
 function youtubeId(url){try{const u=new URL(url);if(u.hostname.includes('youtu.be'))return u.pathname.slice(1);if(u.hostname.includes('youtube.com'))return u.searchParams.get('v')||((u.pathname.match(/\/embed\/([^/]+)/)||[])[1]);}catch(e){}return null}
 function format(t){if(!Number.isFinite(t))return '00:00';t=Math.max(0,Math.floor(t));const m=Math.floor(t/60),s=t%60;return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
 function isYT(v){return (v.type||'').toLowerCase()==='youtube'||!!youtubeId(v.url)}
 function renderList(){
-  $('count').textContent=videos.length+' فيديو';
-  if(!videos.length){list.innerHTML='<div class="emptyList">لا توجد فيديوهات متاحة حاليًا.</div>';return;}
-  list.innerHTML=videos.map((v,i)=>`<button class="item ${i===current?'active':''}" data-i="${i}"><span class="thumb">▶</span><span><strong>${escapeHtml(v.title||'فيديو بدون عنوان')}</strong><small>${escapeHtml(v.description||'فيديو تعليمي')}</small></span><span class="num">${String(i+1).padStart(2,'0')}</span></button>`).join('');
+  const available=getVisibleVideos();
+  $('count').textContent=available.length+' فيديو';
+  if(!available.length){list.innerHTML='<div class="emptyList">لا توجد فيديوهات مضافة لهذا القسم حاليًا.</div>';return;}
+  list.innerHTML=available.map((v,i)=>`<button class="item ${i===current?'active':''}" data-i="${i}"><span class="thumb">▶</span><span><strong>${escapeHtml(v.title||'فيديو بدون عنوان')}</strong><small>${escapeHtml(v.description||'فيديو تعليمي')}</small></span><span class="num">${String(i+1).padStart(2,'0')}</span></button>`).join('');
 }
 function escapeHtml(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
 function load(i,autoplay=true){
-  if(!videos[i])return; current=i; const v=videos[i];
+  const available=getVisibleVideos();
+  if(!available[i])return; current=i; const v=available[i];
   $('title').textContent=v.title||'فيديو'; $('desc').textContent=v.description||'فيديو تعليمي'; $('typeBadge').textContent=isYT(v)?'YouTube داخل المشغل':'فيديو مباشر'; renderList();
   if(isYT(v)){
     video.pause();video.removeAttribute('src');video.style.display='none';yt.hidden=false;empty.style.display='none';
@@ -124,15 +150,45 @@ function load(i,autoplay=true){
 list.addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(b)load(Number(b.dataset.i));});
 $('play').onclick=()=>{if(current<0&&videos.length)load(0);else if(video.paused)video.play();else video.pause();};
 $('back10').onclick=()=>{video.currentTime=Math.max(0,video.currentTime-10)};
-$('next').onclick=()=>{if(videos.length)load((current+1)%videos.length)};
+$('next').onclick=()=>{const available=getVisibleVideos();if(available.length)load((current+1)%available.length)};
 $('volume').oninput=e=>video.volume=Number(e.target.value);
 $('speed').onchange=e=>video.playbackRate=Number(e.target.value);
 $('progress').oninput=e=>{if(video.duration)video.currentTime=(Number(e.target.value)/100)*video.duration};
 video.addEventListener('timeupdate',()=>{const pct=video.duration?(video.currentTime/video.duration)*100:0;$('progress').value=pct;$('time').textContent=format(video.currentTime)+' / '+format(video.duration)});
-video.addEventListener('play',()=>$('play').textContent='⏸');video.addEventListener('pause',()=>$('play').textContent='▶');video.addEventListener('ended',()=>{if(videos.length)load((current+1)%videos.length)});
+video.addEventListener('play',()=>$('play').textContent='⏸');video.addEventListener('pause',()=>$('play').textContent='▶');video.addEventListener('ended',()=>{const available=getVisibleVideos();if(available.length)load((current+1)%available.length)});
 $('full').onclick=()=>{const el=$('screen');if(document.fullscreenElement)document.exitFullscreen();else if(el.requestFullscreen)el.requestFullscreen();};
+
+const stageButtons=document.querySelectorAll('.stageBtn');
+const sectionButtons=document.querySelectorAll('.sideSection');
+const sectionMessage=$('sectionMessage');
+function refreshContent(){
+  current=-1;
+  video.pause(); video.removeAttribute('src'); video.style.display='none'; yt.hidden=true; yt.src=''; empty.style.display='grid';
+  $('customControls').style.display='none';
+  $('title').textContent='اختر فيديو من القائمة';
+  $('desc').textContent='اختر القسم والفئة من الشريط الجانبي لعرض المحتوى المخصص.';
+  $('typeBadge').textContent='جاهز للتشغيل';
+  const available=getVisibleVideos();
+  if(sectionMessage) sectionMessage.classList.toggle('show',available.length===0);
+  renderList();
+}
+stageButtons.forEach(btn=>btn.addEventListener('click',()=>{
+  selectedStage=btn.dataset.stage;
+  stageButtons.forEach(b=>b.classList.toggle('active',b===btn));
+  refreshContent();
+}));
+sectionButtons.forEach(btn=>btn.addEventListener('click',()=>{
+  selectedSection=btn.dataset.section;
+  sectionButtons.forEach(b=>b.classList.toggle('active',b===btn));
+  refreshContent();
+}));
+const themeBtn=document.getElementById('themeBtn');
+let dayMode=false;
+themeBtn.addEventListener('click',()=>{dayMode=!dayMode;document.body.classList.toggle('day',dayMode);themeBtn.textContent=dayMode?'🌙':'☀️';themeBtn.title=dayMode?'تفعيل الوضع الليلي':'تفعيل الوضع النهاري';});
+
 renderList();
-if(videos.length) load(0,false);
+if(sectionMessage) sectionMessage.classList.toggle('show',getVisibleVideos().length===0);
+if(getVisibleVideos().length) load(0,false);
 </script>
 </body>
 </html>
