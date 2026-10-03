@@ -2754,7 +2754,7 @@ mhmdrmdan.yobader.com
 مكتبتك في مكان واحد
 </small>
 
-<h2>
+<h2 id="welcomeTitle">
 مرحبًا بك في مكتبة تانية بكالوريا 👋
 </h2>
 
@@ -6395,8 +6395,21 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   function closeModal(){if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
   function openModal(){if(!modal)return;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
   function isSigned(){try{return !!(window.Clerk&&(Clerk.user||Clerk.isSignedIn));}catch(e){return false;}}
+  function updateWelcomeName(){
+    const title=document.getElementById('welcomeTitle');
+    if(!title)return;
+    let name='';
+    try{
+      const user=window.Clerk&&Clerk.user;
+      if(user){
+        name=(user.firstName||'').trim() || (user.fullName||'').trim() || (user.username||'').trim();
+      }
+    }catch(e){}
+    title.textContent=name ? `أهلاً ${name} 👋 في مكتبة تانية بكالوريا` : 'مرحبًا بك في مكتبة تانية بكالوريا 👋';
+  }
   function sync(){
     const ok=isSigned();
+    updateWelcomeName();
     if(controls)controls.classList.toggle('isSignedIn',ok);
     if(loginBtn){loginBtn.style.display=ok?'none':'inline-flex';loginBtn.setAttribute('aria-hidden',ok?'true':'false');}
     if(userMount){
