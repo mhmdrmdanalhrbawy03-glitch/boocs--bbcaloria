@@ -6366,12 +6366,18 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   const signInMount=document.getElementById('clerkSignInMount');
 
   window.__libraryAuthReady = (async function(){
-    const deadline=Date.now()+20000;
-    while(!window.Clerk && Date.now()<deadline){
+    const deadline=Date.now()+30000;
+    while((!window.Clerk || !window.__internal_ClerkUICtor) && Date.now()<deadline){
       await new Promise(r=>setTimeout(r,50));
     }
     if(!window.Clerk) throw new Error('Clerk لم يتم تحميله خلال المهلة المحددة');
-    await Clerk.load();
+    if(!window.__internal_ClerkUICtor) throw new Error('Clerk UI لم يتم تحميله خلال المهلة المحددة');
+
+    // مهم جدًا مع ClerkJS عبر CDN: واجهة SignIn/UserButton تحتاج UI constructor.
+    // بدون هذا الخيار قد يظهر صندوق تسجيل الدخول فارغًا/كمساحة تحميل فقط.
+    await Clerk.load({
+      ui:{ClerkUI:window.__internal_ClerkUICtor}
+    });
     return Clerk;
   })();
 
