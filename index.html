@@ -649,6 +649,10 @@ svg{
     border-color:var(--gold);
 }
 
+/* وضع البحث: عرض نتائج البحث فقط */
+body.search-mode .search-hidden-section{display:none!important;}
+body.search-mode #allBooks{display:block!important;}
+
 .sort{
     display:flex;
     gap:7px;
@@ -4280,6 +4284,9 @@ if(title===q)score+=100;
 if(title.includes(q))score+=60;
 if(cat.includes(q))score+=35;
 if(desc.includes(q))score+=15;
+
+/* أي جزء من كلمة يكفي لإظهار الكتاب */
+if(q.length >= 1 && (title.includes(q) || cat.includes(q) || desc.includes(q))) score += 1000;
 q.split(' ').filter(Boolean).forEach(word=>{
 if(title.includes(word))score+=18;
 else if(cat.includes(word))score+=10;
@@ -4295,10 +4302,8 @@ let result=
 
 
 const search=
-$('search')
-.value
-.trim()
-.toLowerCase();
+String($('search')?.value || '')
+.trim();
 
 
 if(activeFilter==='fav'){
@@ -4464,6 +4469,29 @@ favorites.includes(id)
    ========================================================= */
 
 function renderBooks(){
+
+const rawSearch = String($('search')?.value || '').trim();
+const hasSearch = rawSearch.length > 0;
+
+/* عند البحث: نخفي كل أقسام المكتبة ونُظهر نتائج البحث فقط */
+const searchOnlySections = [
+    document.getElementById('featured'),
+    document.getElementById('seriesSection'),
+    document.getElementById('allBooks'),
+    document.getElementById('faq')
+];
+
+document.body.classList.toggle('search-mode', hasSearch);
+
+if(hasSearch){
+    searchOnlySections.forEach(el => {
+        if(el) el.style.display = el.id === 'allBooks' ? 'block' : 'none';
+    });
+} else {
+    searchOnlySections.forEach(el => {
+        if(el) el.style.removeProperty('display');
+    });
+}
 
 const result=
 getCurrentBooks();
