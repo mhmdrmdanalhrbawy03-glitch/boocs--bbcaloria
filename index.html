@@ -6461,37 +6461,32 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 <script>
 /* =========================================================
    حماية محتوى المكتبة — Clerk JWT -> Xano book-access
-   نسخة مستقرة: تحقق سريع + مهلة + فتح/تحميل منفصلان
+   تحميل مباشر بدون صفحة "جاري تجهيز الكتاب"
    ========================================================= */
 (function(){
   const XANO_BOOK_ACCESS_URL='https://x8ki-letl-twmt.n7.xano.io/api:library/book-access';
   const accessInFlight=new Map();
   const AUTH_TIMEOUT=12000;
   const XANO_TIMEOUT=15000;
-  const FILE_TIMEOUT=20000;
 
-  function withTimeout(promise,ms,label){
-    return Promise.race([
-      promise,
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error(label||'Timeout')),ms))
-    ]);
+  function timeoutFetch(url,options,ms){
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),ms);
+    return fetch(url,{...(options||{}),signal:controller.signal}).finally(()=>clearTimeout(timer));
   }
 
-  async function waitForAuth(){
+  async function getSession(){
     try{
-      if(window.__libraryAuthReady)return await withTimeout(window.__libraryAuthReady,AUTH_TIMEOUT,'Auth timeout');
-      if(window.Clerk)return window.Clerk;
-      return null;
+      if(window.__libraryAuthReady) await Promise.race([
+        window.__libraryAuthReady,
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error('auth-timeout')),AUTH_TIMEOUT))
+      ]);
+      if(!window.Clerk || !Clerk.session || !Clerk.user)return null;
+      return Clerk.session;
     }catch(e){
-      console.error('Auth ready error:',e);
+      console.error('Auth error:',e);
       return null;
     }
-  }
-
-  async function getValidSession(){
-    const clerk=await waitForAuth();
-    if(!clerk || !clerk.isSignedIn || !clerk.user || !clerk.session)return null;
-    return clerk.session;
   }
 
   function showLogin(){
@@ -6504,171 +6499,157 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     }
     if(mount && window.Clerk && typeof Clerk.mountSignIn==='function' && mount.dataset.mounted!=='1'){
       try{Clerk.mountSignIn(mount,{routing:'hash'});mount.dataset.mounted='1';}
-      catch(e){console.error('SignIn mount error:',e);}
+      catch(e){console.error('Clerk mount error:',e);}
     }
   }
 
-  async function getClerkToken(forceRefresh=false){
-    const session=await getValidSession();
+  async function getToken(refresh){
+    const session=await getSession();
     if(!session)return null;
     try{
-      if(forceRefresh && typeof session.getToken==='function'){
-        try{return await withTimeout(session.getToken({skipCache:true}),AUTH_TIMEOUT,'Token refresh timeout');}catch(e){}
+      if(refresh && typeof session.getToken==='function'){
+        return await Promise.race([
+          session.getToken({skipCache:true}),
+          new Promise((_,reject)=>setTimeout(()=>reject(new Error('token-timeout')),AUTH_TIMEOUT))
+        ]);
       }
-      return await withTimeout(session.getToken(),AUTH_TIMEOUT,'Token timeout');
-    }catch(error){
-      console.error('Clerk token error:',error);
+      return await Promise.race([
+        session.getToken(),
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error('token-timeout')),AUTH_TIMEOUT))
+      ]);
+    }catch(e){
+      console.error('Token error:',e);
       return null;
     }
   }
 
-  async function callXano(token,bookId){
-    const controller=new AbortController();
-    const timer=setTimeout(()=>controller.abort(),XANO_TIMEOUT);
-    try{
-      const response=await fetch(XANO_BOOK_ACCESS_URL,{
-        method:'POST',
-        headers:{
-          'Content-Type':'application/json',
-          'Authorization':`Bearer ${token}`
-        },
-        body:JSON.stringify({book_id:Number(bookId)}),
-        cache:'no-store',
-        signal:controller.signal
-      });
-      let data={};
-      try{data=await response.json();}catch(e){}
-      return {response,data};
-    }finally{
-      clearTimeout(timer);
-    }
+  async function xano(token,bookId){
+    const response=await timeoutFetch(XANO_BOOK_ACCESS_URL,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer '+token
+      },
+      body:JSON.stringify({book_id:Number(bookId)}),
+      cache:'no-store'
+    },XANO_TIMEOUT);
+
+    let data={};
+    try{data=await response.json();}catch(e){}
+    return {response,data};
   }
 
   async function requestBookAccess(bookId){
-    const session=await getValidSession();
-    if(!session){showLogin();return null;}
-
     const key=String(bookId);
     if(accessInFlight.has(key))return accessInFlight.get(key);
 
     const promise=(async()=>{
-      let token=await getClerkToken();
+      let token=await getToken(false);
       if(!token){showLogin();return null;}
 
       let result;
       try{
-        result=await callXano(token,bookId);
+        result=await xano(token,bookId);
       }catch(error){
-        console.error('Xano network/timeout error:',error);
-        alert(error && error.name==='AbortError'
-          ? 'خدمة الكتب لم تستجب في الوقت المحدد. حاول مرة أخرى.'
-          : 'تعذر الاتصال بخدمة الكتب. تأكد من الإنترنت ثم حاول مرة أخرى.');
+        console.error('Xano request failed:',error);
+        alert(error?.name==='AbortError'
+          ? 'خدمة الكتب لم تستجب. حاول مرة أخرى.'
+          : 'تعذر الاتصال بخدمة الكتب. حاول مرة أخرى.');
         return null;
       }
 
-      let {response,data}=result;
-
-      // إعادة المحاولة مرة واحدة فقط إذا انتهت صلاحية JWT.
-      if(response.status===401 || response.status===403){
-        token=await getClerkToken(true);
-        if(token){
-          try{result=await callXano(token,bookId);response=result.response;data=result.data;}
-          catch(error){console.error('Xano retry error:',error);}
+      if(result.response.status===401 || result.response.status===403){
+        token=await getToken(true);
+        if(!token)return null;
+        try{result=await xano(token,bookId);}
+        catch(error){
+          console.error('Xano retry failed:',error);
+          alert('انتهت جلسة الدخول. افتح الحساب ثم حاول مرة أخرى.');
+          return null;
         }
       }
 
-      const resolvedUrl=data.download_url || data.url || data.file_url || data.signed_url || data.fileUrl;
-      if(!response || !response.ok || data.access_granted===false || !resolvedUrl){
-        console.error('Book access response:',{status:response&&response.status,data});
-        if(response && (response.status===401 || response.status===403)){
-          alert('انتهت جلسة الدخول أو لم يتم التحقق منها. سجّل الدخول مرة أخرى ثم حاول.');
-        }else{
-          alert((data&&data.message)||'تعذر تجهيز رابط الكتاب حاليًا. حاول مرة أخرى.');
-        }
+      const data=result.data||{};
+      const url=data.download_url||data.url||data.file_url||data.signed_url||data.fileUrl;
+
+      if(!result.response.ok || data.access_granted===false || !url){
+        console.error('Xano book-access response:',result.response.status,data);
+        alert(data.message||'لم يتم إرجاع رابط الكتاب من خدمة المكتبة.');
         return null;
       }
-      return String(resolvedUrl);
-    })().catch(error=>{
-      console.error('Book access error:',error);
-      alert('حدث خطأ أثناء التحقق من صلاحية الوصول للكتاب.');
-      return null;
-    }).finally(()=>accessInFlight.delete(key));
+      return String(url);
+    })().finally(()=>accessInFlight.delete(key));
 
     accessInFlight.set(key,promise);
     return promise;
   }
 
-  function setDownloadState(link,loading){
-    if(!link)return;
-    if(loading){
-      if(!link.dataset.originalText)link.dataset.originalText=link.textContent.trim();
-      link.textContent='⏳ جاري تجهيز الكتاب...';
-      link.style.pointerEvents='none';
-      link.setAttribute('aria-busy','true');
-    }else{
-      if(link.dataset.originalText)link.textContent=link.dataset.originalText;
-      link.style.pointerEvents='';
-      link.removeAttribute('aria-busy');
-    }
+  // يحول روابط Google Drive الشائعة إلى رابط تنزيل فقط عندما يكون ذلك آمنًا وواضحًا.
+  function makeDownloadUrl(raw){
+    let url=String(raw||'').trim();
+    try{
+      const u=new URL(url);
+      if(u.hostname==='drive.google.com' || u.hostname.endsWith('.drive.google.com')){
+        const m=u.pathname.match(/\/file\/d\/([^/]+)/);
+        const id=m?m[1]:u.searchParams.get('id');
+        if(id)return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id);
+      }
+      if(u.hostname==='www.dropbox.com' || u.hostname==='dropbox.com'){
+        u.searchParams.set('dl','1');
+        return u.toString();
+      }
+    }catch(e){}
+    return url;
   }
 
-  async function downloadFile(url,link){
-    /*
-       لا نحاول تحويل PDF خارجي إلى Blob افتراضيًا؛ هذا هو السبب الأكثر شيوعًا
-       لتعطل التحميل بسبب CORS. بعد الحصول على الرابط المحمي من Xano نرسل
-       المتصفح مباشرة إلى الرابط، مع استخدام download attribute كطلب للمتصفح.
-       إذا كان السيرفر يرسل Content-Disposition: attachment فسيتم التنزيل مباشرة.
-    */
-    try{
-      const a=document.createElement('a');
-      a.href=url;
-      a.target='_blank';
-      a.rel='noopener noreferrer';
-      a.download='كتاب-تانية-بكالوريا.pdf';
-      a.style.display='none';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      return true;
-    }catch(error){
-      console.warn('Direct download click failed:',error);
-      try{window.open(url,'_blank','noopener,noreferrer');return true;}catch(e){window.location.href=url;return false;}
+  function setBusy(link,busy){
+    if(!link)return;
+    if(busy){
+      if(!link.dataset.oldText)link.dataset.oldText=link.textContent.trim();
+      link.dataset.busy='1';
+      link.setAttribute('aria-busy','true');
+      link.style.pointerEvents='none';
+      link.innerHTML='<span style="display:inline-flex;align-items:center;gap:6px">⏳ تحميل...</span>';
+    }else{
+      link.dataset.busy='0';
+      link.removeAttribute('aria-busy');
+      link.style.pointerEvents='';
+      if(link.dataset.oldText)link.textContent=link.dataset.oldText;
     }
   }
 
   window.openProtectedBook=async function(bookId,mode,sourceLink){
-    let popup=null;
-
-    // زر "فتح" فقط يحتاج نافذة مسبقة حتى لا يمنعها المتصفح بعد انتظار Xano.
-    if(mode==='open'){
-      try{
-        popup=window.open('about:blank','_blank');
-        if(popup){
-          popup.document.title='جاري تجهيز الكتاب...';
-          popup.document.body.innerHTML='<div style="font-family:Arial,sans-serif;text-align:center;padding:40px;direction:rtl">جاري تجهيز الكتاب...</div>';
-        }
-      }catch(e){}
-    }
-
-    if(mode==='download')setDownloadState(sourceLink,true);
+    const isDownload=mode==='download';
+    if(isDownload)setBusy(sourceLink,true);
 
     const url=await requestBookAccess(bookId);
     if(!url){
-      if(popup && !popup.closed)popup.close();
-      if(mode==='download')setDownloadState(sourceLink,false);
+      if(isDownload)setBusy(sourceLink,false);
       return null;
     }
 
-    if(mode==='download'){
-      await downloadFile(url,sourceLink);
-      // لا نترك الزر عالقًا على "جاري تجهيز الكتاب".
-      setDownloadState(sourceLink,false);
-      return url;
+    const finalUrl=isDownload?makeDownloadUrl(url):url;
+
+    if(isDownload){
+      /*
+       * لا نستخدم fetch/blob هنا؛ لأن الملف غالبًا على نطاق مختلف،
+       * وCORS كان يمنع التحميل على الهاتف.
+       * المتصفح ينتقل مباشرة إلى رابط الملف، فيحترم Content-Disposition
+       * الذي يرسله خادم الملف إن كان مضبوطًا للتنزيل.
+       */
+      try{
+        window.location.assign(finalUrl);
+      }catch(e){
+        window.open(finalUrl,'_blank','noopener,noreferrer');
+      }
+      setTimeout(()=>setBusy(sourceLink,false),1500);
+      return finalUrl;
     }
 
-    if(popup && !popup.closed)popup.location.href=url;
-    else window.open(url,'_blank','noopener,noreferrer');
-    return url;
+    // فتح الكتاب: افتح الرابط مباشرة بدون صفحة وسيطة.
+    try{window.open(finalUrl,'_blank','noopener,noreferrer');}
+    catch(e){window.location.assign(finalUrl);}
+    return finalUrl;
   };
 
   document.addEventListener('click',function(event){
@@ -6676,23 +6657,22 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     if(!link)return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    const mode=(link.classList.contains('download') || link.classList.contains('seriesDl'))?'download':'open';
+    const mode=(link.classList.contains('download')||link.classList.contains('seriesDl'))?'download':'open';
     window.openProtectedBook(link.dataset.protectedBook,mode,link);
   },true);
 
-  // حماية أي رابط كتاب متبقٍ بالخطأ في عناصر الواجهة.
   document.addEventListener('click',function(event){
     const link=event.target.closest('a.action.open,a.action.download,a.seriesAction.seriesOpen,a.seriesAction.seriesDl');
-    if(!link || link.hasAttribute('data-protected-book'))return;
+    if(!link||link.hasAttribute('data-protected-book'))return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    const id=link.dataset.id || link.closest('[data-book-id]')?.dataset.bookId;
+    const id=link.dataset.id||link.closest('[data-book-id]')?.dataset.bookId;
     if(id)window.openProtectedBook(id,'open',link);else showLogin();
   },true);
 
   (async()=>{
-    const clerk=await waitForAuth();
-    if(clerk && typeof clerk.addListener==='function')clerk.addListener(()=>accessInFlight.clear());
+    const clerk=await getSession();
+    if(clerk&&typeof Clerk.addListener==='function')Clerk.addListener(()=>accessInFlight.clear());
   })();
 })();
 </script>
