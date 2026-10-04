@@ -3064,7 +3064,7 @@ body.library-open.library-details-open #crisp-client .cc-kv6t > div{
 📘 العمالقة English-part 3 🩶 —
 
 <a
-    href="#" data-protected-book="37">
+    href="#" data-protected-book="37" data-protected-mode="download">
 
 اضغط هنا للتحميل
 
@@ -5508,23 +5508,12 @@ function openCrispChat(){
 })();
 
 function openLibrary(){
-  try{
-    if(window.Clerk && (Clerk.user || Clerk.isSignedIn)){
-      $('home').style.display='none';
-      $('library').style.display='block';
-      document.body.classList.add('library-open');
-      document.body.classList.remove('library-details-open');
-      try{ window.$crisp = window.$crisp || []; window.$crisp.push(["do","chat:show"]); }catch(e){}
-      scrollTo(0,0);
-      return;
-    }
-  }catch(e){}
-  const modal=document.getElementById('clerkModal');
-  const mount=document.getElementById('clerkSignInMount');
-  if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-  if(window.Clerk && mount && typeof Clerk.mountSignIn==='function' && !mount.dataset.mounted){
-    try{Clerk.mountSignIn(mount,{routing:'hash'});mount.dataset.mounted='1';}catch(e){console.error(e);}
-  }
+  $('home').style.display='none';
+  $('library').style.display='block';
+  document.body.classList.add('library-open');
+  document.body.classList.remove('library-details-open');
+  try{ window.$crisp = window.$crisp || []; window.$crisp.push(["do","chat:show"]); }catch(e){}
+  scrollTo(0,0);
 }
 
 
@@ -6985,7 +6974,9 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   }
 
   window.openProtectedBook=function(bookId,mode,sourceLink){
-    if(!signedIn()){
+    const isDownload=mode==='download';
+    // التصفح/فتح المحتوى متاح للجميع، أما التنزيل فيتطلب تسجيل الدخول.
+    if(isDownload && !signedIn()){
       showLogin();
       return null;
     }
@@ -6994,7 +6985,6 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
       alert('رابط هذا الكتاب غير مضاف حاليًا.');
       return null;
     }
-    const isDownload=mode==='download';
     const finalUrl=isDownload?driveDownloadUrl(url):url;
     try{
       if(isDownload){
@@ -7014,7 +7004,7 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     if(!link)return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    const mode=(link.classList.contains('download')||link.classList.contains('seriesDl'))?'download':'open';
+    const mode=(link.dataset.protectedMode==='download'||link.classList.contains('download')||link.classList.contains('seriesDl'))?'download':'open';
     window.openProtectedBook(link.dataset.protectedBook,mode,link);
   },true);
 
@@ -7026,7 +7016,7 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
     event.stopImmediatePropagation();
     const id=link.dataset.id || link.closest('[data-book-id]')?.dataset.bookId;
     if(id)window.openProtectedBook(id,link.classList.contains('download')?'download':'open',link);
-    else showLogin();
+    else if(link.classList.contains('download')||link.classList.contains('seriesDl'))showLogin();
   },true);
 
   // روابط المودال المباشرة.
