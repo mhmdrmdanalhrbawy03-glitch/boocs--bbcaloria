@@ -149,6 +149,10 @@ const videos=[
   {title:'تحفيز طلاب البكالوريا والثانوية العامة',description:'قسم تحفيزي لطلاب البكالوريا وطلاب الثانوية العامة.',url:'https://youtu.be/UuStwCzzcD8?si=xHju3r-u8ec8hUTb',type:'youtube',stage:'general',section:'motivation'},
   {title:'قرآن كريم',description:'قرآن كريم.',url:'https://youtu.be/YhjjkHSYzaM?si=xvkNraI_1bB3Uw0g',type:'youtube',stage:'baccalaureate',section:'motivation',subject:'quran'},
   {title:'قرآن كريم',description:'قرآن كريم.',url:'https://youtu.be/YhjjkHSYzaM?si=xvkNraI_1bB3Uw0g',type:'youtube',stage:'general',section:'motivation',subject:'quran'},
+  {title:'تلاوة هادئة',description:'تلاوة هادئة من القرآن الكريم.',url:'https://youtu.be/dN_wUpDgQzM?si=-LPSNPIhjtWB2Po2',type:'youtube',stage:'baccalaureate',section:'motivation',subject:'quran'},
+  {title:'تلاوة هادئة',description:'تلاوة هادئة من القرآن الكريم.',url:'https://youtu.be/dN_wUpDgQzM?si=-LPSNPIhjtWB2Po2',type:'youtube',stage:'general',section:'motivation',subject:'quran'},
+  {title:'قرآن كريم',description:'تلاوة من القرآن الكريم.',url:'https://youtu.be/EfvyfQWF5LQ?si=Xizo1j4X7dxXUa2g',type:'youtube',stage:'baccalaureate',section:'motivation',subject:'quran'},
+  {title:'قرآن كريم',description:'تلاوة من القرآن الكريم.',url:'https://youtu.be/EfvyfQWF5LQ?si=Xizo1j4X7dxXUa2g',type:'youtube',stage:'general',section:'motivation',subject:'quran'},
   {title:'حل تقييم الأسبوع الأول - لغة عربية برعاية محمد رمضان الحرباوي',description:'حل تقييم الأسبوع الأول - لغة عربية برعاية محمد رمضان الحرباوي.',url:'https://youtu.be/7d7zqJkAW-4?si=2SeV64h2rqhsRezZ',type:'youtube',stage:'baccalaureate',section:'evaluations',subject:'arabic'},
   {title:'حل الأداء الصفي والمنزلي - لغة عربية',description:'حل الأداء الصفي والمنزلي - لغة عربية.',url:'https://youtu.be/qk_i7oYZScU?si=VH6T7dxhENwjZTEs',type:'youtube',stage:'baccalaureate',section:'evaluations',subject:'arabic'},
   {title:'حل تقييمات الوزارة الأسبوع الأول - ثانية بكالوريا - فيزياء',description:'حل تقييمات الوزارة الأسبوع الأول - ثانية بكالوريا - فيزياء.',url:'https://youtu.be/vfd6Bg12Y58?si=y_8afnQyCQ9kmNDh',type:'youtube',stage:'baccalaureate',section:'evaluations',subject:'physics'},
@@ -296,6 +300,17 @@ function queueYT(id,autoplay){
 }
 if(window.YT&&window.YT.Player){ytApiReady=true;initYT();}
 if(!ytTimer)ytTimer=setInterval(syncYTControls,250);
+function updateAttachmentsVisibility(){
+  const box=$('attachmentsSection');
+  if(!box)return;
+  const isQuran=selectedSubject==='quran';
+  box.style.display=isQuran?'none':'';
+  if(isQuran){
+    const btn=$('attachmentsToggle'),body=$('attachmentsBody');
+    btn.setAttribute('aria-expanded','false');
+    body.classList.remove('open');
+  }
+}
 function load(i,autoplay=false){
   const available=getVisibleVideos();if(!available[i])return;
   current=i;
@@ -303,7 +318,7 @@ function load(i,autoplay=false){
   $('title').textContent=v.title||'فيديو';
   $('desc').innerHTML=descriptionHtml(v.description);
   $('typeBadge').textContent=isYT(v)?'YouTube • تحكم المكتبة':'فيديو مباشر • تحكم المكتبة';
-  renderList();updateCompletionVisibility();resetDirectControls();
+  renderList();updateCompletionVisibility();resetDirectControls();updateAttachmentsVisibility();
   if(isYT(v)){
     video.pause();video.removeAttribute('src');video.style.display='none';
     yt.hidden=false;empty.style.display='none';$('customControls').style.display='block';
@@ -323,7 +338,7 @@ function refreshContent(){
   $('typeBadge').textContent='جاهز للتشغيل';
   const available=getVisibleVideos();
   $('sectionMessage').classList.toggle('show',available.length===0);
-  renderList();updateCompletionVisibility();
+  renderList();updateCompletionVisibility();updateAttachmentsVisibility();
   if(available.length)load(0,false);
 }
 $('list').addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(b)load(Number(b.dataset.index),false);});
