@@ -4572,6 +4572,30 @@ popular:165,
 isNew:true
 },
 
+{
+id:51,
+title:'كتاب أ. محمد عبدالمعبود فيزياء - تانية بكالوريا - جزء الشرح',
+icon:'⚡',
+cat:'فيزياء',
+desc:'جزء الشرح من كتاب أ. محمد عبدالمعبود فيزياء لطلاب تانية بكالوريا، برعاية محمد رمضان الحرباوي.',
+url:'https://drive.google.com/file/d/1ebJ6H2QfJZkpWANKYQu8qEsnlC6RLHcV/view?usp=sharing',
+date:20261004,
+popular:170,
+isNew:true
+},
+
+{
+id:52,
+title:'كتاب عبدالمعبود - أسئلة - تانية بكالوريا 2026 - الترم الأول',
+icon:'📝',
+cat:'فيزياء',
+desc:'جزء الأسئلة من كتاب عبدالمعبود فيزياء لطلاب تانية بكالوريا 2026 - الترم الأول، برعاية محمد رمضان الحرباوي.',
+url:'https://drive.google.com/file/d/1yjCTonMjOL2S_ZyXSCOMAkG4otglNzWG/view?usp=sharing',
+date:20261004,
+popular:170,
+isNew:true
+},
+
 ];
 
 
@@ -5898,7 +5922,7 @@ let notificationsExpanded=false;
 
 /* إشعارات الجرس مستقلة عن حالة isNew داخل المكتبة.
    القائمة التالية هي الإشعارات الأصلية فقط، وليست كل الكتب الجديدة. */
-const notificationBookIds=[1,2,3,4,47];
+const notificationBookIds=[51,52];
 
 function getLibraryNotifications(){
 return notificationBookIds
@@ -6019,8 +6043,8 @@ const latest=[...books]
 .filter(book=>book.isNew)
 .sort((a,b)=>(b.date||0)-(a.date||0)||(b.id||0)-(a.id||0));
 if(!latest.length)return;
-const newest=latest[0];
-const key=`tb_seen_new_${newest.id}`;
+const newestTwo=latest.slice(0,2);
+const key=`tb_seen_new_${newestTwo.map(book=>book.id).join('_')}`;
 try{
  if(localStorage.getItem(key))return;
  localStorage.setItem(key,'1');
@@ -6028,9 +6052,9 @@ try{
 const toast=$('updateToast');
 const text=$('toastText');
 if(toast&&text){
- text.textContent=`تمت إضافة: ${newest.title}`;
+ text.innerHTML=newestTwo.map((book,index)=>`${index===0?'🆕':'🔔'} ${escapeHTML(book.title)}`).join('<br>');
  toast.classList.add('show');
- setTimeout(()=>toast.classList.remove('show'),7000);
+ setTimeout(()=>toast.classList.remove('show'),9000);
 }
 }
 
