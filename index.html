@@ -577,6 +577,28 @@ svg{
 }
 
 
+
+/* =========================================================
+   الأقسام المخصصة حسب المرحلة الدراسية
+   ========================================================= */
+.studyHub{margin:20px 0 26px}
+.studyFilter{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 13px}
+.studyFilter button{border:1px solid var(--line);background:#0d192a;color:#9eb0c5;border-radius:999px;padding:9px 15px;font-size:10px;font-weight:900;transition:.2s}
+.light .studyFilter button{background:#fff;color:#526276}
+.studyFilter button.active{background:var(--gold);color:#111827;border-color:var(--gold);box-shadow:0 8px 22px #f4cb5925}
+.studyGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.studyCard{position:relative;overflow:hidden;min-height:190px;padding:18px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#14263e,#0f1b2d);transition:.25s}
+.light .studyCard{background:#fff}
+.studyCard:hover{transform:translateY(-4px);border-color:#f4cb5980;box-shadow:0 15px 30px #0003,0 0 22px #f4cb5910}
+.studyCard:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;left:-45px;bottom:-55px;background:#f4cb5910;filter:blur(2px)}
+.studyIcon{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:#f4cb5912;font-size:23px;margin-bottom:9px}
+.studyCard h4{margin:5px 0 7px;color:var(--gold);font-size:14px}
+.studyCard p{margin:0;color:var(--muted);font-size:10px;line-height:2}
+.studyBadge{display:inline-block;margin-top:12px;padding:5px 8px;border-radius:999px;background:#0a1524;color:#9eb0c5;font-size:8px;font-weight:900}
+.light .studyBadge{background:#eef2f7}
+@media(max-width:850px){.studyGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.studyGrid{grid-template-columns:1fr}.studyCard{min-height:0}}
+
 /* =========================================================
    البحث والفلاتر
    ========================================================= */
@@ -3118,6 +3140,42 @@ mhmdrmdan.yobader.com
   </div>
 </section>
 
+<section class="section studyHub" id="studyHub" aria-label="محتوى مخصص حسب المرحلة الدراسية">
+  <div class="sectionHead">
+    <div>
+      <small>اختار مسارك الدراسي</small>
+      <h3>🎯 محتوى يساعدك تتقدم</h3>
+    </div>
+  </div>
+
+  <div class="studyFilter" role="tablist" aria-label="فلترة المرحلة الدراسية">
+    <button type="button" class="active" data-study-filter="baccalaureate">🎓 طلاب البكالوريا</button>
+    <button type="button" data-study-filter="general">📚 طلاب الثانوية العامة</button>
+  </div>
+
+  <div class="studyGrid">
+    <article class="studyCard" data-study-card="motivation">
+      <div class="studyIcon">💪</div>
+      <span class="studyBadge">جزء تحفيزي</span>
+      <h4 id="studyMotivationTitle">💫 خليك مكمل… كل خطوة بتفرق</h4>
+      <p id="studyMotivationText">ركز في هدفك، قسم مذاكرتك لخطوات صغيرة، وما تقارنش بدايتك بغيرك. الاستمرار يومًا بعد يوم هو اللي يصنع الفرق.</p>
+    </article>
+
+    <article class="studyCard" data-study-card="evaluations">
+      <div class="studyIcon">📝</div>
+      <span class="studyBadge">تقييمات الوزارة</span>
+      <h4 id="studyEvalTitle">📘 حل تقييمات الوزارة خطوة بخطوة</h4>
+      <p id="studyEvalText">راجع المطلوب في كل تقييم، حل بنفسك أولًا، ثم راجع أخطاءك وسجّل النقاط التي تحتاج إلى تدريب إضافي.</p>
+    </article>
+
+    <article class="studyCard" data-study-card="revision">
+      <div class="studyIcon">🚀</div>
+      <span class="studyBadge">مراجعة ذكية</span>
+      <h4 id="studyRevisionTitle">🔥 راجع بذكاء قبل ما تنتقل للجديد</h4>
+      <p id="studyRevisionText">خصص وقتًا قصيرًا للمراجعة بعد كل جزء، وارجع للأسئلة التي أخطأت فيها بدل إعادة كل المحتوى من البداية.</p>
+    </article>
+  </div>
+</section>
 
 <section class="controls">
 
@@ -4477,6 +4535,18 @@ popular:155,
 isNew:true
 },
 
+{
+id:48,
+title:'كتاب الثقافة المالية - تانية بكالوريا 2027',
+icon:'💰',
+cat:'ثقافة مالية',
+desc:'كتاب الثقافة المالية لطلاب تانية بكالوريا 2027.',
+url:'https://drive.google.com/file/d/12krhB3csGMy3mR7V9il0qm9bntBrzbdc/view?usp=sharing',
+date:20261004,
+popular:160,
+isNew:true
+},
+
 ];
 
 
@@ -5381,6 +5451,37 @@ function openCrispChat(){
         window.$crisp.push(["do","chat:open"]);
     }catch(e){}
 }
+
+
+/* فلتر البكالوريا / الثانوية العامة للأقسام المخصصة */
+(function initStudyFilter(){
+  const buttons=document.querySelectorAll('[data-study-filter]');
+  if(!buttons.length)return;
+  const content={
+    baccalaureate:{
+      motivation:['💫 خليك مكمل… هدفك يستاهل','ركز على هدفك في تانية بكالوريا، وخلّي كل جلسة مذاكرة خطوة حقيقية للأمام. لو يومك كان صعب، ارجع تاني وكمل.'],
+      evaluations:['📘 حل تقييمات الوزارة للبكالوريا','حل التقييم بنفسك أولًا، ثم راجع الإجابة وحدد سبب الخطأ. كرر الأسئلة التي تحتاج تدريبًا حتى تثبت الفكرة.'],
+      revision:['🔥 مراجعة ذكية للبكالوريا','راجع ما أنجزته باستمرار، واجمع أخطاءك في نقاط قصيرة ترجع لها قبل الاختبارات والمراجعات النهائية.']
+    },
+    general:{
+      motivation:['💫 خليك ثابت… النجاح تراكم','نظّم وقتك واشتغل على هدفك خطوة بخطوة. الإنجاز الصغير كل يوم أفضل من تأجيل المذاكرة لآخر لحظة.'],
+      evaluations:['📘 حل تقييمات الوزارة للثانوية العامة','ابدأ بحل التقييم دون مساعدة، ثم راجع إجاباتك وسجّل الأخطاء المتكررة لتعرف ما يحتاج إلى تدريب أكثر.'],
+      revision:['🔥 مراجعة ذكية للثانوية العامة','بعد كل جزء، اعمل مراجعة سريعة وارجع للأسئلة التي أخطأت فيها. بهذه الطريقة تعرف نقاطك التي تحتاج إلى تركيز أكبر.']
+    }
+  };
+  function apply(type){
+    buttons.forEach(b=>b.classList.toggle('active',b.dataset.studyFilter===type));
+    const c=content[type];
+    document.getElementById('studyMotivationTitle').textContent=c.motivation[0];
+    document.getElementById('studyMotivationText').textContent=c.motivation[1];
+    document.getElementById('studyEvalTitle').textContent=c.evaluations[0];
+    document.getElementById('studyEvalText').textContent=c.evaluations[1];
+    document.getElementById('studyRevisionTitle').textContent=c.revision[0];
+    document.getElementById('studyRevisionText').textContent=c.revision[1];
+  }
+  buttons.forEach(b=>b.addEventListener('click',()=>apply(b.dataset.studyFilter)));
+  apply('baccalaureate');
+})();
 
 function openLibrary(){
   try{
