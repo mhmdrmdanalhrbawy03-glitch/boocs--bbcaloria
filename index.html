@@ -3901,6 +3901,7 @@ Developer
     id="modalDownload"
     class="modalAction mDl"
     target="_blank"
+    data-protected-mode="download"
     rel="noopener">
 
 ⬇ تحميل
@@ -5099,7 +5100,7 @@ canDownload
 
 <a
 class="action download"
-href="#" data-protected-book="${book.id}">
+href="#" data-protected-book="${book.id}" data-protected-mode="download">
 
 ⬇ تحميل
 
@@ -5287,7 +5288,7 @@ href="#" data-protected-book="${book.id}">
 
 <a
 class="seriesAction seriesDl"
-href="#" data-protected-book="${book.id}">
+href="#" data-protected-book="${book.id}" data-protected-mode="download">
 
 ⬇ تحميل
 
@@ -6935,28 +6936,36 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 
 <script>
 /* =========================================================
-   حماية المكتبة — تسجيل الدخول بـ Clerk فقط
-   الكتب العامة تفتح من روابطها الأصلية بدون Xano.
+   حماية التنزيل فقط — التصفح متاح للجميع
    ========================================================= */
 (function(){
   function signedIn(){
-    try{return !!(window.Clerk && (Clerk.user || Clerk.isSignedIn));}
-    catch(e){return false;}
+    try{
+      return !!(window.Clerk && window.Clerk.user);
+    }catch(e){
+      return false;
+    }
   }
 
   function showLogin(){
     const modal=document.getElementById('clerkModal');
     const mount=document.getElementById('clerkSignInMount');
-    if(modal){modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+    if(modal){
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      document.body.style.overflow='hidden';
+    }
     if(mount && window.Clerk && typeof Clerk.mountSignIn==='function' && !mount.dataset.mounted){
-      try{Clerk.mountSignIn(mount,{routing:'hash'});mount.dataset.mounted='1';}
-      catch(e){console.error('Clerk SignIn mount error',e);}
+      try{
+        Clerk.mountSignIn(mount,{routing:'hash'});
+        mount.dataset.mounted='1';
+      }catch(e){console.error('Clerk SignIn mount error',e);}
     }
   }
 
   function getBookUrl(bookId){
     const id=Number(bookId);
-    const book=(typeof books!=='undefined' && Array.isArray(books))?books.find(b=>Number(b.id)===id):null;
+    const book=(typeof books!=='undefined' && Array.isArray(books)) ? books.find(b=>Number(b.id)===id) : null;
     return book && book.url ? String(book.url) : null;
   }
 
@@ -6966,76 +6975,67 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
       const u=new URL(url);
       if(u.hostname==='drive.google.com' || u.hostname.endsWith('.drive.google.com')){
         const m=u.pathname.match(/\/file\/d\/([^/]+)/);
-        const id=m?m[1]:u.searchParams.get('id');
-        if(id)return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id);
+        const id=m ? m[1] : u.searchParams.get('id');
+        if(id) return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id);
       }
     }catch(e){}
     return url;
   }
 
-  window.openProtectedBook=function(bookId,mode,sourceLink){
+  function openBook(bookId,mode){
     const isDownload=mode==='download';
-    // التصفح/فتح المحتوى متاح للجميع، أما التنزيل فيتطلب تسجيل الدخول.
     if(isDownload && !signedIn()){
       showLogin();
-      return null;
+      return false;
     }
     const url=getBookUrl(bookId);
     if(!url){
       alert('رابط هذا الكتاب غير مضاف حاليًا.');
-      return null;
+      return false;
     }
-    const finalUrl=isDownload?driveDownloadUrl(url):url;
-    try{
-      if(isDownload){
-        // التحميل المباشر: افتح رابط Google Drive الخاص بالتحميل في نفس الصفحة
-        // حتى يتعامل المتصفح معه كتنزيل بدل فتح معاينة جديدة.
-        window.location.href=finalUrl;
-      }else{
-        // زر فتح يظل للمعاينة في تبويب جديد.
-        window.open(finalUrl,'_blank','noopener,noreferrer');
-      }
-    }catch(e){window.location.href=finalUrl;}
-    return finalUrl;
-  };
+    const finalUrl=isDownload ? driveDownloadUrl(url) : url;
+    if(isDownload){
+      window.location.href=finalUrl;
+    }else{
+      window.open(finalUrl,'_blank','noopener,noreferrer');
+    }
+    return true;
+  }
+
+  window.openProtectedBook=openBook;
 
   document.addEventListener('click',function(event){
     const link=event.target.closest('[data-protected-book]');
-    if(!link)return;
+    if(!link) return;
+    const mode=link.dataset.protectedMode==='download' || link.classList.contains('download') || link.classList.contains('seriesDl') ? 'download' : 'open';
     event.preventDefault();
     event.stopImmediatePropagation();
-    const mode=(link.dataset.protectedMode==='download'||link.classList.contains('download')||link.classList.contains('seriesDl'))?'download':'open';
-    window.openProtectedBook(link.dataset.protectedBook,mode,link);
+    openBook(link.dataset.protectedBook,mode);
   },true);
 
-  // أي زر فتح/تحميل للكتاب يمر أولًا من بوابة تسجيل الدخول.
+  /* Any download-looking link that lacks the marker is blocked as well. */
   document.addEventListener('click',function(event){
-    const link=event.target.closest('a.action.open,a.action.download,a.seriesAction.seriesOpen,a.seriesAction.seriesDl');
-    if(!link || link.hasAttribute('data-protected-book'))return;
+    const link=event.target.closest('a.action.download,a.seriesAction.seriesDl,#modalDownload');
+    if(!link) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    const id=link.dataset.id || link.closest('[data-book-id]')?.dataset.bookId;
-    if(id)window.openProtectedBook(id,link.classList.contains('download')?'download':'open',link);
-    else if(link.classList.contains('download')||link.classList.contains('seriesDl'))showLogin();
+    const id=link.dataset.protectedBook || link.dataset.id || link.closest('[data-book-id]')?.dataset.bookId;
+    if(!signedIn()){
+      showLogin();
+      return;
+    }
+    if(id) openBook(id,'download');
   },true);
 
-  // روابط المودال المباشرة.
-  document.addEventListener('click',function(event){
-    const link=event.target.closest('#modalOpen,#modalDownload');
-    if(!link)return;
-    const id=link.dataset.protectedBook;
-    if(!id)return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    window.openProtectedBook(id,link.id==='modalDownload'?'download':'open',link);
-  },true);
-
-  // بعد تسجيل الدخول يمكن متابعة محاولة فتح المكتبة من زر الدخول.
   if(window.Clerk && typeof Clerk.addListener==='function'){
     Clerk.addListener(function(){
       if(signedIn()){
         const modal=document.getElementById('clerkModal');
-        if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
+        if(modal){
+          modal.classList.remove('open');
+          modal.setAttribute('aria-hidden','true');
+          document.body.style.overflow='';
+        }
       }
     });
   }
