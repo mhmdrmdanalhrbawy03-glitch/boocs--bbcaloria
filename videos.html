@@ -423,7 +423,7 @@ $('attachmentsToggle').addEventListener('click',()=>{
   btn.setAttribute('aria-expanded',String(!open));body.classList.toggle('open',!open);
 });
 document.querySelectorAll('.stageBtn').forEach(btn=>btn.addEventListener('click',()=>{selectedStage=btn.dataset.stage;document.querySelectorAll('.stageBtn').forEach(b=>b.classList.toggle('active',b===btn));refreshContent();}));
-document.querySelectorAll('.sideSection').forEach(btn=>btn.addEventListener('click',()=>{selectedSection=btn.dataset.section;document.querySelectorAll('.sideSection').forEach(b=>b.classList.toggle('active',b===btn));refreshContent();}));
+document.querySelectorAll('.sideSection').forEach(btn=>btn.addEventListener('click',()=>{selectedSection=btn.dataset.section;selectedSubject='all';document.querySelectorAll('.sideSection').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.subjectBtn').forEach(b=>b.classList.toggle('active',b.dataset.subject==='all'));refreshContent();}));
 document.querySelectorAll('.subjectBtn').forEach(btn=>btn.addEventListener('click',()=>{selectedSubject=btn.dataset.subject;document.querySelectorAll('.subjectBtn').forEach(b=>b.classList.toggle('active',b===btn));refreshContent();}));
 const themeBtn=$('themeBtn');let dayMode=false;themeBtn.addEventListener('click',()=>{dayMode=!dayMode;document.body.classList.toggle('day',dayMode);themeBtn.textContent=dayMode?'🌙':'☀️';themeBtn.title=dayMode?'تفعيل الوضع الليلي':'تفعيل الوضع النهاري';});
 updateStats();refreshContent();
