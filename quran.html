@@ -27,39 +27,212 @@ body.light .themeToggle{background:linear-gradient(145deg,#fff8dc,#fff);color:#8
 .hopeBanner{position:relative;overflow:hidden;margin:0 auto 25px;border:1px solid #f4cb59aa;border-radius:22px;padding:17px 22px;text-align:center;background:linear-gradient(105deg,#4b3505,#a87508,#f4cb59,#9b6a05,#4b3505);background-size:300% 100%;animation:goldFlow 7s linear infinite;box-shadow:0 18px 45px #0006,inset 0 1px #fff8}
 .hopeBanner:before,.hopeBanner:after{content:'✦';position:absolute;color:#fff7c7;opacity:.8;animation:floatSpark 2.8s ease-in-out infinite}.hopeBanner:before{right:8%;top:10px}.hopeBanner:after{left:10%;bottom:8px;animation-delay:1s}.hopeText{position:relative;z-index:2;color:#241600;font-size:clamp(21px,4vw,31px);font-weight:900;text-shadow:0 1px #fff8;letter-spacing:.2px}.hopeSub{display:block;margin-top:5px;color:#fff9dc;font-size:10px;font-weight:700}@keyframes goldFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}@keyframes floatSpark{0%,100%{transform:translateY(0) scale(1);opacity:.45}50%{transform:translateY(-8px) scale(1.25);opacity:1}}
 @media(max-width:600px){.themeToggle{top:15px;left:15px;width:50px;height:50px;border-radius:15px;font-size:22px}.hopeBanner{border-radius:18px;padding:15px 13px;margin-bottom:19px}.hopeSub{font-size:9px}}
-</style></head><body><button class="backBtn" type="button" onclick="location.href='./index.html'" aria-label="العودة إلى المكتبة">←</button><button id="themeToggle" class="themeToggle" type="button" aria-label="تبديل الوضع الليلي والنهاري" title="تبديل الوضع">☀️</button><main class="quranPage"><header class="pageTitle"><span class="badge">🕌 الجزء الديني</span><h1>ركن <span class="gold">الطمأنينة والمذاكرة</span></h1><p>محتوى مستقل يساعدك على بدء المذاكرة وتنظيم الوقت والمحافظة على التركيز.</p></header><div class="hopeBanner" aria-label="رسالة أمل"><div class="hopeText">لا تيأس من رحمة الله</div><span class="hopeSub">واجعل الأمل بالله بداية كل خطوة</span></div><section id="religiousSection" class="religiousSection">
-<div class="religiousHeader">
-<span class="religiousBadge">🕌 الجزء الديني • ركن مهم داخل المكتبة</span>
-<h3>تهيئة العقل <span class="gold">للمذاكرة والإنجاز</span></h3>
-<p>مساحة منظمة تساعدك قبل المذاكرة وأثناءها وبعدها: نية، دعاء، تنظيم، تركيز، بريك، مراجعة، وطمأنينة.</p>
+
+/* ===== الإصدار المحسن ===== */
+html{scroll-behavior:smooth}
+body{overflow-x:hidden}
+.pageTitle{position:relative}
+.heroMeta{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:16px}
+.heroMeta span{padding:7px 11px;border:1px solid var(--line);border-radius:999px;background:#ffffff06;color:var(--muted);font-size:9px}
+.quickNav{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 auto 15px}
+.quickNav a{color:var(--muted);text-decoration:none;border:1px solid var(--line);background:#ffffff06;padding:8px 12px;border-radius:999px;font-size:10px;transition:.2s}
+.quickNav a:hover{color:var(--gold);border-color:#f4cb5955;transform:translateY(-2px)}
+.progressCard{display:grid;grid-template-columns:1.2fr 1fr auto;gap:14px;align-items:center;padding:15px 17px;margin:0 auto 18px;border:1px solid #f4cb5930;border-radius:18px;background:linear-gradient(145deg,#ffffff08,#f4cb5907);box-shadow:0 15px 40px #0004}
+.progressCard strong{display:block;color:var(--gold);font-size:12px;margin-bottom:4px}
+.progressCard span{color:var(--muted);font-size:9px}
+.progressTrack{height:8px;background:#ffffff0c;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.progressTrack i{display:block;width:0;height:100%;background:linear-gradient(90deg,#a97808,#ffe59a);border-radius:99px;transition:.35s}
+.progressCard button,.quizOptions button,.timerControls button{border:1px solid #f4cb5940;background:#f4cb5910;color:var(--gold2);border-radius:11px;padding:9px 12px;font-family:inherit;font-weight:800;font-size:10px;cursor:pointer;transition:.2s}
+.progressCard button:hover,.quizOptions button:hover,.timerControls button:hover{transform:translateY(-2px);background:#f4cb591b;border-color:#f4cb5970}
+.miniQuiz{padding:15px;border:1px solid var(--line);border-radius:15px;background:#ffffff04}
+.quizQuestion{text-align:center;color:var(--text);font-size:13px;font-weight:800;margin-bottom:12px}
+.quizOptions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.quizResult{text-align:center;color:var(--muted);font-size:10px;margin-top:11px;min-height:18px}
+.timerBox{display:grid;grid-template-columns:180px 1fr;gap:20px;align-items:center;padding:15px;border:1px solid var(--line);border-radius:16px;background:#ffffff04}
+.timerCircle{width:155px;height:155px;border-radius:50%;margin:auto;display:grid;place-content:center;text-align:center;border:6px solid #f4cb5930;box-shadow:inset 0 0 35px #f4cb5909,0 0 30px #f4cb5910}
+.timerCircle span{font-size:29px;font-weight:900;color:var(--gold2);direction:ltr}
+.timerCircle small{font-size:9px;color:var(--muted);margin-top:3px}
+.timerControls{display:flex;flex-wrap:wrap;gap:8px}
+.timerBox p{grid-column:2;color:var(--muted);font-size:10px;line-height:1.9;margin:0}
+body.light .heroMeta span,body.light .quickNav a,body.light .progressCard,body.light .miniQuiz,body.light .timerBox{background:#ffffffcc}
+body.light .progressCard button,body.light .quizOptions button,body.light .timerControls button{color:#795b0a;background:#fff8df}
+@media(max-width:700px){
+.progressCard{grid-template-columns:1fr}
+.quizOptions{grid-template-columns:1fr}
+.timerBox{grid-template-columns:1fr}
+.timerBox p{grid-column:auto}
+.timerCircle{width:135px;height:135px}
+.heroMeta{gap:6px}
+.quickNav{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}
+.quickNav a{white-space:nowrap}
+}
+
+/* ===== المحتوى الديني الموثق ===== */
+.ayahLibrary,.hadithGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.ayahItem,.hadithItem{padding:15px;border:1px solid var(--line);border-radius:16px;background:#ffffff04;transition:.22s}
+.ayahItem:hover,.hadithItem:hover{transform:translateY(-3px);border-color:#f4cb5945;box-shadow:0 14px 35px #0004}
+.ayahText{color:var(--gold2);font-size:21px;line-height:2;text-align:center;text-shadow:0 0 18px #f4cb5918}
+.ayahRef{text-align:center;color:var(--gold);font-size:9px;margin:5px 0 10px}
+.ayahItem p,.hadithItem p{color:var(--muted);font-size:10px;line-height:2;margin:0 0 8px}
+.ayahItem small,.hadithItem small{display:block;color:#8e9aaa;font-size:8px;line-height:1.8;border-top:1px solid var(--line);padding-top:8px}
+.hadithBadge{display:inline-block;padding:5px 8px;border-radius:999px;background:#f4cb5910;border:1px solid #f4cb5930;color:var(--gold);font-size:8px;font-weight:900}
+.hadithText{margin:13px 0 9px;color:#fff7d7;font-size:16px;line-height:2;text-align:center;font-weight:800}
+.hadithSource{text-align:center;color:var(--gold);font-size:9px;margin-bottom:10px}
+.verificationNote{margin-top:12px;padding:11px;border-radius:13px;background:#f4cb5908;border:1px solid #f4cb5928;color:var(--muted);font-size:9px;line-height:1.9;text-align:center}
+.comingSoon{display:flex;align-items:center;gap:18px;padding:20px;border-radius:18px;border:1px solid #f4cb5960;background:linear-gradient(135deg,#f4cb5910,#ffffff04);box-shadow:inset 0 0 30px #f4cb5905}
+.comingIcon{width:72px;height:72px;flex:0 0 72px;border-radius:20px;display:grid;place-items:center;background:#f4cb5910;border:1px solid #f4cb5945;color:var(--gold2);font-size:29px;font-weight:900}
+.comingSoon strong{display:block;color:var(--gold2);font-size:20px;margin-bottom:5px}
+.comingSoon p{margin:0 0 6px;color:var(--gold);font-size:11px;font-weight:900}
+.comingSoon span{color:var(--muted);font-size:10px;line-height:1.9}
+body.light .ayahItem,body.light .hadithItem,body.light .comingSoon{background:#ffffffcc}
+body.light .hadithText,body.light .ayahText{color:#28313d}
+@media(max-width:850px){.ayahLibrary,.hadithGrid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.ayahLibrary,.hadithGrid{grid-template-columns:1fr}.comingSoon{align-items:flex-start}.comingIcon{width:58px;height:58px;flex-basis:58px}}
+
+/* ===== ملف واحد بنظام الأقسام المنفصلة ===== */
+body{overflow-x:hidden}
+.oneFilePage{width:min(1120px,calc(100% - 28px));margin:auto;padding:14px 0 45px}
+.brandHero{position:relative;overflow:hidden;text-align:center;margin:0 0 14px;padding:24px 18px 20px;border:1px solid #f4cb5948;border-radius:24px;background:linear-gradient(135deg,#132945 0%,#0b1828 55%,#101c2d 100%);box-shadow:0 16px 45px #0005}
+.brandHero:before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle,#f4cb5914 0,transparent 45%);animation:heroGlow 6s ease-in-out infinite;pointer-events:none}
+.brandHero>*{position:relative;z-index:1}.brandMini{display:inline-block;padding:6px 13px;border-radius:999px;border:1px solid #f4cb5950;background:#f4cb5912;color:var(--gold2);font-size:10px;font-weight:900}.brandHero h1{margin:10px 0 5px;font-size:clamp(24px,5vw,38px);color:#fff}.brandHero h1 span{color:var(--gold)}.brandHero p{margin:0;color:#c8d1dc;font-size:11px;line-height:1.9}.brandCredit{display:inline-block;margin-top:10px;color:#fff0ad;font-size:10px;font-weight:900}
+@keyframes heroGlow{0%,100%{transform:scale(.9);opacity:.45}50%{transform:scale(1.1);opacity:1}}
+.topBtn{border:1px solid #f4cb5945;background:#ffffff07;color:var(--gold);padding:10px 14px;border-radius:12px;text-decoration:none;font-family:inherit;font-size:10px;font-weight:900;cursor:pointer}
+.sectionTabs{position:relative;top:auto;z-index:15;display:flex;gap:7px;overflow-x:auto;padding:8px;margin-bottom:15px;border:1px solid #f4cb5925;border-radius:17px;background:#0b1828;border:1px solid #f4cb5930;box-shadow:0 8px 24px #0004}
+.sectionTabs button{white-space:nowrap;border:1px solid transparent;background:#ffffff06;color:var(--muted);padding:9px 12px;border-radius:11px;font-family:inherit;font-size:9px;font-weight:900;cursor:pointer;transition:.2s}
+.sectionTabs button:hover{color:var(--gold2);background:#f4cb5910}
+.sectionTabs button.active{color:#241600;background:linear-gradient(135deg,#f4cb59,#ffe59a);box-shadow:0 5px 20px #f4cb5925}
+.pageView{display:none;animation:viewIn .25s ease}
+.pageView.active{display:block}
+@keyframes viewIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.dashboardWelcome{text-align:center;padding:28px 18px 22px;border:1px solid #f4cb5940;border-radius:25px;background:linear-gradient(145deg,#0d1c2d,#091525);box-shadow:0 20px 60px #0006;margin-bottom:15px}
+.welcomeBadge{display:inline-block;padding:7px 12px;border-radius:999px;background:#f4cb5912;border:1px solid #f4cb5940;color:var(--gold);font-size:9px;font-weight:900}
+.dashboardWelcome h1{font-size:clamp(28px,5vw,43px);margin:13px 0 7px}
+.dashboardWelcome h1 span{color:var(--gold)}
+.dashboardWelcome p{color:var(--muted);font-size:11px;line-height:2;max-width:700px;margin:auto}
+.dashboardCards{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.dashCard{position:relative;text-align:right;min-height:145px;padding:18px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#ffffff07,#ffffff03);color:var(--text);font-family:inherit;cursor:pointer;transition:.23s;overflow:hidden}
+.dashCard:after{content:"";position:absolute;width:100px;height:100px;left:-35px;bottom:-40px;border-radius:50%;background:#f4cb590d}
+.dashCard:hover{transform:translateY(-4px);border-color:#f4cb5960;box-shadow:0 18px 38px #0005}
+.dashCard b{display:block;font-size:27px;margin-bottom:13px}
+.dashCard strong{display:block;color:var(--gold2);font-size:13px;margin-bottom:6px}
+.dashCard small{display:block;color:var(--muted);font-size:9px;line-height:1.8}
+body.light .sectionTabs{background:#ffffffed}
+body.light .dashboardWelcome{background:linear-gradient(145deg,#fff,#f8fafc);box-shadow:0 20px 55px #66708522}
+body.light .dashCard{background:#ffffffcc}
+.toolGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.toolPanel{border:1px solid var(--line);border-radius:16px;padding:15px;background:#ffffff04}
+.toolPanel h5{color:var(--gold);font-size:14px;margin:0 0 12px}
+@media(max-width:850px){.dashboardCards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.oneFilePage{width:calc(100% - 18px);padding-top:12px}.dashboardCards,.toolGrid{grid-template-columns:1fr}.sectionTabs{top:5px}.dashCard{min-height:125px}}
+</style></head><body>
+<button id="themeToggle" class="themeToggle" type="button" aria-label="تبديل الوضع" title="تبديل الوضع">☀️</button>
+<main class="oneFilePage">
+
+<header class="brandHero">
+  <span class="brandMini">🕌 الجزء الديني</span>
+  <h1>الجزء الديني <span>من مكتبتنا الخاصة</span></h1>
+  <p>ركن مميز للطمأنينة والمذاكرة والآيات والأحاديث وتنظيم رحلة الطالب.</p>
+  <span class="brandCredit">للمطور: محمد رمضان الحرباوي</span>
+</header>
+
+<nav class="sectionTabs" aria-label="أقسام الركن الديني">
+<button class="active" data-page="home">🏠 الرئيسية</button>
+<button data-page="quran">📖 الآيات</button>
+<button data-page="hadith">🕋 الأحاديث</button>
+<button data-page="seerah">🌟 السيرة</button>
+<button data-page="method">📚 المذاكرة</button>
+<button data-page="breaks">⏱️ البريك</button>
+<button data-page="mind">🧠 التركيز</button>
+<button data-page="finish">🌙 الخاتمة</button>
+<button data-page="tools">🛠️ الأدوات</button>
+</nav>
+
+<div id="page-home" class="pageView active">
+<section class="dashboard">
+  <div class="dashboardWelcome">
+    <span class="welcomeBadge">🕌 الركن الديني</span>
+    <h1>الطمأنينة <span>والمذاكرة</span></h1>
+    <p>اختَر القسم الذي تريد قراءته. كل قسم منفصل داخل نفس الملف لتكون الصفحة مرتبة وسهلة الاستخدام.</p>
+  </div>
+  <div class="dashboardCards">
+    <button class="dashCard" data-page="quran"><b>📖</b><strong>آيات وتفسير</strong><small>آيات مختارة مع تفسير ومصدر</small></button>
+    <button class="dashCard" data-page="hadith"><b>🕋</b><strong>أحاديث صحيحة</strong><small>أحاديث موثقة بالمراجع</small></button>
+    <button class="dashCard" data-page="seerah"><b>🌟</b><strong>سيرة المختار ﷺ</strong><small>سيتم توفيرها قريبًا</small></button>
+    <button class="dashCard" data-page="method"><b>📚</b><strong>طريقة المذاكرة</strong><small>خطوات منظمة للمذاكرة</small></button>
+    <button class="dashCard" data-page="breaks"><b>⏱️</b><strong>نظام البريك</strong><small>تنظيم التركيز والراحة</small></button>
+    <button class="dashCard" data-page="mind"><b>🧠</b><strong>التركيز والمذاكرة</strong><small>تقليل المشتتات وتثبيت المعلومات</small></button>
+    <button class="dashCard" data-page="finish"><b>🌙</b><strong>بعد المذاكرة</strong><small>الخاتمة والاستعداد للجلسة التالية</small></button>
+    <button class="dashCard" data-page="tools"><b>🛠️</b><strong>أدوات الطالب</strong><small>مؤقت واختبار سريع</small></button>
+  </div>
+</section>
 </div>
-
-<div class="religiousIntro"><strong class="gold">بسم الله نبدأ</strong><br>ابدأ بخطوة واضحة، وخذ بالأسباب، واجعل وقتك منظمًا قدر استطاعتك. ليس المطلوب يومًا مثاليًا؛ المطلوب أن تستمر.</div>
-
-<div class="religiousGrid">
-<section class="religiousCard">
-<h4>🤲 دعاء قبل المذاكرة</h4>
-<div class="religiousDua">﴿رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي﴾</div>
-<div class="religiousRef">سورة طه • الآيتان 25–26</div>
-</section>
-
-<section class="religiousCard">
-<h4>📖 آية للعلم</h4>
-<div class="religiousAyah">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
-<div class="religiousRef">سورة طه • الآية 114</div>
-</section>
-
-<section class="religiousCard full">
-<h4>🧭 قبل أن تبدأ — جهّز جلسة المذاكرة</h4>
-<div class="studySteps">
-<div class="studyStep"><b>① حدّد هدف الجلسة</b><span>اكتب مهمة واضحة مثل: إنهاء درس، حل مجموعة أسئلة، أو مراجعة جزء محدد.</span></div>
-<div class="studyStep"><b>② جهّز أدواتك</b><span>الكتاب، الكراسة، الأقلام، والماء؛ حتى لا تضطر لترك مكانك كل دقائق.</span></div>
-<div class="studyStep"><b>③ أغلق المشتتات</b><span>أبعد الإشعارات والتطبيقات غير الضرورية، واجعل الهاتف بعيدًا أثناء التركيز.</span></div>
-<div class="studyStep"><b>④ ابدأ فورًا</b><span>لا تنتظر أن تشعر بالحماس؛ ابدأ بأول خطوة صغيرة وستتضح الصورة أثناء العمل.</span></div>
+<div class="pageView" id="page-quran"><section id="quran" class="religiousCard full">
+<h4>📖 آيات وتفسير مختصر</h4>
+<p class="religiousNote">آيات مختارة مرتبطة بالعلم والأمل والثبات، مع تفسير مختصر من <strong>التفسير الميسر</strong>.</p>
+<div class="ayahLibrary">
+<article class="ayahItem">
+<div class="ayahText">﴿وَقُل رَّبِّ زِدْنِي عِلْمًا﴾</div>
+<div class="ayahRef">سورة طه • الآية 114</div>
+<p><b>التفسير المختصر:</b> دعاء بطلب الزيادة من العلم، وفي الآية توجيه إلى سؤال الله الزيادة فيما ينفع من العلم.</p>
+<small>المصدر: التفسير الميسر — Quran.com citeturn1search2</small>
+</article>
+<article class="ayahItem">
+<div class="ayahText">﴿فَإِنَّ مَعَ الْعُسْرِ يُسْرًا﴾</div>
+<div class="ayahRef">سورة الشرح • الآية 5</div>
+<p><b>التفسير المختصر:</b> مع الشدة والضيق يأتي الفرج والتيسير؛ وهي رسالة ثبات وأمل عند مواجهة الصعوبات.</p>
+<small>المصدر: التفسير الميسر — Quran.com citeturn1search1</small>
+</article>
+<article class="ayahItem">
+<div class="ayahText">﴿لَا تَقْنَطُوا مِن رَّحْمَةِ اللَّهِ﴾</div>
+<div class="ayahRef">سورة الزمر • الآية 53</div>
+<p><b>التفسير المختصر:</b> نهي عن اليأس من رحمة الله، وبيان لسعة مغفرته لمن تاب ورجع إليه.</p>
+<small>المصدر: التفسير الميسر — Quran.com citeturn1search0</small>
+</article>
 </div>
 </section>
 
-<section class="religiousCard full">
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-hadith"><section id="hadith" class="religiousCard full">
+<h4>🕋 أحاديث نبوية صحيحة موثقة</h4>
+<p class="religiousNote">تم اختيار الأحاديث مع بيان الكتاب ورقم الحديث؛ لتجنب نشر الأحاديث غير الموثقة.</p>
+<div class="hadithGrid">
+<article class="hadithItem">
+<span class="hadithBadge">صحيح • متفق عليه</span>
+<div class="hadithText">«إنما الأعمال بالنيات، وإنما لكل امرئ ما نوى»</div>
+<div class="hadithSource">صحيح البخاري • حديث 1، ورواه مسلم</div>
+<p>المعنى: قيمة العمل وأجره مرتبطان بالنية والقصد.</p>
+<small>المصدر والتحقق: صحيح البخاري 1 — Sunnah.com citeturn0search0</small>
+</article>
+<article class="hadithItem">
+<span class="hadithBadge">صحيح</span>
+<div class="hadithText">«من سلك طريقًا يلتمس فيه علمًا سهل الله له به طريقًا إلى الجنة»</div>
+<div class="hadithSource">رواه مسلم • ورواه الترمذي 2646</div>
+<p>المعنى: طلب العلم النافع والسعي إليه من الأعمال ذات الفضل العظيم.</p>
+<small>المصدر: جامع الترمذي 2646، وحكمه حسن صحيح في المصدر، ورواية مسلم مذكورة في رياض الصالحين 1381. citeturn0search2turn0search10</small>
+</article>
+<article class="hadithItem">
+<span class="hadithBadge">صحيح • رواه مسلم</span>
+<div class="hadithText">«إذا مات ابن آدم انقطع عمله إلا من ثلاث: صدقة جارية، أو علم ينتفع به، أو ولد صالح يدعو له»</div>
+<div class="hadithSource">صحيح مسلم</div>
+<p>المعنى: من أبواب استمرار الأجر بعد الوفاة العلم النافع الذي ينتفع به الناس.</p>
+<small>المصدر: رياض الصالحين 1383، ونصه منسوب إلى صحيح مسلم. citeturn0search12</small>
+</article>
+</div>
+<div class="verificationNote">🔎 ملاحظة توثيقية: لا نضع عبارة «حديث صحيح» اعتمادًا على الشهرة فقط؛ كل بطاقة هنا مرتبطة بمرجع حديثي واضح.</div>
+</section>
+
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-seerah"><section id="seerah" class="religiousCard full">
+<h4>🌟 سيرة المختار ﷺ</h4>
+<div class="comingSoon">
+<div class="comingIcon">ﷺ</div>
+<div>
+<strong>سيرة المختار ﷺ</strong>
+<p>سيتم توفيرها قريبًا — جاري الإعداد</p>
+<span>سيكون هذا القسم مخصصًا لسيرة النبي محمد ﷺ، وأبرز محطات حياته، ودروسه وهديه، مع الحرص على توثيق المعلومات من المصادر المعتبرة.</span>
+</div>
+</div>
+</section>
+
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-method"><section id="method" class="religiousCard full">
 <h4>📚 طريقة مذاكرة منظمة من أول الدرس لآخره</h4>
 <div class="studySteps">
 <div class="studyStep"><b>① افهم</b><span>اقرأ الفكرة أو الشرح بهدوء، وحدد الكلمات والمفاهيم الأساسية.</span></div>
@@ -69,7 +242,7 @@ body.light .themeToggle{background:linear-gradient(145deg,#fff8dc,#fff);color:#8
 </div>
 </section>
 
-<section class="religiousCard full">
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-breaks"><section id="breaks" class="religiousCard full">
 <h4>⏱️ نظام البريك أثناء المذاكرة</h4>
 <div class="breakPlan">
 <div class="breakBox"><strong>25–30 دقيقة</strong><span>جلسة تركيز حقيقية على مهمة واحدة.</span></div>
@@ -79,7 +252,7 @@ body.light .themeToggle{background:linear-gradient(145deg,#fff8dc,#fff);color:#8
 <p class="religiousNote">البريك ليس وقتًا لفتح عشرات التطبيقات؛ هدفه أن تستعيد تركيزك ثم تعود.</p>
 </section>
 
-<section class="religiousCard">
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-mind"><section id="mind" class="religiousCard">
 <h4>🧠 أثناء المذاكرة</h4>
 <ul class="religiousChecklist">
 <li>ذاكر جزءًا محددًا ثم اختبر نفسك.</li>
@@ -126,7 +299,7 @@ body.light .themeToggle{background:linear-gradient(145deg,#fff8dc,#fff);color:#8
 </div>
 </section>
 
-<section class="religiousCard">
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-finish"><section id="finish" class="religiousCard">
 <h4>🌙 بعد المذاكرة</h4>
 <div class="afterStudy">
 <div class="afterBox"><strong>📝 سجّل الإنجاز</strong><p>اكتب ما انتهيت منه وما بقي عليك.</p></div>
@@ -140,56 +313,64 @@ body.light .themeToggle{background:linear-gradient(145deg,#fff8dc,#fff);color:#8
 <div class="religiousDua">﴿وَقُلْ رَبِّ زِدْنِي عِلْمًا﴾</div>
 </section>
 
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div><div class="pageView" id="page-tools">
 <section class="religiousCard full">
-<h4>📿 ذكر وطمأنينة</h4>
-<div class="religiousDua">سُبْحَانَ اللهِ • الْحَمْدُ لِلَّهِ • اللهُ أَكْبَرُ</div>
-<p class="religiousNote">خذ لحظة هدوء بين جلساتك، وابدأ من جديد دون توتر أو استعجال.</p>
-</section>
-
-<section class="religiousCard">
-<h4>😴 النوم جزء من الاستعداد</h4>
-<p>حافظ قدر الإمكان على وقت نوم مناسب وروتين يساعدك على الاستيقاظ والتركيز. لا تجعل السهر المستمر هو الخطة الأساسية للمذاكرة.</p>
-</section>
-
-<section class="religiousCard">
-<h4>💪 لو فقدت الحماس</h4>
-<p>لا تنتظر الحماس حتى تبدأ. اختر مهمة صغيرة جدًا، أنجزها، ثم انتقل إلى التي بعدها. الاستمرار يتكوّن من خطوات متتابعة.</p>
-</section>
-
-<section class="religiousCard full">
-<h4>💬 رسائل لك أثناء الرحلة</h4>
-<div class="religiousMessage" id="religiousMessage">الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.</div>
-<button type="button" class="religiousAction" id="newReligiousMessage">رسالة أخرى</button>
-</section>
+<h4>🛠️ أدوات الطالب</h4>
+<div class="toolGrid">
+  <div class="toolPanel">
+    <h5>⏱️ مؤقت التركيز</h5>
+    <div class="timerBox">
+      <div class="timerCircle"><span id="timerDisplay">25:00</span><small>دقيقة تركيز</small></div>
+      <div>
+        <div class="timerControls"><button id="timerStart" type="button">▶ بدء</button><button id="timerPause" type="button">⏸ إيقاف</button><button id="timerReset" type="button">↺ إعادة</button></div>
+        <p>ركز على مهمة واحدة لمدة 25 دقيقة، ثم خذ راحة قصيرة.</p>
+      </div>
+    </div>
+  </div>
+  <div class="toolPanel">
+    <h5>🧩 اختبار سريع</h5>
+    <div class="miniQuiz">
+      <div class="quizQuestion">ما أول شيء تفعله قبل جلسة المذاكرة؟</div>
+      <div class="quizOptions"><button data-answer="1">تحديد هدف واضح</button><button data-answer="0">فتح الهاتف</button><button data-answer="0">البدء عشوائيًا</button></div>
+      <div class="quizResult" id="quizResult">اختر إجابة.</div>
+    </div>
+  </div>
 </div>
-</section><div class="quranFooter">📚 مكتبة تانية بكالوريا • للعودة للمكتبة اضغط سهم الرجوع أعلى الصفحة</div></main><script>
+</section>
+<div style="text-align:center;margin-top:12px"><button class="topBtn goHome" type="button">↑ العودة للأقسام</button></div></div>
+<footer class="quranFooter">📚 مكتبة تانية بكالوريا • جميع الأقسام داخل ملف HTML واحد</footer>
+</main>
+
+<script>
 const themeToggle=document.getElementById('themeToggle');
-function applyTheme(mode){document.body.classList.toggle('light',mode==='light');if(themeToggle){themeToggle.textContent=mode==='light'?'🌙':'☀️';themeToggle.title=mode==='light'?'التبديل إلى الوضع الليلي':'التبديل إلى الوضع النهاري';}}
-let savedTheme='dark';
-try{savedTheme=localStorage.getItem('religiousTheme')||'dark';}catch(e){}
+function applyTheme(mode){document.body.classList.toggle('light',mode==='light');if(themeToggle)themeToggle.textContent=mode==='light'?'🌙':'☀️';}
+let savedTheme='dark';try{savedTheme=localStorage.getItem('religiousTheme')||'dark'}catch(e){}
 applyTheme(savedTheme);
-if(themeToggle){themeToggle.addEventListener('click',()=>{const next=document.body.classList.contains('light')?'dark':'light';applyTheme(next);try{localStorage.setItem('religiousTheme',next);}catch(e){}});}
-const religiousMessages=[
-  'الاستمرار أهم من أن تبدأ بحماس ثم تتوقف.',
-  'ابدأ بما تستطيع اليوم، ولا تجعل انتظار اليوم المثالي يؤخر إنجازك.',
-  'خطوة صغيرة كل يوم تصنع فرقًا كبيرًا مع الوقت.',
-  'إذا تعثرت في جزء، لا تتوقف عن الرحلة كلها؛ عد وحاول مرة أخرى.',
-  'نظّم وقتك، خذ بالأسباب، واستعن بالله ثم واصل العمل.',
-  'اجعل هدف جلسة المذاكرة واضحًا، وستجد البداية أسهل.',
-  'لا تقارن بدايتك بإنجاز غيرك؛ ركّز على تقدمك أنت.',
-  'الإنجاز الحقيقي ليس في عدد الساعات، بل فيما خرجت به من كل جلسة.'
-];
-let messageIndex=0;
-const messageEl=document.getElementById('religiousMessage');
-const messageBtn=document.getElementById('newReligiousMessage');
-if(messageEl && messageBtn){
-  messageBtn.addEventListener('click',()=>{
-    messageIndex=(messageIndex+1)%religiousMessages.length;
-    messageEl.animate([
-      {opacity:.2,transform:'translateY(6px)'},
-      {opacity:1,transform:'translateY(0)'}
-    ],{duration:280,easing:'ease-out'});
-    messageEl.textContent=religiousMessages[messageIndex];
-  });
+themeToggle?.addEventListener('click',()=>{const next=document.body.classList.contains('light')?'dark':'light';applyTheme(next);try{localStorage.setItem('religiousTheme',next)}catch(e){}});
+
+const tabs=[...document.querySelectorAll('.sectionTabs button')];
+const cards=[...document.querySelectorAll('.dashCard')];
+const views=[...document.querySelectorAll('.pageView')];
+const dashboard=document.getElementById('page-home');
+
+function showPage(name){
+  dashboard.classList.toggle('active',name==='home');
+  views.forEach(v=>v.classList.toggle('active',v.id==='page-'+name));
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.page===name));
+  window.scrollTo({top:0,behavior:'smooth'});
 }
-</script></body></html>
+tabs.forEach(t=>t.addEventListener('click',()=>showPage(t.dataset.page)));
+cards.forEach(c=>c.addEventListener('click',()=>showPage(c.dataset.page)));
+document.querySelectorAll('.goHome').forEach(b=>b.addEventListener('click',()=>showPage('home')));
+
+let timerSeconds=25*60,timerId=null;
+const timerDisplay=document.getElementById('timerDisplay');
+function renderTimer(){if(timerDisplay)timerDisplay.textContent=String(Math.floor(timerSeconds/60)).padStart(2,'0')+':'+String(timerSeconds%60).padStart(2,'0')}
+document.getElementById('timerStart')?.addEventListener('click',()=>{if(timerId)return;timerId=setInterval(()=>{if(timerSeconds<=0){clearInterval(timerId);timerId=null;return}timerSeconds--;renderTimer()},1000)});
+document.getElementById('timerPause')?.addEventListener('click',()=>{clearInterval(timerId);timerId=null});
+document.getElementById('timerReset')?.addEventListener('click',()=>{clearInterval(timerId);timerId=null;timerSeconds=25*60;renderTimer()});
+document.querySelectorAll('.quizOptions button').forEach(b=>b.addEventListener('click',()=>{const r=document.getElementById('quizResult');const ok=b.dataset.answer==='1';r.textContent=ok?'إجابة ممتازة ✓':'جرّب مرة أخرى؛ البداية الأفضل تكون بتحديد هدف واضح.';r.style.color=ok?'#ffe59a':'#aab6c5'}));
+renderTimer();
+</script>
+
+</body></html>
