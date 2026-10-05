@@ -8,137 +8,170 @@
 <title>مركز الفيديوهات | مكتبة تانية بكالوريا</title>
 <style>
 :root{
-  --bg:#050b14;--panel:#0b1625;--panel2:#101f33;--text:#f7f8fb;--muted:#9eacbd;
-  --line:rgba(255,255,255,.09);--gold:#e6bd4d;--gold2:#fff0a3;--green:#22c55e;--green2:#86efac;
+  --bg:#060b14;--panel:#0d1624;--panel-2:#111d2e;--panel-3:#172840;
+  --text:#f7f9fc;--muted:#90a1b7;--line:rgba(255,255,255,.09);
+  --accent:#ffd34f;--accent-2:#62d8ff;--green:#31d47b;--danger:#ff6b7a;
+  --shadow:0 22px 70px rgba(0,0,0,.28);--radius:24px;
 }
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;background:radial-gradient(circle at 10% 0%,rgba(230,189,77,.10),transparent 25%),radial-gradient(circle at 90% 10%,rgba(45,115,190,.12),transparent 30%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif}
-.wrap{width:min(1220px,calc(100% - 24px));margin:auto}
-.top{padding:15px 0;display:flex;justify-content:flex-start;align-items:center;gap:10px}
-.back,.themeBtn{border:0;text-decoration:none;cursor:pointer;font-weight:900}
-.back{display:inline-flex;align-items:center;gap:8px;color:#07111f;background:linear-gradient(135deg,var(--gold),var(--gold2));padding:10px 15px;border-radius:13px;box-shadow:0 8px 25px rgba(230,189,77,.12)}
-.themeBtn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-size:18px}
-.hero{margin:4px 0 18px;padding:25px 24px;border:1px solid rgba(230,189,77,.18);border-radius:25px;background:linear-gradient(135deg,rgba(14,28,48,.98),rgba(5,12,22,.98));box-shadow:0 20px 60px rgba(0,0,0,.25)}
-.hero small{color:var(--gold);font-weight:900}.hero h1{margin:7px 0;font-size:clamp(28px,5vw,46px)}.hero p{margin:0;color:var(--muted);line-height:1.8}
-.videoStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0 0 14px}
-.videoStat{padding:15px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,rgba(16,31,51,.95),rgba(8,18,31,.95));box-shadow:0 12px 30px rgba(0,0,0,.14)}
-.videoStatTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.videoStatIcon{font-size:23px}.videoStatNum{font-size:25px;font-weight:900;color:var(--gold)}.videoStatLabel{margin-top:9px;font-weight:900;font-size:12px}.videoStatNote{margin-top:4px;color:var(--muted);font-size:9px;line-height:1.6}
-.crispHint{margin:0 0 18px;padding:10px 13px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:11px;background:rgba(255,255,255,.02)}.crispHint b{color:var(--text)}
-.playerLayout{display:grid;grid-template-columns:minmax(0,1fr) 225px;gap:18px;align-items:start}
-.playerArea{display:grid;grid-template-columns:minmax(0,1fr) minmax(270px,.55fr);gap:18px;align-items:start}
-.playerBox,.playlist{background:linear-gradient(145deg,rgba(13,27,46,.98),rgba(7,16,29,.98));border:1px solid var(--line);border-radius:23px;box-shadow:0 20px 55px rgba(0,0,0,.25);overflow:hidden}
-.screen{position:relative;background:#000;aspect-ratio:16/9;display:grid;place-items:center}.screen video,.screen iframe{width:100%;height:100%;display:block;background:#000;border:0}.emptyScreen{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(230,189,77,.08),transparent 45%),#03070d;z-index:2}.emptyScreen .playBig{width:82px;height:82px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#07111f;font-size:34px;margin:auto;box-shadow:0 15px 45px rgba(230,189,77,.2)}.emptyScreen strong{display:block;font-size:21px;margin-top:14px}.emptyScreen span{display:block;color:var(--muted);font-size:13px;margin-top:7px}
-.info{padding:17px 19px}.badge{display:inline-flex;padding:6px 9px;border-radius:9px;background:rgba(230,189,77,.10);color:var(--gold);font-size:11px;font-weight:900}.info h2{margin:10px 0 7px;font-size:22px}.info p{margin:0;color:var(--muted);line-height:1.7;font-size:13px}.sponsorLine{display:block;margin-top:8px;color:var(--gold);font-size:11px;font-weight:900}.listSponsor{display:block;margin-top:5px;color:var(--gold);font-size:9px;font-weight:900}
-.controls{position:absolute;left:0;right:0;bottom:0;z-index:12;padding:34px 14px 12px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.88));border-top:0;pointer-events:none}.controls>*{pointer-events:auto}.progress{display:block;width:100%;height:6px;appearance:none;background:rgba(255,255,255,.26);border-radius:99px;cursor:pointer;accent-color:var(--gold);margin:0 0 10px}.controlRow{display:flex;align-items:center;gap:7px;min-width:0}.ctrl{border:1px solid rgba(255,255,255,.18);background:rgba(3,10,18,.78);color:#fff;width:38px;height:36px;border-radius:10px;cursor:pointer;font-size:15px;flex:0 0 auto;backdrop-filter:blur(8px)}.ctrl:hover{background:rgba(230,189,77,.18);border-color:rgba(230,189,77,.45)}.time{font-size:12px;color:#fff;min-width:92px;text-align:center;white-space:nowrap}.volumeIcon{color:#fff;flex:0 0 auto}.volume{width:80px;accent-color:var(--gold);flex:0 1 100px}.speed{background:rgba(3,10,18,.78);color:#fff;border:1px solid rgba(255,255,255,.18);height:36px;border-radius:10px;padding:0 8px;flex:0 0 auto}.spacer{flex:1}.screen:fullscreen{background:#000}.screen:fullscreen .controls{padding-left:22px;padding-right:22px}
-/* نظام إكمال فيديوهات المراجعة */
-.completionPanel{display:none;gap:11px;padding:15px 17px 18px;border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(34,197,94,.08),rgba(34,197,94,.025))}
-body.revisionMode .completionPanel{display:grid!important}
-.completionTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.completionTitle{font-size:12px;font-weight:900}.completionProgress{font-size:11px;color:var(--muted);font-weight:900}.completionBar{height:8px;border-radius:99px;background:rgba(255,255,255,.10);overflow:hidden}.completionFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--green2));transition:width .25s ease}.completeBtn{width:100%;min-height:50px;border:1px solid rgba(34,197,94,.45);background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(34,197,94,.05));color:#bbf7d0;border-radius:13px;padding:11px 14px;font-weight:900;cursor:pointer;transition:.2s;box-shadow:0 8px 22px rgba(0,0,0,.10)}.completeBtn:hover{transform:translateY(-1px);border-color:var(--green)}.completeBtn:disabled{cursor:not-allowed}.completeBtn.done:disabled{filter:none}.completeBtn.done{background:linear-gradient(135deg,rgba(34,197,94,.32),rgba(34,197,94,.12));border-color:rgba(134,239,172,.85);color:#fff;box-shadow:0 8px 26px rgba(34,197,94,.15)}
-.playlist{padding:17px}.playlistHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}.playlistHead h3{margin:0;font-size:18px}.count{color:var(--muted);font-size:11px}.subjectFilter{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 12px;padding:10px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025)}.subjectBtn{border:1px solid var(--line);background:#0e1c2e;color:var(--muted);border-radius:10px;padding:8px 10px;font-weight:900;font-size:10px;cursor:pointer;transition:.2s}.subjectBtn:hover{border-color:rgba(230,189,77,.45);color:var(--text)}.subjectBtn.active{background:var(--gold);border-color:var(--gold);color:#111827}.filterHint{width:100%;color:var(--muted);font-size:9px;line-height:1.6;margin-top:2px}.list{display:grid;gap:9px;max-height:560px;overflow:auto;padding-left:2px}.item{position:relative;width:100%;display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;text-align:right;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--text);padding:9px;border-radius:14px;cursor:pointer}.item:hover,.item.active{border-color:rgba(230,189,77,.42);background:rgba(230,189,77,.07)}.thumb{width:52px;height:40px;border-radius:9px;background:linear-gradient(135deg,#172f4c,#091525);display:grid;place-items:center;color:var(--gold);font-size:17px}.item strong{font-size:13px;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.item small{display:block;color:var(--muted);font-size:10px;margin-top:4px}.item .num{color:var(--gold);font-size:11px}.item.completed{border-color:rgba(34,197,94,.65);background:rgba(34,197,94,.09)}.item.completed .thumb{background:linear-gradient(135deg,#166534,#14532d);color:#fff}.item.completed .num{color:var(--green2)}.doneLabel{display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:9px;color:var(--green2);font-weight:900}
-.emptyList{text-align:center;padding:30px 10px;color:var(--muted);border:1px dashed var(--line);border-radius:15px;line-height:1.8}.downloadsSection{margin:0 0 12px;padding:20px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(13,27,46,.98),rgba(7,16,29,.98));box-shadow:0 18px 45px rgba(0,0,0,.18)}.downloadsHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}.downloadsHead h3{margin:0;font-size:20px}.downloadsHead span{color:var(--muted);font-size:10px;font-weight:900}.downloadsEmpty{min-height:105px;display:grid;place-items:center;text-align:center;border:1px dashed rgba(230,189,77,.28);border-radius:16px;background:rgba(255,255,255,.018);color:var(--muted);padding:20px;line-height:1.8}.downloadsEmpty strong{display:block;color:var(--gold);font-size:13px;margin-bottom:5px}body.day .downloadsSection{background:linear-gradient(145deg,#fff,#f1f5f9)}body.day .downloadsEmpty{background:rgba(23,32,51,.02)}.note{margin:18px 0 35px;padding:15px 17px;border-radius:17px;border:1px solid rgba(230,189,77,.15);background:rgba(230,189,77,.045);color:var(--muted);font-size:12px;line-height:1.8}.note b{color:var(--text)}
-/* الشريط الجانبي */
-.videoSideBar{position:sticky;top:15px;display:grid;gap:12px;min-width:0}.sideSections{display:grid;gap:10px}.sideSection{width:100%;border:1px solid var(--line);background:linear-gradient(145deg,#14263e,#0f1b2d);border-radius:16px;padding:15px 12px;text-align:right;color:var(--text);cursor:pointer;font-weight:900}.sideSection:hover{border-color:rgba(230,189,77,.5)}.sideSection.active{border-color:var(--gold);background:linear-gradient(145deg,rgba(230,189,77,.18),#0f1b2d)}.sideIcon{font-size:24px;display:block;margin-bottom:7px}.sideSection small{display:block;color:var(--muted);font-size:9px;font-weight:700;margin-top:4px;line-height:1.7}.sideStage{padding:12px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#101f33,#0b1625)}.stageBar{display:grid;gap:7px;margin:0 0 10px}.stageBtn{width:100%;border:1px solid var(--line);background:#102038;color:var(--muted);border-radius:11px;padding:9px 8px;font-weight:900;font-size:10px;cursor:pointer}.stageBtn.active{background:var(--gold);color:#111827;border-color:var(--gold)}.sectionMessage{display:none;padding:18px 10px;text-align:center;border:1px dashed rgba(230,189,77,.35);border-radius:14px;background:rgba(230,189,77,.045);color:var(--muted);line-height:1.9;font-size:10px}.sectionMessage strong{display:block;color:var(--gold);font-size:12px;margin-bottom:5px}.sectionMessage.show{display:block}.sideCompletion{display:none;border:1px solid rgba(34,197,94,.32);border-radius:15px;padding:12px;background:linear-gradient(145deg,rgba(34,197,94,.10),rgba(34,197,94,.03))}.sideCompletion.show{display:block}.sideCompletion strong{display:block;color:var(--green2);font-size:11px;margin-bottom:7px}.sideCompletion .miniBar{height:7px;background:rgba(255,255,255,.09);border-radius:99px;overflow:hidden}.sideCompletion .miniFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--green2))}.sideCompletion p{margin:7px 0 0;color:var(--muted);font-size:9px;line-height:1.6}
-.attachmentsSection{padding:0;overflow:hidden}.attachmentsToggle{width:100%;border:0;background:transparent;color:var(--text);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:right;cursor:pointer}.attachmentsToggle:hover{background:rgba(230,189,77,.045)}.attachmentsToggleMain{display:flex;align-items:center;gap:11px;min-width:0}.attachmentsIcon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(230,189,77,.10);font-size:19px;flex:none}.attachmentsToggleMain strong{display:block;font-size:13px}.attachmentsToggleMain small{display:block;color:var(--muted);font-size:9px;line-height:1.6;margin-top:3px}.attachmentsChevron{width:30px;height:30px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center;color:var(--gold);font-size:17px;transition:transform .2s ease}.attachmentsToggle[aria-expanded="true"] .attachmentsChevron{transform:rotate(180deg)}.attachmentsBody{display:none;padding:0 14px 14px}.attachmentsBody.open{display:block}.attachmentsBody .downloadsEmpty{min-height:88px;margin:0;padding:16px}.ytHolder{width:100%;height:100%;background:#000}.ytHolder iframe{width:100%;height:100%;display:block;border:0}
-/* الوضع النهاري */
-body.day{--bg:#eef3f8;--panel:#fff;--text:#172033;--muted:#607086;--line:rgba(23,32,51,.14);background:linear-gradient(180deg,#f7f9fc,#e9eef5)}
-body.day .themeBtn{background:#fff;color:#172033}body.day .subjectBtn{background:#fff;color:#526276}body.day .subjectBtn.active{background:var(--gold);color:#111827}body.day .playerBox,body.day .playlist,body.day .sideSection,body.day .videoStat{background:linear-gradient(145deg,#fff,#f1f5f9)}body.day .stageBtn{background:#fff;color:#526276}body.day .ctrl{background:#f5f7fa;color:#172033}body.day .speed{background:#fff;color:#172033}
-@media(max-width:560px){.controls{padding:26px 9px 8px}.controlRow{gap:5px;flex-wrap:wrap}.ctrl{width:34px;height:32px}.time{min-width:auto;font-size:11px}.volume{width:55px}.speed{height:32px;padding:0 5px}.spacer{display:none}.controlRow .time{order:5}.controlRow .volumeIcon{order:4}.controlRow .volume{order:4}.controlRow .speed{order:4}.controlRow #full{margin-right:auto}}
-@media(max-width:1100px){.playerLayout{grid-template-columns:1fr}.videoSideBar{position:static}.playerArea{grid-template-columns:minmax(0,1fr) minmax(280px,.55fr)}}
-@media(max-width:820px){.videoStats{grid-template-columns:repeat(2,minmax(0,1fr))}.playerArea{grid-template-columns:1fr}.videoSideBar{grid-template-columns:1fr}.sideSections{grid-template-columns:repeat(3,minmax(0,1fr))}.sideSection{text-align:center;padding:11px 8px}.sideSection small{display:none}}
-@media(max-width:600px){.wrap{width:min(100% - 14px,1220px)}.hero{padding:20px 17px}.playerBox,.playlist{border-radius:18px}.controlRow{flex-wrap:wrap}.spacer{display:none}.volume{width:65px}.time{min-width:78px}.speed{margin-right:auto}.sideSections{grid-template-columns:1fr}.sideSection{text-align:right}.sideSection small{display:block}.videoStats{grid-template-columns:1fr}.completionPanel{padding:12px 14px 15px}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;color:var(--text);font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at 82% 0%,rgba(98,216,255,.08),transparent 24%),radial-gradient(circle at 12% 0%,rgba(255,211,79,.08),transparent 22%),linear-gradient(180deg,#050912,#07101c 48%,#07111e)}
+button,input,select{font:inherit}button{outline:none}.wrap{width:min(1460px,calc(100% - 24px));margin:auto;padding:0 0 34px}
+.top{height:72px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--line);margin-bottom:18px;position:sticky;top:0;z-index:50;background:rgba(5,9,18,.78);backdrop-filter:blur(16px)}
+.topBrand{display:flex;align-items:center;gap:11px;margin-right:auto}.brandMark{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#ffe381,#ffca37);color:#121822;box-shadow:0 10px 28px rgba(255,211,79,.18)}.brandMark svg{width:21px;height:21px}.brandText strong{display:block;font-size:13px}.brandText small{display:block;margin-top:2px;color:var(--muted);font-size:9px}
+.iconBtn,.back{border:1px solid var(--line);height:42px;border-radius:12px;cursor:pointer;font-weight:900;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.18s}.iconBtn{width:42px;background:rgba(13,22,36,.9);color:var(--text)}.iconBtn:hover,.back:hover{transform:translateY(-1px);border-color:rgba(255,211,79,.35)}.back{padding:0 13px;background:linear-gradient(135deg,#ffe27e,#f4c748);color:#111827;box-shadow:0 10px 26px rgba(255,211,79,.14)}
+.hero,.videoStats,.crispHint{display:none}
+.playerLayout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:18px;align-items:start}
+.videoSideBar{position:sticky;top:90px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.sidebarCard{border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(17,29,46,.98),rgba(9,16,28,.98));box-shadow:var(--shadow);overflow:hidden}
+.sideHead{padding:18px 17px 14px;border-bottom:1px solid var(--line)}.sideHead small{color:var(--accent);font-size:9px;font-weight:900}.sideHead h2{margin:6px 0 0;font-size:17px}
+.sideSections{display:grid;gap:7px;padding:10px}.sideSection{position:relative;width:100%;min-height:69px;border:1px solid transparent;border-radius:15px;padding:10px 11px;background:transparent;color:var(--text);cursor:pointer;text-align:right;display:grid;grid-template-columns:40px minmax(0,1fr);gap:10px;align-items:center;transition:.18s}.sideSection:hover{background:rgba(98,216,255,.055);border-color:rgba(98,216,255,.12)}.sideSection.active{background:linear-gradient(135deg,rgba(255,211,79,.16),rgba(255,211,79,.045));border-color:rgba(255,211,79,.30);box-shadow:inset -3px 0 0 var(--accent)}
+.sideSvg{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#0a1220;border:1px solid var(--line);color:var(--accent)}.sideSection.active .sideSvg{background:rgba(255,211,79,.12);color:#ffe27b}.sideSvg svg{width:21px;height:21px}.sideSection strong{display:block;font-size:11px;line-height:1.5}.sideSection small{display:block;margin-top:3px;color:var(--muted);font-size:8px;line-height:1.55}
+.stageWrap{padding:11px;border-top:1px solid var(--line)}.stageTitle{font-size:9px;color:var(--muted);font-weight:900;margin:0 0 8px 2px}.stageBar{display:grid;gap:7px}.stageBtn{border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--muted);border-radius:11px;padding:10px 9px;font-size:9px;font-weight:900;cursor:pointer;transition:.18s}.stageBtn.active{background:var(--accent);color:#111827;border-color:var(--accent);box-shadow:0 8px 18px rgba(255,211,79,.13)}
+.sideStats{padding:12px;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.miniStat{padding:9px 5px;text-align:center;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.018)}.miniStat b{display:block;color:var(--accent);font-size:15px}.miniStat span{display:block;margin-top:2px;color:var(--muted);font-size:7px}
+.mainContent{min-width:0}.contentHead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:12px}.headingSmall{color:var(--accent);font-size:9px;font-weight:900}.sectionTitle{margin:5px 0 3px;font-size:clamp(22px,3vw,31px);line-height:1.25}.sectionSubtitle{margin:0;color:var(--muted);font-size:10px;line-height:1.7}.headStatus{flex:0 0 auto;min-width:180px}.sideCompletion{display:none;padding:10px 12px;border:1px solid rgba(49,212,123,.22);border-radius:13px;background:rgba(49,212,123,.06)}.sideCompletion.show{display:block}.sideCompletion strong{display:block;color:#8af0b3;font-size:9px;margin-bottom:5px}.sideCompletion .miniBar{height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)}.sideCompletion .miniFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),#99f6be)}.sideCompletion p{margin:5px 0 0;color:var(--muted);font-size:7.5px}
+.subjectPanel{padding:11px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(14,25,41,.95),rgba(9,16,28,.95));margin-bottom:13px}.subjectTop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.subjectTop h3{margin:0;font-size:10px}.filterHint{color:var(--muted);font-size:7.5px}.subjectFilter{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.subjectBtn{border:1px solid var(--line);border-radius:13px;min-height:63px;padding:7px 5px;background:rgba(255,255,255,.02);color:var(--muted);font-size:8px;font-weight:900;cursor:pointer;transition:.17s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.subjectBtn:hover{transform:translateY(-1px);border-color:rgba(98,216,255,.2);color:var(--text)}.subjectBtn.active{background:linear-gradient(145deg,rgba(255,211,79,.17),rgba(255,211,79,.04));border-color:rgba(255,211,79,.43);color:var(--text);box-shadow:inset 0 -2px 0 var(--accent)}.subjectIcon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#0a1322;border:1px solid var(--line)}.subjectIcon svg{width:15px;height:15px}.subjectBtn.active .subjectIcon{background:rgba(255,211,79,.12);color:#ffe27d}
+.playerArea{display:grid;grid-template-columns:minmax(0,1fr) 325px;gap:14px;align-items:start;min-width:0}.playerBox,.playlist{border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(12,23,39,.985),rgba(7,14,24,.985));box-shadow:var(--shadow);overflow:hidden;min-width:0}.playlist{position:sticky;top:90px}
+.screen{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}.screen video,.screen iframe{width:100%;height:100%;display:block;background:#000;border:0}.ytHolder{position:absolute;inset:0;z-index:2;background:#000}.ytHolder iframe{width:100%;height:100%}.emptyScreen{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(255,211,79,.07),transparent 38%),#02060c}.emptyScreen .playBig{width:76px;height:76px;margin:auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#fff2ad);color:#111827;font-size:29px;box-shadow:0 16px 40px rgba(255,211,79,.17)}.emptyScreen strong{display:block;margin-top:13px;font-size:17px}.emptyScreen span{display:block;margin-top:5px;color:var(--muted);font-size:9px}
+.controls{position:absolute;left:0;right:0;bottom:0;z-index:10;padding:38px 12px 9px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.94));pointer-events:none}.controls>*{pointer-events:auto}.progress{display:block;width:100%;height:5px;margin:0 0 9px;accent-color:var(--accent);cursor:pointer}.controlRow{display:flex;align-items:center;gap:6px;min-width:0}.ctrl{width:36px;height:34px;flex:0 0 auto;border:1px solid rgba(255,255,255,.13);border-radius:10px;background:rgba(5,10,18,.86);color:#fff;cursor:pointer;transition:.16s}.ctrl:hover{border-color:rgba(255,211,79,.5);background:rgba(255,211,79,.09)}.time{min-width:88px;text-align:center;color:#fff;font-size:10px;white-space:nowrap}.volume{width:68px;accent-color:var(--accent)}.speed{height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(5,10,18,.86);color:#fff;padding:0 6px}.spacer{flex:1}.screen:fullscreen{background:#000}
+.info{padding:15px 17px;border-top:1px solid var(--line)}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;color:var(--accent);font-size:8px;font-weight:900;background:rgba(255,211,79,.08);border:1px solid rgba(255,211,79,.13)}.info h2{margin:9px 0 5px;font-size:19px;line-height:1.5}.info p{margin:0;color:var(--muted);font-size:10px;line-height:1.8}.sponsorLine{display:block;margin-top:6px;color:var(--accent);font-size:9px;font-weight:900}
+.completionPanel{display:none;gap:9px;padding:13px 15px 15px;border-top:1px solid rgba(49,212,123,.14);background:linear-gradient(180deg,rgba(49,212,123,.07),rgba(49,212,123,.018))}.revisionMode .completionPanel{display:grid}.completionTop{display:flex;justify-content:space-between;align-items:center;gap:8px}.completionTitle{font-size:9px;font-weight:900}.completionProgress{font-size:9px;color:var(--muted);font-weight:900}.completionBar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.completionFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),#91f3b7)}.completeBtn{width:100%;min-height:44px;border-radius:11px;border:1px solid rgba(49,212,123,.42);background:rgba(49,212,123,.08);color:#b8f7cf;font-weight:900;cursor:pointer;font-size:10px}.completeBtn.done{background:linear-gradient(135deg,rgba(49,212,123,.33),rgba(49,212,123,.10));border-color:rgba(145,243,183,.82);color:#fff;box-shadow:0 9px 26px rgba(49,212,123,.12)}
+.attachmentsSection{border-top:1px solid var(--line);background:rgba(255,255,255,.012)}.attachmentsToggle{width:100%;border:0;background:transparent;color:var(--text);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:right;cursor:pointer}.attachmentsToggle:hover{background:rgba(255,211,79,.025)}.attachmentsToggleMain{display:flex;align-items:center;gap:9px;min-width:0}.attachmentsIcon{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:rgba(98,216,255,.07);border:1px solid rgba(98,216,255,.11);color:var(--accent-2)}.attachmentsToggleMain strong{display:block;font-size:10px}.attachmentsToggleMain small{display:block;margin-top:2px;color:var(--muted);font-size:7.5px}.attachmentsChevron{width:25px;height:25px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--accent);transition:.18s}.attachmentsToggle[aria-expanded="true"] .attachmentsChevron{transform:rotate(180deg)}.attachmentsBody{display:none;padding:0 12px 12px}.attachmentsBody.open{display:block}.downloadsEmpty{min-height:73px;display:grid;place-items:center;text-align:center;border:1px dashed rgba(255,211,79,.19);border-radius:12px;color:var(--muted);padding:12px;font-size:8px;line-height:1.7}.downloadsEmpty strong{display:block;color:var(--accent);font-size:10px;margin-bottom:2px}
+.playlistHead{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 15px;border-bottom:1px solid var(--line)}.playlistHead h3{margin:0;font-size:14px}.count{font-size:8px;color:var(--muted)}.list{display:grid;gap:7px;max-height:740px;overflow:auto;padding:10px}.item{width:100%;display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:8px;align-items:center;text-align:right;border:1px solid var(--line);border-radius:12px;padding:7px;background:rgba(255,255,255,.018);color:var(--text);cursor:pointer;transition:.15s}.item:hover{border-color:rgba(98,216,255,.22);background:rgba(98,216,255,.032)}.item.active{border-color:rgba(255,211,79,.40);background:rgba(255,211,79,.06);box-shadow:inset -3px 0 0 var(--accent)}.thumb{width:42px;height:34px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(135deg,#19304c,#091422);color:var(--accent);font-size:14px}.item strong{display:block;font-size:9.5px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.item small{display:block;margin-top:2px;color:var(--muted);font-size:7.5px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.listSponsor{display:block;margin-top:2px;color:var(--accent);font-size:7px;font-weight:900}.num{color:var(--accent);font-size:8px}.item.completed{border-color:rgba(49,212,123,.48);background:rgba(49,212,123,.055)}.item.completed .thumb{background:linear-gradient(135deg,#176b3a,#104b2a);color:#fff}.item.completed .num{color:#90f4b6}.doneLabel{display:inline-flex;align-items:center;margin-top:3px;color:#90f4b6;font-size:7px;font-weight:900}.emptyList{text-align:center;padding:24px 9px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);font-size:8px;line-height:1.8}
+.sectionMessage{display:none;margin-top:10px;padding:10px;border:1px dashed rgba(255,211,79,.25);border-radius:12px;text-align:center;color:var(--muted);font-size:8px;line-height:1.7;background:rgba(255,211,79,.03)}.sectionMessage.show{display:block}.sectionMessage strong{display:block;color:var(--accent);font-size:10px;margin-bottom:2px}.note{margin:12px 0 0;padding:11px 13px;border:1px solid rgba(255,211,79,.10);border-radius:13px;background:rgba(255,211,79,.028);color:var(--muted);font-size:8px;line-height:1.7}.note b{color:var(--text)}
+/* Day mode */
+body.day{--bg:#eef4f8;--panel:#fff;--panel-2:#f8fbfd;--text:#172033;--muted:#637389;--line:rgba(23,32,51,.13);background:radial-gradient(circle at 88% 0%,rgba(98,216,255,.11),transparent 25%),linear-gradient(180deg,#f8fafc,#e7eef4)}
+body.day .top{background:rgba(248,250,252,.86)}body.day .iconBtn{background:#fff;color:#172033}body.day .sidebarCard,body.day .subjectPanel,body.day .playerBox,body.day .playlist{background:linear-gradient(160deg,#fff,#f1f5f8);box-shadow:0 20px 50px rgba(30,45,65,.09)}body.day .subjectBtn{background:rgba(23,32,51,.025)}body.day .sideSection:hover{background:rgba(23,32,51,.025)}body.day .stageBtn{background:#fff;color:#637389}body.day .ctrl,body.day .speed{background:#f4f7fa;color:#172033}
+.mobileMenuBtn{display:none}
+@media(max-width:1120px){.subjectFilter{grid-template-columns:repeat(4,minmax(0,1fr))}.playerArea{grid-template-columns:minmax(0,1fr) 295px}.playerLayout{grid-template-columns:220px minmax(0,1fr)}}
+@media(max-width:900px){.mobileMenuBtn{display:inline-flex}.videoSideBar{position:fixed;right:10px;top:82px;bottom:10px;width:min(290px,calc(100vw - 20px));z-index:100;transform:translateX(125%);transition:transform .22s ease}.videoSideBar.open{transform:translateX(0)}.playerLayout{display:block}.mainContent{min-width:0}.sideOverlay{position:fixed;inset:0;background:rgba(0,0,0,.48);backdrop-filter:blur(3px);z-index:90;display:none}.sideOverlay.show{display:block}.playerArea{grid-template-columns:1fr}.playlist{position:static}.list{max-height:500px}.headStatus{min-width:155px}}
+@media(max-width:640px){.wrap{width:min(100% - 12px,1460px)}.top{height:62px}.brandText small{display:none}.back{padding:0 10px;font-size:9px}.iconBtn{width:39px;height:39px}.contentHead{display:block}.headStatus{margin-top:10px}.subjectPanel{padding:9px}.subjectFilter{grid-template-columns:repeat(2,minmax(0,1fr))}.subjectBtn{min-height:58px;flex-direction:row;justify-content:flex-start;padding:8px 9px;text-align:right}.playerBox,.playlist{border-radius:18px}.screen{aspect-ratio:16/9}.controls{padding:32px 7px 7px}.controlRow{gap:4px;flex-wrap:wrap}.ctrl{width:32px;height:31px}.time{min-width:72px;font-size:9px}.volume{width:52px}.speed{height:31px}.spacer{display:none}.info{padding:12px 13px}.info h2{font-size:16px}.item{grid-template-columns:39px minmax(0,1fr) auto}.thumb{width:39px;height:34px}.item strong{font-size:9px}}
+
+/* === Readability + Theme Harmony V4 === */
+body{font-size:15px;}
+.brandText strong{font-size:15px}.brandText small{font-size:11px}
+.iconBtn,.back{font-size:13px}.back{padding-inline:15px}
+.sideHead{padding:20px 18px 16px}.sideHead small{font-size:11px}.sideHead h2{font-size:20px}
+.sideSections{gap:9px;padding:12px}.sideSection{min-height:78px;padding:12px 13px;grid-template-columns:46px minmax(0,1fr);gap:12px}.sideSvg{width:46px;height:46px;border-radius:13px}.sideSvg svg{width:23px;height:23px}.sideSection strong{font-size:14px}.sideSection small{font-size:10.5px}
+.stageWrap{padding:14px}.stageTitle{font-size:11px;margin-bottom:9px}.stageBar{gap:9px}.stageBtn{padding:12px 11px;font-size:12px;border-radius:12px}
+.sideStats{padding:13px;gap:8px}.miniStat{padding:11px 6px}.miniStat b{font-size:19px}.miniStat span{font-size:10px}
+.headingSmall{font-size:11px}.sectionTitle{font-size:clamp(25px,3vw,34px)}.sectionSubtitle{font-size:12px}.subjectPanel{padding:13px}.subjectTop h3{font-size:13px}.filterHint{font-size:10px}.subjectFilter{gap:8px}.subjectBtn{min-height:72px;font-size:11.5px;gap:6px}.subjectIcon{width:34px;height:34px;border-radius:10px}.subjectIcon svg{width:18px;height:18px}
+.controls{padding:42px 14px 11px}.ctrl{width:40px;height:38px;font-size:15px}.time{min-width:100px;font-size:11px}.volume{width:76px}.speed{height:38px;font-size:12px}
+.info{padding:17px 19px}.badge{font-size:10px;padding:6px 9px}.info h2{font-size:21px}.info p{font-size:12px}.sponsorLine{font-size:11px}
+.completionPanel{padding:15px 17px 17px}.completionTitle{font-size:11px}.completionProgress{font-size:11px}.completeBtn{min-height:48px;font-size:12px}
+.attachmentsToggle{padding:13px 15px}.attachmentsIcon{width:38px;height:38px}.attachmentsToggleMain strong{font-size:12px}.attachmentsToggleMain small{font-size:9.5px}.attachmentsChevron{width:32px;height:32px;border-radius:10px;background:var(--panel-2);box-shadow:0 4px 14px rgba(0,0,0,.10)}.attachmentsChevron svg{width:17px;height:17px;display:block}.attachmentsBody{padding:0 14px 14px}.downloadsEmpty{font-size:10px;min-height:84px}.downloadsEmpty strong{font-size:12px}
+.playlistHead{padding:16px}.playlistHead h3{font-size:16px}.count{font-size:10px}.list{padding:12px;gap:8px}.item{padding:9px;grid-template-columns:48px minmax(0,1fr) auto;gap:10px}.thumb{width:48px;height:38px;font-size:16px}.item strong{font-size:12px}.item small{font-size:10px}.listSponsor{font-size:9px}.num{font-size:10px}.doneLabel{font-size:9px}.emptyList{font-size:10px}
+.sectionMessage{font-size:10px}.sectionMessage strong{font-size:12px}.note{font-size:10px}
+
+/* Day mode: use the same visual hierarchy instead of mixing dark cards with light background. */
+body.day .sidebarCard,body.day .subjectPanel,body.day .playerBox,body.day .playlist{background:linear-gradient(145deg,#ffffff,#f5f8fb);border-color:rgba(23,32,51,.12);box-shadow:0 18px 45px rgba(30,45,65,.10)}
+body.day .sideHead,body.day .stageWrap,body.day .sideStats,body.day .playlistHead,body.day .info,body.day .attachmentsSection{border-color:rgba(23,32,51,.10)}
+body.day .sideSvg,body.day .subjectIcon{background:#f3f7fa;color:#35506b;border-color:rgba(23,32,51,.11)}
+body.day .sideSection{color:#172033}.day .sideSection.active .sideSvg{background:rgba(255,211,79,.18);color:#9a6b00}
+body.day .stageBtn{border-color:rgba(23,32,51,.12);color:#405169}.day .stageBtn.active{color:#172033}
+body.day .subjectBtn{background:#f8fafc;border-color:rgba(23,32,51,.11);color:#526276}.day .subjectBtn.active{color:#172033}
+body.day .miniStat{background:#f8fafc;border-color:rgba(23,32,51,.10)}
+body.day .item{background:#f9fbfd;border-color:rgba(23,32,51,.10)}body.day .item:hover{background:#f2f7fa;border-color:rgba(32,126,163,.25)}body.day .item.active{background:rgba(255,211,79,.11);border-color:rgba(176,134,23,.34)}body.day .thumb{background:linear-gradient(135deg,#e8f0f6,#dbe7ef);color:#2a607b}.day .item.completed .thumb{background:linear-gradient(135deg,#dff6e8,#c9edd8);color:#167143}
+body.day .attachmentsChevron{background:#f0f4f7;color:#405169;box-shadow:0 4px 14px rgba(30,45,65,.10)}
+body.day .sectionMessage,body.day .downloadsEmpty,body.day .note{background:#fbfcfd;border-color:rgba(23,32,51,.11)}
+body.day .controls{background:linear-gradient(180deg,transparent,rgba(6,11,20,.94));color:#fff}
+body.day #themeBtn{background:#fff;color:#172033;border-color:rgba(23,32,51,.13);box-shadow:0 5px 16px rgba(30,45,65,.07)}
+
+/* Cleaner attachment toggle: the chevron is a dedicated icon, not a text glyph. */
+.attachmentsToggle:hover .attachmentsChevron{transform:translateY(-1px);border-color:rgba(98,216,255,.28)}
+.attachmentsToggle[aria-expanded="true"] .attachmentsChevron{transform:rotate(180deg)}
+@media(max-width:640px){
+  body{font-size:14px}.brandText strong{font-size:14px}.brandText small{font-size:10px}
+  .sectionTitle{font-size:25px}.sectionSubtitle{font-size:11px}.subjectBtn{font-size:11.5px;min-height:64px}.sideSection strong{font-size:14px}.sideSection small{font-size:10px}
+  .ctrl{width:36px;height:35px}.time{min-width:76px;font-size:10px}.speed{height:35px}.volume{width:60px}
+  .info h2{font-size:18px}.info p{font-size:11px}.item strong{font-size:11.5px}.item small{font-size:9.5px}
+}
 </style>
 </head>
-<body>
+<body data-ui-version="3">
+
 <div class="wrap">
   <div class="top">
-    <button class="themeBtn" id="themeBtn" type="button" title="تفعيل الوضع النهاري">☀️</button>
-    <a class="back" href="./index.html" onclick="return backToLibrary(event)">← العودة إلى المكتبة</a>
+    <button class="iconBtn mobileMenuBtn" id="mobileMenuBtn" type="button" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <button class="iconBtn" id="themeBtn" type="button" title="تفعيل الوضع النهاري">☀️</button>
+    <div class="topBrand">
+      <div class="brandMark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4.8A2.8 2.8 0 0 1 7.8 2h10.4A.8.8 0 0 1 19 2.8v15.4a1.8 1.8 0 0 0-1.8-1.8H7.8A2.8 2.8 0 0 0 5 19.2V4.8Z"/><path d="M5 19.2A2.8 2.8 0 0 1 7.8 16.4H19M9 6h6M9 9.3h7"/></svg></div>
+      <div class="brandText"><strong>مركز الفيديوهات</strong><small>محتوى تعليمي مرتب حسب القسم والمادة</small></div>
+    </div>
+    <a class="back" href="./index.html" onclick="return backToLibrary(event)">← المكتبة</a>
   </div>
-
-  <section class="hero">
-    <small>مكتبة تانية بكالوريا • مشغل احترافي</small>
-    <h1>🎬 مركز الفيديوهات</h1>
-    <p>مشغل واحد للدروس والمراجعات مع قائمة فيديوهات، اختيار القسم والفئة، إحصائيات، ودعم فني مباشر.</p>
-  </section>
-
-  <section class="videoStats" aria-label="إحصائيات مركز الفيديوهات">
-    <div class="videoStat"><div class="videoStatTop"><div class="videoStatIcon">🎬</div><div class="videoStatNum" id="statTotal">0</div></div><div class="videoStatLabel">إجمالي الفيديوهات</div><div class="videoStatNote">كل المحتوى المضاف حاليًا</div></div>
-    <div class="videoStat"><div class="videoStatTop"><div class="videoStatIcon">🎓</div><div class="videoStatNum" id="statBac">0</div></div><div class="videoStatLabel">فيديوهات البكالوريا</div><div class="videoStatNote">محتوى مخصص لطلاب البكالوريا</div></div>
-    <div class="videoStat"><div class="videoStatTop"><div class="videoStatIcon">📚</div><div class="videoStatNum" id="statGeneral">0</div></div><div class="videoStatLabel">فيديوهات الثانوية العامة</div><div class="videoStatNote">محتوى مخصص للثانوية العامة</div></div>
-    <div class="videoStat"><div class="videoStatTop"><div class="videoStatIcon">📂</div><div class="videoStatNum" id="statSections">0</div></div><div class="videoStatLabel">أقسام بها محتوى</div><div class="videoStatNote">تحفيزي • تقييمات • مراجعة</div></div>
-  </section>
-  <div class="crispHint">💬 <b>الدعم والمساعدة:</b> أيقونة Crisp تظهر تلقائيًا أسفل الصفحة بنفس ربط المكتبة.</div>
+  <div class="sideOverlay" id="sideOverlay"></div>
 
   <main class="playerLayout">
-    <div class="playerArea">
-      <section class="playerBox" aria-label="مشغل الفيديو">
-        <div class="screen" id="screen">
-          <div class="emptyScreen" id="emptyScreen"><div><div class="playBig">▶</div><strong>المشغل جاهز</strong><span>اختر الفيديو من القائمة لبدء المشاهدة.</span></div></div>
-          <video id="video" playsinline preload="metadata" controlslist="nodownload"></video>
-          <div id="yt" class="ytHolder" aria-label="مشغل YouTube" hidden></div>
-          <div class="controls" id="customControls">
-            <input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم">
-            <div class="controlRow"><button class="ctrl" id="play" title="تشغيل / إيقاف">▶</button><button class="ctrl" id="back10" title="رجوع 10 ثوانٍ">↶</button><button class="ctrl" id="next" title="الفيديو التالي">⏭</button><span class="time" id="time">00:00 / 00:00</span><span class="volumeIcon" aria-hidden="true">🔊</span><input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="الصوت"><select id="speed" class="speed" aria-label="سرعة التشغيل"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select><span class="spacer"></span><button class="ctrl" id="full" title="ملء الشاشة">⛶</button></div>
-          </div>
-        </div>
-        <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">اختر الفيديو من القائمة لمتابعة المشاهدة.</p></div>
-        <div class="completionPanel" id="completionPanel">
-          <div class="completionTop"><span class="completionTitle">✅ متابعة التقدم في قسم المراجعة</span><span class="completionProgress" id="completionProgress">0 / 0 مكتمل</span></div>
-          <div class="completionBar"><div class="completionFill" id="completionFill"></div></div>
-          <button class="completeBtn" id="completeBtn" type="button">☐ تمت المشاهدة — تحديد الفيديو كمكتمل</button>
-        </div>
-        <section class="downloadsSection attachmentsSection" id="attachmentsSection" aria-label="المرفقات">
-          <button class="attachmentsToggle" id="attachmentsToggle" type="button" aria-expanded="false" aria-controls="attachmentsBody">
-            <span class="attachmentsToggleMain"><span class="attachmentsIcon">📎</span><span><strong>المرفقات</strong><small>ملفات ومحتوى إضافي مرتبط بالفيديو</small></span></span>
-            <span class="attachmentsChevron" id="attachmentsChevron">⌄</span>
+    <aside class="videoSideBar" id="videoSideBar" aria-label="القائمة الجانبية">
+      <div class="sidebarCard">
+        <div class="sideHead"><small>اختر المسار</small><h2>أقسام الفيديوهات</h2></div>
+        <div class="sideSections">
+          <button class="sideSection active" data-section="motivation" type="button">
+            <span class="sideSvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20V8"/><path d="M7.5 12.5 12 8l4.5 4.5"/><path d="M5 20h14"/><path d="M8 5.3a5.5 5.5 0 0 1 8 0"/></svg></span>
+            <span><strong>الجزء التحفيزي</strong><small>شحن الهمة والاستمرار</small></span>
           </button>
-          <div class="attachmentsBody" id="attachmentsBody">
-            <div class="downloadsEmpty" id="attachmentsList">
-              <div><strong>📥 المرفقات غير متاحة حاليًا</strong><span>سيتم إضافة محتوى قريبًا.</span></div>
-            </div>
-          </div>
-        </section>
-      </section>
-
-      <aside class="playlist">
-        <div class="playlistHead"><h3>📋 قائمة الفيديوهات</h3><span class="count" id="count">0 فيديو</span></div>
-        <div class="subjectFilter" id="subjectFilter" aria-label="فلتر المواد">
-          <button class="subjectBtn active" type="button" data-subject="all">📚 كل المواد</button>
-          <button class="subjectBtn" type="button" data-subject="arabic">🟠 اللغة العربية</button>
-          <button class="subjectBtn" type="button" data-subject="english">🔵 اللغة الإنجليزية</button>
-          <button class="subjectBtn" type="button" data-subject="physics">⚡ الفيزياء</button>
-          <button class="subjectBtn" type="button" data-subject="history">🏛️ التاريخ الوطني</button>
-          <button class="subjectBtn" type="button" data-subject="programming">💻 البرمجة</button>
-          <button class="subjectBtn" type="button" data-subject="quran">🕌 القرآن الكريم</button>
-          <div class="filterHint">اختر المادة، ثم اختر القسم لرؤية تقييمات ومراجعات المادة المختارة.</div>
+          <button class="sideSection" data-section="evaluations" type="button">
+            <span class="sideSvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8 8h8M8 12h6M8 16h4"/><path d="m15.5 15.5 1.2 1.2 2.3-2.6"/></svg></span>
+            <span><strong>حل تقييمات الوزارة</strong><small>التقييمات والواجبات والاختبارات</small></span>
+          </button>
+          <button class="sideSection" data-section="revision" type="button">
+            <span class="sideSvg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3.5a8.5 8.5 0 1 0 8.5 8.5"/><path d="M12 3.5v5l3.3 2"/><path d="M17.5 4.5h3v3"/></svg></span>
+            <span><strong>المراجعة والاستعداد</strong><small>مراجعة منظمة + متابعة الإكمال</small></span>
+          </button>
         </div>
-        <div class="list" id="list"><div class="emptyList">لا توجد فيديوهات متاحة حاليًا.</div></div>
-      </aside>
-    </div>
-
-    <aside class="videoSideBar" aria-label="اختيار القسم والفئة">
-      <div class="sideSections">
-        <button class="sideSection active" data-section="motivation"><span class="sideIcon">💪</span>الجزء التحفيزي<small>شحن الهمة والاستمرار</small></button>
-        <button class="sideSection" data-section="evaluations"><span class="sideIcon">📝</span>حل تقييمات الوزارة<small>شرح وحل التقييمات</small></button>
-        <button class="sideSection" data-section="revision"><span class="sideIcon">🚀</span>المراجعة والاستعداد<small>مراجعة قبل الاختبارات • متابعة الإكمال</small></button>
-      </div>
-      <div class="sideStage">
-        <div class="stageBar" aria-label="اختيار الفئة">
-          <button class="stageBtn active" data-stage="baccalaureate">🎓 البكالوريا</button>
-          <button class="stageBtn" data-stage="general">📚 الثانوية العامة</button>
+        <div class="stageWrap"><div class="stageTitle">الفئة المستهدفة</div><div class="stageBar"><button class="stageBtn active" data-stage="baccalaureate" type="button">🎓 البكالوريا</button><button class="stageBtn" data-stage="general" type="button">📚 الثانوية العامة</button></div></div>
+        <div class="sideStats" aria-label="إحصائيات سريعة">
+          <div class="miniStat"><b id="statTotal">0</b><span>فيديو</span></div><div class="miniStat"><b id="statBac">0</b><span>بكالوريا</span></div><div class="miniStat"><b id="statGeneral">0</b><span>ثانوية</span></div>
+          <span id="statSections" hidden>0</span>
         </div>
-        <div class="sideCompletion" id="sideCompletion"><strong>✅ تقدم المراجعة</strong><div class="miniBar"><div class="miniFill" id="miniFill"></div></div><p id="sideCompletionText">0 / 0 فيديو مكتمل</p></div>
-        <div class="sectionMessage" id="sectionMessage"><strong>سيتم إضافة الفيديوهات قريبًا جدًا</strong><span>هذا الجزء مخصص لهذه الفئة، وسيتم إضافة محتواه فور تجهيزه.</span></div>
       </div>
     </aside>
+
+    <section class="mainContent">
+      <div class="contentHead">
+        <div>
+          <div class="headingSmall" id="sectionEyebrow">قسم مخصص للمشاهدة</div>
+          <h1 class="sectionTitle" id="sectionTitle">الجزء التحفيزي</h1>
+          <p class="sectionSubtitle" id="sectionSubtitle">اختر المادة للوصول إلى فيديوهات القسم فقط.</p>
+        </div>
+        <div class="headStatus">
+          <div class="sideCompletion" id="sideCompletion"><strong>✅ تقدم المراجعة</strong><div class="miniBar"><div class="miniFill" id="miniFill"></div></div><p id="sideCompletionText">0 / 0 فيديو مكتمل</p></div>
+          <div class="sectionMessage" id="sectionMessage"><strong>سيتم إضافة الفيديوهات قريبًا جدًا</strong><span>هذا الجزء مخصص لهذه الفئة، وسيتم إضافة محتواه فور تجهيزه.</span></div>
+        </div>
+      </div>
+
+      <section class="subjectPanel" aria-label="اختيار المادة">
+        <div class="subjectTop"><h3>المواد</h3><span class="filterHint">اختر مادة لعرض فيديوهاتها في هذا القسم</span></div>
+        <div class="subjectFilter" id="subjectFilter">
+          <button class="subjectBtn active" type="button" data-subject="all"><span class="subjectIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="6" height="6" rx="1.2"/><rect x="14" y="4" width="6" height="6" rx="1.2"/><rect x="4" y="14" width="6" height="6" rx="1.2"/><rect x="14" y="14" width="6" height="6" rx="1.2"/></svg></span>كل المواد</button>
+          <button class="subjectBtn" type="button" data-subject="arabic"><span class="subjectIcon">ع</span>العربية</button>
+          <button class="subjectBtn" type="button" data-subject="english"><span class="subjectIcon">EN</span>الإنجليزية</button>
+          <button class="subjectBtn" type="button" data-subject="physics"><span class="subjectIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13.2 2.8 6.8 13h4.6l-.8 8.2L17.2 11h-4.6l.6-8.2Z"/></svg></span>الفيزياء</button>
+          <button class="subjectBtn" type="button" data-subject="history"><span class="subjectIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20h16M5 17V9l7-4 7 4v8M8 9v8M12 9v8M16 9v8"/></svg></span>التاريخ الوطني</button>
+          <button class="subjectBtn" type="button" data-subject="programming"><span class="subjectIcon">&lt;/&gt;</span>البرمجة</button>
+          <button class="subjectBtn" type="button" data-subject="quran"><span class="subjectIcon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 4.5h11a1 1 0 0 1 1 1v14H7a1.5 1.5 0 0 1-1.5-1.5V5.5A1 1 0 0 1 6.5 4.5Z"/><path d="M8.5 8h6M8.5 11h6M8.5 14h4"/></svg></span>القرآن الكريم</button>
+        </div>
+      </section>
+
+      <div class="playerArea">
+        <section class="playerBox" aria-label="مشغل الفيديو">
+          <div class="screen" id="screen">
+            <div class="emptyScreen" id="emptyScreen"><div><div class="playBig">▶</div><strong>المشغل جاهز</strong><span>اختر الفيديو من القائمة لبدء المشاهدة.</span></div></div>
+            <video id="video" playsinline preload="metadata" controlslist="nodownload"></video>
+            <div id="yt" class="ytHolder" aria-label="مشغل YouTube" hidden></div>
+            <div class="controls" id="customControls"><input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم"><div class="controlRow"><button class="ctrl" id="play" title="تشغيل / إيقاف">▶</button><button class="ctrl" id="back10" title="رجوع 10 ثوانٍ">↶</button><button class="ctrl" id="next" title="الفيديو التالي">⏭</button><span class="time" id="time">00:00 / 00:00</span><span class="volumeIcon" aria-hidden="true">🔊</span><input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="الصوت"><select id="speed" class="speed" aria-label="سرعة التشغيل"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select><span class="spacer"></span><button class="ctrl" id="full" title="ملء الشاشة">⛶</button></div></div>
+          </div>
+          <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">اختر المادة والقسم ثم اختر الفيديو من القائمة لمتابعة المشاهدة.</p></div>
+          <div class="completionPanel" id="completionPanel"><div class="completionTop"><span class="completionTitle">✅ متابعة التقدم في قسم المراجعة</span><span class="completionProgress" id="completionProgress">0 / 0 مكتمل</span></div><div class="completionBar"><div class="completionFill" id="completionFill"></div></div><button class="completeBtn" id="completeBtn" type="button">☐ تمت المشاهدة — تحديد الفيديو كمكتمل</button></div>
+          <section class="attachmentsSection" id="attachmentsSection" aria-label="المرفقات"><button class="attachmentsToggle" id="attachmentsToggle" type="button" aria-expanded="false" aria-controls="attachmentsBody"><span class="attachmentsToggleMain"><span class="attachmentsIcon">📎</span><span><strong>المرفقات</strong><small>ملفات ومحتوى إضافي مرتبط بالفيديو</small></span></span><span class="attachmentsChevron" id="attachmentsChevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="attachmentsBody" id="attachmentsBody"><div class="downloadsEmpty" id="attachmentsList"><div><strong>📥 المرفقات غير متاحة حاليًا</strong><span>سيتم إضافة محتوى قريبًا.</span></div></div></div></section>
+        </section>
+
+        <aside class="playlist"><div class="playlistHead"><h3>قائمة الفيديوهات</h3><span class="count" id="count">0 فيديو</span></div><div class="list" id="list"><div class="emptyList">لا توجد فيديوهات متاحة حاليًا.</div></div></aside>
+      </div>
+      <div class="note"><b>ملاحظة:</b> علامة ✅ وحالة الإكمال تظهر في قسم 🚀 المراجعة والاستعداد فقط، ويتم حفظها على نفس المتصفح.</div>
+    </section>
   </main>
-
-
-  <div class="note"><b>ملاحظة:</b> علامة ✅ وحالة الإكمال تظهر في قسم 🚀 المراجعة والاستعداد فقط، ويتم حفظها على نفس المتصفح.</div>
-
 </div>
-
 <script>
 'use strict';
 const videos=[
@@ -394,6 +427,22 @@ document.querySelectorAll('.sideSection').forEach(btn=>btn.addEventListener('cli
 document.querySelectorAll('.subjectBtn').forEach(btn=>btn.addEventListener('click',()=>{selectedSubject=btn.dataset.subject;document.querySelectorAll('.subjectBtn').forEach(b=>b.classList.toggle('active',b===btn));refreshContent();}));
 const themeBtn=$('themeBtn');let dayMode=false;themeBtn.addEventListener('click',()=>{dayMode=!dayMode;document.body.classList.toggle('day',dayMode);themeBtn.textContent=dayMode?'🌙':'☀️';themeBtn.title=dayMode?'تفعيل الوضع الليلي':'تفعيل الوضع النهاري';});
 updateStats();refreshContent();
+</script>
+<script>
+(function(){
+  const sidebar=document.getElementById('videoSideBar');
+  const overlay=document.getElementById('sideOverlay');
+  const menuBtn=document.getElementById('mobileMenuBtn');
+  if(menuBtn){menuBtn.addEventListener('click',()=>{const open=sidebar.classList.toggle('open');overlay.classList.toggle('show',open);menuBtn.setAttribute('aria-expanded',String(open));});}
+  if(overlay){overlay.addEventListener('click',()=>{sidebar.classList.remove('open');overlay.classList.remove('show');menuBtn&&menuBtn.setAttribute('aria-expanded','false');});}
+  document.querySelectorAll('.sideSection').forEach(btn=>btn.addEventListener('click',()=>{
+    const titles={motivation:['الجزء التحفيزي','شحن الهمة والاستمرار والبدء بقوة.'],evaluations:['حل تقييمات الوزارة','حلول التقييمات والواجبات المنظمة حسب المادة.'],revision:['المراجعة والاستعداد','مراجعة مركزة مع متابعة الفيديوهات المكتملة.']};
+    const t=titles[btn.dataset.section]||titles.motivation;
+    const title=document.getElementById('sectionTitle'),sub=document.getElementById('sectionSubtitle');
+    if(title)title.textContent=t[0]; if(sub)sub.textContent=t[1];
+    sidebar&&sidebar.classList.remove('open'); overlay&&overlay.classList.remove('show'); menuBtn&&menuBtn.setAttribute('aria-expanded','false');
+  }));
+})();
 </script>
 
 <script src="https://www.youtube.com/iframe_api"></script>
