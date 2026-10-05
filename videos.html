@@ -86,6 +86,50 @@ body.day #themeBtn{background:#fff;color:#172033;border-color:rgba(23,32,51,.13)
   .info h2{font-size:18px}.info p{font-size:11px}.item strong{font-size:11.5px}.item small{font-size:9.5px}
 }
 </style>
+
+<style>
+/* ===== Student features ===== */
+.studentTools{margin:0 0 14px;padding:12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));box-shadow:0 12px 28px rgba(0,0,0,.08)}
+.toolsRow{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.searchBox{flex:1 1 260px;min-width:220px;display:flex;align-items:center;gap:8px;padding:0 12px;height:44px;border:1px solid var(--line);border-radius:13px;background:var(--panel2);color:var(--muted)}
+.searchBox svg{width:19px;height:19px;flex:0 0 auto}
+.searchBox input{width:100%;border:0;outline:0;background:transparent;color:var(--text);font-size:13px;font-family:inherit}
+.searchBox input::placeholder{color:var(--muted)}
+.toolChip{border:1px solid var(--line);background:var(--panel2);color:var(--text);height:44px;border-radius:13px;padding:0 13px;cursor:pointer;font:800 11px inherit;transition:.18s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.toolChip:hover{transform:translateY(-1px);border-color:rgba(98,216,255,.4)}
+.toolChip.active{border-color:rgba(255,211,79,.55);background:rgba(255,211,79,.08);color:var(--accent)}
+.toolChip.primary{background:linear-gradient(135deg,rgba(98,216,255,.15),rgba(255,211,79,.08));border-color:rgba(98,216,255,.28)}
+.resumeStrip{display:none;margin:0 0 14px;padding:11px 13px;border-radius:14px;border:1px solid rgba(98,216,255,.22);background:linear-gradient(135deg,rgba(98,216,255,.10),rgba(255,255,255,.015));align-items:center;justify-content:space-between;gap:10px}
+.resumeStrip.show{display:flex}
+.resumeText{min-width:0}.resumeText strong{display:block;color:var(--text);font-size:11px}.resumeText span{display:block;color:var(--muted);font-size:9px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.resumeBtn{border:1px solid rgba(98,216,255,.35);background:rgba(98,216,255,.10);color:var(--text);border-radius:11px;padding:9px 12px;font:900 10px inherit;cursor:pointer;white-space:nowrap}
+.itemActions{display:flex;flex-direction:column;gap:5px;align-items:stretch;justify-content:center;min-width:82px}
+.itemAction{min-width:82px;min-height:28px;padding:0 7px;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:4px;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-size:11px;font-weight:900;cursor:pointer;user-select:none;white-space:nowrap}
+.itemAction:hover{color:var(--accent);border-color:rgba(255,211,79,.35)}
+.itemAction.active{color:var(--accent);border-color:rgba(255,211,79,.55);background:rgba(255,211,79,.10)}
+.itemAction[data-action="pin"]{color:#f2d36b;border-color:rgba(255,211,79,.28);background:rgba(255,211,79,.045)}
+.itemAction[data-action="pin"].active{color:#111827;background:linear-gradient(135deg,#ffe27e,#f4c748);border-color:#ffe27e}
+.notesSection{margin:12px 0 0;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.018);overflow:hidden}
+.notesToggle{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;border:0;background:transparent;color:var(--text);padding:13px 14px;cursor:pointer;font:900 13px inherit;text-align:right}
+.notesToggleMain{display:flex;align-items:center;gap:10px;min-width:0}.notesToggleMain>span:last-child{min-width:0}
+.notesToggle small{display:block;color:var(--muted);font-size:10px;margin-top:3px;font-weight:600}
+.notesChevron{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--muted);transition:transform .2s ease,background .2s ease,color .2s ease}
+.notesChevron svg{width:17px;height:17px;display:block}.notesToggle[aria-expanded="true"] .notesChevron{transform:rotate(180deg);background:rgba(98,216,255,.08);color:var(--accent)}
+.notesBody{display:none;padding:0 12px 12px}.notesBody.open{display:block}
+.notesBody textarea{width:100%;min-height:120px;resize:vertical;border:1px solid var(--line);border-radius:11px;background:var(--panel2);color:var(--text);padding:11px;font:600 12px/1.8 inherit;outline:0}.notesBody textarea:focus{border-color:rgba(98,216,255,.55);box-shadow:0 0 0 3px rgba(98,216,255,.08)}
+.notesSaved{display:block;color:#7ef0ae;font-size:10px;margin-top:6px;min-height:14px;font-weight:800}
+.studentModal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(3,8,15,.66);backdrop-filter:blur(8px);z-index:300}
+.studentModal.show{display:flex}
+.modalCard{width:min(760px,100%);max-height:min(82vh,760px);overflow:auto;border:1px solid var(--line);border-radius:20px;background:var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.35);padding:18px}
+.modalTop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.modalTop h3{margin:0;font-size:18px}.modalClose{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-size:18px}
+.progressGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.progressCard{border:1px solid var(--line);border-radius:14px;padding:11px;background:var(--panel2)}.progressCardHead{display:flex;justify-content:space-between;gap:8px;font-size:10px;font-weight:900}.progressCardHead span{color:var(--muted);display:flex;align-items:center;gap:7px}.progressPercent{color:var(--green);font-size:11px;font-weight:900;direction:ltr;white-space:nowrap}.progressTrack{height:7px;border-radius:99px;background:rgba(127,144,164,.14);margin-top:9px;overflow:hidden}.progressTrack i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#62d8ff,#ffd34f)}
+.badgeGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}.achievement{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:var(--panel2);opacity:.5;filter:grayscale(.6)}.achievement.unlocked{opacity:1;filter:none;border-color:rgba(255,211,79,.38)}.achievement .aIcon{font-size:23px}.achievement strong{display:block;margin-top:5px;font-size:10px}.achievement small{display:block;color:var(--muted);margin-top:3px;font-size:8px;line-height:1.5}
+.quickEmpty{padding:14px;text-align:center;color:var(--muted);font-size:10px}
+body.day .studentTools,body.day .resumeStrip,body.day .notesSection{background:#fff}body.day .searchBox,body.day .toolChip,body.day .itemAction,body.day .notesBody textarea,body.day .modalClose,body.day .progressCard,body.day .achievement{background:#f7f9fc}
+body.day .resumeStrip{border-color:rgba(23,32,51,.10)}
+@media(max-width:720px){.toolsRow{display:grid;grid-template-columns:1fr 1fr}.searchBox{grid-column:1/-1;min-width:0}.toolChip{justify-content:center}.progressGrid{grid-template-columns:1fr}.badgeGrid{grid-template-columns:1fr 1fr}.resumeStrip{align-items:stretch;flex-direction:column}.resumeBtn{width:100%}}
+</style>
+
 </head>
 <body data-ui-version="3">
 
@@ -153,6 +197,25 @@ body.day #themeBtn{background:#fff;color:#172033;border-color:rgba(23,32,51,.13)
         </div>
       </section>
 
+      <section class="studentTools" aria-label="أدوات الطالب">
+        <div class="toolsRow">
+          <label class="searchBox" aria-label="البحث في الفيديوهات">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.7"/><path d="m16 16 5 5"/></svg>
+            <input id="videoSearch" type="search" placeholder="ابحث عن درس أو مادة أو اسم فيديو..." autocomplete="off">
+          </label>
+          <button class="toolChip active" id="showAllBtn" type="button">🎬 الكل</button>
+          <button class="toolChip" id="favoritesBtn" type="button">⭐ المفضلة</button>
+          <button class="toolChip" id="pinnedBtn" type="button">📌 المثبتة</button>
+          <button class="toolChip" id="latestBtn" type="button">🆕 آخر الإضافات</button>
+          <button class="toolChip primary" id="statsBtn" type="button">📊 تقدمي</button>
+        </div>
+      </section>
+
+      <div class="resumeStrip" id="resumeStrip">
+        <div class="resumeText"><strong>▶️ أكمل من حيث توقفت</strong><span id="resumeLabel">يوجد فيديو محفوظ للمتابعة.</span></div>
+        <button class="resumeBtn" id="resumeBtn" type="button">متابعة الفيديو</button>
+      </div>
+
       <div class="playerArea">
         <section class="playerBox" aria-label="مشغل الفيديو">
           <div class="screen" id="screen">
@@ -162,6 +225,7 @@ body.day #themeBtn{background:#fff;color:#172033;border-color:rgba(23,32,51,.13)
             <div class="controls" id="customControls"><input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم"><div class="controlRow"><button class="ctrl" id="play" title="تشغيل / إيقاف">▶</button><button class="ctrl" id="back10" title="رجوع 10 ثوانٍ">↶</button><button class="ctrl" id="next" title="الفيديو التالي">⏭</button><span class="time" id="time">00:00 / 00:00</span><span class="volumeIcon" aria-hidden="true">🔊</span><input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="الصوت"><select id="speed" class="speed" aria-label="سرعة التشغيل"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select><span class="spacer"></span><button class="ctrl" id="full" title="ملء الشاشة">⛶</button></div></div>
           </div>
           <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">اختر المادة والقسم ثم اختر الفيديو من القائمة لمتابعة المشاهدة.</p></div>
+          <section class="notesSection" id="notesSection" aria-label="ملاحظاتي"><button class="notesToggle" id="notesToggle" type="button" aria-expanded="false" aria-controls="notesBody"><span class="notesToggleMain"><span aria-hidden="true">📝</span><span>ملاحظاتي<small>اكتب ملاحظاتك الخاصة واحفظها لهذا الفيديو تلقائيًا</small></span></span><span class="notesChevron" id="notesChevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="notesBody" id="notesBody"><textarea id="videoNotes" placeholder="اكتب ملاحظاتك هنا..."></textarea><span class="notesSaved" id="notesSaved"></span></div></section>
           <div class="completionPanel" id="completionPanel"><div class="completionTop"><span class="completionTitle">✅ متابعة التقدم في قسم المراجعة</span><span class="completionProgress" id="completionProgress">0 / 0 مكتمل</span></div><div class="completionBar"><div class="completionFill" id="completionFill"></div></div><button class="completeBtn" id="completeBtn" type="button">☐ تمت المشاهدة — تحديد الفيديو كمكتمل</button></div>
           <section class="attachmentsSection" id="attachmentsSection" aria-label="المرفقات"><button class="attachmentsToggle" id="attachmentsToggle" type="button" aria-expanded="false" aria-controls="attachmentsBody"><span class="attachmentsToggleMain"><span class="attachmentsIcon">📎</span><span><strong>المرفقات</strong><small>ملفات ومحتوى إضافي مرتبط بالفيديو</small></span></span><span class="attachmentsChevron" id="attachmentsChevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="attachmentsBody" id="attachmentsBody"><div class="downloadsEmpty" id="attachmentsList"><div><strong>📥 المرفقات غير متاحة حاليًا</strong><span>سيتم إضافة محتوى قريبًا.</span></div></div></div></section>
         </section>
@@ -171,6 +235,13 @@ body.day #themeBtn{background:#fff;color:#172033;border-color:rgba(23,32,51,.13)
       <div class="note"><b>ملاحظة:</b> علامة ✅ وحالة الإكمال تظهر في قسم 🚀 المراجعة والاستعداد فقط، ويتم حفظها على نفس المتصفح.</div>
     </section>
   </main>
+</div>
+<div class="studentModal" id="studentModal" role="dialog" aria-modal="true" aria-labelledby="studentModalTitle">
+  <div class="modalCard">
+    <div class="modalTop"><h3 id="studentModalTitle">📊 تقدمي وإنجازاتي</h3><button class="modalClose" id="modalClose" type="button" aria-label="إغلاق">×</button></div>
+    <div class="progressGrid" id="subjectProgressGrid"></div>
+    <div class="badgeGrid" id="badgeGrid"></div>
+  </div>
 </div>
 <script>
 'use strict';
@@ -204,12 +275,41 @@ const $=id=>document.getElementById(id);
 const video=$('video'),yt=$('yt'),empty=$('emptyScreen'),list=$('list');
 let current=-1,selectedStage='baccalaureate',selectedSection='motivation',selectedSubject='all';
 let ytPlayer=null,ytApiReady=false,pendingYT=null,ytTimer=null;
+let quickMode='all';
+let searchTerm='';
+const favoritesKey='videos_favorites_v1',pinsKey='videos_pins_v1',resumeKey='videos_resume_v1',notesKey='videos_notes_v1';
+let favorites={},pins={},resumeData={},notesData={};
+let lastResumeSaveAt=0;
+try{favorites=JSON.parse(localStorage.getItem(favoritesKey)||'{}')||{};}catch(_){favorites={};}
+try{pins=JSON.parse(localStorage.getItem(pinsKey)||'{}')||{};}catch(_){pins={};}
+try{resumeData=JSON.parse(localStorage.getItem(resumeKey)||'{}')||{};}catch(_){resumeData={};}
+try{notesData=JSON.parse(localStorage.getItem(notesKey)||'{}')||{};}catch(_){notesData={};}
 let ytCreating=false;
 const completionKey='videos_completion_v2';
 let completedVideos={};
 try{completedVideos=JSON.parse(localStorage.getItem(completionKey)||'{}')||{};}catch(_){completedVideos={};}
 const getVisibleVideos=()=>videos.filter(v=>v.stage===selectedStage&&v.section===selectedSection&&(selectedSubject==='all'||v.subject===selectedSubject));
 const videoKey=v=>[v.stage,v.section,v.url].join('|');
+const keyForGlobal=v=>videoKey(v);
+function saveMap(key,obj){try{localStorage.setItem(key,JSON.stringify(obj));}catch(_){} }
+function currentList(){
+  let arr=getVisibleVideos();
+  const q=searchTerm.trim().toLowerCase();
+  if(q)arr=arr.filter(v=>(v.title+' '+v.description+' '+(v.subject||'')).toLowerCase().includes(q));
+  if(quickMode==='favorites')arr=arr.filter(v=>!!favorites[videoKey(v)]);
+  else if(quickMode==='pins')arr=arr.filter(v=>!!pins[videoKey(v)]);
+  else if(quickMode==='latest'){
+    const base=getVisibleVideos();const latest=new Set(base.slice(-5).map(videoKey));arr=arr.filter(v=>latest.has(videoKey(v)));
+  }
+  return arr;
+}
+function getVideoByKey(k){return videos.find(v=>videoKey(v)===k)||null;}
+function saveResume(v,seconds,force=false){if(!v)return;const nowMs=Date.now();if(!force&&nowMs-lastResumeSaveAt<1200)return;lastResumeSaveAt=nowMs;const k=videoKey(v);const d=Math.max(0,Number(seconds)||0);if(d>3){resumeData[k]=Math.floor(d);resumeData.__last=k;}else{delete resumeData[k];if(resumeData.__last===k)delete resumeData.__last;}saveMap(resumeKey,resumeData);updateResumeStrip();}
+function getResumeSeconds(v){return v?Number(resumeData[videoKey(v)]||0):0;}
+function getLastResume(){const k=resumeData.__last;if(!k)return null;const v=getVideoByKey(k);return v&&getResumeSeconds(v)>3?v:null;}
+function updateResumeStrip(){const v=getLastResume(),box=$('resumeStrip'),label=$('resumeLabel');if(!box||!label)return;if(!v){box.classList.remove('show');return;}const sec=getResumeSeconds(v);box.classList.add('show');label.textContent=v.title+' • عند '+format(sec);}
+function setQuickMode(mode){quickMode=mode;document.querySelectorAll('.toolChip').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));renderList();}
+
 const isCompleted=v=>!!completedVideos[videoKey(v)];
 function saveCompleted(){try{localStorage.setItem(completionKey,JSON.stringify(completedVideos));}catch(_){} }
 function escapeHtml(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
@@ -249,16 +349,17 @@ function updateCompletionVisibility(){
   updateRevisionProgress();
 }
 function renderList(){
-  const available=getVisibleVideos();
+  const allAvailable=getVisibleVideos(),available=currentList();
   $('count').textContent=available.length+' فيديو';
-  if(!available.length){list.innerHTML='<div class="emptyList">لا توجد فيديوهات مضافة لهذا القسم والمادة المختارة حاليًا.<br>سيتم إضافة الفيديوهات قريبًا جدًا.</div>';updateRevisionProgress();return;}
+  if(!available.length){list.innerHTML='<div class="quickEmpty">لا توجد نتائج مطابقة حاليًا.<br>جرّب تغيير البحث أو الفلتر.</div>';updateRevisionProgress();return;}
   list.innerHTML=available.map((v,i)=>{
-    const done=isCompleted(v);
+    const done=isCompleted(v),fav=!!favorites[videoKey(v)],pin=!!pins[videoKey(v)];
     const meta=done?'<span class="doneLabel">✅ تمت المشاهدة</span>':'';
-    return `<button class="item ${i===current?'active ':''}${done?'completed':''}" data-index="${i}" type="button"><span class="thumb">${done?'✓':'▶'}</span><span><strong>${escapeHtml(v.title||'فيديو بدون عنوان')}</strong><small>${escapeHtml(v.description||'فيديو تعليمي')}<span class="listSponsor">برعاية :- محمد رمضان الحرباوي</span></small>${meta}</span><span class="num">${String(i+1).padStart(2,'0')}</span></button>`;
+    return `<div class="item ${v===getVisibleVideos()[current]?'active ':''}${done?'completed':''}" data-index="${getVisibleVideos().indexOf(v)}" role="button" tabindex="0" aria-label="فتح ${escapeHtml(v.title||'الفيديو')}"><span class="thumb">${done?'✓':'▶'}</span><span><strong>${escapeHtml(v.title||'فيديو بدون عنوان')}</strong><small>${escapeHtml(v.description||'فيديو تعليمي')}<span class="listSponsor">برعاية :- محمد رمضان الحرباوي</span></small>${meta}</span><span class="itemActions"><span class="itemAction ${fav?'active':''}" data-action="favorite" data-key="${escapeHtml(videoKey(v))}" title="${fav?'إزالة من المفضلة':'إضافة للمفضلة'}">${fav?'★':'☆'}</span><span class="itemAction ${pin?'active':''}" data-action="pin" data-key="${escapeHtml(videoKey(v))}" title="${pin?'إلغاء تثبيت الفيديو':'تثبيت الفيديو'}">${pin?'📌 مثبت':'📌 تثبيت'}</span><span class="num">${String(i+1).padStart(2,'0')}</span></span></div>`;
   }).join('');
   updateRevisionProgress();
 }
+
 function resetDirectControls(){
   $('progress').value=0;
   $('time').textContent='00:00 / 00:00';
@@ -279,9 +380,11 @@ function syncYTControls(){
   const now=Number(ytPlayer.getCurrentTime&&ytPlayer.getCurrentTime())||0;
   $('progress').value=duration?Math.min(100,(now/duration)*100):0;
   $('time').textContent=format(now)+' / '+format(duration);
+  if(now>3)saveResume(v,now);
   const state=typeof ytPlayer.getPlayerState==='function'?ytPlayer.getPlayerState():-1;
   $('play').textContent=state===1?'⏸':'▶';
   if(state===0 && !pendingYT){
+    saveResume(v,0,true);
     const a=getVisibleVideos();
     if(a.length)load((current+1)%a.length,false);
   }
@@ -301,8 +404,8 @@ function initYT(){
           syncYTControls();
           if(pendingYT){
             const q=pendingYT;pendingYT=null;
-            try{ytPlayer.loadVideoById({videoId:q.id,startSeconds:0}); if(!q.autoplay) ytPlayer.pauseVideo();}
-            catch(_){try{ytPlayer.cueVideoById(q.id);if(q.autoplay)ytPlayer.playVideo();}catch(__){}}
+            try{ytPlayer.loadVideoById({videoId:q.id,startSeconds:Number(q.startSeconds)||0}); if(!q.autoplay) ytPlayer.pauseVideo();}
+            catch(_){try{ytPlayer.cueVideoById({videoId:q.id,startSeconds:Number(q.startSeconds)||0});if(q.autoplay)ytPlayer.playVideo();}catch(__){}}
           }
         },
         onStateChange:()=>syncYTControls(),
@@ -317,17 +420,17 @@ function initYT(){
   }
 }
 window.onYouTubeIframeAPIReady=()=>{ytApiReady=true;initYT();};
-function queueYT(id,autoplay){
-  pendingYT={id,autoplay};
+function queueYT(id,autoplay,startSeconds=0){
+  pendingYT={id,autoplay,startSeconds};
   if(!ytApiReady)return;
   initYT();
   if(ytPlayer&&typeof ytPlayer.loadVideoById==='function'){
     const q=pendingYT;pendingYT=null;
     try{
-      ytPlayer.loadVideoById({videoId:q.id,startSeconds:0});
+      ytPlayer.loadVideoById({videoId:q.id,startSeconds:Number(q.startSeconds)||0});
       if(q.autoplay)ytPlayer.playVideo();else ytPlayer.pauseVideo();
     }catch(_){
-      try{ytPlayer.cueVideoById(q.id);if(q.autoplay)ytPlayer.playVideo();}catch(__){ }
+      try{ytPlayer.cueVideoById({videoId:q.id,startSeconds:Number(q.startSeconds)||0});if(q.autoplay)ytPlayer.playVideo();}catch(__){ }
     }
   }
 }
@@ -351,18 +454,18 @@ function load(i,autoplay=false){
   $('title').textContent=v.title||'فيديو';
   $('desc').innerHTML=descriptionHtml(v.description);
   $('typeBadge').textContent=isYT(v)?'YouTube • تحكم المكتبة':'فيديو مباشر • تحكم المكتبة';
-  renderList();updateCompletionVisibility();resetDirectControls();updateAttachmentsVisibility();
+  loadNotes(v);renderList();updateCompletionVisibility();resetDirectControls();updateAttachmentsVisibility();updateResumeStrip();
   if(isYT(v)){
     video.pause();video.removeAttribute('src');video.style.display='none';
     yt.hidden=false;empty.style.display='none';$('customControls').style.display='block';
     const id=youtubeId(v.url);
     if(!id){$('typeBadge').textContent='رابط YouTube غير صالح';return;}
-    queueYT(id,autoplay);
+    queueYT(id,autoplay,getResumeSeconds(v));
   }else{
-    stopYT();video.style.display='block';empty.style.display='none';$('customControls').style.display='block';video.src=v.url;video.load();if(autoplay)video.play().catch(()=>{});
+    stopYT();video.style.display='block';empty.style.display='none';$('customControls').style.display='block';video.src=v.url;video.load();const resume=getResumeSeconds(v);const startDirect=()=>{if(resume>3)video.currentTime=Math.min(resume,Math.max(0,(video.duration||resume)-0.5));if(autoplay)video.play().catch(()=>{});};if(video.readyState>=1)startDirect();else video.addEventListener('loadedmetadata',startDirect,{once:true});
   }
 }
-function refreshContent(){
+function refreshContent(autoLoad=true){
   current=-1;
   video.pause();video.removeAttribute('src');video.style.display='none';
   stopYT();empty.style.display='grid';$('customControls').style.display='none';
@@ -372,9 +475,19 @@ function refreshContent(){
   const available=getVisibleVideos();
   $('sectionMessage').classList.toggle('show',available.length===0);
   renderList();updateCompletionVisibility();updateAttachmentsVisibility();
-  if(available.length)load(0,false);
+  if(autoLoad&&available.length)load(0,false);
 }
-$('list').addEventListener('click',e=>{const b=e.target.closest('[data-index]');if(b)load(Number(b.dataset.index),false);});
+
+$('list').addEventListener('click',e=>{
+  const act=e.target.closest('[data-action]');
+  if(act){
+    e.stopPropagation();const k=act.dataset.key;const action=act.dataset.action;
+    if(action==='favorite'){favorites[k]=!favorites[k];saveMap(favoritesKey,favorites);}else if(action==='pin'){pins[k]=!pins[k];saveMap(pinsKey,pins);}
+    renderList();return;
+  }
+  const b=e.target.closest('[data-index]');if(b)load(Number(b.dataset.index),false);
+});
+$('list').addEventListener('keydown',e=>{const b=e.target.closest('[data-index]');if(!b)return;if(e.target.closest('[data-action]'))return;if(e.key==='Enter'||e.key===' '){e.preventDefault();load(Number(b.dataset.index),false);}});
 $('completeBtn').addEventListener('click',()=>{
   const available=getVisibleVideos(),v=available[current];
   if(!v||selectedSection!=='revision'||isCompleted(v))return;
@@ -411,20 +524,53 @@ $('progress').oninput=e=>{
   else if(video.duration)video.currentTime=(pct/100)*video.duration;
 };
 $('volume').value=1;
-video.addEventListener('timeupdate',()=>{if(current<0)return;const v=getVisibleVideos()[current];if(v&&isYT(v))return;const pct=video.duration?(video.currentTime/video.duration)*100:0;$('progress').value=pct;$('time').textContent=format(video.currentTime)+' / '+format(video.duration);});
+video.addEventListener('timeupdate',()=>{if(current<0)return;const v=getVisibleVideos()[current];if(v&&isYT(v))return;const pct=video.duration?(video.currentTime/video.duration)*100:0;$('progress').value=pct;$('time').textContent=format(video.currentTime)+' / '+format(video.duration);if(v&&video.currentTime>3)saveResume(v,video.currentTime);});
 video.addEventListener('loadedmetadata',()=>{$('volume').value=video.volume;$('speed').value=String(video.playbackRate||1);});
 video.addEventListener('play',()=>$('play').textContent='⏸');
 video.addEventListener('pause',()=>$('play').textContent='▶');
-video.addEventListener('ended',()=>{const a=getVisibleVideos();if(a.length)load((current+1)%a.length,false)});
+video.addEventListener('ended',()=>{const v=getVisibleVideos()[current];if(v)saveResume(v,0,true);const a=getVisibleVideos();if(a.length)load((current+1)%a.length,false)});
 $('full').onclick=()=>{const el=$('screen');if(document.fullscreenElement){document.exitFullscreen().catch(()=>{});}else if(el.requestFullscreen){el.requestFullscreen().catch(()=>{});}};
 $('attachmentsToggle').addEventListener('click',()=>{
   const btn=$('attachmentsToggle'),body=$('attachmentsBody');
   const open=btn.getAttribute('aria-expanded')==='true';
   btn.setAttribute('aria-expanded',String(!open));body.classList.toggle('open',!open);
 });
-document.querySelectorAll('.stageBtn').forEach(btn=>btn.addEventListener('click',()=>{selectedStage=btn.dataset.stage;document.querySelectorAll('.stageBtn').forEach(b=>b.classList.toggle('active',b===btn));refreshContent();}));
+document.querySelectorAll('.stageBtn').forEach(btn=>btn.addEventListener('click',()=>{selectedStage=btn.dataset.stage;document.querySelectorAll('.stageBtn').forEach(b=>b.classList.toggle('active',b===btn));quickMode='all';searchTerm='';$('videoSearch').value='';quickMode='all';searchTerm='';$('videoSearch').value='';quickMode='all';searchTerm='';$('videoSearch').value='';refreshContent();}));
 document.querySelectorAll('.sideSection').forEach(btn=>btn.addEventListener('click',()=>{selectedSection=btn.dataset.section;selectedSubject='all';document.querySelectorAll('.sideSection').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.subjectBtn').forEach(b=>b.classList.toggle('active',b.dataset.subject==='all'));refreshContent();}));
 document.querySelectorAll('.subjectBtn').forEach(btn=>btn.addEventListener('click',()=>{selectedSubject=btn.dataset.subject;document.querySelectorAll('.subjectBtn').forEach(b=>b.classList.toggle('active',b===btn));refreshContent();}));
+function loadNotes(v){const box=$('videoNotes'),saved=$('notesSaved');if(!box)return;try{notesData=JSON.parse(localStorage.getItem(notesKey)||'{}')||{};}catch(_){notesData=notesData||{};}box.value=v?String(notesData[videoKey(v)]||''):'';if(saved){saved.textContent=(v&&notesData[videoKey(v)])?'تم استرجاع الملاحظة ✓':'';if(v&&notesData[videoKey(v)]){clearTimeout(window.__notesRestoredTimer);window.__notesRestoredTimer=setTimeout(()=>{saved.textContent='';},1400);}}}
+function saveCurrentNote(showStatus=true){const v=getVisibleVideos()[current],box=$('videoNotes');if(!v||!box)return;const value=box.value;const k=videoKey(v);if(value.length)notesData[k]=value;else delete notesData[k];saveMap(notesKey,notesData);if(showStatus&&$('notesSaved')){$('notesSaved').textContent='تم الحفظ تلقائيًا ✓';clearTimeout(window.__notesSavedTimer);window.__notesSavedTimer=setTimeout(()=>{$('notesSaved').textContent='';},1200);}}
+function saveNoteBeforeLeave(){try{const v=getVisibleVideos()[current],box=$('videoNotes');if(!v||!box)return;const value=box.value;const k=videoKey(v);if(value.length)notesData[k]=value;else delete notesData[k];localStorage.setItem(notesKey,JSON.stringify(notesData));}catch(_){} }
+function populateStatsModal(){
+  const subjects=[['arabic','العربية'],['english','الإنجليزية'],['physics','الفيزياء'],['history','التاريخ الوطني'],['programming','البرمجة'],['quran','القرآن الكريم']];
+  $('subjectProgressGrid').innerHTML=subjects.map(([id,label])=>{const arr=videos.filter(v=>v.stage===selectedStage&&v.subject===id&&v.section==='revision');const done=arr.filter(isCompleted).length;const pct=arr.length?Math.round(done/arr.length*100):0;return `<div class="progressCard"><div class="progressCardHead"><b>${label}</b><span>${arr.length?done+' / '+arr.length:'لا توجد مراجعات بعد'} <strong class="progressPercent">${arr.length?pct:0}%</strong></span></div><div class="progressTrack"><i style="width:${pct}%"></i></div></div>`;}).join('');
+  const doneCount=videos.filter(v=>v.stage===selectedStage&&v.section==='revision'&&isCompleted(v)).length;
+  const favCount=Object.values(favorites).filter(Boolean).length;
+  const pinCount=Object.values(pins).filter(Boolean).length;
+  const totalRev=videos.filter(v=>v.stage===selectedStage&&v.section==='revision').length;
+  const badges=[
+    ['🌟','أول خطوة','أكمل أول فيديو في المراجعة.',doneCount>=1],
+    ['🔥','10 فيديوهات','أكمل 10 فيديوهات مراجعة.',doneCount>=10],
+    ['🏆','مراجعة كاملة','أكمل جميع فيديوهات المراجعة المتاحة.',totalRev>0&&doneCount===totalRev],
+    ['⭐','ذوقك المفضل','أضف 3 فيديوهات للمفضلة.',favCount>=3],
+    ['📌','منظم','ثبّت 3 فيديوهات مهمة.',pinCount>=3],
+    ['🚀','مستمر','أكمل 5 فيديوهات مراجعة على الأقل.',doneCount>=5]
+  ];
+  $('badgeGrid').innerHTML=badges.map(b=>`<div class="achievement ${b[3]?'unlocked':''}"><div class="aIcon">${b[0]}</div><strong>${b[1]}</strong><small>${b[2]}</small></div>`).join('');
+}
+$('videoSearch').addEventListener('input',e=>{searchTerm=e.target.value||'';renderList();});
+[['showAllBtn','all'],['favoritesBtn','favorites'],['pinnedBtn','pins'],['latestBtn','latest']].forEach(([id,mode])=>{$(id).dataset.mode=mode;$(id).addEventListener('click',()=>{setQuickMode(mode);document.querySelectorAll('.toolChip').forEach(b=>b.classList.toggle('active',b=== $(id)));});});
+$('resumeBtn').addEventListener('click',()=>{const v=getLastResume();if(!v)return;selectedStage=v.stage;selectedSection=v.section;selectedSubject=v.subject||'all';quickMode='all';searchTerm='';$('videoSearch').value='';document.querySelectorAll('.stageBtn').forEach(b=>b.classList.toggle('active',b.dataset.stage===selectedStage));document.querySelectorAll('.sideSection').forEach(b=>b.classList.toggle('active',b.dataset.section===selectedSection));document.querySelectorAll('.subjectBtn').forEach(b=>b.classList.toggle('active',b.dataset.subject===selectedSubject));refreshContent(false);const arr=getVisibleVideos();const idx=arr.findIndex(x=>videoKey(x)===videoKey(v));if(idx>=0)load(idx,true);});
+$('statsBtn').addEventListener('click',()=>{$('studentModal').classList.add('show');populateStatsModal();});
+$('modalClose').addEventListener('click',()=>$('studentModal').classList.remove('show'));
+$('studentModal').addEventListener('click',e=>{if(e.target.id==='studentModal')$('studentModal').classList.remove('show');});
+$('notesToggle').addEventListener('click',()=>{const body=$('notesBody'),open=body.classList.toggle('open');$('notesToggle').setAttribute('aria-expanded',String(open));});
+$('videoNotes').addEventListener('input',()=>saveCurrentNote(true));
+$('videoNotes').addEventListener('blur',()=>saveCurrentNote(false));
+window.addEventListener('beforeunload',saveNoteBeforeLeave);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveNoteBeforeLeave();});
+updateResumeStrip();
+
 const themeBtn=$('themeBtn');let dayMode=false;themeBtn.addEventListener('click',()=>{dayMode=!dayMode;document.body.classList.toggle('day',dayMode);themeBtn.textContent=dayMode?'🌙':'☀️';themeBtn.title=dayMode?'تفعيل الوضع الليلي':'تفعيل الوضع النهاري';});
 updateStats();refreshContent();
 </script>
