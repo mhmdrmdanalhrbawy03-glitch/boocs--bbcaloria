@@ -2267,6 +2267,39 @@ body.light .religiousSection{background:linear-gradient(145deg,#fff,#f3f7fb);bor
 .clerkLoginBtn:hover{transform:translateY(-2px);box-shadow:0 12px 25px #f4cb5930;}
 #clerkUserButton{min-width:46px;min-height:46px;display:flex!important;align-items:center;justify-content:flex-end;visibility:visible!important;opacity:1!important;}
 #clerkUserButton .cl-userButtonTrigger{border-radius:13px!important;}
+.supabaseUserChip{height:43px;max-width:190px;padding:0 12px;border-radius:13px;border:1px solid #f4cb5948;background:#f4cb5912;color:#f4cb59;font:inherit;font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+body.light .supabaseUserChip{background:#fff7df;border-color:#e5c661;color:#8c6816;}
+.supabaseAuthCard{padding:20px!important;background:linear-gradient(145deg,#0d1d33,#081323)!important;}
+.supabaseAuthHeader{display:flex;align-items:center;gap:12px;padding:6px 6px 16px;border-bottom:1px solid #ffffff12;}
+.supabaseAuthHeader>span{width:48px;height:48px;border-radius:15px;display:grid;place-items:center;background:linear-gradient(145deg,#f6d76b,#dba936);color:#07111f;font-size:23px;}
+.supabaseAuthHeader strong{display:block;font-size:17px;color:#fff;}
+.supabaseAuthHeader small{display:block;margin-top:3px;color:#9db0c4;font-size:11px;line-height:1.6;}
+.supabaseAuthTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0;}
+.supabaseAuthTab{border:1px solid #ffffff12;background:#ffffff08;color:#9fb0c2;border-radius:12px;padding:10px;font:inherit;font-weight:800;cursor:pointer;}
+.supabaseAuthTab.active{background:#f4cb591a;color:#f4cb59;border-color:#f4cb5948;}
+.supabaseField{display:block;margin:11px 0;}
+.supabaseField span{display:block;margin:0 0 7px;color:#dce7f2;font-size:12px;font-weight:800;}
+.supabaseField input{width:100%;height:44px;border:1px solid #ffffff14;background:#07111f;color:#fff;border-radius:12px;padding:0 12px;outline:none;font:inherit;}
+.supabaseField input:focus{border-color:#f4cb5970;box-shadow:0 0 0 3px #f4cb5912;}
+.supabaseSubmit{width:100%;height:45px;border:0;border-radius:12px;background:linear-gradient(135deg,#f8dc73,#dda934);color:#101724;font:inherit;font-weight:900;cursor:pointer;margin-top:5px;}
+.supabaseSubmit:disabled{opacity:.65;cursor:wait;}
+.supabaseAuthMsg{min-height:22px;margin-top:9px;text-align:center;color:#9fb0c2;font-size:11px;line-height:1.7;}
+.supabaseAuthMsg.error{color:#ff9b9b}.supabaseAuthMsg.ok{color:#80e6ad;}
+.supabaseAccountPanel{text-align:center;padding:12px 5px 4px;}
+.supabaseAccountAvatar{width:70px;height:70px;border-radius:22px;display:grid;place-items:center;margin:0 auto 10px;background:linear-gradient(145deg,#f4cb59,#dcae38);font-size:31px;}
+.supabaseAccountPanel strong{display:block;color:#fff;word-break:break-word;}
+.supabaseAccountPanel span{display:block;color:#9fb0c2;font-size:11px;margin:5px 0 14px;}
+.supabaseSignOut{width:100%;height:43px;border-radius:12px;border:1px solid #ff727255;background:#ff727212;color:#ffadad;font:inherit;font-weight:800;cursor:pointer;}
+body.light .supabaseAuthCard{background:#fff!important;}
+body.light .supabaseAuthHeader strong{color:#172033;}
+body.light .supabaseAuthHeader small{color:#5e7187;}
+body.light .supabaseAuthTab{background:#f5f7fa;color:#5d7087;border-color:#d9e1ea;}
+body.light .supabaseAuthTab.active{background:#f4cb5912;color:#946d13;border-color:#e5c661;}
+body.light .supabaseField span{color:#243247;}
+body.light .supabaseField input{background:#f7f9fc;color:#172033;border-color:#d5dfe9;}
+body.light .supabaseAccountPanel strong{color:#172033;}
+body.light .supabaseAccountPanel span{color:#5e7187;}
+@media(max-width:600px){.supabaseAuthCard{padding:15px!important}.supabaseAuthHeader strong{font-size:15px}.supabaseAuthHeader small{font-size:10px}}
 .clerkModal{position:fixed;inset:0;z-index:20000;background:#020712b8;backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:16px;}
 .clerkModal.open{display:flex;}
 .clerkModalCard{width:min(440px,100%);max-height:92vh;overflow:auto;border:1px solid #f4cb5945;border-radius:22px;background:#0c1930;box-shadow:0 30px 80px #0009;padding:10px;}
@@ -2456,28 +2489,24 @@ body.library-details-open #crisp-client{
 .introSplash{
   position:fixed;inset:0;z-index:99999;overflow:hidden;display:grid;place-items:center;
   background:#000;isolation:isolate;pointer-events:auto;
-  animation:introExit 1000ms cubic-bezier(.22,.75,.2,1) 5200ms forwards;
+  animation:introExit 600ms cubic-bezier(.22,.75,.2,1) 2800ms forwards;
 }
 .introContent{position:relative;z-index:8;text-align:center;width:min(940px,92vw);padding:24px;opacity:0;
-  animation:introContentIn 1450ms cubic-bezier(.16,1,.3,1) 900ms forwards;}
+  animation:introContentIn 1300ms cubic-bezier(.16,1,.3,1) 820ms forwards;}
 .introKicker{display:inline-flex;align-items:center;gap:9px;padding:9px 17px;border:1px solid rgba(244,203,89,.34);
   border-radius:999px;background:rgba(244,203,89,.06);color:#d9bd67;font-size:12px;font-weight:900;letter-spacing:.4px;
   box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 12px 35px rgba(0,0,0,.42);
-  animation:introKickerIn 1000ms cubic-bezier(.16,1,.3,1) 1200ms both,introFloat 2.8s ease-in-out 2600ms infinite;}
+  animation:introKickerIn 900ms ease 1250ms both,introFloat 2.8s ease-in-out 2100ms infinite;}
 .introTitleWrap{position:relative;margin:25px auto 12px;width:fit-content;max-width:100%;}
 .introTitle{margin:0;color:#fff;font-size:clamp(36px,8vw,86px);font-weight:900;letter-spacing:-2px;line-height:1.02;
   text-shadow:0 16px 45px rgba(0,0,0,.7),0 0 28px rgba(244,203,89,.13);
   background:linear-gradient(110deg,#ffffff 8%,#fff6d2 38%,#f4cb59 54%,#ffffff 72%,#d8e5ff 94%);
   -webkit-background-clip:text;background-clip:text;color:transparent;background-size:220% 100%;
-  animation:introTitleReveal 1500ms cubic-bezier(.16,1,.3,1) 1350ms both,introTextSheen 3.2s ease 2850ms infinite;}
-
-.introTitleWrap::before{content:"";position:absolute;left:50%;top:50%;width:120%;height:120%;transform:translate(-50%,-50%) scale(.75);border-radius:50%;background:radial-gradient(circle,rgba(244,203,89,.12),transparent 62%);filter:blur(26px);opacity:0;z-index:-1;animation:introHaloIn 1500ms ease 1900ms forwards,introHaloPulse 3.4s ease 3600ms infinite;}
-@keyframes introHaloIn{from{opacity:0;transform:translate(-50%,-50%) scale(.75)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@keyframes introHaloPulse{0%,100%{opacity:.65}50%{opacity:1;transform:translate(-50%,-50%) scale(1.06)}}
+  animation:introTitleReveal 1300ms cubic-bezier(.16,1,.3,1) 1050ms both,introTextSheen 2.6s ease 2100ms infinite;}
 .introTitleLine{height:3px;width:0;margin:18px auto 0;border-radius:99px;background:linear-gradient(90deg,transparent,#f4cb59,#fff2ad,#f4cb59,transparent);
-  box-shadow:0 0 22px rgba(244,203,89,.55);animation:introLineIn 1100ms cubic-bezier(.16,1,.3,1) 2050ms forwards;}
+  box-shadow:0 0 22px rgba(244,203,89,.55);animation:introLineIn 1000ms cubic-bezier(.16,1,.3,1) 1550ms forwards;}
 .introDeveloper{margin:15px 0 0;color:#b9c7d7;font-size:clamp(15px,2.5vw,22px);font-weight:800;opacity:0;
-  animation:introDeveloperIn 1000ms cubic-bezier(.16,1,.3,1) 2350ms forwards;}
+  animation:introDeveloperIn 900ms ease 1750ms forwards;}
 .introDeveloper strong{color:#f4cb59;font-weight:900;}
 .introNoise{position:absolute;inset:-50%;opacity:.16;mix-blend-mode:screen;
   background-image:radial-gradient(rgba(255,255,255,.11) 1px,transparent 1px);background-size:5px 5px;
@@ -2487,29 +2516,18 @@ body.library-details-open #crisp-client{
   background-size:42px 42px;mask-image:linear-gradient(to top,black,transparent 75%);animation:introGridMove 4.6s linear infinite;}
 .introRing{position:absolute;left:50%;top:50%;border:1px solid rgba(244,203,89,.24);border-radius:50%;transform:translate(-50%,-50%) scale(.2);opacity:0;
   box-shadow:0 0 50px rgba(244,203,89,.05),inset 0 0 40px rgba(244,203,89,.03);}
-.ringOne{width:min(60vw,720px);height:min(60vw,720px);animation:introRingIn 1900ms cubic-bezier(.16,1,.3,1) 450ms forwards,introRingPulse 4.2s ease 2600ms infinite;}
-.ringTwo{width:min(82vw,980px);height:min(82vw,980px);border-color:rgba(37,99,235,.20);animation:introRingIn 2100ms cubic-bezier(.16,1,.3,1) 600ms forwards,introRingPulse 5s ease 2900ms infinite reverse;}
+.ringOne{width:min(60vw,720px);height:min(60vw,720px);animation:introRingIn 1800ms cubic-bezier(.16,1,.3,1) 550ms forwards,introRingPulse 4.2s ease 2200ms infinite;}
+.ringTwo{width:min(82vw,980px);height:min(82vw,980px);border-color:rgba(37,99,235,.20);animation:introRingIn 1900ms cubic-bezier(.16,1,.3,1) 700ms forwards,introRingPulse 5s ease 2500ms infinite reverse;}
 .introOrbit{position:absolute;left:50%;top:50%;border:1px solid rgba(255,255,255,.08);border-radius:50%;transform:translate(-50%,-50%) rotate(-22deg);
-  opacity:0;animation:introOrbitIn 1800ms ease 700ms forwards,introOrbitSpin 9s linear 2500ms infinite;}
+  opacity:0;animation:introOrbitIn 1600ms ease 650ms forwards,introOrbitSpin 9s linear 1900ms infinite;}
 .orbitOne{width:min(55vw,680px);height:min(22vw,220px);}
-.orbitTwo{width:min(72vw,900px);height:min(28vw,270px);transform:translate(-50%,-50%) rotate(28deg);border-color:rgba(244,203,89,.13);animation-name:introOrbitIn,introOrbitSpinTwo;animation-delay:850ms,2750ms;}
-.introPulse{position:absolute;left:50%;top:50%;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(244,203,89,.45),rgba(244,203,89,.05) 45%,transparent 72%);transform:translate(-50%,-50%) scale(.2);opacity:0;filter:blur(1px);animation:introPulseIn 1350ms ease 650ms forwards,introCorePulse 2.2s ease 2450ms infinite;}
+.orbitTwo{width:min(72vw,900px);height:min(28vw,270px);transform:translate(-50%,-50%) rotate(28deg);border-color:rgba(244,203,89,.13);animation-name:introOrbitIn,introOrbitSpinTwo;}
+.introPulse{position:absolute;left:50%;top:50%;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(244,203,89,.45),rgba(244,203,89,.05) 45%,transparent 72%);transform:translate(-50%,-50%) scale(.2);opacity:0;filter:blur(1px);animation:introPulseIn 1200ms ease 700ms forwards,introCorePulse 2.2s ease 1900ms infinite;}
 .introCore{position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%) rotate(45deg);z-index:4;opacity:0;
-  animation:introCoreIn 1100ms cubic-bezier(.16,1,.3,1) 700ms forwards;}
+  animation:introCoreIn 1000ms ease 650ms forwards;}
 .introCore span,.introCore i{position:absolute;inset:0;border:1px solid rgba(244,203,89,.8);background:linear-gradient(135deg,#f4cb59,#ffffff);box-shadow:0 0 24px rgba(244,203,89,.65);}
 .introCore i{transform:scale(.42);border:none;background:#07111f;box-shadow:none;}
-.introFlash{position:absolute;left:-20%;top:0;width:38%;height:100%;transform:skewX(-24deg) translateX(-180%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.17),transparent);filter:blur(2px);z-index:7;animation:introFlashMove 1150ms cubic-bezier(.16,1,.3,1) 3250ms forwards;}
-.introSweep{position:absolute;inset:-10%;z-index:3;opacity:0;pointer-events:none;
-  background:conic-gradient(from 210deg at 50% 50%,transparent 0deg,rgba(244,203,89,.10) 14deg,transparent 30deg,transparent 360deg);
-  filter:blur(8px);animation:introSweepIn 1500ms ease 3350ms forwards,introSweepSpin 8s linear 4000ms infinite;}
-.introParticles{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:0;animation:introParticlesIn 1200ms ease 1800ms forwards;}
-.introParticles i{position:absolute;display:block;width:4px;height:4px;border-radius:50%;background:#f4cb59;box-shadow:0 0 14px #f4cb59,0 0 28px rgba(244,203,89,.45);animation:introParticleFloat 4.5s ease-in-out infinite;}
-.introParticles i:nth-child(1){left:18%;top:28%;animation-delay:0s}.introParticles i:nth-child(2){left:30%;top:18%;width:3px;height:3px;animation-delay:.5s}.introParticles i:nth-child(3){left:72%;top:24%;width:5px;height:5px;animation-delay:1s}.introParticles i:nth-child(4){left:82%;top:42%;width:3px;height:3px;animation-delay:1.4s}.introParticles i:nth-child(5){left:24%;top:62%;width:5px;height:5px;animation-delay:1.8s}.introParticles i:nth-child(6){left:78%;top:66%;animation-delay:2.2s}.introParticles i:nth-child(7){left:39%;top:76%;width:3px;height:3px;animation-delay:2.7s}.introParticles i:nth-child(8){left:63%;top:80%;width:4px;height:4px;animation-delay:3.1s}
-@keyframes introSweepIn{from{opacity:0;transform:scale(.7)}to{opacity:.8;transform:scale(1)}}
-@keyframes introSweepSpin{to{transform:rotate(360deg)}}
-@keyframes introParticlesIn{from{opacity:0}to{opacity:.9}}
-@keyframes introParticleFloat{0%,100%{transform:translate3d(0,0,0);opacity:.35}50%{transform:translate3d(0,-14px,0);opacity:1}}
-
+.introFlash{position:absolute;left:-20%;top:0;width:38%;height:100%;transform:skewX(-24deg) translateX(-180%);background:linear-gradient(90deg,transparent,rgba(255,255,255,.17),transparent);filter:blur(2px);z-index:7;animation:introFlashMove 950ms ease 1450ms forwards;}
 @keyframes introContentIn{from{opacity:0;transform:translateY(34px) scale(.97);filter:blur(10px)}to{opacity:1;transform:none;filter:none}}
 @keyframes introKickerIn{from{opacity:0;transform:translateY(-16px) scale(.82)}to{opacity:1;transform:none}}
 @keyframes introTitleReveal{from{opacity:0;transform:translateY(28px) scale(.9);filter:blur(12px);clip-path:inset(100% 0 0)}to{opacity:1;transform:none;filter:none;clip-path:inset(0)}}
@@ -2528,7 +2546,7 @@ body.library-details-open #crisp-client{
 @keyframes introGridMove{from{background-position:0 0,0 0}to{background-position:0 42px,42px 0}}
 @keyframes introNoiseMove{0%{transform:translate3d(0,0,0)}25%{transform:translate3d(3%,-2%,0)}50%{transform:translate3d(-2%,2%,0)}75%{transform:translate3d(2%,3%,0)}100%{transform:translate3d(-3%,-2%,0)}}
 @keyframes introFlashMove{0%{transform:skewX(-24deg) translateX(-180%);opacity:0}25%{opacity:1}100%{transform:skewX(-24deg) translateX(620%);opacity:0}}
-@keyframes introExit{0%{opacity:1;visibility:visible;transform:scale(1)}55%{opacity:1;transform:scale(1)}78%{opacity:.95;transform:scale(1.018)}100%{opacity:0;visibility:hidden;transform:scale(1.035);pointer-events:none}}
+@keyframes introExit{0%{opacity:1;visibility:visible;transform:scale(1)}72%{opacity:1}100%{opacity:0;visibility:hidden;transform:scale(1.03);pointer-events:none}}
 @media(prefers-reduced-motion:reduce){.introSplash *{animation:none!important}.introSplash{animation:introExit 1ms linear 1ms forwards}.introContent{opacity:1}.introKicker,.introTitleLine,.introDeveloper{opacity:1}.introRing,.introOrbit,.introPulse,.introCore{opacity:.2;transform:translate(-50%,-50%) scale(1)}}
 @media(max-width:560px){.introTitle{letter-spacing:-1.2px}.introContent{padding:18px}.introKicker{font-size:10px;padding:8px 13px}.introDeveloper{font-size:14px}.introGrid{background-size:28px 28px}.introTitleLine{margin-top:14px}}
 
@@ -2543,9 +2561,13 @@ body.library-details-open #crisp-client{
 body.intro-active{overflow:hidden !important;}
 
 </style>
-<!-- Clerk Authentication -->
-<script crossorigin="anonymous" defer="" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js" type="text/javascript"></script>
-<script crossorigin="anonymous" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGVyay5hY2NvdW50cy5kZXYk" defer="" src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js" type="text/javascript"></script>
+<!-- Supabase Browser Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" crossorigin="anonymous"></script>
+<script>
+window.SUPABASE_URL='https://bekfemtkhhluktidhcyi.supabase.co';
+window.SUPABASE_PUBLISHABLE_KEY='sb_publishable_efC0vUlDzVwJXAlg80lg9A_5rEhehxi';
+window.supabaseClient=window.supabase.createClient(window.SUPABASE_URL,window.SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+</script>
 <script type="text/javascript">
 window.$crisp=window.$crisp||[];window.CRISP_WEBSITE_ID="b5b8607e-6d45-4399-ae09-94ecc65ad712";
 (function(){var d=document,s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=true;s.charset="UTF-8";s.setAttribute("data-cfasync","false");d.head.appendChild(s);})();
@@ -2768,10 +2790,6 @@ body.library-open .floating .up{bottom:255px !important;}
 <p class="introDeveloper">للمطور :- <strong>محمد رمضان الحرباوي</strong></p>
 </div>
 <div aria-hidden="true" class="introFlash"></div>
-<div aria-hidden="true" class="introSweep"></div>
-<div aria-hidden="true" class="introParticles">
-  <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
-</div>
 </div>
 <!-- =======================================================
      الصفحة الرئيسية
@@ -3499,7 +3517,7 @@ Developer
    البيانات
    ========================================================= */
 
-const books=[
+let books=[
 
 {
 id:1,
@@ -4437,6 +4455,8 @@ favorites
 
 
 saveFavorites();
+
+if(typeof window.syncFavoriteRemote==='function'){window.syncFavoriteRemote(id, favorites.includes(id));}
 
 renderCategories();
 
@@ -5859,170 +5879,230 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 </script>
 <div aria-hidden="true" class="clerkModal" id="clerkModal">
 <button aria-label="إغلاق" class="clerkModalClose" id="clerkModalClose" type="button">×</button>
-<div class="clerkModalCard">
-<div id="clerkSignInMount"></div>
+<div class="clerkModalCard supabaseAuthCard">
+<div class="supabaseAuthHeader">
+<span>🔐</span>
+<div><strong>حسابك في المكتبة</strong><small>تسجيل واحد لحماية التحميل وحفظ المفضلة</small></div>
+</div>
+<div class="supabaseAuthTabs" role="tablist" aria-label="اختيار نوع الحساب">
+<button class="supabaseAuthTab active" id="authSignInTab" type="button">تسجيل الدخول</button>
+<button class="supabaseAuthTab" id="authSignUpTab" type="button">إنشاء حساب</button>
+</div>
+<div id="clerkSignInMount">
+<form id="supabaseAuthForm" novalidate>
+<label class="supabaseField"><span>البريد الإلكتروني</span><input id="supabaseEmail" type="email" autocomplete="email" required placeholder="name@example.com"></label>
+<label class="supabaseField"><span>كلمة المرور</span><input id="supabasePassword" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"></label>
+<label class="supabaseField supabaseNameField" id="supabaseNameWrap" hidden><span>الاسم</span><input id="supabaseName" type="text" autocomplete="name" placeholder="اسمك"></label>
+<button class="supabaseSubmit" id="supabaseSubmit" type="submit">تسجيل الدخول</button>
+<div class="supabaseAuthMsg" id="supabaseAuthMsg" role="status" aria-live="polite"></div>
+</form>
+</div>
+<div class="supabaseAccountPanel" id="supabaseAccountPanel" hidden>
+<div class="supabaseAccountAvatar">👤</div>
+<strong id="supabaseAccountEmail"></strong>
+<span>الحساب متصل بالمكتبة</span>
+<button class="supabaseSignOut" id="supabaseSignOut" type="button">تسجيل الخروج</button>
+</div>
 </div>
 </div>
 <script>
-/* Clerk — تسجيل الدخول والحساب: مزامنة ثابتة للحساب */
+/* Supabase Auth — تسجيل الدخول والحساب */
 (function(){
+  const sb=window.supabaseClient;
   const loginBtn=document.getElementById('clerkLoginBtn');
   const controls=document.querySelector('.clerkControls');
   const userMount=document.getElementById('clerkUserButton');
   const modal=document.getElementById('clerkModal');
   const closeBtn=document.getElementById('clerkModalClose');
-  const signInMount=document.getElementById('clerkSignInMount');
+  const form=document.getElementById('supabaseAuthForm');
+  const email=document.getElementById('supabaseEmail');
+  const password=document.getElementById('supabasePassword');
+  const name=document.getElementById('supabaseName');
+  const nameWrap=document.getElementById('supabaseNameWrap');
+  const submit=document.getElementById('supabaseSubmit');
+  const msg=document.getElementById('supabaseAuthMsg');
+  const signInTab=document.getElementById('authSignInTab');
+  const signUpTab=document.getElementById('authSignUpTab');
+  const accountPanel=document.getElementById('supabaseAccountPanel');
+  const accountEmail=document.getElementById('supabaseAccountEmail');
+  const signOut=document.getElementById('supabaseSignOut');
+  let authMode='signin';
+  window.currentSupabaseSession=null;
+
   function closeModal(){if(!modal)return;modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow='';}
-  function openModal(){if(!modal)return;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
-  function isSigned(){try{return !!(window.Clerk&&(Clerk.user||Clerk.isSignedIn));}catch(e){return false;}}
-  function updateWelcomeName(){
-    const title=document.getElementById('welcomeTitle');
-    if(!title)return;
-    let name='';
-    try{
-      const user=window.Clerk&&Clerk.user;
-      if(user){
-        name=(user.firstName||'').trim() || (user.fullName||'').trim() || (user.username||'').trim();
-      }
-    }catch(e){}
-    title.textContent=name ? `أهلاً ${name} 👋 في مكتبة تانية بكالوريا` : 'مرحبًا بك في مكتبة تانية بكالوريا 👋';
+  function openModal(mode){if(!modal)return;if(mode)setMode(mode);modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+  function setMsg(text,type){if(!msg)return;msg.textContent=text||'';msg.className='supabaseAuthMsg'+(type?' '+type:'');}
+  function setMode(mode){
+    authMode=mode==='signup'?'signup':'signin';
+    signInTab.classList.toggle('active',authMode==='signin');
+    signUpTab.classList.toggle('active',authMode==='signup');
+    nameWrap.hidden=authMode!=='signup';
+    password.setAttribute('autocomplete',authMode==='signup'?'new-password':'current-password');
+    submit.textContent=authMode==='signup'?'إنشاء الحساب':'تسجيل الدخول';
+    setMsg('');
   }
-  function sync(){
-    const ok=isSigned();
-    updateWelcomeName();
+  function renderUser(session){
+    window.currentSupabaseSession=session||null;
+    const user=session?.user||null;
+    const ok=!!user;
     if(controls)controls.classList.toggle('isSignedIn',ok);
-    if(loginBtn){loginBtn.style.display=ok?'none':'inline-flex';loginBtn.setAttribute('aria-hidden',ok?'true':'false');}
+    if(loginBtn)loginBtn.style.display=ok?'none':'inline-flex';
     if(userMount){
       userMount.style.display=ok?'flex':'none';
-      if(ok&&window.Clerk&&typeof Clerk.mountUserButton==='function'&&!userMount.dataset.mounted){
-        try{Clerk.mountUserButton(userMount);userMount.dataset.mounted='1';}catch(e){console.error('UserButton mount error',e);}
+      userMount.innerHTML='';
+      if(ok){
+        const label=user.email||user.user_metadata?.full_name||'حسابي';
+        userMount.innerHTML='<button type="button" class="supabaseUserChip" id="supabaseHeaderUser" title="بيانات الحساب">👤 '+escapeHTML(label)+'</button>';
+        const h=document.getElementById('supabaseHeaderUser');
+        if(h)h.onclick=()=>openModal('signin');
       }
     }
+    if(accountPanel){accountPanel.hidden=!ok;if(ok&&accountEmail)accountEmail.textContent=user.email||'حساب المستخدم';}
+    if(form)form.hidden=ok;
     if(ok)closeModal();
+    if(!ok&&form)form.hidden=false;
   }
+  function signedIn(){return !!window.currentSupabaseSession?.user;}
+  window.isLibrarySignedIn=signedIn;
   closeBtn&&closeBtn.addEventListener('click',closeModal);
   modal&&modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
-  async function init(){
-    if(!window.Clerk){if(loginBtn)loginBtn.style.display='inline-flex';if(userMount)userMount.style.display='none';return;}
-    try{
-      await Clerk.load({ui:{ClerkUI:window.__internal_ClerkUICtor}});
-      sync();
-      if(loginBtn)loginBtn.onclick=function(){if(isSigned()){sync();return;}openModal();if(signInMount&&!signInMount.dataset.mounted){Clerk.mountSignIn(signInMount,{routing:'hash'});signInMount.dataset.mounted='1';}};
-      if(typeof Clerk.addListener==='function')Clerk.addListener(function(){setTimeout(sync,50);setTimeout(sync,400);});
-      setInterval(sync,3000);
-    }catch(e){console.error('Clerk initialization error:',e);if(loginBtn)loginBtn.style.display='inline-flex';if(userMount)userMount.style.display='none';}
-  }
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+  signInTab&&signInTab.addEventListener('click',()=>setMode('signin'));
+  signUpTab&&signUpTab.addEventListener('click',()=>setMode('signup'));
+  loginBtn&&loginBtn.addEventListener('click',()=>openModal('signin'));
+  signOut&&signOut.addEventListener('click',async()=>{
+    const {error}=await sb.auth.signOut();
+    if(error)setMsg(error.message||'تعذر تسجيل الخروج','error');
+  });
+  form&&form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    if(!sb){setMsg('تعذر الاتصال بخدمة الحسابات حاليًا.','error');return;}
+    const mail=String(email.value||'').trim();
+    const pass=String(password.value||'');
+    if(!mail||!pass){setMsg('اكتب البريد الإلكتروني وكلمة المرور أولًا.','error');return;}
+    submit.disabled=true;setMsg(authMode==='signup'?'جارٍ إنشاء الحساب…':'جارٍ تسجيل الدخول…');
+    const result=authMode==='signup'
+      ?await sb.auth.signUp({email:mail,password:pass,options:{data:{full_name:String(name.value||'').trim()}}})
+      :await sb.auth.signInWithPassword({email:mail,password:pass});
+    submit.disabled=false;
+    if(result.error){setMsg(result.error.message||'حدث خطأ في الحساب.','error');return;}
+    if(authMode==='signup'&&result.data?.user&&!result.data?.session){
+      setMsg('تم إنشاء الحساب. إذا كان تأكيد البريد مفعّلًا، أكّد بريدك ثم سجّل الدخول.','ok');
+      setMode('signin');return;
+    }
+    setMsg('تم تسجيل الدخول بنجاح.','ok');
+  });
+  if(sb){
+    sb.auth.getSession().then(({data})=>{renderUser(data.session);if(window.__loadSupabaseUserData)window.__loadSupabaseUserData();});
+    sb.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>{renderUser(session);if(window.__loadSupabaseUserData)window.__loadSupabaseUserData();},0);});
+  }else renderUser(null);
+  window.__openSupabaseAuthModal=()=>openModal('signin');
 })();
 </script>
 <script>
 </script>
 <script>
-/* =========================================================
-   حماية التنزيل فقط — التصفح متاح للجميع
-   ========================================================= */
+/* حماية التنزيل فقط — Supabase Auth */
 (function(){
-  function signedIn(){
-    try{
-      return !!(window.Clerk && window.Clerk.user);
-    }catch(e){
-      return false;
-    }
+  const sb=window.supabaseClient;
+  function signedIn(){return !!window.currentSupabaseSession?.user;}
+  function showLogin(){window.__openSupabaseAuthModal?window.__openSupabaseAuthModal():alert('يرجى تسجيل الدخول أولًا لإتمام التنزيل.');}
+  async function logActivity(bookId,eventType){
+    if(!sb||!signedIn())return;
+    try{await sb.from('activity_events').insert({user_id:window.currentSupabaseSession.user.id,book_id:Number(bookId),event_type:eventType});}catch(e){console.warn('Supabase activity log failed',e);}
   }
-
-  function showLogin(){
-    const modal=document.getElementById('clerkModal');
-    const mount=document.getElementById('clerkSignInMount');
-    if(modal){
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden','false');
-      document.body.style.overflow='hidden';
-    }
-    if(mount && window.Clerk && typeof Clerk.mountSignIn==='function' && !mount.dataset.mounted){
-      try{
-        Clerk.mountSignIn(mount,{routing:'hash'});
-        mount.dataset.mounted='1';
-      }catch(e){console.error('Clerk SignIn mount error',e);}
-    }
-  }
-
-  function getBookUrl(bookId){
-    const id=Number(bookId);
-    const book=(typeof books!=='undefined' && Array.isArray(books)) ? books.find(b=>Number(b.id)===id) : null;
-    return book && book.url ? String(book.url) : null;
-  }
-
+  function getBookUrl(bookId){const id=Number(bookId);const book=Array.isArray(books)?books.find(b=>Number(b.id)===id):null;return book?.url?String(book.url):null;}
   function driveDownloadUrl(raw){
     const url=String(raw||'');
-    try{
-      const u=new URL(url);
-      if(u.hostname==='drive.google.com' || u.hostname.endsWith('.drive.google.com')){
-        const m=u.pathname.match(/\/file\/d\/([^/]+)/);
-        const id=m ? m[1] : u.searchParams.get('id');
-        if(id) return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id);
-      }
-    }catch(e){}
+    try{const u=new URL(url);if(u.hostname==='drive.google.com'||u.hostname.endsWith('.drive.google.com')){const m=u.pathname.match(/\/file\/d\/([^/]+)/);const id=m?m[1]:u.searchParams.get('id');if(id)return 'https://drive.google.com/uc?export=download&id='+encodeURIComponent(id);}}catch(e){}
     return url;
   }
-
-  function openBook(bookId,mode){
+  async function openBook(bookId,mode){
     const isDownload=mode==='download';
-    if(isDownload && !signedIn()){
-      showLogin();
-      return false;
-    }
+    if(isDownload&&!signedIn()){showLogin();return false;}
     const url=getBookUrl(bookId);
-    if(!url){
-      alert('رابط هذا الكتاب غير مضاف حاليًا.');
-      return false;
-    }
-    const finalUrl=isDownload ? driveDownloadUrl(url) : url;
-    if(isDownload){
-      window.location.href=finalUrl;
-    }else{
-      window.open(finalUrl,'_blank','noopener,noreferrer');
-    }
+    if(!url){alert('رابط هذا الكتاب غير مضاف حاليًا.');return false;}
+    await logActivity(bookId,isDownload?'download':'open');
+    if(isDownload)window.location.href=driveDownloadUrl(url);
+    else window.open(url,'_blank','noopener,noreferrer');
     return true;
   }
-
   window.openProtectedBook=openBook;
-
   document.addEventListener('click',function(event){
-    const link=event.target.closest('[data-protected-book]');
-    if(!link) return;
-    const mode=link.dataset.protectedMode==='download' || link.classList.contains('download') || link.classList.contains('seriesDl') ? 'download' : 'open';
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    openBook(link.dataset.protectedBook,mode);
+    const link=event.target.closest('[data-protected-book]');if(!link)return;
+    const mode=link.dataset.protectedMode==='download'||link.classList.contains('download')||link.classList.contains('seriesDl')?'download':'open';
+    event.preventDefault();event.stopImmediatePropagation();openBook(link.dataset.protectedBook,mode);
   },true);
-
-  /* Any download-looking link that lacks the marker is blocked as well. */
   document.addEventListener('click',function(event){
-    const link=event.target.closest('a.action.download,a.seriesAction.seriesDl,#modalDownload');
-    if(!link) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    const id=link.dataset.protectedBook || link.dataset.id || link.closest('[data-book-id]')?.dataset.bookId;
-    if(!signedIn()){
-      showLogin();
-      return;
-    }
-    if(id) openBook(id,'download');
+    const link=event.target.closest('a.action.download,a.seriesAction.seriesDl,#modalDownload');if(!link)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    const id=link.dataset.protectedBook||link.dataset.id||link.closest('[data-book-id]')?.dataset.bookId;
+    if(!signedIn()){showLogin();return;}
+    if(id)openBook(id,'download');
   },true);
+})();
+</script>
+<script>
+/* Supabase data layer — الكتب، الإشعارات، المفضلة وسجل النشاط */
+(function(){
+  const sb=window.supabaseClient;if(!sb)return;
+  const embeddedBooks=books.slice();
+  let remoteNotifications=[];
 
-  if(window.Clerk && typeof Clerk.addListener==='function'){
-    Clerk.addListener(function(){
-      if(signedIn()){
-        const modal=document.getElementById('clerkModal');
-        if(modal){
-          modal.classList.remove('open');
-          modal.setAttribute('aria-hidden','true');
-          document.body.style.overflow='';
-        }
-      }
-    });
+  async function loadBooks(){
+    const {data,error}=await sb.from('books').select('id,title,icon,cat,description,url,date,popular,is_new,series,is_folder').order('date',{ascending:false});
+    if(error||!Array.isArray(data)||!data.length){books=embeddedBooks.slice();console.warn('Supabase books unavailable; embedded library retained.',error?.message||'empty');return;}
+    books=data.map(b=>({id:Number(b.id),title:b.title,icon:b.icon,cat:b.cat,desc:b.description||'',url:b.url,date:Number(b.date||0),popular:Number(b.popular||0),isNew:!!b.is_new,series:b.series||undefined,isFolder:!!b.is_folder}));
+    renderCategories();updateStats();renderFeatured();renderBooks();
   }
+  async function loadNotifications(){
+    const {data,error}=await sb.from('notifications').select('id,book_id,title,description,category,created_at').eq('is_active',true).order('created_at',{ascending:false});
+    if(!error&&Array.isArray(data)){
+      remoteNotifications=data.map(n=>({type:'book',id:String(n.book_id||n.id),date:new Date(n.created_at||0).getTime(),title:n.title,cat:n.category||'محتوى جديد',desc:n.description||''}));
+      if(typeof renderNotifications==='function')renderNotifications();
+    }
+  }
+  window.__loadSupabaseUserData=async function(){
+    if(!window.currentSupabaseSession?.user){
+      try{favorites=JSON.parse(localStorage.getItem('tb_favorites')||'[]').map(Number).filter(Number.isFinite);}catch(e){favorites=[];}
+      renderCategories();renderFeatured();renderBooks();return;
+    }
+    const uid=window.currentSupabaseSession.user.id;
+    const localFavorites=(()=>{try{return JSON.parse(localStorage.getItem('tb_favorites')||'[]').map(Number).filter(Number.isFinite);}catch(e){return [];}})();
+    const {data,error}=await sb.from('favorites').select('book_id').eq('user_id',uid);
+    if(!error&&Array.isArray(data)){
+      const remoteFavorites=data.map(x=>Number(x.book_id)).filter(Number.isFinite);
+      if(remoteFavorites.length===0 && localFavorites.length){
+        await sb.from('favorites').upsert(localFavorites.map(book_id=>({user_id:uid,book_id})),{onConflict:'user_id,book_id'});
+        favorites=[...new Set(localFavorites)];
+      }else{
+        favorites=[...new Set(remoteFavorites)];
+      }
+      try{localStorage.setItem('tb_favorites',JSON.stringify(favorites));}catch(e){}
+      renderCategories();renderFeatured();renderBooks();
+    }
+  };
+  window.syncFavoriteRemote=async function(bookId,isFavorite){
+    if(!window.currentSupabaseSession?.user)return;
+    const uid=window.currentSupabaseSession.user.id;
+    try{
+      if(isFavorite){
+        await sb.from('favorites').upsert({user_id:uid,book_id:Number(bookId)},{onConflict:'user_id,book_id'});
+        await sb.from('activity_events').insert({user_id:uid,book_id:Number(bookId),event_type:'favorite_add'});
+      }else{
+        await sb.from('favorites').delete().eq('user_id',uid).eq('book_id',Number(bookId));
+        await sb.from('activity_events').insert({user_id:uid,book_id:Number(bookId),event_type:'favorite_remove'});
+      }
+    }catch(e){console.warn('Supabase favorite sync failed',e);}
+  };
+  const originalGetNotifications=window.getLibraryNotifications;
+  if(typeof originalGetNotifications==='function'){window.getLibraryNotifications=function(){return remoteNotifications.length?remoteNotifications:originalGetNotifications();};}
+  loadBooks();loadNotifications();
+  Promise.resolve().then(()=>{if(window.__loadSupabaseUserData)window.__loadSupabaseUserData();});
+  try{
+    sb.channel('library-books-live').on('postgres_changes',{event:'*',schema:'public',table:'books'},()=>loadBooks()).subscribe();
+    sb.channel('library-notifications-live').on('postgres_changes',{event:'*',schema:'public',table:'notifications'},()=>loadNotifications()).subscribe();
+  }catch(e){console.warn('Supabase realtime setup failed',e);}
 })();
 </script>
 <script>
@@ -6031,7 +6111,7 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   if(!splash) return;
   document.body.classList.add('intro-active');
   const release=()=>{document.body.classList.remove('intro-active');};
-  window.setTimeout(release,6500);
+  window.setTimeout(release,3400);
   splash.addEventListener('animationend',function(e){if(e.animationName==='introExit'){release();splash.remove();}}, {once:false});
 })();
 </script>
