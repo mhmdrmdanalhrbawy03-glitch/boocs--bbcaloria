@@ -3,82 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#07111f">
-<title>إجابات وتقييمات البكالوريا | مكتبة تانية بكالوريا</title>
+<meta name="theme-color" content="#050816">
+<title>التقييمات | مكتبة تانية بكالوريا</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <script type="text/javascript" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGlyay5hY2NvdW50cy5kZXYk" defer src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"></script>
 <style>
-:root{--bg:#07111f;--bg2:#0c1930;--card:#12233a;--line:#29415f;--text:#f8fafc;--muted:#9badc2;--gold:#f4cb59;--blue:#2563eb;--green:#25d366}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;min-height:100vh;font-family:"Cairo",Tahoma,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text)}
-a{text-decoration:none;color:inherit}
-button{font:inherit;cursor:pointer}
-.page{width:min(1200px,100%);margin:auto;padding:18px 14px 60px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
-.back,.login{border:1px solid var(--line);background:#102038;color:var(--text);border-radius:13px;padding:10px 14px;font-weight:800;font-size:11px}
-.login{background:linear-gradient(135deg,#f8dc73,#dfae38);color:#111827;border-color:#f4cb5966}
-.hero{position:relative;overflow:hidden;text-align:center;padding:38px 20px;border:1px solid #f4cb5938;border-radius:26px;background:linear-gradient(145deg,#14263e,#091322);margin-bottom:22px}
-.hero:before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;left:-100px;top:-130px;background:#2563eb22;filter:blur(35px)}
-.hero>*{position:relative}
-.badge{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid #f4cb5940;background:#f4cb5910;color:var(--gold);font-size:10px;font-weight:900}
-.hero h1{margin:10px 0 7px;font-size:clamp(27px,5vw,45px)}
-.hero p{margin:0 auto;color:var(--muted);font-size:12px;line-height:2;max-width:760px}
-.credit{margin-top:12px;color:var(--gold);font-size:10px;font-weight:900}
-.notice{margin:0 0 18px;padding:12px 14px;border:1px solid #f4cb5940;border-radius:15px;background:#f4cb590b;color:#dce5ef;font-size:10px;line-height:1.9;text-align:center}
-.subject{margin:20px 0 28px}
-.subjectHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:11px}
-.subjectHead h2{margin:0;font-size:20px}
-.subjectHead small{color:var(--gold);font-size:9px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
-.card{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#14263e,#0f1b2d);padding:15px;transition:.2s}
-.card:hover{transform:translateY(-3px);border-color:#f4cb5980;box-shadow:0 14px 30px #0004}
-.num{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#f4cb5912;color:var(--gold);font-weight:900;margin-bottom:9px}
-.card h3{font-size:13px;margin:0 0 6px;line-height:1.8}
-.card p{font-size:9px;color:var(--muted);line-height:1.8;margin:0 0 13px}
-.actions{display:flex;gap:7px}
-.action{flex:1;text-align:center;padding:9px 7px;border-radius:11px;font-size:9px;font-weight:900;border:1px solid var(--line)}
-.open{background:#102038;color:#dce5ef}
-.download{background:#f4cb59;color:#111827;border-color:#f4cb59}
-.empty{display:none;text-align:center;padding:20px;color:var(--muted)}
-.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;background:#020712cc;backdrop-filter:blur(7px)}
-.modal.open{display:flex}
-.modalCard{width:min(430px,100%);padding:20px;border:1px solid #f4cb5945;border-radius:22px;background:#0c1930;box-shadow:0 30px 80px #0009;text-align:center}
-.modalCard h3{margin:5px 0 8px}
-.modalCard p{font-size:11px;color:var(--muted);line-height:1.9}
-.close{border:0;background:transparent;color:#9badc2;font-size:22px;float:left}
-@media(max-width:750px){.grid{grid-template-columns:1fr 1fr}}
-@media(max-width:520px){.top{align-items:stretch}.back,.login{font-size:10px;padding:9px}.grid{grid-template-columns:1fr}.hero{padding:30px 15px}.subjectHead{display:block}.subjectHead small{display:block;margin-top:4px}}
+:root{--bg:#050816;--bg2:#091126;--panel:#0b1429;--card:#101b34;--line:#1d3153;--text:#f7f9ff;--muted:#9eabc2;--blue:#4f8cff;--cyan:#5ee7ff;--gold:#f4cc61;--green:#35d18b;--shadow:0 24px 70px #0008}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:"Cairo",Tahoma,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 85% 8%,#173c7838 0,transparent 28%),radial-gradient(circle at 10% 30%,#0b7a9d22 0,transparent 25%),linear-gradient(145deg,var(--bg),var(--bg2));overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,#000,transparent 80%)}a{text-decoration:none;color:inherit}button,input{font:inherit}button{cursor:pointer}.page{width:min(1240px,100%);margin:auto;padding:20px 16px 70px;position:relative}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px}.brand{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:900;color:#dce7ff}.brandMark{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(145deg,#15396f,#0d1b37);border:1px solid #4f8cff55;box-shadow:0 10px 35px #17458f33}.topActions{display:flex;gap:8px}.topBtn{min-height:42px;padding:9px 14px;border-radius:13px;border:1px solid var(--line);background:#0d1930;color:#e8efff;font-size:10px;font-weight:900}.topBtn.login{background:linear-gradient(135deg,#5e9cff,#3b69ef);border-color:#74adff55;box-shadow:0 8px 25px #2864ed35}.hero{position:relative;overflow:hidden;border:1px solid #527fcf40;border-radius:32px;padding:38px 25px 30px;text-align:center;background:linear-gradient(145deg,#0e1d39e8,#081022f2);box-shadow:var(--shadow)}.hero:before,.hero:after{content:"";position:absolute;border-radius:50%;filter:blur(4px);pointer-events:none}.hero:before{width:330px;height:330px;right:-120px;top:-170px;background:#4f8cff28}.hero:after{width:260px;height:260px;left:-110px;bottom:-150px;background:#5ee7ff20}.heroContent{position:relative;z-index:1}.eyebrow{display:inline-flex;align-items:center;gap:7px;padding:7px 12px;border:1px solid #5ee7ff35;border-radius:999px;background:#5ee7ff0b;color:#8fefff;font-size:9px;font-weight:900}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 14px #35d18b}.hero h1{font-size:clamp(28px,5vw,52px);line-height:1.2;margin:14px 0 10px;letter-spacing:-.7px}.hero h1 span{background:linear-gradient(90deg,#fff,#72b9ff,#5ee7ff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero p{max-width:760px;margin:0 auto;color:#aebbd2;font-size:11px;line-height:2.1}.credit{margin-top:14px;color:var(--gold);font-size:10px;font-weight:900}.stats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:680px;margin:24px auto 0}.stat{padding:13px;border:1px solid #263c60;border-radius:17px;background:#071126b8}.stat strong{display:block;font-size:21px;line-height:1.1}.stat span{display:block;color:var(--muted);font-size:8px;margin-top:5px}.toolbar{display:flex;gap:10px;align-items:center;margin:18px 0 22px;flex-wrap:wrap}.search{flex:1;min-width:220px;position:relative}.search input{width:100%;height:46px;border:1px solid var(--line);border-radius:15px;background:#09142a;color:var(--text);outline:none;padding:0 43px 0 14px;font-size:10px}.search input:focus{border-color:#4f8cff88;box-shadow:0 0 0 4px #4f8cff12}.searchIcon{position:absolute;right:14px;top:12px;color:#7f96ba;font-size:15px}.filters{display:flex;gap:7px;overflow:auto;padding-bottom:2px}.filter{white-space:nowrap;border:1px solid var(--line);background:#0b172d;color:#aebbd2;border-radius:13px;padding:10px 13px;font-size:9px;font-weight:900}.filter.active{background:#3976ed;color:white;border-color:#6da1ff55;box-shadow:0 8px 22px #2465ec2e}.notice{display:flex;align-items:center;gap:11px;padding:13px 15px;margin-bottom:24px;border:1px solid #f4cc6138;border-radius:17px;background:linear-gradient(90deg,#f4cc610a,#09152a);color:#dbe5f5;font-size:9px;line-height:1.9}.noticeIcon{width:34px;height:34px;flex:0 0 34px;border-radius:11px;display:grid;place-items:center;background:#f4cc6112;color:var(--gold);font-size:15px}.subject{margin:0 0 30px}.subjectHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.subjectTitle{display:flex;align-items:center;gap:11px}.subjectIcon{width:43px;height:43px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#162c52,#0d1930);border:1px solid #37557d;font-size:19px}.subjectHead h2{margin:0;font-size:18px}.subjectHead small{color:#8194b3;font-size:8px}.line{height:1px;flex:1;background:linear-gradient(90deg,#28446d,transparent);margin-right:10px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:21px;background:linear-gradient(150deg,#111f3a,#0a1428);padding:17px;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}.card:before{content:"";position:absolute;width:120px;height:120px;left:-55px;bottom:-70px;border-radius:50%;background:#4f8cff18;filter:blur(8px)}.card:hover{transform:translateY(-4px);border-color:#4f8cff75;box-shadow:0 18px 40px #0007}.cardTop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}.number{width:35px;height:35px;border-radius:12px;display:grid;place-items:center;color:#9dc1ff;background:#4f8cff12;border:1px solid #4f8cff2d;font-weight:900;font-size:11px}.tag{font-size:8px;font-weight:900;color:#82e7ff;border:1px solid #5ee7ff30;background:#5ee7ff09;border-radius:999px;padding:6px 9px}.card h3{margin:0 0 7px;font-size:12px;line-height:1.9}.card p{margin:0 0 15px;color:#899ab5;font-size:8px;line-height:1.8;min-height:30px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;position:relative;z-index:1}.action{min-height:40px;border-radius:12px;border:1px solid #263b5c;display:flex;align-items:center;justify-content:center;gap:5px;font-size:9px;font-weight:900}.open{background:#0c1b34;color:#dbe7fb}.open:hover{border-color:#4f8cff66}.download{border-color:#4f8cff55;background:linear-gradient(135deg,#4f8cff,#3266dd);color:white;box-shadow:0 8px 22px #2864ed25}.empty{display:none;text-align:center;padding:35px 15px;border:1px dashed #29405f;border-radius:20px;color:#8798b2;font-size:10px}.footer{margin-top:42px;text-align:center;color:#667895;font-size:8px}.footer b{color:var(--gold)}.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;background:#020510d9;backdrop-filter:blur(12px)}.modal.open{display:flex}.modalCard{width:min(450px,100%);padding:22px;border:1px solid #4f8cff45;border-radius:24px;background:linear-gradient(145deg,#101e39,#071126);box-shadow:0 30px 100px #000b;text-align:center}.close{float:left;border:0;background:transparent;color:#9badc2;font-size:24px}.modalCard h3{margin:7px 0;font-size:17px}.modalCard p{font-size:10px;color:var(--muted);line-height:1.9}.loginBadge{width:52px;height:52px;margin:3px auto 10px;border-radius:16px;display:grid;place-items:center;background:#4f8cff14;border:1px solid #4f8cff38;font-size:23px}@media(max-width:850px){.grid{grid-template-columns:1fr 1fr}.line{display:none}}@media(max-width:560px){.page{padding:14px 11px 50px}.brand span{display:none}.topBtn{padding:9px 10px}.hero{padding:30px 15px 24px;border-radius:25px}.stats{grid-template-columns:repeat(3,1fr);gap:6px}.stat{padding:10px 6px}.stat strong{font-size:17px}.toolbar{display:block}.search{min-width:0;margin-bottom:9px}.filters{overflow-x:auto}.grid{grid-template-columns:1fr}.subjectHead h2{font-size:16px}.notice{align-items:flex-start}}
 </style>
 </head>
 <body>
 <main class="page">
-<div class="top">
-<a class="back" href="./index.html">← العودة إلى المكتبة</a>
-<button class="login" id="loginBtn" type="button">👤 تسجيل الدخول</button>
-</div>
+  <div class="top">
+    <div class="brand"><div class="brandMark">✦</div><span>مكتبة تانية بكالوريا</span></div>
+    <div class="topActions">
+      <a class="topBtn" href="./index.html">← المكتبة</a>
+      <button class="topBtn login" id="loginBtn" type="button">👤 تسجيل الدخول</button>
+    </div>
+  </div>
 
-<section class="hero">
-<span class="badge">محتوى جديد داخل المكتبة</span>
-<h1>📝 إجابات وتقييمات البكالوريا</h1>
-<p>قسم مستقل يجمع تقييمات وإجابات المواد الأساسية، مرتبة حسب المادة والأسبوع أو الدرس، مع فتح المحتوى للجميع وتحميله للحسابات المسجلة فقط.</p>
-<div class="credit">برعاية وتطوير :- محمد رمضان الحرباوي</div>
-</section>
+  <section class="hero">
+    <div class="heroContent">
+      <div class="eyebrow"><i class="dot"></i> مركز التقييمات والإجابات • 2027</div>
+      <h1>إجابات وتقييمات <span>البكالوريا</span></h1>
+      <p>كل تقييماتك في مكان واحد — مرتبة حسب المادة، الأسبوع والدرس، بواجهة سريعة ومريحة للمذاكرة والوصول للمحتوى.</p>
+      <div class="credit">برعاية وتطوير :- محمد رمضان الحرباوي</div>
+      <div class="stats">
+        <div class="stat"><strong>12</strong><span>تقييم متاح</span></div>
+        <div class="stat"><strong>4</strong><span>مواد دراسية</span></div>
+        <div class="stat"><strong>2027</strong><span>العام الدراسي</span></div>
+      </div>
+    </div>
+  </section>
 
-<div class="notice">🔓 يمكنك فتح ومعاينة أي تقييم بدون تسجيل دخول. 🔐 زر التحميل يتطلب تسجيل الدخول أولًا.</div>
+  <div class="toolbar">
+    <div class="search"><span class="searchIcon">⌕</span><input id="searchInput" type="search" placeholder="ابحث عن تقييم أو أسبوع أو درس..." aria-label="بحث"></div>
+    <div class="filters" id="filters"></div>
+  </div>
 
-<div id="subjects"></div>
+  <div class="notice"><div class="noticeIcon">🔐</div><div><b>الوصول مفتوح للطلاب</b> — يمكنك فتح أي تقييم مباشرة، بينما التحميل متاح بعد تسجيل الدخول لحماية محتوى المكتبة.</div></div>
+  <div id="subjects"></div>
+  <div class="empty" id="empty">لا توجد نتائج مطابقة للبحث الحالي.</div>
+  <div class="footer">جميع الحقوق محفوظة • <b>مكتبة تانية بكالوريا</b> • تطوير محمد رمضان الحرباوي</div>
 </main>
 
 <div class="modal" id="loginModal" aria-hidden="true">
-<div class="modalCard">
-<button class="close" id="closeModal" type="button" aria-label="إغلاق">×</button>
-<h3>🔐 تسجيل الدخول مطلوب</h3>
-<p>لتحميل التقييم، سجّل الدخول إلى حسابك ثم اضغط تحميل مرة أخرى.</p>
-<div id="signInMount"></div>
-</div>
+  <div class="modalCard">
+    <button class="close" id="closeModal" type="button" aria-label="إغلاق">×</button>
+    <div class="loginBadge">🔐</div>
+    <h3>تسجيل الدخول مطلوب</h3>
+    <p>لتحميل هذا التقييم، سجّل الدخول إلى حسابك ثم أعد الضغط على زر التحميل.</p>
+    <div id="signInMount"></div>
+  </div>
 </div>
 
 <script>
@@ -86,88 +64,30 @@ const evaluations=[
 {subject:"اللغة العربية",icon:"📖",items:[
 ["الأسبوع الأول","إجابات وتقييمات اللغة العربية - الأسبوع الأول","https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=drivesdk"],
 ["الأسبوع الثاني","إجابات وتقييمات اللغة العربية - الأسبوع الثاني","https://drive.google.com/file/d/1J4oP1x3zl0qhx8ZxwLQ5Xz_sPncgbyy4/view?usp=drivesdk"],
-["الأسبوع الثالث","إجابات وتقييمات اللغة العربية - الأسبوع الثالث","https://drive.google.com/file/d/1WfJz5GV-v1_0j_jFJzNuTc-hNC2BgFbH/view?usp=drivesdk"]
-]},
+["الأسبوع الثالث","إجابات وتقييمات اللغة العربية - الأسبوع الثالث","https://drive.google.com/file/d/1WfJz5GV-v1_0j_jFJzNuTc-hNC2BgFbH/view?usp=drivesdk"]]},
 {subject:"اللغة الإنجليزية",icon:"🇬🇧",items:[
 ["الأسبوع الأول","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الأول","https://drive.google.com/file/d/11z_of6JnxtGu4SkFrawviePM_H9gOSer/view?usp=drivesdk"],
 ["الأسبوع الثاني","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الثاني","https://drive.google.com/file/d/1sVe2SXclh8UuOZxMw41rtLIxVyNfFKOL/view?usp=drivesdk"],
-["الأسبوع الثالث","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الثالث","https://drive.google.com/file/d/1OFpElv0GuQD4hlKb54aBq9sASTMdkfqr/view?usp=drivesdk"]
-]},
+["الأسبوع الثالث","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الثالث","https://drive.google.com/file/d/1OFpElv0GuQD4hlKb54aBq9sASTMdkfqr/view?usp=drivesdk"]]},
 {subject:"التاريخ الوطني",icon:"🏛️",items:[
 ["تقييم الدرس الأول","إجابات تقييمات التاريخ الوطني - الدرس الأول","https://drive.google.com/file/d/1s9rDvspE1cqmLLAUssUYjO5PbppfcvVM/view?usp=drivesdk"],
 ["تقييم الدرس الثاني","إجابات تقييمات التاريخ الوطني - الدرس الثاني","https://drive.google.com/file/d/1_Pv4mYe6YISoMeiSpB_YyKFb2ks_35Y-/view?usp=drivesdk"],
-["تقييم الدرس الثالث","إجابات تقييمات التاريخ الوطني - الدرس الثالث","https://drive.google.com/file/d/1XdIFVRRMv2giqI3kL7M4hjK74ucK2XNu/view?usp=drivesdk"]
-]},
+["تقييم الدرس الثالث","إجابات تقييمات التاريخ الوطني - الدرس الثالث","https://drive.google.com/file/d/1XdIFVRRMv2giqI3kL7M4hjK74ucK2XNu/view?usp=drivesdk"]]},
 {subject:"البرمجة",icon:"💻",items:[
 ["الأسبوع الأول","إجابات وتقييمات البرمجة - الأسبوع الأول","https://drive.google.com/file/d/1Yz3D2zaLS53WEh95i0JG1Yv8rBYToOIf/view?usp=drivesdk"],
 ["الأسبوع الثاني","إجابات وتقييمات البرمجة - الأسبوع الثاني","https://drive.google.com/file/d/17f5q1qr5WwEBZmgpzfNdewPjeVpA4FYX/view?usp=drivesdk"],
-["الأسبوع الثالث","إجابات وتقييمات البرمجة - الأسبوع الثالث","https://drive.google.com/file/d/1odu6HFmYHzLjqb23y8HW4P7ykE8sdrOG/view?usp=drivesdk"]
-]}
+["الأسبوع الثالث","إجابات وتقييمات البرمجة - الأسبوع الثالث","https://drive.google.com/file/d/1odu6HFmYHzLjqb23y8HW4P7ykE8sdrOG/view?usp=drivesdk"]]}
 ];
-
-const subjects=document.getElementById("subjects");
-const modal=document.getElementById("loginModal");
-const signInMount=document.getElementById("signInMount");
-const loginBtn=document.getElementById("loginBtn");
-let signMounted=false;
-
-function signedIn(){
- try{return !!(window.Clerk&&window.Clerk.user)}catch(e){return false}
-}
-function showLogin(){
- modal.classList.add("open"); modal.setAttribute("aria-hidden","false");
- if(window.Clerk&&typeof Clerk.mountSignIn==="function"&&!signMounted){
-  try{Clerk.mountSignIn(signInMount,{routing:"hash"});signMounted=true}catch(e){}
- }
-}
+const subjects=document.getElementById("subjects"),filters=document.getElementById("filters"),searchInput=document.getElementById("searchInput"),empty=document.getElementById("empty"),modal=document.getElementById("loginModal"),signInMount=document.getElementById("signInMount"),loginBtn=document.getElementById("loginBtn");let active="all",signMounted=false;
+function signedIn(){try{return !!(window.Clerk&&window.Clerk.user)}catch(e){return false}}
+function showLogin(){modal.classList.add("open");modal.setAttribute("aria-hidden","false");if(window.Clerk&&typeof Clerk.mountSignIn==="function"&&!signMounted){try{Clerk.mountSignIn(signInMount,{routing:"hash"});signMounted=true}catch(e){}}}
 function closeLogin(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
-function driveDownload(url){
- const m=String(url).match(/\/file\/d\/([^/]+)/);
- return m?"https://drive.google.com/uc?export=download&id="+encodeURIComponent(m[1]):url;
-}
-function openItem(url,download){
- if(download&&!signedIn()){showLogin();return}
- window.open(download?driveDownload(url):url,"_blank","noopener,noreferrer");
-}
-function render(){
- subjects.innerHTML=evaluations.map(group=>`
- <section class="subject">
-  <div class="subjectHead"><h2>${group.icon} ${group.subject}</h2><small>${group.items.length} تقييمات</small></div>
-  <div class="grid">
-   ${group.items.map((item,i)=>`
-    <article class="card">
-     <div class="num">${i+1}</div>
-     <h3>${item[0]}</h3>
-     <p>${item[1]}</p>
-     <div class="actions">
-      <a class="action open" href="${item[2]}" target="_blank" rel="noopener">📖 فتح</a>
-      <button class="action download" type="button" data-url="${item[2]}">⬇ تحميل</button>
-     </div>
-    </article>`).join("")}
-  </div>
- </section>`).join("");
-}
-subjects.addEventListener("click",e=>{
- const btn=e.target.closest(".download"); if(!btn)return;
- openItem(btn.dataset.url,true);
-});
-loginBtn.addEventListener("click",()=>{if(signedIn())return;showLogin()});
-document.getElementById("closeModal").addEventListener("click",closeLogin);
-modal.addEventListener("click",e=>{if(e.target===modal)closeLogin()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin()});
-render();
-
-async function initClerk(){
- if(!window.Clerk)return;
- try{
-  await Clerk.load();
-  if(signedIn()){loginBtn.textContent="👤 الحساب";closeLogin()}
-  if(typeof Clerk.addListener==="function")Clerk.addListener(()=>{
-   if(signedIn()){loginBtn.textContent="👤 الحساب";closeLogin()}
-   else loginBtn.textContent="👤 تسجيل الدخول";
-  });
- }catch(e){}
-}
+function driveDownload(url){const m=String(url).match(/\/file\/d\/([^/]+)/);return m?"https://drive.google.com/uc?export=download&id="+encodeURIComponent(m[1]):url}
+function openItem(url,download){if(!signedIn()){showLogin();return}window.open(download?driveDownload(url):url,"_blank","noopener,noreferrer")}
+function buildFilters(){filters.innerHTML=[{k:"all",t:"الكل"},...evaluations.map((x,i)=>({k:String(i),t:x.subject}))].map(x=>`<button type="button" class="filter ${active===x.k?"active":""}" data-filter="${x.k}">${x.t}</button>`).join("")}
+function render(){const q=searchInput.value.trim().toLowerCase();let count=0;subjects.innerHTML=evaluations.map((group,gi)=>{if(active!=="all"&&active!==String(gi))return"";const items=group.items.filter(item=>(item.join(" ")+" "+group.subject).toLowerCase().includes(q));if(!items.length)return"";count+=items.length;return `<section class="subject"><div class="subjectHead"><div class="subjectTitle"><div class="subjectIcon">${group.icon}</div><div><h2>${group.subject}</h2><small>${items.length} تقييم متاح الآن</small></div></div><div class="line"></div></div><div class="grid">${items.map((item,i)=>`<article class="card"><div class="cardTop"><div class="number">${String(i+1).padStart(2,"0")}</div><div class="tag">متاح الآن</div></div><h3>${item[0]}</h3><p>${item[1]}</p><div class="actions"><button class="action open" type="button" data-url="${item[2]}">↗ فتح التقييم</button><button class="action download" type="button" data-url="${item[2]}">↓ تحميل</button></div></article>`).join("")}</div></section>`}).join("");empty.style.display=count?"none":"block"}
+filters.addEventListener("click",e=>{const b=e.target.closest("[data-filter]");if(!b)return;active=b.dataset.filter;buildFilters();render()});searchInput.addEventListener("input",render);subjects.addEventListener("click",e=>{const b=e.target.closest("[data-url]");if(b)openItem(b.dataset.url,b.classList.contains("download"))});loginBtn.addEventListener("click",()=>{if(!signedIn())showLogin()});document.getElementById("closeModal").addEventListener("click",closeLogin);modal.addEventListener("click",e=>{if(e.target===modal)closeLogin()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin()});buildFilters();render();
+async function initClerk(){if(!window.Clerk)return;try{await Clerk.load();if(signedIn()){loginBtn.textContent="👤 الحساب";closeLogin()}if(typeof Clerk.addListener==="function")Clerk.addListener(()=>{if(signedIn()){loginBtn.textContent="👤 الحساب";closeLogin()}else loginBtn.textContent="👤 تسجيل الدخول"})}catch(e){}}
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initClerk);else initClerk();
 </script>
 </body>
