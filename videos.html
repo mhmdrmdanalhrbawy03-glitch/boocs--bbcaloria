@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#07111f">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>مشغل فيديوهات البكالوريا | مكتبة تانية بكالوريا</title>
+<title>مركز الفيديوهات | مكتبة تانية بكالوريا</title>
 <style>
 :root{
   --bg:#060b14;--panel:#0d1624;--panel-2:#111d2e;--panel-3:#172840;
@@ -31,7 +31,8 @@ button,input,select{font:inherit}button{outline:none}.wrap{width:min(1460px,calc
 .mainContent{min-width:0}.contentHead{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:12px}.headingSmall{color:var(--accent);font-size:9px;font-weight:900}.sectionTitle{margin:5px 0 3px;font-size:clamp(22px,3vw,31px);line-height:1.25}.sectionSubtitle{margin:0;color:var(--muted);font-size:10px;line-height:1.7}.headStatus{flex:0 0 auto;min-width:180px}.sideCompletion{display:none;padding:10px 12px;border:1px solid rgba(49,212,123,.22);border-radius:13px;background:rgba(49,212,123,.06)}.sideCompletion.show{display:block}.sideCompletion strong{display:block;color:#8af0b3;font-size:9px;margin-bottom:5px}.sideCompletion .miniBar{height:6px;border-radius:99px;overflow:hidden;background:rgba(255,255,255,.07)}.sideCompletion .miniFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),#99f6be)}.sideCompletion p{margin:5px 0 0;color:var(--muted);font-size:7.5px}
 .subjectPanel{padding:11px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,rgba(14,25,41,.95),rgba(9,16,28,.95));margin-bottom:13px}.subjectTop{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.subjectTop h3{margin:0;font-size:10px}.filterHint{color:var(--muted);font-size:7.5px}.subjectFilter{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}.subjectBtn{border:1px solid var(--line);border-radius:13px;min-height:63px;padding:7px 5px;background:rgba(255,255,255,.02);color:var(--muted);font-size:8px;font-weight:900;cursor:pointer;transition:.17s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.subjectBtn:hover{transform:translateY(-1px);border-color:rgba(98,216,255,.2);color:var(--text)}.subjectBtn.active{background:linear-gradient(145deg,rgba(255,211,79,.17),rgba(255,211,79,.04));border-color:rgba(255,211,79,.43);color:var(--text);box-shadow:inset 0 -2px 0 var(--accent)}.subjectIcon{width:28px;height:28px;border-radius:9px;display:grid;place-items:center;background:#0a1322;border:1px solid var(--line)}.subjectIcon svg{width:15px;height:15px}.subjectBtn.active .subjectIcon{background:rgba(255,211,79,.12);color:#ffe27d}
 .playerArea{display:grid;grid-template-columns:minmax(0,1fr) 325px;gap:14px;align-items:start;min-width:0}.playerBox,.playlist{border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(12,23,39,.985),rgba(7,14,24,.985));box-shadow:var(--shadow);overflow:hidden;min-width:0}.playlist{position:sticky;top:90px}
-.screen{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}.screen video,.screen iframe{width:100%;height:100%;display:block;background:#000;border:0}.ytHolder{position:absolute;inset:0;z-index:2;background:#000}.ytHolder iframe{width:100%;height:100%}.emptyScreen{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(255,211,79,.07),transparent 38%),#02060c}.emptyScreen .playBig{width:76px;height:76px;margin:auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#fff2ad);color:#111827;font-size:29px;box-shadow:0 16px 40px rgba(255,211,79,.17)}.emptyScreen strong{display:block;margin-top:13px;font-size:17px}.emptyScreen span{display:block;margin-top:5px;color:var(--muted);font-size:9px}
+.screen{position:relative;aspect-ratio:16/9;background:#000;overflow:hidden}.screen video,.screen iframe{width:100%;height:100%;display:block;background:#000;border:0}.ytHolder{position:absolute;inset:0;z-index:2;background:#000}.ytHolder iframe{width:100%;height:100%}
+.ytGuard{position:absolute;inset:0;z-index:4;background:transparent;cursor:default;pointer-events:auto;touch-action:none;user-select:none}.ytHolder iframe{pointer-events:none}.captionBtn{min-width:42px;font-weight:800;letter-spacing:.2px}.captionBtn.active{border-color:rgba(255,211,79,.75);background:rgba(255,211,79,.16);color:var(--accent)}.emptyScreen{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:25px;background:radial-gradient(circle,rgba(255,211,79,.07),transparent 38%),#02060c}.emptyScreen .playBig{width:76px;height:76px;margin:auto;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),#fff2ad);color:#111827;font-size:29px;box-shadow:0 16px 40px rgba(255,211,79,.17)}.emptyScreen strong{display:block;margin-top:13px;font-size:17px}.emptyScreen span{display:block;margin-top:5px;color:var(--muted);font-size:9px}
 .controls{position:absolute;left:0;right:0;bottom:0;z-index:10;padding:38px 12px 9px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.94));pointer-events:none}.controls>*{pointer-events:auto}.progress{display:block;width:100%;height:5px;margin:0 0 9px;accent-color:var(--accent);cursor:pointer}.controlRow{display:flex;align-items:center;gap:6px;min-width:0}.ctrl{width:36px;height:34px;flex:0 0 auto;border:1px solid rgba(255,255,255,.13);border-radius:10px;background:rgba(5,10,18,.86);color:#fff;cursor:pointer;transition:.16s}.ctrl:hover{border-color:rgba(255,211,79,.5);background:rgba(255,211,79,.09)}.time{min-width:88px;text-align:center;color:#fff;font-size:10px;white-space:nowrap}.volume{width:68px;accent-color:var(--accent)}.speed{height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.13);background:rgba(5,10,18,.86);color:#fff;padding:0 6px}.spacer{flex:1}.screen:fullscreen{background:#000}
 .info{padding:15px 17px;border-top:1px solid var(--line)}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;color:var(--accent);font-size:8px;font-weight:900;background:rgba(255,211,79,.08);border:1px solid rgba(255,211,79,.13)}.info h2{margin:9px 0 5px;font-size:19px;line-height:1.5}.info p{margin:0;color:var(--muted);font-size:10px;line-height:1.8}.sponsorLine{display:block;margin-top:6px;color:var(--accent);font-size:9px;font-weight:900}
 .completionPanel{display:none;gap:9px;padding:13px 15px 15px;border-top:1px solid rgba(49,212,123,.14);background:linear-gradient(180deg,rgba(49,212,123,.07),rgba(49,212,123,.018))}.revisionMode .completionPanel{display:grid}.completionTop{display:flex;justify-content:space-between;align-items:center;gap:8px}.completionTitle{font-size:9px;font-weight:900}.completionProgress{font-size:9px;color:var(--muted);font-weight:900}.completionBar{height:6px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.completionFill{height:100%;width:0;background:linear-gradient(90deg,var(--green),#91f3b7)}.completeBtn{width:100%;min-height:44px;border-radius:11px;border:1px solid rgba(49,212,123,.42);background:rgba(49,212,123,.08);color:#b8f7cf;font-weight:900;cursor:pointer;font-size:10px}.completeBtn.done{background:linear-gradient(135deg,rgba(49,212,123,.33),rgba(49,212,123,.10));border-color:rgba(145,243,183,.82);color:#fff;box-shadow:0 9px 26px rgba(49,212,123,.12)}
@@ -130,120 +131,8 @@ body.day .resumeStrip{border-color:rgba(23,32,51,.10)}
 @media(max-width:720px){.toolsRow{display:grid;grid-template-columns:1fr 1fr}.searchBox{grid-column:1/-1;min-width:0}.toolChip{justify-content:center}.progressGrid{grid-template-columns:1fr}.badgeGrid{grid-template-columns:1fr 1fr}.resumeStrip{align-items:stretch;flex-direction:column}.resumeBtn{width:100%}}
 </style>
 
-
-<style id="video-cinema-intro">
-/* ===== افتتاحية خاصة بمشغل الفيديوهات — هوية مستقلة عن المكتبة ===== */
-.videoIntro{
-  position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;overflow:hidden;
-  background:#02050a;color:#fff;isolation:isolate;pointer-events:auto;
-  animation:videoIntroExit 900ms cubic-bezier(.22,.72,.16,1) 6100ms forwards;
-}
-.videoIntro::before{
-  content:"";position:absolute;inset:0;z-index:-4;
-  background:radial-gradient(circle at 50% 45%,rgba(91,216,255,.12),transparent 25%),
-             radial-gradient(circle at 50% 90%,rgba(255,211,79,.09),transparent 40%),
-             linear-gradient(180deg,#010307 0%,#040912 55%,#02050a 100%);
-}
-.videoIntro::after{
-  content:"";position:absolute;inset:0;z-index:10;pointer-events:none;opacity:.12;
-  background:repeating-linear-gradient(180deg,rgba(255,255,255,.55) 0 1px,transparent 1px 5px);
-  mix-blend-mode:overlay;animation:videoScan 1.15s linear infinite;
-}
-.videoIntroGrid{
-  position:absolute;inset:-25%;z-index:-2;opacity:.18;transform:perspective(850px) rotateX(66deg) translateY(17%);
-  transform-origin:center bottom;
-  background-image:linear-gradient(rgba(91,216,255,.17) 1px,transparent 1px),linear-gradient(90deg,rgba(91,216,255,.17) 1px,transparent 1px);
-  background-size:46px 46px;mask-image:linear-gradient(to top,black,transparent 78%);
-  animation:videoGridMove 5.8s linear infinite;
-}
-.videoIntroVignette{position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(circle at center,transparent 38%,rgba(0,0,0,.78) 100%)}
-.videoIntroHalo{
-  position:absolute;left:50%;top:46%;width:min(74vw,820px);height:min(74vw,820px);transform:translate(-50%,-50%) scale(.6);border-radius:50%;
-  background:radial-gradient(circle,rgba(91,216,255,.13) 0,rgba(91,216,255,.035) 38%,transparent 67%);filter:blur(18px);opacity:0;
-  animation:videoHaloIn 1.7s cubic-bezier(.16,1,.3,1) .35s forwards,videoHaloPulse 3.8s ease 2.2s infinite;
-}
-.videoIntroRing{position:absolute;left:50%;top:46%;border-radius:50%;transform:translate(-50%,-50%) scale(.25) rotate(0deg);opacity:0}
-.videoIntroRing.r1{width:min(46vw,520px);height:min(46vw,520px);border:1px solid rgba(91,216,255,.27);box-shadow:0 0 55px rgba(91,216,255,.05),inset 0 0 35px rgba(91,216,255,.025);animation:videoRingIn 1.55s cubic-bezier(.16,1,.3,1) .3s forwards,videoRingPulse 4.2s ease 2.1s infinite}
-.videoIntroRing.r2{width:min(67vw,760px);height:min(67vw,760px);border:1px solid rgba(255,211,79,.18);animation:videoRingIn 1.85s cubic-bezier(.16,1,.3,1) .52s forwards,videoRingSpin 14s linear 2.1s infinite}
-.videoIntroRing.r3{width:min(88vw,980px);height:min(42vw,470px);border:1px solid rgba(255,255,255,.08);transform:translate(-50%,-50%) rotate(26deg) scale(.25);animation:videoRingIn3 2s cubic-bezier(.16,1,.3,1) .78s forwards,videoRingSpin3 11s linear 2.5s infinite}
-.videoIntroCore{
-  position:absolute;left:50%;top:46%;z-index:5;width:118px;height:118px;transform:translate(-50%,-50%) scale(.25) rotate(-15deg);opacity:0;
-  border-radius:31px;border:1px solid rgba(255,255,255,.22);
-  background:linear-gradient(145deg,rgba(255,255,255,.13),rgba(255,255,255,.035));backdrop-filter:blur(10px);
-  box-shadow:0 28px 70px rgba(0,0,0,.5),0 0 70px rgba(91,216,255,.15),inset 0 1px 0 rgba(255,255,255,.13);
-  animation:videoCoreIn 1.3s cubic-bezier(.16,1,.3,1) 1.05s forwards,videoCoreFloat 3.2s ease 2.6s infinite;
-}
-.videoIntroCore::before{content:"";position:absolute;inset:-12px;border-radius:38px;border:1px solid rgba(91,216,255,.28);filter:blur(.3px);animation:videoCoreAura 2.8s ease-in-out 2.5s infinite}
-.videoIntroCore svg{width:46px;height:46px;position:absolute;left:50%;top:50%;transform:translate(-45%,-50%);color:#fff;filter:drop-shadow(0 0 14px rgba(91,216,255,.65))}
-.videoIntroWave{position:absolute;left:50%;top:61%;z-index:4;display:flex;align-items:center;justify-content:center;gap:5px;height:56px;transform:translateX(-50%);opacity:0;animation:videoWaveIn 1.1s ease 1.55s forwards}
-.videoIntroWave i{display:block;width:4px;border-radius:999px;background:linear-gradient(180deg,#fff,#61d9ff);box-shadow:0 0 12px rgba(91,216,255,.38);animation:videoWave 1.25s ease-in-out infinite}
-.videoIntroWave i:nth-child(1){height:10px;animation-delay:-.95s}.videoIntroWave i:nth-child(2){height:18px;animation-delay:-.75s}.videoIntroWave i:nth-child(3){height:30px;animation-delay:-.55s}.videoIntroWave i:nth-child(4){height:43px;animation-delay:-.35s}.videoIntroWave i:nth-child(5){height:28px;animation-delay:-.15s}.videoIntroWave i:nth-child(6){height:49px}.videoIntroWave i:nth-child(7){height:34px;animation-delay:-.2s}.videoIntroWave i:nth-child(8){height:22px;animation-delay:-.4s}.videoIntroWave i:nth-child(9){height:14px;animation-delay:-.6s}.videoIntroWave i:nth-child(10){height:8px;animation-delay:-.8s}
-.videoIntroContent{position:relative;z-index:20;width:min(980px,92vw);padding:30px;text-align:center;opacity:0;transform:translateY(28px);animation:videoContentIn 1.35s cubic-bezier(.16,1,.3,1) 2.15s forwards}
-.videoIntroKicker{display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid rgba(91,216,255,.24);border-radius:999px;background:rgba(91,216,255,.055);color:#bfeeff;font:900 12px/1 Cairo,Tahoma,sans-serif;letter-spacing:.3px;box-shadow:0 14px 35px rgba(0,0,0,.28)}
-.videoIntroTitle{margin:20px 0 0;font:900 clamp(37px,7vw,84px)/1.05 Cairo,Tahoma,sans-serif;letter-spacing:-1.8px;
-  background:linear-gradient(110deg,#ffffff 12%,#d9f7ff 38%,#61d9ff 54%,#fff3ba 68%,#ffffff 92%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
-  text-shadow:0 18px 50px rgba(0,0,0,.72);animation:videoTitleSheen 3.1s ease 3.25s infinite}
-.videoIntroLine{width:0;height:3px;margin:17px auto 0;border-radius:999px;background:linear-gradient(90deg,transparent,#61d9ff,#fff3ba,#61d9ff,transparent);box-shadow:0 0 26px rgba(91,216,255,.45);animation:videoLineIn 1s cubic-bezier(.16,1,.3,1) 3.45s forwards}
-.videoIntroDeveloper{margin:14px 0 0;color:#a9b9cc;font:800 clamp(16px,2.5vw,23px)/1.6 Cairo,Tahoma,sans-serif;opacity:0;animation:videoDevIn .95s cubic-bezier(.16,1,.3,1) 3.65s forwards}
-.videoIntroDeveloper strong{color:#ffd965;font-weight:900}
-.videoIntroHint{margin:16px auto 0;color:#6f8298;font:700 10px/1.7 Tahoma,Arial,sans-serif;opacity:0;animation:videoHintIn .8s ease 4.2s forwards}
-.videoIntroSpark{position:absolute;z-index:12;width:5px;height:5px;border-radius:50%;background:#61d9ff;box-shadow:0 0 16px #61d9ff;opacity:0;animation:videoSpark 2.8s ease-in-out infinite}
-.videoIntroSpark.s1{left:18%;top:24%;animation-delay:2.1s}.s2{left:29%;top:70%;animation-delay:2.55s}.s3{left:74%;top:28%;animation-delay:2.9s}.s4{left:82%;top:66%;animation-delay:3.15s}.s5{left:63%;top:18%;animation-delay:3.45s}.s6{left:39%;top:82%;animation-delay:3.75s}
-@keyframes videoHaloIn{to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@keyframes videoHaloPulse{0%,100%{opacity:.55}50%{opacity:.95;transform:translate(-50%,-50%) scale(1.06)}}
-@keyframes videoRingIn{from{opacity:0;transform:translate(-50%,-50%) scale(.25)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-@keyframes videoRingIn3{from{opacity:0;transform:translate(-50%,-50%) rotate(26deg) scale(.25)}to{opacity:1;transform:translate(-50%,-50%) rotate(26deg) scale(1)}}
-@keyframes videoRingPulse{0%,100%{opacity:.28}50%{opacity:.08;transform:translate(-50%,-50%) scale(1.03)}}
-@keyframes videoRingSpin{to{transform:translate(-50%,-50%) scale(1) rotate(360deg)}}
-@keyframes videoRingSpin3{to{transform:translate(-50%,-50%) rotate(386deg) scale(1)}}
-@keyframes videoCoreIn{from{opacity:0;transform:translate(-50%,-50%) scale(.25) rotate(-15deg);filter:blur(8px)}to{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0);filter:none}}
-@keyframes videoCoreFloat{0%,100%{margin-top:0}50%{margin-top:-7px}}
-@keyframes videoCoreAura{0%,100%{opacity:.18;transform:scale(.98)}50%{opacity:.58;transform:scale(1.05)}}
-@keyframes videoWaveIn{from{opacity:0;transform:translateX(-50%) translateY(14px)}to{opacity:.92;transform:translateX(-50%) translateY(0)}}
-@keyframes videoWave{0%,100%{transform:scaleY(.7);opacity:.5}50%{transform:scaleY(1.15);opacity:1}}
-@keyframes videoContentIn{to{opacity:1;transform:none}}
-@keyframes videoTitleSheen{0%,60%{background-position:220% 0}82%,100%{background-position:-30% 0}}
-@keyframes videoLineIn{from{width:0;opacity:0}to{width:min(560px,80vw);opacity:1}}
-@keyframes videoDevIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-@keyframes videoHintIn{from{opacity:0}to{opacity:1}}
-@keyframes videoSpark{0%,100%{opacity:0;transform:scale(.7) translateY(0)}45%{opacity:1;transform:scale(1.1) translateY(-10px)}65%{opacity:.35;transform:scale(.85) translateY(-18px)}}
-@keyframes videoGridMove{from{background-position:0 0,0 0}to{background-position:0 46px,46px 0}}
-@keyframes videoScan{from{transform:translateY(-12px)}to{transform:translateY(12px)}}
-@keyframes videoIntroExit{0%,66%{opacity:1;visibility:visible;transform:scale(1)}82%{opacity:.98;transform:scale(1.012)}100%{opacity:0;visibility:hidden;transform:scale(1.035);pointer-events:none}}
-body.intro-active{overflow:hidden!important}
-@media(prefers-reduced-motion:reduce){
-  .videoIntro *{animation:none!important}.videoIntro{animation:videoIntroExit 1ms linear 1ms forwards}.videoIntroContent{opacity:1;transform:none}.videoIntroDeveloper,.videoIntroHint{opacity:1}.videoIntroRing,.videoIntroCore{opacity:.5;transform:translate(-50%,-50%) scale(1)}
-}
-@media(max-width:620px){.videoIntroCore{width:92px;height:92px;border-radius:25px}.videoIntroCore svg{width:38px;height:38px}.videoIntroWave{top:60%;height:48px}.videoIntroWave i{width:3px}.videoIntroKicker{font-size:10px}.videoIntroTitle{font-size:clamp(34px,10vw,54px);letter-spacing:-1px}.videoIntroDeveloper{font-size:15px}.videoIntroHint{font-size:9px}.videoIntroGrid{background-size:30px 30px}}
-</style>
 </head>
 <body data-ui-version="3">
-
-<!-- افتتاحية مشغل الفيديوهات -->
-<div class="videoIntro" id="videoIntro" aria-label="مقدمة مشغل فيديوهات البكالوريا">
-  <div class="videoIntroGrid" aria-hidden="true"></div>
-  <div class="videoIntroHalo" aria-hidden="true"></div>
-  <div class="videoIntroRing r1" aria-hidden="true"></div>
-  <div class="videoIntroRing r2" aria-hidden="true"></div>
-  <div class="videoIntroRing r3" aria-hidden="true"></div>
-  <div class="videoIntroCore" aria-hidden="true">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M7 4.8a2.2 2.2 0 0 1 3.4-1.83l7.7 5.23a2.2 2.2 0 0 1 0 3.64l-7.7 5.23A2.2 2.2 0 0 1 7 15.24V4.8Z" fill="currentColor" stroke="none"/>
-    </svg>
-  </div>
-  <div class="videoIntroWave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-  <div class="videoIntroSpark s1" aria-hidden="true"></div><div class="videoIntroSpark s2" aria-hidden="true"></div>
-  <div class="videoIntroSpark s3" aria-hidden="true"></div><div class="videoIntroSpark s4" aria-hidden="true"></div>
-  <div class="videoIntroSpark s5" aria-hidden="true"></div><div class="videoIntroSpark s6" aria-hidden="true"></div>
-  <div class="videoIntroContent">
-    <div class="videoIntroKicker">▶ منظومة مشاهدة تعليمية</div>
-    <h1 class="videoIntroTitle">مشغل فيديوهات البكالوريا</h1>
-    <div class="videoIntroLine" aria-hidden="true"></div>
-    <p class="videoIntroDeveloper">للمطور :- <strong>محمد رمضان الحرباوي</strong></p>
-    <p class="videoIntroHint">تهيئة المشغل • تنظيم المحتوى • ابدأ المشاهدة</p>
-  </div>
-  <div class="videoIntroVignette" aria-hidden="true"></div>
-</div>
 
 <div class="wrap">
   <div class="top">
@@ -251,7 +140,7 @@ body.intro-active{overflow:hidden!important}
     <button class="iconBtn" id="themeBtn" type="button" title="تفعيل الوضع النهاري">☀️</button>
     <div class="topBrand">
       <div class="brandMark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4.8A2.8 2.8 0 0 1 7.8 2h10.4A.8.8 0 0 1 19 2.8v15.4a1.8 1.8 0 0 0-1.8-1.8H7.8A2.8 2.8 0 0 0 5 19.2V4.8Z"/><path d="M5 19.2A2.8 2.8 0 0 1 7.8 16.4H19M9 6h6M9 9.3h7"/></svg></div>
-      <div class="brandText"><strong>مشغل فيديوهات البكالوريا</strong><small>مشاهدة منظمة • مراجعة • تقييمات</small></div>
+      <div class="brandText"><strong>مركز الفيديوهات</strong><small>محتوى تعليمي مرتب حسب القسم والمادة</small></div>
     </div>
     <a class="back" href="./index.html" onclick="return backToLibrary(event)">← المكتبة</a>
   </div>
@@ -333,8 +222,8 @@ body.intro-active{overflow:hidden!important}
           <div class="screen" id="screen">
             <div class="emptyScreen" id="emptyScreen"><div><div class="playBig">▶</div><strong>المشغل جاهز</strong><span>اختر الفيديو من القائمة لبدء المشاهدة.</span></div></div>
             <video id="video" playsinline preload="metadata" controlslist="nodownload"></video>
-            <div id="yt" class="ytHolder" aria-label="مشغل YouTube" hidden></div>
-            <div class="controls" id="customControls"><input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم"><div class="controlRow"><button class="ctrl" id="play" title="تشغيل / إيقاف">▶</button><button class="ctrl" id="back10" title="رجوع 10 ثوانٍ">↶</button><button class="ctrl" id="next" title="الفيديو التالي">⏭</button><span class="time" id="time">00:00 / 00:00</span><span class="volumeIcon" aria-hidden="true">🔊</span><input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="الصوت"><select id="speed" class="speed" aria-label="سرعة التشغيل"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select><span class="spacer"></span><button class="ctrl" id="full" title="ملء الشاشة">⛶</button></div></div>
+            <div id="yt" class="ytHolder" aria-label="مشغل YouTube" hidden></div><div id="ytGuard" class="ytGuard" aria-hidden="true"></div>
+            <div class="controls" id="customControls"><input id="progress" class="progress" type="range" min="0" max="100" value="0" step="0.1" aria-label="التقدم"><div class="controlRow"><button class="ctrl" id="play" title="تشغيل / إيقاف">▶</button><button class="ctrl" id="back10" title="رجوع 10 ثوانٍ">↶</button><button class="ctrl" id="next" title="الفيديو التالي">⏭</button><button class="ctrl captionBtn" id="captions" title="تشغيل / إيقاف الترجمة" aria-pressed="false">CC</button><span class="time" id="time">00:00 / 00:00</span><span class="volumeIcon" aria-hidden="true">🔊</span><input id="volume" class="volume" type="range" min="0" max="1" step="0.05" value="1" aria-label="الصوت"><select id="speed" class="speed" aria-label="سرعة التشغيل"><option value="0.75">0.75×</option><option value="1" selected>1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="1.75">1.75×</option><option value="2">2×</option></select><span class="spacer"></span><button class="ctrl" id="full" title="ملء الشاشة">⛶</button></div></div>
           </div>
           <div class="info"><span class="badge" id="typeBadge">جاهز للتشغيل</span><h2 id="title">اختر فيديو من القائمة</h2><p id="desc">اختر المادة والقسم ثم اختر الفيديو من القائمة لمتابعة المشاهدة.</p></div>
           <section class="notesSection" id="notesSection" aria-label="ملاحظاتي"><button class="notesToggle" id="notesToggle" type="button" aria-expanded="false" aria-controls="notesBody"><span class="notesToggleMain"><span aria-hidden="true">📝</span><span>ملاحظاتي<small>اكتب ملاحظاتك الخاصة واحفظها لهذا الفيديو تلقائيًا</small></span></span><span class="notesChevron" id="notesChevron" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span></button><div class="notesBody" id="notesBody"><textarea id="videoNotes" placeholder="اكتب ملاحظاتك هنا..."></textarea><span class="notesSaved" id="notesSaved"></span></div></section>
@@ -506,6 +395,34 @@ function syncYTControls(){
     if(a.length)load((current+1)%a.length,false);
   }
 }
+let captionsEnabled=false;
+let ytRebuildInProgress=false;
+function setCaptionsButton(){const b=$('captions');if(!b)return;b.classList.toggle('active',captionsEnabled);b.setAttribute('aria-pressed',String(captionsEnabled));b.textContent=captionsEnabled?'CC✓':'CC';b.title=captionsEnabled?'إيقاف الترجمة':'تشغيل الترجمة';}
+function rebuildYTWithCaptions(enabled){
+  if(current<0)return;
+  const v=getVisibleVideos()[current];
+  if(!v||!isYT(v)||ytRebuildInProgress)return;
+  const id=youtubeId(v.url); if(!id)return;
+  ytRebuildInProgress=true;
+  const wasPlaying=!!ytPlayer && typeof ytPlayer.getPlayerState==='function' && ytPlayer.getPlayerState()===1;
+  const start=!!ytPlayer && typeof ytPlayer.getCurrentTime==='function' ? Number(ytPlayer.getCurrentTime())||0 : getResumeSeconds(v);
+  const oldVolume=Number($('volume')?.value)||1;
+  const oldRate=Number($('speed')?.value)||1;
+  captionsEnabled=!!enabled; setCaptionsButton();
+  try{if(ytPlayer&&typeof ytPlayer.destroy==='function')ytPlayer.destroy();}catch(_){}
+  ytPlayer=null;ytCreating=false;yt.innerHTML='';yt.hidden=false;
+  if(!ytApiReady){pendingYT={id,autoplay:wasPlaying,startSeconds:start};ytRebuildInProgress=false;return;}
+  ytCreating=true;
+  try{
+    ytPlayer=new YT.Player('yt',{width:'100%',height:'100%',playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,rel:0,playsinline:1,iv_load_policy:3,enablejsapi:1,hl:'ar',cc_lang_pref:'ar',cc_load_policy:enabled?1:0},events:{
+      onReady:()=>{ytCreating=false;ytRebuildInProgress=false;try{ytPlayer.setVolume(Math.round(oldVolume*100));}catch(_){}try{ytPlayer.setPlaybackRate(oldRate);}catch(_){}try{ytPlayer.seekTo(start,true);}catch(_){}if(wasPlaying)try{ytPlayer.playVideo();}catch(_){ }syncYTControls();},
+      onStateChange:()=>syncYTControls(),
+      onPlaybackRateChange:e=>{const r=Number(e.data)||1;$('speed').value=String(r);},
+      onError:()=>{$('typeBadge').textContent='تعذر تحميل فيديو YouTube';}
+    }});
+  }catch(_){ytCreating=false;ytPlayer=null;ytRebuildInProgress=false;$('typeBadge').textContent='تعذر تشغيل مشغل YouTube';}
+}
+
 function initYT(){
   if(ytPlayer||ytCreating||!ytApiReady)return;
   ytCreating=true;
@@ -514,7 +431,7 @@ function initYT(){
   try{
     ytPlayer=new YT.Player('yt',{
       width:'100%',height:'100%',
-      playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,rel:0,playsinline:1,modestbranding:1,iv_load_policy:3,enablejsapi:1},
+      playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,rel:0,playsinline:1,iv_load_policy:3,enablejsapi:1,hl:'ar',cc_lang_pref:'ar'},
       events:{
         onReady:()=>{
           ytCreating=false;
@@ -537,6 +454,11 @@ function initYT(){
   }
 }
 window.onYouTubeIframeAPIReady=()=>{ytApiReady=true;initYT();};
+document.getElementById('ytGuard')?.addEventListener('contextmenu',e=>{e.preventDefault();e.stopPropagation();});
+document.getElementById('ytGuard')?.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();});
+document.getElementById('ytGuard')?.addEventListener('dblclick',e=>{e.preventDefault();e.stopPropagation();});
+document.getElementById('ytGuard')?.addEventListener('auxclick',e=>{e.preventDefault();e.stopPropagation();});
+
 function queueYT(id,autoplay,startSeconds=0){
   pendingYT={id,autoplay,startSeconds};
   if(!ytApiReady)return;
@@ -568,24 +490,28 @@ function load(i,autoplay=false){
   const available=getVisibleVideos();if(!available[i])return;
   current=i;
   const v=available[i];
+  captionsEnabled=false;
+  setCaptionsButton();
   $('title').textContent=v.title||'فيديو';
   $('desc').innerHTML=descriptionHtml(v.description);
   $('typeBadge').textContent=isYT(v)?'YouTube • تحكم المكتبة':'فيديو مباشر • تحكم المكتبة';
   loadNotes(v);renderList();updateCompletionVisibility();resetDirectControls();updateAttachmentsVisibility();updateResumeStrip();
   if(isYT(v)){
     video.pause();video.removeAttribute('src');video.style.display='none';
+    setCaptionsButton();
     yt.hidden=false;empty.style.display='none';$('customControls').style.display='block';
     const id=youtubeId(v.url);
     if(!id){$('typeBadge').textContent='رابط YouTube غير صالح';return;}
     queueYT(id,autoplay,getResumeSeconds(v));
   }else{
+    captionsEnabled=false;setCaptionsButton();
     stopYT();video.style.display='block';empty.style.display='none';$('customControls').style.display='block';video.src=v.url;video.load();const resume=getResumeSeconds(v);const startDirect=()=>{if(resume>3)video.currentTime=Math.min(resume,Math.max(0,(video.duration||resume)-0.5));if(autoplay)video.play().catch(()=>{});};if(video.readyState>=1)startDirect();else video.addEventListener('loadedmetadata',startDirect,{once:true});
   }
 }
 function refreshContent(autoLoad=true){
   current=-1;
   video.pause();video.removeAttribute('src');video.style.display='none';
-  stopYT();empty.style.display='grid';$('customControls').style.display='none';
+  stopYT();captionsEnabled=false;setCaptionsButton();empty.style.display='grid';$('customControls').style.display='none';
   $('title').textContent='اختر فيديو من القائمة';
   $('desc').innerHTML=descriptionHtml(selectedSection==='revision'?'اختر فيديو من المراجعة، وبعد الانتهاء اضغط زر تمت المشاهدة مرة واحدة.':'اختر المادة والقسم ثم اختر الفيديو من القائمة لمتابعة المشاهدة.');
   $('typeBadge').textContent='جاهز للتشغيل';
@@ -634,6 +560,7 @@ $('speed').onchange=e=>{
   if(v&&isYT(v)){if(ytPlayer&&ytPlayer.setPlaybackRate){ytPlayer.setPlaybackRate(value);}}
   else video.playbackRate=value;
 };
+$('captions').onclick=()=>{if(current<0)return;const v=getVisibleVideos()[current];if(!v||!isYT(v))return;rebuildYTWithCaptions(!captionsEnabled);};
 $('progress').oninput=e=>{
   const pct=Number(e.target.value),v=getVisibleVideos()[current];
   if(!v)return;
@@ -708,19 +635,6 @@ updateStats();refreshContent();
 })();
 </script>
 
-<script>
-/* تشغيل افتتاحية مشغل الفيديوهات ثم تحرير الصفحة */
-(function(){
-  const splash=document.getElementById('videoIntro');
-  if(!splash)return;
-  document.body.classList.add('intro-active');
-  const release=()=>document.body.classList.remove('intro-active');
-  let released=false;
-  const finish=()=>{if(released)return;released=true;release();splash.remove();};
-  window.setTimeout(finish,7000);
-  splash.addEventListener('animationend',e=>{if(e.animationName==='videoIntroExit')finish();},{once:true});
-})();
-</script>
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <!-- Crisp بنفس الربط المستخدم في المكتبة -->
