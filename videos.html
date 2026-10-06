@@ -396,31 +396,43 @@ function syncYTControls(){
   }
 }
 let captionsEnabled=false;
-let ytRebuildInProgress=false;
+let captionsBusy=false;
 function setCaptionsButton(){const b=$('captions');if(!b)return;b.classList.toggle('active',captionsEnabled);b.setAttribute('aria-pressed',String(captionsEnabled));b.textContent=captionsEnabled?'CC✓':'CC';b.title=captionsEnabled?'إيقاف الترجمة':'تشغيل الترجمة';}
-function rebuildYTWithCaptions(enabled){
-  if(current<0)return;
-  const v=getVisibleVideos()[current];
-  if(!v||!isYT(v)||ytRebuildInProgress)return;
-  const id=youtubeId(v.url); if(!id)return;
-  ytRebuildInProgress=true;
-  const wasPlaying=!!ytPlayer && typeof ytPlayer.getPlayerState==='function' && ytPlayer.getPlayerState()===1;
-  const start=!!ytPlayer && typeof ytPlayer.getCurrentTime==='function' ? Number(ytPlayer.getCurrentTime())||0 : getResumeSeconds(v);
-  const oldVolume=Number($('volume')?.value)||1;
-  const oldRate=Number($('speed')?.value)||1;
-  captionsEnabled=!!enabled; setCaptionsButton();
-  try{if(ytPlayer&&typeof ytPlayer.destroy==='function')ytPlayer.destroy();}catch(_){}
-  ytPlayer=null;ytCreating=false;yt.innerHTML='';yt.hidden=false;
-  if(!ytApiReady){pendingYT={id,autoplay:wasPlaying,startSeconds:start};ytRebuildInProgress=false;return;}
-  ytCreating=true;
+
+// تبديل الترجمة بدون إعادة إنشاء مشغل YouTube أو إعادة تشغيل الفيديو.
+// لذلك لا يحدث توقف/شاشة سوداء عند الضغط على زر CC.
+function toggleYouTubeCaptions(){
+  if(!ytPlayer || captionsBusy) return;
+  captionsBusy=true;
+  const wasPlaying=typeof ytPlayer.getPlayerState==='function' && ytPlayer.getPlayerState()===1;
   try{
-    ytPlayer=new YT.Player('yt',{width:'100%',height:'100%',playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,rel:0,playsinline:1,iv_load_policy:3,enablejsapi:1,hl:'ar',cc_lang_pref:'ar',cc_load_policy:enabled?1:0},events:{
-      onReady:()=>{ytCreating=false;ytRebuildInProgress=false;try{ytPlayer.setVolume(Math.round(oldVolume*100));}catch(_){}try{ytPlayer.setPlaybackRate(oldRate);}catch(_){}try{ytPlayer.seekTo(start,true);}catch(_){}if(wasPlaying)try{ytPlayer.playVideo();}catch(_){ }syncYTControls();},
-      onStateChange:()=>syncYTControls(),
-      onPlaybackRateChange:e=>{const r=Number(e.data)||1;$('speed').value=String(r);},
-      onError:()=>{$('typeBadge').textContent='تعذر تحميل فيديو YouTube';}
-    }});
-  }catch(_){ytCreating=false;ytPlayer=null;ytRebuildInProgress=false;$('typeBadge').textContent='تعذر تشغيل مشغل YouTube';}
+    if(captionsEnabled){
+      // إيقاف الترجمة من نفس المشغل بدون تحميل الفيديو من جديد.
+      if(typeof ytPlayer.unloadModule==='function') ytPlayer.unloadModule('captions');
+      captionsEnabled=false;
+    }else{
+      // تحميل وحدة الترجمة داخل المشغل نفسه، ثم اختيار العربية إن كانت متاحة.
+      if(typeof ytPlayer.loadModule==='function') ytPlayer.loadModule('captions');
+      if(typeof ytPlayer.setOption==='function'){
+        setTimeout(()=>{
+          try{
+            const tracks=ytPlayer.getOption('captions','tracklist');
+            const hasArabic=Array.isArray(tracks) && tracks.some(t=>String(t.languageCode||'').toLowerCase().startsWith('ar'));
+            ytPlayer.setOption('captions','track',hasArabic?{languageCode:'ar'}:{});
+          }catch(_){ }
+        },120);
+      }
+      captionsEnabled=true;
+    }
+    setCaptionsButton();
+    // الحفاظ على حالة التشغيل؛ لا نعيد تحميل الفيديو ولا نغير موضعه.
+    if(wasPlaying && typeof ytPlayer.playVideo==='function'){setTimeout(()=>{try{if(ytPlayer.getPlayerState()!==1)ytPlayer.playVideo();}catch(_){ }},80);}
+  }catch(_){
+    // إذا لم يدعم المشغل الوحدة، نترك الفيديو كما هو ونعيد حالة الزر السابقة.
+    setCaptionsButton();
+  }finally{
+    setTimeout(()=>{captionsBusy=false;},180);
+  }
 }
 
 function initYT(){
@@ -431,7 +443,7 @@ function initYT(){
   try{
     ytPlayer=new YT.Player('yt',{
       width:'100%',height:'100%',
-      playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,rel:0,playsinline:1,iv_load_policy:3,enablejsapi:1,hl:'ar',cc_lang_pref:'ar'},
+      playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,rel:0,playsinline:1,iv_load_policy:3,enablejsapi:1,hl:'ar',cc_lang_pref:'ar',cc_load_policy:0},
       events:{
         onReady:()=>{
           ytCreating=false;
@@ -442,7 +454,7 @@ function initYT(){
             catch(_){try{ytPlayer.cueVideoById({videoId:q.id,startSeconds:Number(q.startSeconds)||0});if(q.autoplay)ytPlayer.playVideo();}catch(__){}}
           }
         },
-        onStateChange:()=>syncYTControls(),
+        onStateChange:()=>{syncYTControls();if(!captionsEnabled&&ytPlayer&&typeof ytPlayer.unloadModule==='function'){try{ytPlayer.unloadModule('captions');}catch(_){}}},
         onPlaybackRateChange:e=>{const r=Number(e.data)||1;$('speed').value=String(r);},
         onError:()=>{$('typeBadge').textContent='تعذر تحميل فيديو YouTube';}
       }
@@ -560,7 +572,7 @@ $('speed').onchange=e=>{
   if(v&&isYT(v)){if(ytPlayer&&ytPlayer.setPlaybackRate){ytPlayer.setPlaybackRate(value);}}
   else video.playbackRate=value;
 };
-$('captions').onclick=()=>{if(current<0)return;const v=getVisibleVideos()[current];if(!v||!isYT(v))return;rebuildYTWithCaptions(!captionsEnabled);};
+$('captions').onclick=()=>{if(current<0)return;const v=getVisibleVideos()[current];if(!v||!isYT(v))return;toggleYouTubeCaptions();};
 $('progress').oninput=e=>{
   const pct=Number(e.target.value),v=getVisibleVideos()[current];
   if(!v)return;
