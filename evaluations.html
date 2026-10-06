@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#07111f">
+<title>إجابات وتقييمات البكالوريا | مكتبة تانية بكالوريا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<script type="text/javascript" data-clerk-publishable-key="pk_test_c2FjcmVkLXNhd2Zpc2gtNTA5OS5jbGlyay5hY2NvdW50cy5kZXYk" defer src="https://sacred-sawfish-5099.clerk.accounts.dev/npm/@clerk/clerk-js@6/dist/clerk.browser.js"></script>
+<style>
+:root{--bg:#07111f;--bg2:#0c1930;--card:#12233a;--line:#29415f;--text:#f8fafc;--muted:#9badc2;--gold:#f4cb59;--blue:#2563eb;--green:#25d366}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:"Cairo",Tahoma,Arial,sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text)}
+a{text-decoration:none;color:inherit}
+button{font:inherit;cursor:pointer}
+.page{width:min(1200px,100%);margin:auto;padding:18px 14px 60px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.back,.login{border:1px solid var(--line);background:#102038;color:var(--text);border-radius:13px;padding:10px 14px;font-weight:800;font-size:11px}
+.login{background:linear-gradient(135deg,#f8dc73,#dfae38);color:#111827;border-color:#f4cb5966}
+.hero{position:relative;overflow:hidden;text-align:center;padding:38px 20px;border:1px solid #f4cb5938;border-radius:26px;background:linear-gradient(145deg,#14263e,#091322);margin-bottom:22px}
+.hero:before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;left:-100px;top:-130px;background:#2563eb22;filter:blur(35px)}
+.hero>*{position:relative}
+.badge{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid #f4cb5940;background:#f4cb5910;color:var(--gold);font-size:10px;font-weight:900}
+.hero h1{margin:10px 0 7px;font-size:clamp(27px,5vw,45px)}
+.hero p{margin:0 auto;color:var(--muted);font-size:12px;line-height:2;max-width:760px}
+.credit{margin-top:12px;color:var(--gold);font-size:10px;font-weight:900}
+.notice{margin:0 0 18px;padding:12px 14px;border:1px solid #f4cb5940;border-radius:15px;background:#f4cb590b;color:#dce5ef;font-size:10px;line-height:1.9;text-align:center}
+.subject{margin:20px 0 28px}
+.subjectHead{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:11px}
+.subjectHead h2{margin:0;font-size:20px}
+.subjectHead small{color:var(--gold);font-size:9px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.card{border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#14263e,#0f1b2d);padding:15px;transition:.2s}
+.card:hover{transform:translateY(-3px);border-color:#f4cb5980;box-shadow:0 14px 30px #0004}
+.num{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:#f4cb5912;color:var(--gold);font-weight:900;margin-bottom:9px}
+.card h3{font-size:13px;margin:0 0 6px;line-height:1.8}
+.card p{font-size:9px;color:var(--muted);line-height:1.8;margin:0 0 13px}
+.actions{display:flex;gap:7px}
+.action{flex:1;text-align:center;padding:9px 7px;border-radius:11px;font-size:9px;font-weight:900;border:1px solid var(--line)}
+.open{background:#102038;color:#dce5ef}
+.download{background:#f4cb59;color:#111827;border-color:#f4cb59}
+.empty{display:none;text-align:center;padding:20px;color:var(--muted)}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;background:#020712cc;backdrop-filter:blur(7px)}
+.modal.open{display:flex}
+.modalCard{width:min(430px,100%);padding:20px;border:1px solid #f4cb5945;border-radius:22px;background:#0c1930;box-shadow:0 30px 80px #0009;text-align:center}
+.modalCard h3{margin:5px 0 8px}
+.modalCard p{font-size:11px;color:var(--muted);line-height:1.9}
+.close{border:0;background:transparent;color:#9badc2;font-size:22px;float:left}
+@media(max-width:750px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:520px){.top{align-items:stretch}.back,.login{font-size:10px;padding:9px}.grid{grid-template-columns:1fr}.hero{padding:30px 15px}.subjectHead{display:block}.subjectHead small{display:block;margin-top:4px}}
+</style>
+</head>
+<body>
+<main class="page">
+<div class="top">
+<a class="back" href="./index.html">← العودة إلى المكتبة</a>
+<button class="login" id="loginBtn" type="button">👤 تسجيل الدخول</button>
+</div>
+
+<section class="hero">
+<span class="badge">محتوى جديد داخل المكتبة</span>
+<h1>📝 إجابات وتقييمات البكالوريا</h1>
+<p>قسم مستقل يجمع تقييمات وإجابات المواد الأساسية، مرتبة حسب المادة والأسبوع أو الدرس، مع فتح المحتوى للجميع وتحميله للحسابات المسجلة فقط.</p>
+<div class="credit">برعاية وتطوير :- محمد رمضان الحرباوي</div>
+</section>
+
+<div class="notice">🔓 يمكنك فتح ومعاينة أي تقييم بدون تسجيل دخول. 🔐 زر التحميل يتطلب تسجيل الدخول أولًا.</div>
+
+<div id="subjects"></div>
+</main>
+
+<div class="modal" id="loginModal" aria-hidden="true">
+<div class="modalCard">
+<button class="close" id="closeModal" type="button" aria-label="إغلاق">×</button>
+<h3>🔐 تسجيل الدخول مطلوب</h3>
+<p>لتحميل التقييم، سجّل الدخول إلى حسابك ثم اضغط تحميل مرة أخرى.</p>
+<div id="signInMount"></div>
+</div>
+</div>
+
+<script>
+const evaluations=[
+{subject:"اللغة العربية",icon:"📖",items:[
+["الأسبوع الأول","إجابات وتقييمات اللغة العربية - الأسبوع الأول","https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=drivesdk"],
+["الأسبوع الثاني","إجابات وتقييمات اللغة العربية - الأسبوع الثاني","https://drive.google.com/file/d/1J4oP1x3zl0qhx8ZxwLQ5Xz_sPncgbyy4/view?usp=drivesdk"],
+["الأسبوع الثالث","إجابات وتقييمات اللغة العربية - الأسبوع الثالث","https://drive.google.com/file/d/1WfJz5GV-v1_0j_jFJzNuTc-hNC2BgFbH/view?usp=drivesdk"]
+]},
+{subject:"اللغة الإنجليزية",icon:"🇬🇧",items:[
+["الأسبوع الأول","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الأول","https://drive.google.com/file/d/11z_of6JnxtGu4SkFrawviePM_H9gOSer/view?usp=drivesdk"],
+["الأسبوع الثاني","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الثاني","https://drive.google.com/file/d/1sVe2SXclh8UuOZxMw41rtLIxVyNfFKOL/view?usp=drivesdk"],
+["الأسبوع الثالث","إجابات وتقييمات اللغة الإنجليزية - الأسبوع الثالث","https://drive.google.com/file/d/1OFpElv0GuQD4hlKb54aBq9sASTMdkfqr/view?usp=drivesdk"]
+]},
+{subject:"التاريخ الوطني",icon:"🏛️",items:[
+["تقييم الدرس الأول","إجابات تقييمات التاريخ الوطني - الدرس الأول","https://drive.google.com/file/d/1s9rDvspE1cqmLLAUssUYjO5PbppfcvVM/view?usp=drivesdk"],
+["تقييم الدرس الثاني","إجابات تقييمات التاريخ الوطني - الدرس الثاني","https://drive.google.com/file/d/1_Pv4mYe6YISoMeiSpB_YyKFb2ks_35Y-/view?usp=drivesdk"],
+["تقييم الدرس الثالث","إجابات تقييمات التاريخ الوطني - الدرس الثالث","https://drive.google.com/file/d/1XdIFVRRMv2giqI3kL7M4hjK74ucK2XNu/view?usp=drivesdk"]
+]},
+{subject:"البرمجة",icon:"💻",items:[
+["الأسبوع الأول","إجابات وتقييمات البرمجة - الأسبوع الأول","https://drive.google.com/file/d/1Yz3D2zaLS53WEh95i0JG1Yv8rBYToOIf/view?usp=drivesdk"],
+["الأسبوع الثاني","إجابات وتقييمات البرمجة - الأسبوع الثاني","https://drive.google.com/file/d/17f5q1qr5WwEBZmgpzfNdewPjeVpA4FYX/view?usp=drivesdk"],
+["الأسبوع الثالث","إجابات وتقييمات البرمجة - الأسبوع الثالث","https://drive.google.com/file/d/1odu6HFmYHzLjqb23y8HW4P7ykE8sdrOG/view?usp=drivesdk"]
+]}
+];
+
+const subjects=document.getElementById("subjects");
+const modal=document.getElementById("loginModal");
+const signInMount=document.getElementById("signInMount");
+const loginBtn=document.getElementById("loginBtn");
+let signMounted=false;
+
+function signedIn(){
+ try{return !!(window.Clerk&&window.Clerk.user)}catch(e){return false}
+}
+function showLogin(){
+ modal.classList.add("open"); modal.setAttribute("aria-hidden","false");
+ if(window.Clerk&&typeof Clerk.mountSignIn==="function"&&!signMounted){
+  try{Clerk.mountSignIn(signInMount,{routing:"hash"});signMounted=true}catch(e){}
+ }
+}
+function closeLogin(){modal.classList.remove("open");modal.setAttribute("aria-hidden","true")}
+function driveDownload(url){
+ const m=String(url).match(/\/file\/d\/([^/]+)/);
+ return m?"https://drive.google.com/uc?export=download&id="+encodeURIComponent(m[1]):url;
+}
+function openItem(url,download){
+ if(download&&!signedIn()){showLogin();return}
+ window.open(download?driveDownload(url):url,"_blank","noopener,noreferrer");
+}
+function render(){
+ subjects.innerHTML=evaluations.map(group=>`
+ <section class="subject">
+  <div class="subjectHead"><h2>${group.icon} ${group.subject}</h2><small>${group.items.length} تقييمات</small></div>
+  <div class="grid">
+   ${group.items.map((item,i)=>`
+    <article class="card">
+     <div class="num">${i+1}</div>
+     <h3>${item[0]}</h3>
+     <p>${item[1]}</p>
+     <div class="actions">
+      <a class="action open" href="${item[2]}" target="_blank" rel="noopener">📖 فتح</a>
+      <button class="action download" type="button" data-url="${item[2]}">⬇ تحميل</button>
+     </div>
+    </article>`).join("")}
+  </div>
+ </section>`).join("");
+}
+subjects.addEventListener("click",e=>{
+ const btn=e.target.closest(".download"); if(!btn)return;
+ openItem(btn.dataset.url,true);
+});
+loginBtn.addEventListener("click",()=>{if(signedIn())return;showLogin()});
+document.getElementById("closeModal").addEventListener("click",closeLogin);
+modal.addEventListener("click",e=>{if(e.target===modal)closeLogin()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeLogin()});
+render();
+
+async function initClerk(){
+ if(!window.Clerk)return;
+ try{
+  await Clerk.load();
+  if(signedIn()){loginBtn.textContent="👤 الحساب";closeLogin()}
+  if(typeof Clerk.addListener==="function")Clerk.addListener(()=>{
+   if(signedIn()){loginBtn.textContent="👤 الحساب";closeLogin()}
+   else loginBtn.textContent="👤 تسجيل الدخول";
+  });
+ }catch(e){}
+}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",initClerk);else initClerk();
+</script>
+</body>
+</html>

@@ -2989,6 +2989,19 @@ mhmdrmdan.yobader.com
 <a class="videoLibraryBtn" href="./videos.html" id="videosSectionBtn">فتح مشغل الفيديوهات <span>←</span></a>
 </div>
 </section>
+<section aria-label="إجابات وتقييمات البكالوريا" class="section evaluationsLibraryCard" id="evaluationsLibrary">
+<div class="evaluationsGlow"></div>
+<div class="evaluationsIcon">📝</div>
+<div class="evaluationsContent">
+<small>إجابات وتقييمات منظمة حسب المادة</small>
+<h3>📝 إجابات وتقييمات البكالوريا</h3>
+<p>تقييمات اللغة العربية والإنجليزية والتاريخ الوطني والبرمجة، مرتبة في ملف مستقل وسهلة الفتح والتحميل.</p>
+<div class="evaluationsSubjects">
+<span>📖 عربي</span><span>🇬🇧 إنجليزي</span><span>🏛️ تاريخ وطني</span><span>💻 برمجة</span>
+</div>
+<a class="evaluationsBtn" href="./evaluations.html">فتح قسم التقييمات <span>←</span></a>
+</div>
+</section>
 <section aria-label="محتوى مخصص حسب المرحلة الدراسية" class="section studyHub" id="studyHub">
 <div class="sectionHead">
 <div>
@@ -6036,6 +6049,35 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 })();
 </script>
 </body>
+
+
+<style id="evaluations-library-section">
+.evaluationsLibraryCard{
+  position:relative;overflow:hidden;display:flex;align-items:center;gap:20px;
+  margin:0 0 28px;padding:24px 26px;border:1px solid rgba(230,189,77,.25);
+  border-radius:24px;background:linear-gradient(135deg,rgba(18,35,58,.98),rgba(7,17,31,.98));
+  box-shadow:0 18px 45px rgba(0,0,0,.22);
+}
+.evaluationsGlow{position:absolute;width:210px;height:210px;border-radius:50%;background:rgba(37,99,235,.12);filter:blur(35px);left:-65px;top:-70px;pointer-events:none}
+.evaluationsIcon{position:relative;z-index:1;flex:0 0 74px;width:74px;height:74px;border-radius:22px;display:grid;place-items:center;
+  background:linear-gradient(145deg,#f4cb59,#fff0a3);color:#07111f;font-size:30px;
+  box-shadow:0 12px 28px rgba(244,203,89,.18)}
+.evaluationsContent{position:relative;z-index:1;min-width:0}
+.evaluationsContent small{color:#f4cb59;font-weight:800}
+.evaluationsContent h3{margin:4px 0 7px;font-size:25px}
+.evaluationsContent p{margin:0 0 12px;color:rgba(255,255,255,.72);line-height:1.8}
+.evaluationsSubjects{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
+.evaluationsSubjects span{padding:6px 9px;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.04);font-size:9px;color:#dbe5f0}
+.evaluationsBtn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:#f4cb59;color:#07111f;padding:11px 18px;border-radius:13px;font-weight:900;transition:.2s}
+.evaluationsBtn:hover{transform:translateY(-2px);box-shadow:0 9px 20px rgba(244,203,89,.18)}
+@media(max-width:650px){
+ .evaluationsLibraryCard{padding:19px;gap:14px}
+ .evaluationsIcon{flex-basis:58px;width:58px;height:58px;border-radius:17px;font-size:23px}
+ .evaluationsContent h3{font-size:21px}
+ .evaluationsContent p{font-size:13px}
+ .evaluationsBtn{padding:9px 13px;font-size:13px}
+}
+</style>
 </html>
 <style id="final-floating-left-small">
 /* آخر تعديل: نقل أيقونات الدعم للناحية اليسرى وتصغيرها قليلًا */
