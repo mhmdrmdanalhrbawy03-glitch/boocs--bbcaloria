@@ -2745,6 +2745,106 @@ body.library-open.library-details-open #crisp-client .cc-kv6t > div{
 body.library-open .floating .up{bottom:255px !important;}
 @media(max-width:700px){body.library-open .floating .up{bottom:250px !important;}}
 </style>
+
+
+<style id="support-layout-final">
+/* ترتيب ثابت لأزرار الدعم والمشاركة */
+body.library-open .floating .share{position:fixed!important;left:18px!important;right:auto!important;bottom:18px!important;width:54px!important;height:54px!important;z-index:2147483000!important;}
+body.library-open .floating .up{position:fixed!important;right:18px!important;left:auto!important;bottom:165px!important;z-index:2147483004!important;}
+body.library-open .floating .wa{position:fixed!important;left:18px!important;right:auto!important;bottom:220px!important;z-index:2147483003!important;}
+body.library-open .floating .audioFloat{position:fixed!important;left:18px!important;right:auto!important;bottom:275px!important;z-index:2147483002!important;}
+body.library-open #crisp-client{z-index:2147483001!important;}
+body.library-open #tidio-chat{z-index:2147483005!important;}
+body.library-open #tidio-chat iframe{z-index:2147483005!important;}
+@media(max-width:700px){
+body.library-open .floating .share{left:12px!important;bottom:12px!important;width:50px!important;height:50px!important;}
+body.library-open .floating .up{right:12px!important;bottom:150px!important;}
+body.library-open .floating .wa{left:12px!important;right:auto!important;bottom:200px!important;}
+body.library-open .floating .audioFloat{left:12px!important;right:auto!important;bottom:250px!important;}
+body.library-open #tidio-chat{z-index:2147483005!important;}
+}
+</style>
+
+<style id="library-final-button-layout">
+/* ترتيب نهائي: المشاركة داخل بداية المكتبة فقط، وباقي الأزرار في أماكنها دون المساس بالمحتوى */
+body:not(.library-open) .libraryShare{display:none!important;}
+body.library-open .libraryShare{display:grid!important;place-items:center!important;}
+.libraryShare .shareSvg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+body.library-open .floating{position:fixed!important;left:0!important;right:0!important;bottom:0!important;width:100%!important;height:0!important;display:block!important;z-index:2147482000!important;pointer-events:none!important;}
+body.library-open .floating .floatRight{position:fixed!important;right:20px!important;bottom:20px!important;left:auto!important;margin:0!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:12px!important;pointer-events:none!important;}
+body.library-open .floating .audioFloat{position:relative!important;right:auto!important;left:auto!important;bottom:auto!important;top:auto!important;margin:0!important;z-index:2147482002!important;pointer-events:auto!important;order:1!important;}
+body.library-open .floating .wa{position:relative!important;right:auto!important;left:auto!important;bottom:auto!important;top:auto!important;margin:0!important;z-index:2147482003!important;pointer-events:auto!important;order:2!important;}
+body.library-open .floating .up{position:relative!important;right:auto!important;left:auto!important;bottom:auto!important;top:auto!important;margin:0!important;z-index:2147482004!important;pointer-events:auto!important;order:3!important;}
+
+/* لا نغير Crisp أو Tidio؛ فقط نترك لهما مساحة واضحة أسفل اليمين */
+body.library-open #crisp-client{visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:2147483000!important;}
+body:not(.library-open) #crisp-client{visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+
+@media(max-width:700px){
+  body.library-open .floating .floatRight{right:12px!important;bottom:12px!important;gap:10px!important;}
+  .libraryShare .shareSvg{width:20px;height:20px;}
+}
+</style>
+
+<style id="final-floating-request">
+/* الترتيب النهائي: الصوت وواتساب في الجهة اليسرى */
+body.library-open .floating .audioFloat{
+  position:fixed!important;
+  left:18px!important;
+  right:auto!important;
+  bottom:86px!important;
+  margin:0!important;
+  z-index:2147483002!important;
+}
+body.library-open .floating .wa{
+  position:fixed!important;
+  left:18px!important;
+  right:auto!important;
+  bottom:18px!important;
+  margin:0!important;
+  z-index:2147483003!important;
+}
+/* المشاركة تظهر فقط داخل بداية المكتبة */
+body:not(.library-open) .floating .share{
+  display:none!important;
+}
+body.library-open .floating .share{
+  position:absolute!important;
+  left:18px!important;
+  right:auto!important;
+  top:18px!important;
+  bottom:auto!important;
+  z-index:2147483000!important;
+}
+body.library-details-open .floating .share{
+  display:none!important;
+}
+body.library-open .floating .up{
+  position:fixed!important;
+  right:18px!important;
+  left:auto!important;
+  bottom:18px!important;
+  z-index:2147483004!important;
+}
+@media(max-width:700px){
+  body.library-open .floating .audioFloat{left:12px!important;bottom:74px!important;}
+  body.library-open .floating .wa{left:12px!important;bottom:12px!important;}
+  body.library-open .floating .share{left:12px!important;top:12px!important;}
+  body.library-open .floating .up{right:12px!important;bottom:12px!important;}
+}
+</style>
+<style id="final-float-position-v3">
+/* ضبط نهائي: رفع الصوت والواتساب والسهم وإبعاد السهم عن Tidio */
+body.library-open .floating .audioFloat{position:fixed!important;right:16px!important;left:auto!important;bottom:255px!important;z-index:2147482997!important;}
+body.library-open .floating .wa{position:fixed!important;right:16px!important;left:auto!important;bottom:190px!important;z-index:2147482998!important;}
+body.library-open .floating .up{position:fixed!important;right:16px!important;left:auto!important;bottom:325px!important;z-index:2147482996!important;}
+@media(max-width:700px){
+ body.library-open .floating .audioFloat{left:12px!important;right:auto!important;bottom:245px!important;}
+ body.library-open .floating .wa{left:12px!important;right:auto!important;bottom:185px!important;}
+ body.library-open .floating .up{right:12px!important;bottom:315px!important;}
+}
+</style>
 </head>
 <body>
 <!-- =======================================================
@@ -2897,6 +2997,15 @@ body.library-open .floating .up{bottom:255px !important;}
 <header class="header">
 <div class="head">
 <div class="tools">
+<button aria-label="مشاركة المكتبة" class="ib libraryShare" id="shareBtn" type="button">
+<svg class="shareSvg" viewBox="0 0 24 24">
+<circle cx="18" cy="5" r="3"></circle>
+<circle cx="6" cy="12" r="3"></circle>
+<circle cx="18" cy="19" r="3"></circle>
+<line x1="8.6" x2="15.4" y1="13.5" y2="17.5"></line>
+<line x1="15.4" x2="8.6" y1="6.5" y2="10.5"></line>
+</svg>
+</button>
 <button class="ib" id="menuBtn" type="button">
 
 ☰
@@ -3310,15 +3419,6 @@ Developer
      الأزرار العائمة: الصوت ثم واتساب ثم السهم
      ======================================================= -->
 <div class="floating">
-<button aria-label="مشاركة المكتبة" class="float share" id="shareBtn" type="button">
-<svg class="shareSvg" viewbox="0 0 24 24">
-<circle cx="18" cy="5" r="3"></circle>
-<circle cx="6" cy="12" r="3"></circle>
-<circle cx="18" cy="19" r="3"></circle>
-<line x1="8.6" x2="15.4" y1="13.5" y2="17.5"></line>
-<line x1="15.4" x2="8.6" y1="6.5" y2="10.5"></line>
-</svg>
-</button>
 <div class="floatRight">
 <div class="audioFloat">
 <button aria-expanded="false" aria-label="اختيار الصوت" aria-pressed="false" class="audioBtn" id="audioBtn" type="button">
@@ -6048,6 +6148,40 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
   splash.addEventListener('animationend',function(e){if(e.animationName==='introExit'){release();splash.remove();}}, {once:false});
 })();
 </script>
+<script src="https://code.tidio.co/quak1cmzgxtgbyhf5f7dj9iumrudukgh.js" async></script>
+<script id="tidio-clean-init">
+(function(){
+  function revealTidio(){
+    try{
+      if(window.tidioChatApi){
+        if(typeof window.tidioChatApi.display==='function') window.tidioChatApi.display(true);
+        if(typeof window.tidioChatApi.show==='function') window.tidioChatApi.show();
+      }
+    }catch(e){}
+  }
+  window.addEventListener('load', function(){
+    setTimeout(revealTidio, 700);
+    setTimeout(revealTidio, 1800);
+    setTimeout(revealTidio, 3500);
+  });
+  var n=0, t=setInterval(function(){
+    n++; revealTidio();
+    if(window.tidioChatApi || n>30) clearInterval(t);
+  },500);
+})();
+</script>
+
+<style id="final-float-position-v5">
+/* الوضع النهائي: الصوت + واتساب + السهم في الجهة المقابلة بنفس الارتفاعات */
+body.library-open .floating .audioFloat{position:fixed!important;left:16px!important;right:auto!important;bottom:255px!important;top:auto!important;margin:0!important;z-index:2147482997!important;}
+body.library-open .floating .wa{position:fixed!important;left:16px!important;right:auto!important;bottom:190px!important;top:auto!important;margin:0!important;z-index:2147482998!important;}
+body.library-open .floating .up{position:fixed!important;left:16px!important;right:auto!important;bottom:325px!important;top:auto!important;margin:0!important;z-index:2147482996!important;}
+@media(max-width:700px){
+ body.library-open .floating .audioFloat{left:12px!important;right:auto!important;bottom:245px!important;}
+ body.library-open .floating .wa{left:12px!important;right:auto!important;bottom:185px!important;}
+ body.library-open .floating .up{left:12px!important;right:auto!important;bottom:315px!important;}
+}
+</style>
 </body>
 
 
@@ -6079,50 +6213,7 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 }
 </style>
 </html>
-<style id="final-floating-left-small">
-/* آخر تعديل: نقل أيقونات الدعم للناحية اليسرى وتصغيرها قليلًا */
-body.library-open .floating .wa{
-    left:20px !important;
-    right:auto !important;
-    bottom:92px !important;
-    transform:scale(.82) !important;
-    transform-origin:bottom left !important;
-}
-body.library-open .floating .audioFloat{
-    left:20px !important;
-    right:auto !important;
-    bottom:164px !important;
-    transform:scale(.82) !important;
-    transform-origin:bottom left !important;
-}
-body.library-open #crisp-client .cc-kv6t{
-    left:20px !important;
-    right:auto !important;
-    bottom:18px !important;
-    transform:scale(.82) !important;
-    transform-origin:bottom left !important;
-}
-@media(max-width:700px){
-    body.library-open .floating .wa{
-        left:12px !important;
-        right:auto !important;
-        bottom:88px !important;
-        transform:scale(.78) !important;
-    }
-    body.library-open .floating .audioFloat{
-        left:12px !important;
-        right:auto !important;
-        bottom:154px !important;
-        transform:scale(.78) !important;
-    }
-    body.library-open #crisp-client .cc-kv6t{
-        left:12px !important;
-        right:auto !important;
-        bottom:12px !important;
-        transform:scale(.78) !important;
-    }
-}
-
+<style id="final-video-library-styles">
 /* ================= VIDEO LIBRARY ================= */
 .videoLibraryCard{
   position:relative;overflow:hidden;display:flex;align-items:center;gap:20px;
@@ -6141,3 +6232,6 @@ body.library-open #crisp-client .cc-kv6t{
 .videoLibraryBtn:hover{transform:translateY(-2px);box-shadow:0 9px 20px rgba(230,189,77,.18)}
 @media(max-width:650px){.videoLibraryCard{padding:19px;gap:14px}.videoLibraryIcon{flex-basis:58px;width:58px;height:58px;border-radius:17px;font-size:22px}.videoLibraryContent h3{font-size:21px}.videoLibraryContent p{font-size:13px}.videoLibraryBtn{padding:9px 13px;font-size:13px}}
 </style>
+</style>
+
+
