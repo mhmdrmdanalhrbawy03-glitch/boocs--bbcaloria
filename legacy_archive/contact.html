@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>تواصل معنا | مكتبة تانية بكالوريا</title>
+<style>
+:root{--bg:#07101d;--card:#101b2d;--line:#263a55;--gold:#f4cb59;--text:#f7f8fb;--muted:#aab8ca;--green:#20c978}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:radial-gradient(circle at top,#152842 0,#07101d 52%,#050a12 100%);color:var(--text);min-height:100vh}.wrap{width:min(920px,calc(100% - 28px));margin:auto;padding:28px 0 45px}.back{display:inline-flex;align-items:center;gap:7px;color:var(--gold);text-decoration:none;font-weight:800;margin-bottom:18px}.card{background:linear-gradient(145deg,#111d31,#0c1626);border:1px solid #d8ad4544;border-radius:24px;padding:28px;box-shadow:0 22px 65px #0008}.hero{text-align:center;padding:12px 10px 20px}.hero .icon{font-size:44px}.hero h1{margin:8px 0;color:var(--gold);font-size:30px}.hero p{color:var(--muted);line-height:1.9;margin:0 auto;max-width:680px}.form{display:grid;gap:14px;margin-top:18px}.field{display:grid;gap:7px}.field label{font-weight:800}.field input,.field textarea{width:100%;padding:14px 15px;border-radius:13px;border:1px solid var(--line);background:#081321;color:#fff;font:inherit;outline:none}.field input:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px #f4cb5918}.field textarea{min-height:145px;resize:vertical}.btn{border:0;border-radius:14px;padding:14px 18px;background:linear-gradient(135deg,#f4cb59,#c89a31);color:#101010;font:inherit;font-weight:900;cursor:pointer}.btn:disabled{opacity:.6;cursor:wait}.quick{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:18px}.quick a{padding:13px;border:1px solid var(--line);border-radius:13px;color:var(--text);text-decoration:none;text-align:center;background:#0b1727}.quick a:hover{border-color:#f4cb5970}.status{min-height:26px;text-align:center;color:var(--gold);font-weight:800;line-height:1.7}.rights{margin-top:22px;padding-top:16px;border-top:1px solid var(--line);text-align:center;color:#8fa0b6;font-size:13px}.rights strong{color:var(--gold)}@media(max-width:650px){.card{padding:20px}.hero h1{font-size:25px}.quick{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<a class="back" href="./index.html">← العودة إلى المكتبة</a>
+<section class="card">
+<div class="hero"><div class="icon">📩</div><h1>تواصل معنا</h1><p>للاستفسارات، الاقتراحات، الإبلاغ عن مشكلة، أو طلب إضافة كتاب، يمكنك إرسال رسالتك مباشرة. سيتم استقبال الطلب عبر نموذج التواصل الخاص بالمكتبة.</p></div>
+<form id="contactForm" class="form" action="https://formcarry.com/s/gLmeJMRTUnQ" method="POST">
+<div class="field"><label for="name">الاسم</label><input id="name" name="name" type="text" required autocomplete="name" placeholder="اكتب اسمك"></div>
+<div class="field"><label for="phone">رقم الهاتف</label><input id="phone" name="phone" type="tel" required autocomplete="tel" placeholder="اكتب رقم الهاتف"></div>
+<div class="field"><label for="description">تفاصيل الرسالة</label><textarea id="description" name="description" required placeholder="اكتب استفسارك أو اقتراحك أو المشكلة بالتفصيل"></textarea></div>
+<button id="sendBtn" class="btn" type="submit">📨 إرسال الرسالة</button>
+<div id="status" class="status" role="status" aria-live="polite"></div>
+</form>
+<div class="quick"><a href="https://wa.me/201500492203" target="_blank" rel="noopener">💬 واتساب المطور</a><a href="./privacy.html">🔐 سياسة الخصوصية والملكية الفكرية</a></div>
+<div class="rights">© جميع الحقوق محفوظة لـ <strong>محمد رمضان الحرباوي</strong></div>
+</section>
+</main>
+<script>
+const form=document.getElementById('contactForm');
+const statusEl=document.getElementById('status');
+const btn=document.getElementById('sendBtn');
+form.addEventListener('submit',async e=>{
+ e.preventDefault();statusEl.textContent='جاري إرسال الرسالة…';btn.disabled=true;
+ try{
+  const res=await fetch(form.action,{method:'POST',headers:{Accept:'application/json'},body:new FormData(form)});
+  let data={};try{data=await res.json()}catch{}
+  if(res.ok && (data.code===200 || data.status==='success')){statusEl.textContent='✅ تم إرسال رسالتك بنجاح، شكرًا لتواصلك معنا.';form.reset();}
+  else{statusEl.textContent='تعذر إرسال الرسالة حاليًا. يمكنك التواصل معنا عبر واتساب.';}
+ }catch(err){statusEl.textContent='تعذر الاتصال بالخدمة. يمكنك التواصل معنا عبر واتساب.';}
+ finally{btn.disabled=false;}
+});
+</script>
+</body>
+</html>

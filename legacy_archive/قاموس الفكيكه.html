@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 قاموس الفكيكة | تانية بكالوريا</title>
+<style>
+  :root {
+    --green: #16A34A;
+    --green-light: #22C55E;
+    --green-dark: #15803D;
+    --white: #FFFFFF;
+    --gray-dark: #1F2937;
+    --gray-mid: #374151;
+    --gray-light: #F3F4F6;
+    --gray-border: #E5E7EB;
+    --gold: #D4AF37;
+    --gold-light: #F0D060;
+    --bg: #F9FAFB;
+    --card-bg: #FFFFFF;
+    --text: #1F2937;
+    --text-muted: #6B7280;
+    --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --shadow-hover: 0 8px 30px rgba(22,163,74,0.2);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F172A;
+      --card-bg: #1E293B;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --gray-dark: #F1F5F9;
+      --gray-light: #1E293B;
+      --gray-border: #334155;
+      --shadow: 0 4px 20px rgba(0,0,0,0.4);
+      --shadow-hover: 0 8px 30px rgba(22,163,74,0.3);
+    }
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',Tahoma,Arial,sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background 0.3s,color 0.3s; }
+
+  /* NAV */
+  .nav { background:var(--green); color:#fff; padding:0 20px; position:sticky; top:0; z-index:1000; box-shadow:0 2px 12px rgba(22,163,74,0.4); }
+  .nav-inner { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; padding:10px 0; }
+  .nav-logo { font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px; }
+  .nav-logo span { color:var(--gold); }
+  .nav-links { display:flex; gap:6px; flex-wrap:wrap; }
+  .nav-btn { background:rgba(255,255,255,0.15); border:none; color:#fff; padding:7px 14px; border-radius:30px; cursor:pointer; font-size:0.85rem; font-family:inherit; transition:all 0.2s; white-space:nowrap; }
+  .nav-btn:hover, .nav-btn.active { background:var(--gold); color:#1F2937; font-weight:700; }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,var(--green) 0%,var(--green-dark) 60%,#0F4C2A 100%); color:#fff; text-align:center; padding:48px 20px 60px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:radial-gradient(circle,rgba(212,175,55,0.12) 0%,transparent 60%); animation:pulse 4s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+  .hero h1 { font-size:clamp(1.6rem,4vw,2.6rem); font-weight:900; margin-bottom:12px; text-shadow:0 2px 10px rgba(0,0,0,0.3); position:relative; }
+  .hero h1 .gold { color:var(--gold); }
+  .hero p { font-size:clamp(0.9rem,2vw,1.05rem); opacity:0.9; max-width:680px; margin:0 auto 28px; line-height:1.8; position:relative; }
+  .hero-stats { display:flex; justify-content:center; gap:24px; flex-wrap:wrap; position:relative; }
+  .stat-box { background:rgba(255,255,255,0.15); backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.25); border-radius:14px; padding:14px 24px; text-align:center; transition:transform 0.3s; }
+  .stat-box:hover { transform:translateY(-4px); }
+  .stat-box .num { font-size:1.6rem; font-weight:900; color:var(--gold); }
+  .stat-box .lbl { font-size:0.82rem; opacity:0.85; }
+
+  /* SEARCH */
+  .search-wrap { background:var(--card-bg); padding:28px 20px; border-bottom:2px solid var(--gray-border); position:sticky; top:56px; z-index:900; box-shadow:var(--shadow); }
+  .search-inner { max-width:720px; margin:0 auto; position:relative; }
+  .search-box { width:100%; padding:18px 60px 18px 20px; font-size:1.1rem; border:2px solid var(--gray-border); border-radius:50px; outline:none; background:var(--bg); color:var(--text); font-family:inherit; transition:all 0.3s; }
+  .search-box:focus { border-color:var(--green); box-shadow:0 0 0 4px rgba(22,163,74,0.15); }
+  .search-icon { position:absolute; left:20px; top:50%; transform:translateY(-50%); font-size:1.3rem; opacity:0.5; }
+  .search-clear { position:absolute; right:20px; top:50%; transform:translateY(-50%); background:var(--gray-border); border:none; border-radius:50%; width:30px; height:30px; cursor:pointer; font-size:1rem; display:none; align-items:center; justify-content:center; color:var(--text); transition:all 0.2s; }
+  .search-clear:hover { background:var(--green); color:#fff; }
+
+  /* MAIN */
+  .main { max-width:1100px; margin:0 auto; padding:28px 16px 60px; }
+
+  /* SECTIONS */
+  .section { display:none; animation:fadeIn 0.4s ease; }
+  .section.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+  .section-title { font-size:1.3rem; font-weight:800; color:var(--green); margin-bottom:20px; display:flex; align-items:center; gap:10px; }
+  .section-title::after { content:''; flex:1; height:2px; background:linear-gradient(to left,transparent,var(--green)); }
+
+  /* WORD CARD */
+  .results-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+  .word-card { background:var(--card-bg); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); border:1px solid var(--gray-border); transition:all 0.3s; position:relative; overflow:hidden; }
+  .word-card::before { content:''; position:absolute; top:0; right:0; width:4px; height:100%; background:var(--green); }
+  .word-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-hover); border-color:var(--green); }
+  .word-en { font-size:1.3rem; font-weight:800; color:var(--green); margin-bottom:4px; direction:ltr; text-align:left; }
+  .word-ar { font-size:1.05rem; font-weight:600; color:var(--text); margin-bottom:8px; }
+  .word-type { display:inline-block; background:rgba(22,163,74,0.12); color:var(--green); padding:3px 12px; border-radius:20px; font-size:0.78rem; font-weight:700; margin-bottom:10px; }
+  .word-example { font-size:0.88rem; color:var(--text-muted); border-top:1px dashed var(--gray-border); padding-top:10px; line-height:1.7; }
+  .word-example strong { color:var(--green); }
+  .card-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .action-btn { flex:1; min-width:60px; padding:7px 10px; border:none; border-radius:8px; cursor:pointer; font-size:0.8rem; font-family:inherit; font-weight:600; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:5px; }
+  .btn-fav { background:rgba(212,175,55,0.15); color:var(--gold); border:1px solid rgba(212,175,55,0.3); }
+  .btn-fav:hover, .btn-fav.active { background:var(--gold); color:#1F2937; }
+  .btn-speak { background:rgba(22,163,74,0.12); color:var(--green); border:1px solid rgba(22,163,74,0.25); }
+  .btn-speak:hover { background:var(--green); color:#fff; }
+  .btn-copy { background:rgba(100,116,139,0.12); color:var(--text-muted); border:1px solid var(--gray-border); }
+  .btn-copy:hover { background:var(--gray-mid); color:#fff; }
+
+  /* ALPHABET FILTER */
+  .alpha-filter { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px; }
+  .alpha-btn { width:36px; height:36px; border:1px solid var(--gray-border); border-radius:8px; background:var(--card-bg); color:var(--text); font-weight:700; font-size:0.85rem; cursor:pointer; transition:all 0.2s; }
+  .alpha-btn:hover, .alpha-btn.active { background:var(--green); color:#fff; border-color:var(--green); }
+
+  /* NO RESULT */
+  .no-result { text-align:center; padding:60px 20px; }
+  .no-result .emoji { font-size:4rem; margin-bottom:16px; }
+  .no-result p { color:var(--text-muted); font-size:1.05rem; }
+
+  /* HISTORY */
+  .history-list { display:flex; flex-wrap:wrap; gap:10px; }
+  .history-tag { background:var(--card-bg); border:1px solid var(--gray-border); border-radius:30px; padding:8px 18px; cursor:pointer; font-size:0.9rem; transition:all 0.2s; display:flex; align-items:center; gap:6px; }
+  .history-tag:hover { background:var(--green); color:#fff; border-color:var(--green); }
+  .clear-btn { background:rgba(239,68,68,0.12); color:#EF4444; border:1px solid rgba(239,68,68,0.3); border-radius:8px; padding:8px 18px; cursor:pointer; font-family:inherit; font-size:0.88rem; font-weight:600; transition:all 0.2s; }
+  .clear-btn:hover { background:#EF4444; color:#fff; }
+
+  /* CATEGORIES */
+  .cat-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-bottom:28px; }
+  .cat-card { background:var(--card-bg); border:1px solid var(--gray-border); border-radius:var(--radius-sm); padding:16px; text-align:center; cursor:pointer; transition:all 0.3s; }
+  .cat-card:hover { background:var(--green); color:#fff; transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+  .cat-card:hover .cat-icon { filter:grayscale(0) brightness(2); }
+  .cat-icon { font-size:1.8rem; margin-bottom:6px; }
+  .cat-name { font-size:0.88rem; font-weight:700; }
+  .cat-count { font-size:0.78rem; opacity:0.7; }
+
+  /* ABOUT */
+  .about-card { background:var(--card-bg); border-radius:var(--radius); padding:32px; box-shadow:var(--shadow); max-width:700px; margin:0 auto; }
+  .about-card h2 { color:var(--green); font-size:1.4rem; margin-bottom:16px; }
+  .about-card p { color:var(--text-muted); line-height:1.9; margin-bottom:12px; }
+  .about-card .highlight { color:var(--gold); font-weight:700; }
+
+  /* FOOTER */
+  footer { background:var(--gray-dark); color:rgba(255,255,255,0.7); text-align:center; padding:24px; font-size:0.88rem; line-height:1.8; }
+  footer strong { color:var(--gold); }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--green); color:#fff; padding:12px 28px; border-radius:50px; font-size:0.92rem; font-weight:600; z-index:9999; transition:transform 0.4s ease; box-shadow:0 6px 20px rgba(22,163,74,0.4); }
+  .toast.show { transform:translateX(-50%) translateY(0); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:var(--bg); }
+  ::-webkit-scrollbar-thumb { background:var(--green); border-radius:3px; }
+
+  @media(max-width:600px) {
+    .nav-inner { flex-direction:column; align-items:flex-start; }
+    .nav-links { width:100%; overflow-x:auto; padding-bottom:4px; }
+    .results-grid { grid-template-columns:1fr; }
+    .hero { padding:32px 16px 44px; }
+    .search-wrap { top:0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">📚 <span>الفكيكة</span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="showSection('home')">🏠 الرئيسية</button>
+      <button class="nav-btn" onclick="showSection('all')">📖 جميع الكلمات</button>
+      <button class="nav-btn" onclick="showSection('favorites')">⭐ المفضلة</button>
+      <button class="nav-btn" onclick="showSection('history')">🕐 السجل</button>
+      <button class="nav-btn" onclick="showSection('about')">ℹ️ حول</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="heroSection">
+  <h1>📚 قاموس <span class="gold">الفكيكة</span> | تانية بكالوريا</h1>
+  <p>مرحبًا بك في قاموس الفكيكة، أكبر قاموس عربي–إنجليزي مخصص لطلاب الثانوية العامة. يحتوي على آلاف الكلمات الإنجليزية مع معانيها بالعربية، والبحث الفوري للوصول لأي كلمة خلال ثوانٍ.</p>
+  <div class="hero-stats">
+    <div class="stat-box"><div class="num" id="wordCount">0</div><div class="lbl">كلمة في القاموس</div></div>
+    <div class="stat-box"><div class="num" id="favCount">0</div><div class="lbl">في المفضلة</div></div>
+    <div class="stat-box"><div class="num" id="searchCount">0</div><div class="lbl">عمليات بحث</div></div>
+  </div>
+</div>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <input class="search-box" id="searchInput" type="text" placeholder="🔍 ابحث عن أي كلمة إنجليزية..." oninput="liveSearch(this.value)" autocomplete="off" spellcheck="false">
+    <span class="search-icon">🔍</span>
+    <button class="search-clear" id="clearBtn" onclick="clearSearch()">✕</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HOME SECTION -->
+  <div class="section active" id="sec-home">
+    <div class="section-title">🔥 الكلمات الأكثر استخدامًا</div>
+    <div class="results-grid" id="popularGrid"></div>
+    <br>
+    <div class="section-title">🎓 كلمات تانية بكالوريا</div>
+    <div class="results-grid" id="bacGrid"></div>
+    <br>
+    <div class="section-title">📂 تصفح حسب الفئة</div>
+    <div class="cat-grid" id="catGrid"></div>
+  </div>
+
+  <!-- SEARCH RESULTS -->
+  <div class="section" id="sec-search">
+    <div class="section-title">🔎 نتائج البحث</div>
+    <div class="results-grid" id="searchGrid"></div>
+  </div>
+
+  <!-- ALL WORDS -->
+  <div class="section" id="sec-all">
+    <div class="section-title">📖 جميع الكلمات</div>
+    <div class="alpha-filter" id="alphaFilter"></div>
+    <div class="results-grid" id="allGrid"></div>
+  </div>
+
+  <!-- FAVORITES -->
+  <div class="section" id="sec-favorites">
+    <div class="section-title">⭐ الكلمات المحفوظة</div>
+    <div class="results-grid" id="favGrid"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="section" id="sec-history">
+    <div class="section-title">🕐 آخر عمليات البحث</div>
+    <div style="margin-bottom:16px;">
+      <button class="clear-btn" onclick="clearHistory()">🗑️ مسح السجل</button>
+    </div>
+    <div class="history-list" id="historyList"></div>
+  </div>
+
+  <!-- ABOUT -->
+  <div class="section" id="sec-about">
+    <div class="about-card">
+      <h2>📚 عن قاموس الفكيكة</h2>
+      <p>قاموس الفكيكة هو مشروع تعليمي متكامل مصمم خصيصًا لطلاب <span class="highlight">تانية بكالوريا</span> للمساعدة في تعلم واستيعاب الكلمات الإنجليزية الأساسية.</p>
+      <p>يحتوي القاموس على <span class="highlight" id="aboutCount"></span> كلمة إنجليزية مع معانيها بالعربية، نوع الكلمة، وجملة مثال تطبيقية.</p>
+      <p>الميزات: 🔍 بحث فوري • ⭐ المفضلة • 🔊 نطق الكلمات • 📋 نسخ المعنى • 🕐 سجل البحث • 🌙 وضع ليلي تلقائي</p>
+      <p>صُمم ليعمل بالكامل دون إنترنت – كل شيء محلي على جهازك.</p>
+      <p style="color:var(--text-muted); font-size:0.88rem;">تم التصميم بـ ❤️ لطلاب المغرب</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 <strong>الفكيكة | تانية بكالوريا</strong><br>
+  جميع الحقوق محفوظة · <strong>اسمر</strong>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+//  قاعدة البيانات – الكلمات الإنجليزية
+// ============================================================
+// هيكل كل كلمة: [en, ar, type, example, tags]
+// type: v=فعل n=اسم adj=صفة adv=ظرف prep=حرف جر conj=حرف ربط
+// tags: شامل قائمات الفئات مثل popular, bac, nature, body...
+const RAW = [
+// ===================== A =====================
+["abandon","يتخلى عن","v","He abandoned his old habits.","bac"],
+["ability","قدرة / موهبة","n","She has the ability to learn fast.","popular,bac"],
+["absent","غائب","adj","He was absent from school.","popular"],
+["abuse","إساءة / يسيء","n/v","Drug abuse is dangerous.","bac"],
+["accept","يقبل","v","Please accept my apology.","popular"],
+["access","الوصول / الدخول","n","I have no access to the internet.","bac"],
+["accident","حادث","n","There was a car accident.","popular"],
+["accompany","يرافق","v","She accompanied her friend.","bac"],
+["accomplish","ينجز","v","He accomplished his goal.","bac"],
+["according","وفقاً لـ","adv","According to the report, it is true.","bac"],
+["accurate","دقيق","adj","The information is accurate.","bac"],
+["achieve","يحقق","v","She achieved her dream.","popular,bac"],
+["action","عمل / فعل","n","Actions speak louder than words.","popular"],
+["active","نشيط","adj","He is very active in sports.","popular"],
+["adapt","يتكيف","v","We must adapt to changes.","bac"],
+["add","يضيف","v","Add some salt to the soup.","popular"],
+["admire","يعجب بـ","v","I admire her courage.","bac"],
+["advance","تقدم / يتقدم","n/v","Technology advances every year.","bac"],
+["advice","نصيحة","n","He gave me good advice.","popular"],
+["advise","ينصح","v","I advise you to study hard.","bac"],
+["affect","يؤثر","v","The weather affects my mood.","bac"],
+["afraid","خائف","adj","The child was afraid of the dark.","popular"],
+["age","عمر / عصر","n","What is your age?","popular"],
+["agree","يوافق","v","I agree with your opinion.","popular"],
+["air","هواء / جو","n","The air is fresh here.","popular"],
+["allow","يسمح","v","Parents allow children to play.","popular"],
+["alone","وحيد","adj","She was alone in the room.","popular"],
+["already","بالفعل / سبق","adv","I have already finished my homework.","popular"],
+["although","رغم أن / على الرغم","conj","Although it was cold, we went out.","bac"],
+["anger","غضب","n","He felt anger inside.","popular"],
+["animal","حيوان","n","The dog is a domestic animal.","popular,nature"],
+["anxiety","قلق","n","She felt anxiety before the exam.","bac"],
+["apply","يتقدم / يطبق","v","Apply for the job online.","bac"],
+["appreciate","يقدر / يشكر","v","I appreciate your help.","bac"],
+["approach","يقترب / نهج","v/n","A new approach to learning.","bac"],
+["argue","يجادل","v","They always argue about money.","popular"],
+["arise","ينشأ / يطرح","v","Problems may arise.","bac"],
+["army","جيش","n","The army protects the country.","popular"],
+["arrest","يعتقل","v","The police arrested the thief.","bac"],
+["art","فن","n","He loves modern art.","popular"],
+["attend","يحضر","v","She attends school every day.","popular"],
+["attitude","موقف / سلوك","n","He has a positive attitude.","bac"],
+["attract","يجذب","v","Flowers attract butterflies.","bac"],
+["average","متوسط","adj/n","The average score is 14.","bac"],
+["avoid","يتجنب","v","Avoid eating junk food.","popular,bac"],
+["aware","مدرك / واعٍ","adj","Be aware of your surroundings.","bac"],
+// ===================== B =====================
+["balance","توازن","n","Keep a balance between work and rest.","bac"],
+["basic","أساسي","adj","Food is a basic need.","popular"],
+["beauty","جمال","n","The beauty of nature is amazing.","popular"],
+["become","يصبح","v","She wants to become a doctor.","popular"],
+["behave","يتصرف","v","Please behave well in class.","popular"],
+["benefit","فائدة / يستفيد","n/v","Reading has many benefits.","bac"],
+["between","بين","prep","Sit between your parents.","popular"],
+["borrow","يستعير","v","Can I borrow your pen?","popular"],
+["brave","شجاع","adj","He was brave enough to help.","popular"],
+["break","يكسر / استراحة","v/n","Take a short break.","popular"],
+["brilliant","رائع / ذكي","adj","She is a brilliant student.","bac"],
+["broad","واسع / عريض","adj","He has a broad knowledge.","bac"],
+["build","يبني","v","They will build a new school.","popular"],
+["busy","مشغول","adj","The teacher is busy right now.","popular"],
+// ===================== C =====================
+["calm","هادئ / يهدئ","adj/v","The sea was calm.","popular"],
+["care","اهتمام / يهتم","n/v","She cares about her family.","popular"],
+["career","مسيرة مهنية","n","He built a great career.","bac"],
+["cause","سبب / يسبب","n/v","Pollution causes diseases.","bac"],
+["celebrate","يحتفل","v","We celebrate Eid together.","popular"],
+["challenge","تحدٍّ / يتحدى","n/v","Life is full of challenges.","bac"],
+["change","يغير / تغيير","v/n","Change is inevitable.","popular,bac"],
+["character","شخصية / طابع","n","She has a strong character.","bac"],
+["charity","خيرية / عطاء","n","Give to charity.","bac"],
+["children","أطفال","n","Children need love and care.","popular"],
+["choice","خيار","n","Make the right choice.","popular,bac"],
+["citizen","مواطن","n","Every citizen has rights.","bac"],
+["climate","مناخ","n","Climate change is a serious issue.","bac,nature"],
+["collect","يجمع","v","He collects stamps.","popular"],
+["communicate","يتواصل","v","We must communicate clearly.","bac"],
+["community","مجتمع","n","Help your community.","bac"],
+["compare","يقارن","v","Compare the two prices.","bac"],
+["competition","منافسة","n","There is tough competition.","bac"],
+["complete","يكمل / مكتمل","v/adj","Complete your homework.","popular"],
+["complex","معقد","adj","The problem is very complex.","bac"],
+["concern","قلق / يهتم","n/v","Health is everyone's concern.","bac"],
+["confirm","يؤكد","v","Please confirm your order.","bac"],
+["connect","يربط / يوصل","v","Connect the cable to the TV.","popular"],
+["consequence","عاقبة / نتيجة","n","Think about the consequences.","bac"],
+["consider","يعتبر / يفكر في","v","Consider all options.","bac"],
+["continue","يستمر","v","Continue reading the text.","popular"],
+["control","يتحكم / سيطرة","v/n","Control your emotions.","popular,bac"],
+["convenient","مريح / ملائم","adj","The location is convenient.","bac"],
+["correct","صحيح / يصحح","adj/v","Give the correct answer.","popular"],
+["courage","شجاعة","n","Courage is not the absence of fear.","bac"],
+["create","يخلق / يبدع","v","Create something beautiful.","popular,bac"],
+["crime","جريمة","n","Crime rate is increasing.","bac"],
+["critical","حرج / انتقادي","adj","This is a critical situation.","bac"],
+["culture","ثقافة","n","Morocco has a rich culture.","bac"],
+["curious","فضولي","adj","Children are naturally curious.","popular"],
+["custom","عادة / تقليد","n","Every country has its customs.","bac"],
+// ===================== D =====================
+["damage","ضرر / يتلف","n/v","The flood caused much damage.","bac"],
+["danger","خطر","n","He faced great danger.","popular"],
+["deal","يتعامل / صفقة","v/n","Deal with your problems calmly.","bac"],
+["decide","يقرر","v","She decided to study abroad.","popular"],
+["declare","يعلن","v","The government declared a holiday.","bac"],
+["demand","يطالب / طلب","v/n","The job demands hard work.","bac"],
+["depend","يعتمد","v","Success depends on effort.","popular"],
+["describe","يصف","v","Describe the picture.","popular"],
+["destroy","يدمر","v","War destroys cities.","bac"],
+["develop","يطور / ينمو","v","Develop your skills.","bac"],
+["difference","اختلاف / فرق","n","There is a big difference.","popular"],
+["difficult","صعب","adj","The exam was difficult.","popular"],
+["discover","يكتشف","v","Scientists discover new things.","popular,bac"],
+["discuss","يناقش","v","Let's discuss the topic.","popular,bac"],
+["disease","مرض","n","The disease spread quickly.","bac"],
+["distance","مسافة","n","The distance is 10 km.","popular"],
+["divide","يقسم","v","Divide the work equally.","bac"],
+["doubt","شك / يشك","n/v","I have no doubt about it.","bac"],
+["dream","حلم / يحلم","n/v","Follow your dream.","popular"],
+["duty","واجب","n","It is your duty to study.","bac"],
+// ===================== E =====================
+["earn","يكسب / يستحق","v","He earns a good salary.","popular"],
+["economic","اقتصادي","adj","Economic growth is important.","bac"],
+["educate","يعلم / يثقف","v","Parents educate their children.","bac"],
+["education","تعليم","n","Education is the key to success.","popular,bac"],
+["effect","تأثير / أثر","n","Exercise has a good effect.","bac"],
+["effort","جهد","n","Success requires effort.","popular"],
+["electricity","كهرباء","n","We use electricity every day.","popular"],
+["emergency","طارئ / حالة طارئة","n","Call 15 in case of emergency.","bac"],
+["emotion","مشاعر / عاطفة","n","Control your emotions.","bac"],
+["encourage","يشجع","v","Teachers encourage students.","popular,bac"],
+["energy","طاقة","n","Solar energy is clean.","bac,nature"],
+["enjoy","يستمتع","v","I enjoy reading.","popular"],
+["environment","بيئة","n","Protect the environment.","bac,nature"],
+["equality","مساواة","n","We believe in equality.","bac"],
+["escape","يهرب / هروب","v/n","He escaped from danger.","popular"],
+["establish","يؤسس","v","Establish good habits.","bac"],
+["event","حدث / مناسبة","n","The event was successful.","popular"],
+["evidence","دليل / برهان","n","There is no evidence.","bac"],
+["exist","يوجد / يعيش","v","Does life exist on Mars?","bac"],
+["expect","يتوقع","v","I expect good results.","popular"],
+["experience","خبرة / تجربة","n/v","Experience is the best teacher.","popular,bac"],
+["explain","يشرح","v","Explain your answer.","popular"],
+["express","يعبر","v","Express your feelings freely.","bac"],
+// ===================== F =====================
+["fail","يفشل","v","Don't be afraid to fail.","popular"],
+["fair","عادل","adj","The teacher was fair to all.","bac"],
+["faith","إيمان","n","Have faith in yourself.","bac"],
+["famous","مشهور","adj","He is a famous actor.","popular"],
+["fear","خوف / يخاف","n/v","He overcame his fear.","popular"],
+["feel","يشعر","v","How do you feel today?","popular"],
+["fight","يقاتل / نزال","v/n","Fight for your rights.","popular"],
+["find","يجد","v","Find a solution to the problem.","popular"],
+["focus","يركز / تركيز","v/n","Focus on your studies.","popular,bac"],
+["force","يجبر / قوة","v/n","Don't force people to agree.","bac"],
+["foreign","أجنبي","adj","He speaks a foreign language.","popular"],
+["forgive","يسامح","v","Forgive and forget.","popular"],
+["freedom","حرية","n","Freedom is a right.","bac"],
+["friendship","صداقة","n","Friendship is precious.","popular"],
+["future","مستقبل","n","The future belongs to those who prepare.","popular"],
+// ===================== G =====================
+["gather","يجمع / يجتمع","v","The family gathers on weekends.","popular"],
+["global","عالمي","adj","Global warming is a threat.","bac,nature"],
+["goal","هدف","n","Set clear goals.","popular,bac"],
+["government","حكومة","n","The government creates laws.","bac"],
+["grateful","ممتن / شاكر","adj","Be grateful for what you have.","popular"],
+["grow","يكبر / ينمو","v","Plants grow with water.","popular"],
+["guess","يخمن","v","Can you guess the answer?","popular"],
+["guide","يرشد / دليل","v/n","A teacher guides students.","bac"],
+// ===================== H =====================
+["habit","عادة","n","Reading is a good habit.","popular"],
+["happen","يحدث","v","What happened yesterday?","popular"],
+["happiness","سعادة","n","Happiness is a choice.","popular"],
+["harm","يضر / ضرر","v/n","Smoking harms your health.","bac"],
+["health","صحة","n","Health is wealth.","popular"],
+["help","يساعد","v","Help others in need.","popular"],
+["heritage","تراث","n","Morocco has a rich heritage.","bac"],
+["honest","أمين / صادق","adj","Be honest in all you do.","popular"],
+["hope","أمل / يأمل","n/v","Never lose hope.","popular"],
+["human","إنسان / بشري","n/adj","All humans are equal.","popular,bac"],
+// ===================== I =====================
+["idea","فكرة","n","That is a great idea.","popular"],
+["identify","يتعرف / يحدد","v","Can you identify the problem?","bac"],
+["imagine","يتخيل","v","Imagine a better world.","popular"],
+["impact","تأثير / يؤثر","n/v","Education has a big impact.","bac"],
+["important","مهم","adj","Education is very important.","popular"],
+["improve","يحسن","v","We can always improve.","popular,bac"],
+["include","يشمل / يتضمن","v","The price includes taxes.","bac"],
+["increase","يزيد / ارتفاع","v/n","Prices continue to increase.","bac"],
+["independence","استقلالية","n","Independence is a core value.","bac"],
+["individual","فرد / فردي","n/adj","Respect each individual.","bac"],
+["influence","تأثير / يؤثر","n/v","Friends influence your choices.","bac"],
+["information","معلومات","n","Find reliable information.","popular"],
+["injustice","ظلم","n","Fight against injustice.","bac"],
+["innocent","بريء","adj","The suspect was innocent.","bac"],
+["innovation","ابتكار","n","Innovation drives progress.","bac"],
+["inspire","يلهم","v","Great teachers inspire students.","bac"],
+["intelligent","ذكي","adj","She is very intelligent.","popular"],
+["investigate","يحقق","v","Police investigated the crime.","bac"],
+["involve","يتضمن / يشرك","v","Involve everyone in the plan.","bac"],
+["issue","قضية / مشكلة","n","Climate is a global issue.","bac"],
+// ===================== J =====================
+["join","ينضم / يشارك","v","Join the club.","popular"],
+["journey","رحلة","n","Life is a beautiful journey.","popular"],
+["judge","يحكم / قاضٍ","v/n","Don't judge a book by its cover.","bac"],
+["justice","عدالة","n","We all deserve justice.","bac"],
+// ===================== K =====================
+["knowledge","معرفة / علم","n","Knowledge is power.","popular,bac"],
+["keen","متحمس / حريص","adj","She is keen on learning.","bac"],
+// ===================== L =====================
+["law","قانون","n","Everyone must obey the law.","bac"],
+["lead","يقود","v","Lead by example.","popular,bac"],
+["learn","يتعلم","v","Learn from your mistakes.","popular"],
+["legal","قانوني","adj","Is this legal?","bac"],
+["level","مستوى / درجة","n","Her level of English is high.","popular"],
+["lifestyle","أسلوب حياة","n","A healthy lifestyle is important.","bac"],
+["limit","حد / يحد","n/v","Know your limits.","bac"],
+["local","محلي","adj","Support local businesses.","bac"],
+["lonely","وحيد","adj","He felt lonely at school.","popular"],
+["lose","يخسر / يفقد","v","No one likes to lose.","popular"],
+["loyalty","وفاء","n","Loyalty is a rare quality.","bac"],
+// ===================== M =====================
+["manage","يدير / يتمكن","v","She manages her time well.","bac"],
+["matter","يهم / موضوع","v/n","Every person matters.","popular"],
+["media","وسائل الإعلام","n","Media influences opinions.","bac"],
+["mention","يذكر","v","He mentioned your name.","popular"],
+["migrate","يهاجر","v","Birds migrate in winter.","bac,nature"],
+["minority","أقلية","n","Protect minority rights.","bac"],
+["mistake","خطأ","n","Learn from your mistakes.","popular"],
+["modern","حديث / عصري","adj","We live in a modern world.","popular"],
+["moral","أخلاقي / قيم","adj/n","Have good morals.","bac"],
+["motivate","يحفز","v","Teachers motivate students.","bac"],
+// ===================== N =====================
+["nature","طبيعة","n","Respect nature.","popular,nature"],
+["necessary","ضروري","adj","Sleep is necessary.","popular,bac"],
+["negative","سلبي","adj","Avoid negative thoughts.","popular"],
+["negotiate","يفاوض","v","Learn to negotiate.","bac"],
+["neighborhood","حي / جيران","n","We live in a nice neighborhood.","popular"],
+["nervous","متوتر / عصبي","adj","She felt nervous before the exam.","popular"],
+["notice","يلاحظ","v","Did you notice the change?","popular"],
+["nutrition","تغذية","n","Good nutrition is vital.","bac"],
+// ===================== O =====================
+["object","يعترض / شيء","v/n","He objected to the decision.","bac"],
+["observe","يلاحظ / يراقب","v","Observe the experiment carefully.","bac"],
+["obtain","يحصل على","v","Obtain the required documents.","bac"],
+["offer","يعرض / عرض","v/n","He offered to help.","popular"],
+["opinion","رأي","n","Share your opinion freely.","popular"],
+["opportunity","فرصة","n","Seize every opportunity.","popular,bac"],
+["organize","ينظم","v","Organize your notes.","bac"],
+["overcome","يتغلب على","v","Overcome your fears.","bac"],
+// ===================== P =====================
+["participate","يشارك","v","Participate actively in class.","bac"],
+["patience","صبر","n","Patience is a virtue.","popular"],
+["peaceful","سلمي / هادئ","adj","We want a peaceful world.","bac"],
+["permit","يأذن / تصريح","v/n","You need a permit to park.","bac"],
+["persuade","يقنع","v","She persuaded him to study.","bac"],
+["plan","يخطط / خطة","v/n","Plan your future carefully.","popular,bac"],
+["pollution","تلوث","n","Pollution destroys the environment.","bac,nature"],
+["poor","فقير","adj","Help the poor.","popular"],
+["positive","إيجابي","adj","Stay positive always.","popular"],
+["poverty","فقر","n","Education reduces poverty.","bac"],
+["powerful","قوي","adj","Knowledge is powerful.","popular"],
+["practice","يمارس / ممارسة","v/n","Practice makes perfect.","popular"],
+["present","يقدم / حاضر","v/adj","Present your ideas clearly.","popular,bac"],
+["prevent","يمنع","v","Prevent diseases by washing hands.","bac"],
+["produce","ينتج","v","Morocco produces phosphates.","bac"],
+["protect","يحمي","v","Protect the environment.","bac,nature"],
+["provide","يوفر","v","The school provides books.","bac"],
+["publish","ينشر","v","He published a book.","bac"],
+["purpose","هدف / غرض","n","Have a clear purpose in life.","bac"],
+// ===================== Q =====================
+["quality","جودة","n","Choose quality over quantity.","bac"],
+["quantity","كمية","n","We need a large quantity.","bac"],
+["question","سؤال / يسأل","n/v","Ask questions freely.","popular"],
+["quick","سريع","adj","Give a quick answer.","popular"],
+// ===================== R =====================
+["raise","يرفع / يربي","v","Raise your hand to answer.","popular"],
+["reach","يصل","v","Reach for your goals.","popular"],
+["reality","واقع / حقيقة","n","Face reality bravely.","bac"],
+["reason","سبب / عقل","n","Give a reason for your answer.","popular,bac"],
+["receive","يستقبل / يتلقى","v","She received a letter.","popular"],
+["reduce","يقلل","v","Reduce plastic use.","bac,nature"],
+["reflect","يعكس / يفكر","v","Reflect on your mistakes.","bac"],
+["refuse","يرفض","v","He refused the offer.","popular"],
+["relationship","علاقة","n","Build strong relationships.","popular,bac"],
+["religion","دين","n","Respect all religions.","bac"],
+["responsibility","مسؤولية","n","Take responsibility for your actions.","bac"],
+["result","نتيجة","n","The result was surprising.","popular"],
+["rich","غني / ثري","adj","She became rich through hard work.","popular"],
+["right","حق / صحيح","n/adj","You have the right to education.","popular,bac"],
+["risk","خطر / مجازفة","n","Take calculated risks.","bac"],
+["role","دور","n","Teachers play a big role.","bac"],
+["rule","قاعدة / يحكم","n/v","Follow the rules.","popular"],
+// ===================== S =====================
+["safe","آمن","adj","Keep yourself safe.","popular"],
+["satisfy","يرضي / يشبع","v","Hard work satisfies the soul.","bac"],
+["save","يوفر / ينقذ","v","Save water. Save life.","popular,nature"],
+["serious","جاد / خطير","adj","Be serious about your future.","popular,bac"],
+["share","يشارك / يشاطر","v","Share knowledge with others.","popular"],
+["similar","مشابه","adj","The two ideas are similar.","bac"],
+["simple","بسيط","adj","Use simple language.","popular"],
+["situation","وضع / حالة","n","The situation is improving.","bac"],
+["skill","مهارة","n","Develop new skills.","bac"],
+["society","مجتمع","n","A healthy society needs education.","bac"],
+["solve","يحل","v","Solve the problem.","popular"],
+["source","مصدر","n","The river is the source of life.","bac"],
+["speed","سرعة","n","The speed of light is amazing.","popular"],
+["spirit","روح / معنويات","n","Never lose your spirit.","popular"],
+["spread","ينتشر / يوزع","v","Spread kindness.","popular,bac"],
+["struggle","يكافح / نضال","v/n","She struggled to succeed.","bac"],
+["success","نجاح","n","Hard work leads to success.","popular"],
+["suffer","يعاني","v","Nobody should suffer.","bac"],
+["suggest","يقترح","v","Suggest a better solution.","bac"],
+["support","يدعم / دعم","v/n","Support your family.","popular,bac"],
+["survive","يبقى / ينجو","v","Humans can survive many things.","bac"],
+["symbol","رمز","n","The dove is a symbol of peace.","bac"],
+// ===================== T =====================
+["teach","يعلم","v","Teachers teach future leaders.","popular"],
+["technology","تكنولوجيا","n","Technology changes our lives.","popular,bac"],
+["threat","تهديد","n","Pollution is a threat to nature.","bac,nature"],
+["together","معاً","adv","We are stronger together.","popular"],
+["tradition","تقليد / تراث","n","Respect cultural traditions.","bac"],
+["treat","يعامل / يعالج","v","Treat people with respect.","popular"],
+["trust","ثقة / يثق","n/v","Build trust slowly.","popular"],
+["truth","حقيقة","n","Always tell the truth.","popular"],
+// ===================== U =====================
+["understand","يفهم","v","Do you understand the lesson?","popular"],
+["unfortunately","للأسف","adv","Unfortunately, he failed.","popular,bac"],
+["unique","فريد / مميز","adj","Everyone is unique.","popular"],
+["unity","وحدة / تماسك","n","Unity is strength.","bac"],
+["urgent","عاجل / ملح","adj","This is an urgent matter.","bac"],
+["useful","مفيد","adj","Reading is very useful.","popular"],
+// ===================== V =====================
+["value","قيمة / يقدر","n/v","Education has great value.","bac"],
+["violence","عنف","n","Say no to violence.","bac"],
+["volunteer","يتطوع / متطوع","v/n","Volunteer in your community.","bac"],
+// ===================== W =====================
+["waste","يهدر / نفايات","v/n","Don't waste water.","popular,nature"],
+["wealth","ثروة","n","True wealth is knowledge.","bac"],
+["wise","حكيم","adj","A wise person listens more.","popular"],
+["wonder","يتساءل / أعجوبة","v/n","I wonder what the future holds.","popular"],
+["world","عالم","n","The world is changing fast.","popular"],
+// ===================== Y / Z =====================
+["youth","شباب","n","Youth is the hope of the nation.","bac"],
+["zero","صفر","n","Zero waste is the goal.","popular"],
+// ===== إضافات بكالوريا وشائعة =====
+["abolish","يلغي / يقضي على","v","We must abolish discrimination.","bac"],
+["absurd","سخيف / بلا معنى","adj","That idea is absurd.","bac"],
+["accelerate","يعجّل / يسرع","v","Technology accelerates progress.","bac"],
+["acclaim","إشادة / يُثني","n/v","Her book received wide acclaim.","bac"],
+["accommodate","يستوعب / يسكن","v","The hotel accommodates 200 guests.","bac"],
+["accountability","مساءلة","n","Leaders need accountability.","bac"],
+["accumulate","يتراكم","v","Dust accumulates quickly.","bac"],
+["adequate","كافٍ / مناسب","adj","We need adequate resources.","bac"],
+["adjacent","مجاور","adj","The school is adjacent to the park.","bac"],
+["administer","يدير / يتولى","v","Administer the medicine correctly.","bac"],
+["adolescent","مراهق","n","Adolescents need guidance.","bac"],
+["advocate","يدعو / محامٍ","v/n","She advocates for human rights.","bac"],
+["affluent","ثري / موسر","adj","They live in an affluent area.","bac"],
+["aggressive","عدواني","adj","Aggressive behavior is not accepted.","bac"],
+["agriculture","زراعة","n","Agriculture feeds the world.","bac,nature"],
+["allocate","يخصص","v","Allocate time for each subject.","bac"],
+["ambition","طموح","n","Ambition leads to success.","popular,bac"],
+["appropriate","مناسب","adj","Use appropriate language.","bac"],
+["argue","يجادل / يحتج","v","He argued his point well.","bac"],
+["artificial","اصطناعي","adj","Artificial intelligence is growing.","bac"],
+["assess","يقيّم","v","Assess your strengths.","bac"],
+["asset","أصل / مورد","n","Knowledge is your greatest asset.","bac"],
+["assume","يفترض","v","Don't assume, ask instead.","bac"],
+["assure","يطمئن","v","I assure you everything is fine.","bac"],
+["attempt","يحاول / محاولة","v/n","Make an attempt to improve.","bac"],
+["authority","سلطة","n","Respect the authority of the law.","bac"],
+["available","متاح","adj","Is the book available?","popular"],
+["barrier","حاجز / عائق","n","Language is a barrier.","bac"],
+["bias","تحيز","n","Avoid cultural bias.","bac"],
+["border","حدود","n","Morocco borders Algeria.","bac"],
+["campaign","حملة","n","Launch a campaign for education.","bac"],
+["capacity","قدرة / سعة","n","The hall has a large capacity.","bac"],
+["capable","قادر","adj","She is capable of great things.","popular,bac"],
+["clash","تصادم / تعارض","n/v","There was a clash of ideas.","bac"],
+["commit","يلتزم / يرتكب","v","Commit to your studies.","bac"],
+["compensation","تعويض","n","He received compensation.","bac"],
+["condemn","يدين","v","We condemn all forms of violence.","bac"],
+["conflict","نزاع / تعارض","n","Resolve conflicts peacefully.","bac"],
+["conquer","يغلب / يتغلب","v","Conquer your weaknesses.","bac"],
+["constitution","دستور","n","The constitution protects rights.","bac"],
+["cope","يتعامل مع / يتكيف","v","Learn to cope with stress.","bac"],
+["corrupt","فاسد / يفسد","adj/v","Corrupt officials harm society.","bac"],
+["crisis","أزمة","n","Economic crisis affects everyone.","bac"],
+["cruel","قاسٍ / ظالم","adj","Cruelty has no place in society.","bac"],
+["debate","نقاش / يناقش","n/v","Open debate strengthens democracy.","bac"],
+["decade","عقد من الزمن","n","A decade is 10 years.","bac"],
+["decrease","ينخفض / تراجع","v/n","Prices decreased last year.","bac"],
+["defend","يدافع","v","Defend your opinion.","bac"],
+["deforestation","إزالة الغابات","n","Deforestation causes floods.","bac,nature"],
+["democracy","ديمقراطية","n","Democracy gives people power.","bac"],
+["desperate","يائس","adj","He was desperate for help.","bac"],
+["despite","رغم / على الرغم من","prep","Despite the rain, we played.","bac"],
+["determine","يحدد / يعزم","v","Determine your priorities.","bac"],
+["devote","يكرس / يخصص","v","Devote time to your family.","bac"],
+["digital","رقمي","adj","The digital era is here.","bac"],
+["discrimination","تمييز","n","End racial discrimination.","bac"],
+["diversity","تنوع","n","Diversity is a strength.","bac"],
+["drought","جفاف","n","The drought destroyed crops.","bac,nature"],
+["eliminate","يقضي على","v","Eliminate bad habits.","bac"],
+["emission","انبعاث","n","Reduce carbon emissions.","bac,nature"],
+["empathy","تعاطف","n","Show empathy to others.","bac"],
+["emphasize","يؤكد / يُبرز","v","Emphasize the key points.","bac"],
+["endangered","مهدد بالانقراض","adj","Tigers are endangered.","bac,nature"],
+["essential","أساسي / ضروري","adj","Water is essential for life.","bac"],
+["ethnic","عرقي","adj","Respect all ethnic groups.","bac"],
+["evolve","يتطور","v","Species evolve over time.","bac"],
+["exclude","يستبعد","v","No one should be excluded.","bac"],
+["exhaust","ينهك / عوادم","v/n","Don't exhaust your resources.","bac"],
+["exploit","يستغل","v","Do not exploit workers.","bac"],
+["extreme","متطرف / شديد","adj","Extreme weather is dangerous.","bac"],
+["facilitate","يسهل / ييسر","v","Technology facilitates learning.","bac"],
+["factor","عامل","n","Education is a key factor.","bac"],
+["famine","مجاعة","n","Famine kills millions.","bac,nature"],
+["flexibility","مرونة","n","Show flexibility in work.","bac"],
+["flood","فيضان","n","The flood destroyed the village.","bac,nature"],
+["fossil","حفري / وقود أحفوري","n","We rely too much on fossil fuels.","bac,nature"],
+["fragile","هش","adj","The ecosystem is fragile.","bac,nature"],
+["fundamental","أساسي / جوهري","adj","Fundamental rights must be protected.","bac"],
+["generation","جيل","n","Every generation faces challenges.","bac"],
+["genuine","أصلي / صادق","adj","He showed genuine concern.","bac"],
+["globalization","عولمة","n","Globalization connects the world.","bac"],
+["gradually","تدريجيًا","adv","Change comes gradually.","bac"],
+["grant","يمنح / منحة","v/n","He was granted a scholarship.","bac"],
+["greenhouse","الاحتباس الحراري","n","The greenhouse effect warms Earth.","bac,nature"],
+["hardship","صعوبة / محنة","n","Overcome every hardship.","bac"],
+["harmful","ضار","adj","Junk food is harmful.","popular"],
+["highlight","يسلط الضوء / يبرز","v","Highlight the main ideas.","bac"],
+["hunger","جوع","n","Eliminate hunger worldwide.","bac"],
+["hypothesis","فرضية","n","Test your hypothesis.","bac"],
+["identity","هوية","n","Cultural identity is important.","bac"],
+["illiteracy","أمية","n","Fight illiteracy through education.","bac"],
+["immigration","هجرة","n","Immigration is a complex issue.","bac"],
+["implement","ينفذ / يطبق","v","Implement the plan.","bac"],
+["imply","يوحي / يعني ضمنًا","v","What does this imply?","bac"],
+["inadequate","غير كافٍ","adj","Resources are inadequate.","bac"],
+["inevitable","لا مفر منه","adj","Change is inevitable.","bac"],
+["inequality","عدم المساواة","n","Reduce inequality in society.","bac"],
+["infrastructure","بنية تحتية","n","Invest in infrastructure.","bac"],
+["initiative","مبادرة","n","Take the initiative.","bac"],
+["interaction","تفاعل","n","Human interaction is important.","bac"],
+["invest","يستثمر","v","Invest in education.","bac"],
+["isolate","يعزل","v","Don't isolate yourself.","bac"],
+["justice","عدل / إنصاف","n","Justice must be served.","bac"],
+["labor","عمل / عمالة","n","Child labor must be banned.","bac"],
+["lack","يفتقر إلى / نقص","v/n","He lacks confidence.","bac"],
+["launch","يطلق","v","Launch a new project.","bac"],
+["legacy","إرث","n","Leave a positive legacy.","bac"],
+["maintain","يحافظ على","v","Maintain your health.","bac"],
+["manipulation","تلاعب","n","Media manipulation is dangerous.","bac"],
+["mechanism","آلية","n","Explain the mechanism.","bac"],
+["migration","هجرة","n","Climate causes migration.","bac,nature"],
+["minimize","يقلل إلى أدنى حد","v","Minimize waste.","bac,nature"],
+["momentum","زخم / قوة دفع","n","Keep the momentum going.","bac"],
+["monitor","يراقب","v","Monitor your progress.","bac"],
+["monopoly","احتكار","n","Monopolies harm consumers.","bac"],
+["multinational","متعدد الجنسيات","adj","He works for a multinational company.","bac"],
+["mutual","متبادل","adj","We need mutual respect.","bac"],
+["neglect","يهمل","v","Don't neglect your studies.","bac"],
+["norm","معيار / قاعدة","n","Social norms change over time.","bac"],
+["objective","هدف / موضوعي","n/adj","Stay objective.","bac"],
+["obligation","التزام / واجب","n","Education is an obligation.","bac"],
+["obstacle","عقبة","n","Face every obstacle bravely.","bac"],
+["oppression","اضطهاد","n","Fight against oppression.","bac"],
+["outbreak","تفشٍّ","n","The outbreak spread fast.","bac"],
+["overcome","يتجاوز","v","Overcome your limits.","bac"],
+["phenomenon","ظاهرة","n","Climate change is a phenomenon.","bac"],
+["policy","سياسة","n","Good policy improves society.","bac"],
+["poverty","فقر","n","Poverty must be eliminated.","bac"],
+["prejudice","تحيز / تعصب","n","Fight prejudice and racism.","bac"],
+["privilege","امتياز / ميزة","n","Education is a privilege.","bac"],
+["process","عملية / يعالج","n/v","Learning is a process.","bac"],
+["progress","تقدم","n","Monitor your progress.","bac"],
+["promote","يروج / يشجع","v","Promote healthy habits.","bac"],
+["protest","يحتج / احتجاج","v/n","Students protested peacefully.","bac"],
+["psychology","علم النفس","n","Understanding psychology helps.","bac"],
+["racism","عنصرية","n","Racism has no place in society.","bac"],
+["reform","إصلاح","n/v","Education reform is needed.","bac"],
+["refugee","لاجئ","n","Help refugees rebuild their lives.","bac"],
+["reject","يرفض","v","He rejected the offer.","bac"],
+["rely","يعتمد على","v","Rely on yourself.","popular"],
+["renewable","متجدد","adj","Invest in renewable energy.","bac,nature"],
+["represent","يمثل","v","She represents her country.","bac"],
+["resource","مورد","n","Use resources wisely.","bac"],
+["restrict","يقيد","v","Don't restrict freedom.","bac"],
+["revolution","ثورة","n","The industrial revolution changed the world.","bac"],
+["rural","ريفي","adj","Rural areas need development.","bac"],
+["sacrifice","تضحية / يضحي","n/v","Success requires sacrifice.","bac"],
+["sanitation","صرف صحي / النظافة","n","Good sanitation prevents disease.","bac"],
+["sector","قطاع","n","The education sector needs funding.","bac"],
+["sensitive","حساس","adj","Be sensitive to others' feelings.","bac"],
+["shortage","نقص / شح","n","Water shortage is a crisis.","bac,nature"],
+["significant","مهم / بارز","adj","This is a significant discovery.","bac"],
+["solidarity","تضامن","n","Show solidarity with others.","bac"],
+["sovereignty","سيادة","n","Respect national sovereignty.","bac"],
+["stable","مستقر","adj","A stable government is needed.","bac"],
+["status","مكانة / وضع","n","His social status improved.","bac"],
+["stereotype","نمط نمطي / حكم مسبق","n","Avoid stereotypes.","bac"],
+["strategy","استراتيجية","n","Plan a good strategy.","bac"],
+["sufficient","كافٍ","adj","Is the time sufficient?","bac"],
+["sustainable","مستدام","adj","Sustainable development is the goal.","bac,nature"],
+["tension","توتر","n","Reduce tension between groups.","bac"],
+["tolerant","متسامح","adj","Be tolerant of differences.","bac"],
+["transform","يحوّل","v","Education transforms lives.","bac"],
+["transparent","شفاف","adj","Leaders should be transparent.","bac"],
+["trend","اتجاه / موضة","n","A new trend is emerging.","bac"],
+["unemployment","بطالة","n","Unemployment is rising.","bac"],
+["urban","حضري","adj","Urban areas grow fast.","bac"],
+["victim","ضحية","n","Help victims of poverty.","bac"],
+["violation","انتهاك","n","Human rights violations must stop.","bac"],
+["welfare","رفاه / رعاية","n","Society's welfare is important.","bac"],
+["widespread","واسع الانتشار","adj","The disease is widespread.","bac"],
+// ====== طبيعة وبيئة ======
+["biodiversity","تنوع بيولوجي","n","Protect biodiversity.","nature"],
+["climate","مناخ","n","The climate is changing.","nature,bac"],
+["coral","مرجان","n","Coral reefs are dying.","nature"],
+["deforestation","إزالة الغابات","n","Deforestation destroys habitats.","nature,bac"],
+["earthquake","زلزال","n","The earthquake caused damage.","nature"],
+["ecosystem","نظام بيئي","n","Protect our ecosystem.","nature,bac"],
+["erosion","تآكل","n","Soil erosion affects farming.","nature"],
+["extinct","منقرض","adj","Many species are extinct.","nature"],
+["forest","غابة","n","Forests produce oxygen.","nature"],
+["hurricane","إعصار","n","A hurricane hit the coast.","nature"],
+["ocean","محيط","n","The ocean covers most of the Earth.","nature"],
+["ozone","أوزون","n","The ozone layer protects us.","nature"],
+["recycle","يعيد التدوير","v","Recycle paper and plastic.","nature,popular"],
+["species","أنواع / فصائل","n","Many species are threatened.","nature"],
+["tsunami","تسونامي","n","The tsunami was devastating.","nature"],
+["volcano","بركان","n","The volcano erupted yesterday.","nature"],
+["wildfire","حريق غابات","n","Wildfires destroy ecosystems.","nature"],
+// ====== جسم الإنسان ======
+["brain","دماغ / مخ","n","The brain controls the body.","body"],
+["heart","قلب","n","Exercise strengthens the heart.","body"],
+["kidney","كلية","n","The kidney filters blood.","body"],
+["lung","رئة","n","Smoking damages the lungs.","body"],
+["muscle","عضلة","n","Exercise builds muscles.","body"],
+["spine","عمود فقري","n","Protect your spine.","body"],
+// ====== مزيد من الكلمات الشائعة ======
+["bridge","جسر / يجسر","n/v","Build a bridge between cultures.","popular"],
+["burden","عبء","n","Don't be a burden.","popular"],
+["celebrate","يحتفل","v","Celebrate your achievements.","popular"],
+["citizen","مواطن","n","Be a responsible citizen.","popular,bac"],
+["confuse","يربك / يخلط","v","Don't confuse the two words.","popular"],
+["convince","يقنع","v","Convince others with evidence.","popular"],
+["creative","مبدع / إبداعي","adj","Be creative in your work.","popular"],
+["curious","فضولي","adj","Stay curious and keep learning.","popular"],
+["deserve","يستحق","v","You deserve the best.","popular"],
+["effective","فعال","adj","Find an effective solution.","popular"],
+["efficient","كفء / فعّال","adj","Use time efficiently.","popular"],
+["examine","يفحص / يمتحن","v","The doctor examined the patient.","popular"],
+["exceed","يتجاوز / يتخطى","v","Exceed your own expectations.","popular"],
+["extend","يمتد / يمدد","v","Extend the deadline.","popular"],
+["extract","يستخرج","v","Extract the key information.","bac"],
+["favor","محبذ / يفضل","v/n","Do me a favor.","popular"],
+["finally","أخيرًا","adv","He finally passed the exam.","popular"],
+["fluent","طليق / بارع","adj","She is fluent in French.","popular"],
+["frequent","متكرر","adj","He makes frequent mistakes.","popular"],
+["generous","كريم / سخي","adj","Be generous with others.","popular"],
+["gentle","لطيف / هادئ","adj","Speak in a gentle tone.","popular"],
+["genuine","حقيقي / صادق","adj","Show genuine care.","popular"],
+["hardworking","مجتهد / مثابر","adj","He is a hardworking student.","popular"],
+["healthy","صحي","adj","Eat healthy food.","popular"],
+["helpful","مفيد / متعاون","adj","Be helpful to your classmates.","popular"],
+["honest","صادق / أمين","adj","Always be honest.","popular"],
+["ideal","مثالي","adj","This is the ideal solution.","popular"],
+["inspire","يلهم","v","Great leaders inspire others.","popular"],
+["involve","يشمل / يشرك","v","Involve students in decisions.","popular"],
+["joyful","مفرح / بهيج","adj","It was a joyful day.","popular"],
+["lifelong","مدى الحياة","adj","Education is a lifelong journey.","bac"],
+["logical","منطقي","adj","Give a logical answer.","bac"],
+["meaningful","ذو معنى","adj","Live a meaningful life.","popular"],
+["memorable","لا يُنسى","adj","It was a memorable event.","popular"],
+["motivate","يحفز","v","Motivate yourself every day.","popular"],
+["objective","موضوعي / هدف","adj/n","Stay objective.","bac"],
+["patient","صبور / مريض","adj/n","Be patient.","popular"],
+["polite","مؤدب","adj","Always be polite.","popular"],
+["practical","عملي","adj","Use practical skills.","popular"],
+["productive","منتج","adj","Be productive every day.","popular"],
+["proud","فخور","adj","I am proud of you.","popular"],
+["reliable","موثوق","adj","Be a reliable friend.","popular"],
+["remarkable","رائع / ملحوظ","adj","She made a remarkable achievement.","popular"],
+["responsible","مسؤول","adj","Be responsible.","popular"],
+["secure","آمن / يؤمن","adj/v","Keep your data secure.","popular"],
+["sincere","صادق / مخلص","adj","Be sincere in all things.","popular"],
+["talented","موهوب","adj","He is a talented musician.","popular"],
+["thankful","شاكر / ممتن","adj","Be thankful every day.","popular"],
+["thoughtful","مدروس / مراعٍ","adj","A thoughtful response.","popular"],
+["tolerant","متسامح","adj","Be tolerant of others.","popular"],
+["tremendous","هائل / ضخم","adj","A tremendous effort.","popular"],
+["vital","حيوي / ضروري","adj","Water is vital.","popular"],
+["volunteer","يتطوع","v","Volunteer your time.","popular"],
+["warm","دافئ / حار","adj","She gave a warm welcome.","popular"],
+["worthy","جدير / مستحق","adj","Work for a worthy cause.","popular"],
+];
+
+// ============================================================
+//  معالجة البيانات
+// ============================================================
+const DICT = {};
+RAW.forEach(([en,ar,type,example,tags])=>{
+  DICT[en.toLowerCase()] = {en,ar,type,example,tags:tags||""};
+});
+const ALL_WORDS = Object.values(DICT);
+const POPULAR = ALL_WORDS.filter(w=>w.tags.includes("popular")).slice(0,24);
+const BAC = ALL_WORDS.filter(w=>w.tags.includes("bac")).slice(0,24);
+const NATURE = ALL_WORDS.filter(w=>w.tags.includes("nature"));
+const BODY = ALL_WORDS.filter(w=>w.tags.includes("body"));
+
+const TYPE_MAP = {v:"فعل",n:"اسم","n/v":"اسم/فعل","v/n":"فعل/اسم",adj:"صفة","adj/v":"صفة/فعل","v/adj":"فعل/صفة","adj/n":"صفة/اسم","n/adj":"اسم/صفة",adv:"ظرف",prep:"حرف جر",conj:"حرف ربط"};
+
+let favorites = JSON.parse(localStorage.getItem("fav")||"[]");
+let history = JSON.parse(localStorage.getItem("hist")||"[]");
+let currentSection = "home";
+let currentAlpha = "all";
+
+// ============================================================
+//  بناء الصفحة
+// ============================================================
+function init(){
+  document.getElementById("wordCount").textContent = ALL_WORDS.length;
+  document.getElementById("aboutCount").textContent = ALL_WORDS.length;
+  updateCounts();
+  renderGrid("popularGrid", POPULAR);
+  renderGrid("bacGrid", BAC);
+  buildAlpha();
+  buildCats();
+  renderGrid("allGrid", ALL_WORDS);
+  renderHistory();
+  renderFav();
+}
+
+function updateCounts(){
+  document.getElementById("favCount").textContent = favorites.length;
+  document.getElementById("searchCount").textContent = history.length;
+}
+
+function buildAlpha(){
+  const az = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const container = document.getElementById("alphaFilter");
+  let html = `<button class="alpha-btn active" onclick="filterAlpha('all',this)">الكل</button>`;
+  az.forEach(l=>{ html+=`<button class="alpha-btn" onclick="filterAlpha('${l}',this)">${l}</button>`; });
+  container.innerHTML = html;
+}
+
+function filterAlpha(letter, btn){
+  currentAlpha = letter;
+  document.querySelectorAll(".alpha-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  const words = letter==="all" ? ALL_WORDS : ALL_WORDS.filter(w=>w.en[0].toUpperCase()===letter);
+  renderGrid("allGrid", words);
+}
+
+const CATEGORIES = [
+  {icon:"🔥",name:"الأكثر استخدامًا",key:"popular"},
+  {icon:"🎓",name:"تانية بكالوريا",key:"bac"},
+  {icon:"🌿",name:"البيئة والطبيعة",key:"nature"},
+  {icon:"🧠",name:"جسم الإنسان",key:"body"},
+];
+
+function buildCats(){
+  const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const container = document.getElementById("catGrid");
+  let html = CATEGORIES.map(c=>{
+    const count = ALL_WORDS.filter(w=>w.tags.includes(c.key)).length;
+    return `<div class="cat-card" onclick="showCat('${c.key}','${c.name}')">
+      <div class="cat-icon">${c.icon}</div>
+      <div class="cat-name">${c.name}</div>
+      <div class="cat-count">${count} كلمة</div>
+    </div>`;
+  }).join("");
+  // add A-Z shortcuts
+  ["A","B","C","D","E","F","G","H"].forEach(l=>{
+    html+=`<div class="cat-card" onclick="showAlphaSec('${l}')">
+      <div class="cat-icon">🔤</div>
+      <div class="cat-name">حرف ${l}</div>
+      <div class="cat-count">${ALL_WORDS.filter(w=>w.en[0].toUpperCase()===l).length} كلمة</div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function showCat(key, name){
+  showSection("all");
+  const words = ALL_WORDS.filter(w=>w.tags.includes(key));
+  document.querySelector(".section.active .section-title").textContent = "📂 "+name;
+  renderGrid("allGrid", words);
+}
+
+function showAlphaSec(letter){
+  showSection("all");
+  // activate alpha btn
+  document.querySelectorAll(".alpha-btn").forEach(b=>{
+    b.classList.toggle("active", b.textContent===letter||b.textContent==="الكل"&&letter==="all");
+  });
+  const words = ALL_WORDS.filter(w=>w.en[0].toUpperCase()===letter);
+  renderGrid("allGrid", words);
+}
+
+// ============================================================
+//  عرض الكروت
+// ============================================================
+function renderGrid(targetId, words){
+  const container = document.getElementById(targetId);
+  if(!words.length){
+    container.innerHTML = `<div class="no-result" style="grid-column:1/-1"><div class="emoji">🔍</div><p>عذرًا، لم يتم العثور على الكلمة.</p></div>`;
+    return;
+  }
+  container.innerHTML = words.map(w=>cardHTML(w)).join("");
+}
+
+function cardHTML(w){
+  const isFav = favorites.includes(w.en);
+  const typeAr = TYPE_MAP[w.type]||w.type;
+  return `<div class="word-card">
+    <div class="word-en">${w.en}</div>
+    <div class="word-ar">${w.ar}</div>
+    <span class="word-type">${typeAr}</span>
+    <div class="word-example">📝 <strong>مثال:</strong> ${w.example}</div>
+    <div class="card-actions">
+      <button class="action-btn btn-fav ${isFav?"active":""}" onclick="toggleFav('${w.en}',this)">
+        ${isFav?"⭐":"☆"} مفضلة
+      </button>
+      <button class="action-btn btn-speak" onclick="speak('${w.en}')">🔊 نطق</button>
+      <button class="action-btn btn-copy" onclick="copyMeaning('${w.ar}',this)">📋 نسخ</button>
+    </div>
+  </div>`;
+}
+
+// ============================================================
+//  البحث الفوري
+// ============================================================
+function liveSearch(q){
+  const clearBtn = document.getElementById("clearBtn");
+  clearBtn.style.display = q ? "flex" : "none";
+  if(!q.trim()){
+    showSection("home"); return;
+  }
+  const query = q.toLowerCase().trim();
+  const results = ALL_WORDS.filter(w=>
+    w.en.toLowerCase().includes(query)||w.ar.includes(query)
+  ).sort((a,b)=>{
+    const aStart = a.en.toLowerCase().startsWith(query)?0:1;
+    const bStart = b.en.toLowerCase().startsWith(query)?0:1;
+    return aStart-bStart;
+  });
+  showSection("search");
+  document.querySelector(".section-title", "#sec-search");
+  renderGrid("searchGrid", results);
+  if(query.length>=2){
+    addHistory(query);
+  }
+}
+
+function clearSearch(){
+  document.getElementById("searchInput").value="";
+  document.getElementById("clearBtn").style.display="none";
+  showSection("home");
+}
+
+// ============================================================
+//  السجل
+// ============================================================
+function addHistory(q){
+  history = [q,...history.filter(h=>h!==q)].slice(0,20);
+  localStorage.setItem("hist",JSON.stringify(history));
+  updateCounts();
+}
+
+function renderHistory(){
+  const container = document.getElementById("historyList");
+  if(!history.length){
+    container.innerHTML=`<p style="color:var(--text-muted)">لا يوجد سجل بعد.</p>`;return;
+  }
+  container.innerHTML = history.map(h=>`
+    <div class="history-tag" onclick="searchFromHistory('${h}')">🕐 ${h}</div>
+  `).join("");
+}
+
+function searchFromHistory(q){
+  document.getElementById("searchInput").value=q;
+  liveSearch(q);
+  showSection("search");
+}
+
+function clearHistory(){
+  history=[];
+  localStorage.setItem("hist","[]");
+  updateCounts();
+  renderHistory();
+  toast("تم مسح السجل ✓");
+}
+
+// ============================================================
+//  المفضلة
+// ============================================================
+function toggleFav(en, btn){
+  if(favorites.includes(en)){
+    favorites = favorites.filter(f=>f!==en);
+    btn.innerHTML="☆ مفضلة";
+    btn.classList.remove("active");
+    toast("تمت الإزالة من المفضلة");
+  } else {
+    favorites.push(en);
+    btn.innerHTML="⭐ مفضلة";
+    btn.classList.add("active");
+    toast("تمت الإضافة للمفضلة ⭐");
+  }
+  localStorage.setItem("fav",JSON.stringify(favorites));
+  updateCounts();
+  renderFav();
+}
+
+function renderFav(){
+  const words = ALL_WORDS.filter(w=>favorites.includes(w.en));
+  const grid = document.getElementById("favGrid");
+  if(!words.length){
+    grid.innerHTML=`<div class="no-result" style="grid-column:1/-1"><div class="emoji">⭐</div><p>لم تضف أي كلمة للمفضلة بعد.</p></div>`;
+    return;
+  }
+  renderGrid("favGrid", words);
+}
+
+// ============================================================
+//  الأقسام
+// ============================================================
+function showSection(name){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById("sec-"+name).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
+  const map={home:0,all:1,favorites:2,history:3,about:4};
+  if(map[name]!==undefined) document.querySelectorAll(".nav-btn")[map[name]].classList.add("active");
+  currentSection = name;
+  document.getElementById("heroSection").style.display = name==="home"?"block":"none";
+  if(name==="favorites") renderFav();
+  if(name==="history") renderHistory();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ============================================================
+//  نطق الكلمة
+// ============================================================
+function speak(word){
+  if("speechSynthesis" in window){
+    const u = new SpeechSynthesisUtterance(word);
+    u.lang = "en-US";
+    u.rate = 0.9;
+    speechSynthesis.speak(u);
+  } else {
+    toast("المتصفح لا يدعم ميزة النطق");
+  }
+}
+
+// ============================================================
+//  نسخ المعنى
+// ============================================================
+function copyMeaning(ar, btn){
+  navigator.clipboard.writeText(ar).then(()=>{
+    const old = btn.innerHTML;
+    btn.innerHTML="✓ تم النسخ";
+    btn.style.background="var(--green)";
+    btn.style.color="#fff";
+    setTimeout(()=>{btn.innerHTML=old;btn.style.background="";btn.style.color="";},1500);
+    toast("تم نسخ المعنى ✓");
+  }).catch(()=>toast("تعذّر النسخ"));
+}
+
+// ============================================================
+//  Toast
+// ============================================================
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),2500);
+}
+
+// ============================================================
+//  تشغيل
+// ============================================================
+init();
+</script>
+</body>
+</html>
