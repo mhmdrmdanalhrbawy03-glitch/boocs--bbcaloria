@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   BookOpen,
   Plus,
@@ -20,10 +20,7 @@ import {
   KeyRound,
   ShieldCheck,
   Eye,
-  EyeOff,
-  LogIn,
-  LogOut,
-  Info
+  EyeOff
 } from 'lucide-react';
 import {
   BookItem,
@@ -36,9 +33,8 @@ import {
   DEFAULT_EXAM,
   DEFAULT_ANNOUNCEMENTS
 } from '../data/initialData';
-import { db, auth, googleProvider, handleFirestoreError, OperationType } from '../firebase';
+import { db } from '../firebase';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { signInWithPopup, User } from 'firebase/auth';
 
 interface TeacherDashboardProps {
   books: BookItem[];
@@ -47,7 +43,6 @@ interface TeacherDashboardProps {
   announcements: AnnouncementItem[];
   onRefresh: () => void;
   userId?: string;
-  user?: User | null;
 }
 
 export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
@@ -56,10 +51,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   exams,
   announcements,
   onRefresh,
-  userId = 'teacher-admin',
-  user
+  userId = 'teacher-admin'
 }) => {
-  // Security & Authentication Gate
+  // Security & Authentication Gate with strict password admin123
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     try {
       return localStorage.getItem('teacher_session_auth') === 'true';
@@ -71,7 +65,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [passwordInput, setPasswordInput] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
-  const [googleLoading, setGoogleLoading] = useState(false);
 
   // Active SubTab
   const [activeSubTab, setActiveSubTab] = useState<'books' | 'evaluations' | 'exams' | 'announcements'>('books');
@@ -118,47 +111,18 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [examAns, setExamAns] = useState(0);
   const [examExp, setExamExp] = useState('');
 
-  // Acceptable teacher passwords (flexible for the user)
-  const VALID_PASSWORDS = ['معلم2026', 'teacher2026', 'teacher123', 'admin2026', '123456'];
-
+  // Strict teacher password: admin123
   const handlePasswordLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const clean = passwordInput.trim();
-    if (VALID_PASSWORDS.includes(clean)) {
+    if (clean === 'admin123') {
       setIsAuthenticated(true);
       setAuthError(null);
       try {
         localStorage.setItem('teacher_session_auth', 'true');
       } catch {}
     } else {
-      setAuthError('كلمة المرور غير صحيحة. يرجى تجربة: معلم2026 أو teacher2026 أو 123456');
-    }
-  };
-
-  const handleGoogleTeacherLogin = async () => {
-    setGoogleLoading(true);
-    setAuthError(null);
-    try {
-      const res = await signInWithPopup(auth, googleProvider);
-      const u = res.user;
-      
-      // Update profile in Firestore with role: teacher
-      await setDoc(doc(db, 'users', u.uid), {
-        id: u.uid,
-        fullName: u.displayName || 'معلم معتمد',
-        email: u.email || '',
-        role: 'teacher',
-        updatedAt: new Date().toISOString()
-      }, { merge: true });
-
-      setIsAuthenticated(true);
-      try {
-        localStorage.setItem('teacher_session_auth', 'true');
-      } catch {}
-    } catch (err: any) {
-      setAuthError(err.message || 'تعذر تسجيل الدخول بحساب Google');
-    } finally {
-      setGoogleLoading(false);
+      setAuthError('كلمة المرور غير صحيحة! كلمة المرور المعتمدة هي: admin123');
     }
   };
 
@@ -170,89 +134,61 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     } catch {}
   };
 
-  // Sync to Firestore with automated login check and progress tracking
+  // Direct Firestore Sync without domain restrictions or Google popup
   const handleSyncToFirestore = async () => {
-    // 1. Check if user is signed in to Firebase Auth
-    if (!auth.currentUser) {
-      const confirmGoogle = window.confirm(
-        'لمزامنة البيانات مع قاعدة بيانات Firebase السحابية، يجب تسجيل الدخول بحساب المعلم أولاً.\nهل تريد تسجيل الدخول الآن بحساب Google؟'
-      );
-      if (confirmGoogle) {
-        try {
-          await handleGoogleTeacherLogin();
-        } catch {
-          return;
-        }
-      } else {
-        return;
-      }
-    }
-
-    const currentUid = auth.currentUser?.uid || userId;
     setIsSyncing(true);
     setSyncStatus(null);
-    setSyncProgress('بدء فحص الاتصال ومزامنة البيانات...');
+    setSyncProgress('بدء الاتصال ومزامنة قاعدة البيانات السحابية...');
 
     try {
-      // 1. Ensure Teacher role in users document
-      if (auth.currentUser) {
-        await setDoc(doc(db, 'users', auth.currentUser.uid), {
-          id: auth.currentUser.uid,
-          fullName: auth.currentUser.displayName || 'معلم المنصة',
-          email: auth.currentUser.email || '',
-          role: 'teacher',
-          updatedAt: new Date().toISOString()
-        }, { merge: true });
-      }
-
-      // 2. Sync Books (1/4)
-      setSyncProgress('جاري مزامنة كتب الوزارة والمذكرات (1/4)...');
+      // 1. Sync all 53 Books (1/4)
+      setSyncProgress(`جاري مزامنة كافة الكتب والمذكرات القديمة والجديدة (${DEFAULT_BOOKS.length} كتاب) [1/4]...`);
       for (const b of DEFAULT_BOOKS) {
         await setDoc(doc(db, 'books', b.id), {
           ...b,
-          createdBy: currentUid,
+          createdBy: 'admin-teacher',
           updatedAt: new Date().toISOString()
         });
       }
 
-      // 3. Sync Evaluations (2/4)
-      setSyncProgress('جاري مزامنة التقييمات والواجبات الأسبوعية (2/4)...');
+      // 2. Sync Evaluations (2/4)
+      setSyncProgress('جاري مزامنة التقييمات والواجبات الأسبوعية [2/4]...');
       for (const ev of DEFAULT_EVALUATIONS) {
         await setDoc(doc(db, 'evaluations', ev.id), {
           ...ev,
-          createdBy: currentUid,
+          createdBy: 'admin-teacher',
           updatedAt: new Date().toISOString()
         });
       }
 
-      // 4. Sync Exam (3/4)
-      setSyncProgress('جاري مزامنة بنك أسئلة امتحان النحو التفاعلي (3/4)...');
+      // 3. Sync Exam (3/4)
+      setSyncProgress('جاري مزامنة بنك أسئلة امتحان النحو التفاعلي [3/4]...');
       await setDoc(doc(db, 'exams', DEFAULT_EXAM.id), {
         id: DEFAULT_EXAM.id,
         title: DEFAULT_EXAM.title,
         subject: DEFAULT_EXAM.subject,
         timeLimit: DEFAULT_EXAM.timeLimit,
         questions: JSON.stringify(DEFAULT_EXAM.questions),
-        createdBy: currentUid,
+        createdBy: 'admin-teacher',
         updatedAt: new Date().toISOString()
       });
 
-      // 5. Sync Announcements (4/4)
-      setSyncProgress('جاري مزامنة الإعلانات والتنبيهات المدرسية (4/4)...');
+      // 4. Sync Announcements (4/4)
+      setSyncProgress('جاري مزامنة الإعلانات والتنبيهات [4/4]...');
       for (const a of DEFAULT_ANNOUNCEMENTS) {
         await setDoc(doc(db, 'announcements', a.id), {
           ...a,
-          createdBy: currentUid,
+          createdBy: 'admin-teacher',
           updatedAt: new Date().toISOString()
         });
       }
 
-      setSyncStatus(`تمت المزامنة السحابية بنجاح تام! (${DEFAULT_BOOKS.length} كتاب، ${DEFAULT_EVALUATIONS.length} تقييم، والامتحانات)`);
+      setSyncStatus(`تمت المزامنة بنجاح تام! تم حفظ جميع الكتب (${DEFAULT_BOOKS.length} كتاب) والتقييمات والامتحانات في Firestore.`);
       setSyncProgress(null);
       onRefresh();
     } catch (err: any) {
       console.error('Sync error:', err);
-      setSyncStatus('حدث خطأ أثناء المزامنة: ' + (err.message || 'يرجى التأكد من تسجيل الدخول بحساب المعلم المعتمد.'));
+      setSyncStatus('حدث خطأ أثناء المزامنة: ' + (err.message || 'يرجى مراجعة الاتصال.'));
       setSyncProgress(null);
     } finally {
       setIsSyncing(false);
@@ -276,7 +212,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       popular: 85,
       isNew: true,
       teacherNotes: bookNotes,
-      createdBy: auth.currentUser?.uid || userId,
+      createdBy: 'admin-teacher',
       createdAt: new Date().toISOString()
     };
 
@@ -285,8 +221,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       setShowBookModal(false);
       resetBookForm();
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `books/${id}`);
+    } catch (err: any) {
+      alert('خطأ في حفظ الكتاب: ' + err.message);
     }
   };
 
@@ -318,8 +254,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     try {
       await deleteDoc(doc(db, 'books', id));
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.DELETE, `books/${id}`);
+    } catch (err: any) {
+      alert('خطأ في الحذف: ' + err.message);
     }
   };
 
@@ -337,7 +273,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       url: evalUrl,
       solutionUrl: evalSolutionUrl || evalUrl,
       icon: '📝',
-      createdBy: auth.currentUser?.uid || userId,
+      createdBy: 'admin-teacher',
       createdAt: new Date().toISOString()
     };
 
@@ -348,8 +284,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       setEvalUrl('');
       setEvalSolutionUrl('');
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `evaluations/${id}`);
+    } catch (err: any) {
+      alert('خطأ في حفظ التقييم: ' + err.message);
     }
   };
 
@@ -358,8 +294,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     try {
       await deleteDoc(doc(db, 'evaluations', id));
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.DELETE, `evaluations/${id}`);
+    } catch (err: any) {
+      alert('خطأ في الحذف: ' + err.message);
     }
   };
 
@@ -375,7 +311,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       content: announceContent,
       category: announceCat,
       date: 'الآن',
-      createdBy: auth.currentUser?.uid || userId,
+      createdBy: 'admin-teacher',
       createdAt: new Date().toISOString()
     };
 
@@ -385,8 +321,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       setAnnounceTitle('');
       setAnnounceContent('');
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `announcements/${id}`);
+    } catch (err: any) {
+      alert('خطأ في نشر الإعلان: ' + err.message);
     }
   };
 
@@ -395,8 +331,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     try {
       await deleteDoc(doc(db, 'announcements', id));
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.DELETE, `announcements/${id}`);
+    } catch (err: any) {
+      alert('خطأ في الحذف: ' + err.message);
     }
   };
 
@@ -425,7 +361,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         subject: examQSubject,
         timeLimit: exams[0]?.timeLimit || DEFAULT_EXAM.timeLimit,
         questions: JSON.stringify(updated),
-        createdBy: auth.currentUser?.uid || userId,
+        createdBy: 'admin-teacher',
         updatedAt: new Date().toISOString()
       });
       setShowExamModal(false);
@@ -436,20 +372,20 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       setExamOpt3('');
       setExamExp('');
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, `exams/${examId}`);
+    } catch (err: any) {
+      alert('خطأ في إضافة السؤال: ' + err.message);
     }
   };
 
   // =========================================================================
-  // IF NOT AUTHENTICATED: RENDER SECURE TEACHER LOGIN & PASSCODE GATE
+  // IF NOT AUTHENTICATED: RENDER SECURE TEACHER LOGIN WITH admin123
   // =========================================================================
   if (!isAuthenticated) {
     return (
       <div className="max-w-md mx-auto my-8 p-6 sm:p-8 bg-slate-900 border border-amber-500/30 rounded-3xl shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
         
-        {/* Lock Icon Header */}
+        {/* Lock Icon */}
         <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-amber-500/20">
           <Lock className="w-8 h-8 text-slate-950" />
         </div>
@@ -457,11 +393,11 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         <div className="text-center mb-6">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-2">
             <ShieldCheck className="w-3.5 h-3.5" />
-            منطقة محمية ومخصصة للمعلمين فقط
+            منطقة محمية ومخصصة لإدارة المعلم
           </div>
-          <h2 className="text-2xl font-black text-white">تسجيل دخول المعلم والمشرف</h2>
+          <h2 className="text-2xl font-black text-white">تسجيل دخول المعلم</h2>
           <p className="text-xs text-slate-400 mt-1">
-            أدخل كلمة مرور المعلم أو سجّل الدخول بحساب Google للوصول للوحة التحكم
+            أدخل كلمة المرور الخاصة بالإدارة للدخول إلى لوحة التحكم
           </p>
         </div>
 
@@ -472,18 +408,18 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           </div>
         )}
 
-        {/* Password Form */}
+        {/* Strict Password Form */}
         <form onSubmit={handlePasswordLogin} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              كلمة مرور المعلم المشرف (Teacher Password)
+              كلمة مرور المعلم المشرف (Password)
             </label>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="أدخل كلمة المرور (الافتراضية: معلم2026)"
+                placeholder="أدخل كلمة المرور: admin123"
                 className="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 transition-colors"
                 autoFocus
               />
@@ -495,10 +431,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            <p className="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
-              <KeyRound className="w-3 h-3 text-amber-400" />
-              كلمة المرور الافتراضية للمعلم: <strong className="text-amber-300 font-mono">معلم2026</strong> أو <strong className="text-amber-300 font-mono">123456</strong>
-            </p>
           </div>
 
           <button
@@ -506,32 +438,9 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 transition-all cursor-pointer"
           >
             <Unlock className="w-4 h-4" />
-            <span>فتح لوحة التحكم بالرمز السري</span>
+            <span>فتح لوحة التحكم</span>
           </button>
         </form>
-
-        <div className="relative my-6 text-center">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-slate-800" />
-          </div>
-          <span className="relative bg-slate-900 px-3 text-[11px] text-slate-500 uppercase tracking-wider font-semibold">
-            أو عبر حساب Google المعتمد
-          </span>
-        </div>
-
-        {/* Google Authentication */}
-        <button
-          onClick={handleGoogleTeacherLogin}
-          disabled={googleLoading}
-          className="w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
-        >
-          {googleLoading ? (
-            <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
-          ) : (
-            <LogIn className="w-4 h-4 text-amber-400" />
-          )}
-          <span>تسجيل الدخول بحساب Google الرسمي للمعلم</span>
-        </button>
       </div>
     );
   }
@@ -541,7 +450,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   // =========================================================================
   return (
     <div className="space-y-8">
-      {/* Dashboard Top Header */}
+      {/* Top Banner */}
       <div className="bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-amber-500/40 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div>
@@ -550,22 +459,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                 جلسة معلم نشطة ومؤمنة
               </span>
-              {auth.currentUser ? (
-                <span className="text-xs text-indigo-300 bg-indigo-950/60 px-2.5 py-1 rounded-full border border-indigo-800">
-                  متصل: {auth.currentUser.email}
-                </span>
-              ) : (
-                <span className="text-xs text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-full border border-amber-800">
-                  مفتوح بكلمة المرور
-                </span>
-              )}
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
               لوحة الإدارة والتحكم الأكاديمي
             </h2>
             <p className="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
-              تحكم كامل في إضافة وحذف وتعديل كتب الوزارة، التقييمات الأسبوعية، بنك الأسئلة، وإعلانات الطلاب مع حفظ فوري ومزامنة سحابية.
+              تحكم كامل في جميع الكتب ({DEFAULT_BOOKS.length} كتاب من الملف القديم)، والتقييمات، وبنك أسئلة الامتحانات.
             </p>
           </div>
 
@@ -591,7 +491,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
             <button
               onClick={handleLockDashboard}
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-rose-300 text-xs font-semibold border border-slate-700 transition-colors"
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-rose-300 text-xs font-semibold border border-slate-700 transition-colors cursor-pointer"
               title="قفل لوحة التحكم"
             >
               <Lock className="w-4 h-4" />
@@ -621,22 +521,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
             )}
             <span className="font-semibold">{syncStatus}</span>
-          </div>
-        )}
-
-        {/* Notice for Google Connection if not signed into Firebase */}
-        {!auth.currentUser && (
-          <div className="mt-4 p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-300 flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Info className="w-4 h-4 text-amber-400 shrink-0" />
-              <span>لضمان حفظ التعديلات في قاعدة بيانات Firebase السحابية، يفضل ربط حساب Google الخاص بك.</span>
-            </div>
-            <button
-              onClick={handleGoogleTeacherLogin}
-              className="text-amber-400 hover:underline font-bold shrink-0"
-            >
-              ربط الحساب الآن
-            </button>
           </div>
         )}
       </div>
@@ -690,7 +574,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       <div className="flex border-b border-slate-800 gap-2 sm:gap-4 overflow-x-auto text-xs sm:text-sm">
         <button
           onClick={() => setActiveSubTab('books')}
-          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 ${
+          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 cursor-pointer ${
             activeSubTab === 'books'
               ? 'border-indigo-500 text-indigo-400'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -702,7 +586,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
         <button
           onClick={() => setActiveSubTab('evaluations')}
-          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 ${
+          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 cursor-pointer ${
             activeSubTab === 'evaluations'
               ? 'border-emerald-500 text-emerald-400'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -714,7 +598,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
         <button
           onClick={() => setActiveSubTab('exams')}
-          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 ${
+          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 cursor-pointer ${
             activeSubTab === 'exams'
               ? 'border-amber-500 text-amber-400'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -726,7 +610,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
         <button
           onClick={() => setActiveSubTab('announcements')}
-          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 ${
+          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 cursor-pointer ${
             activeSubTab === 'announcements'
               ? 'border-violet-500 text-violet-400'
               : 'border-transparent text-slate-400 hover:text-slate-200'
@@ -741,84 +625,78 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       {activeSubTab === 'books' && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-white text-base">قائمة الكتب والمقررات الحالية</h3>
+            <h3 className="font-bold text-white text-base">قائمة الكتب والمقررات الحالية ({books.length} كتاب)</h3>
             <button
               onClick={() => {
                 resetBookForm();
                 setShowBookModal(true);
               }}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>إضافة كتاب جديد</span>
             </button>
           </div>
 
-          <div className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
-              <table className="w-full text-right text-xs">
-                <thead className="bg-slate-950/80 text-slate-400 uppercase border-b border-slate-800">
-                  <tr>
-                    <th className="p-4">الكتاب / المادة</th>
-                    <th className="p-4">الشعبة / المادة</th>
-                    <th className="p-4">الصف</th>
-                    <th className="p-4">ملاحظات المعلم</th>
-                    <th className="p-4 text-center">إجراءات</th>
+          <div className="bg-slate-900/90 rounded-2xl border border-slate-800 overflow-hidden shadow-xl max-h-[600px] overflow-y-auto">
+            <table className="w-full text-right text-xs">
+              <thead className="bg-slate-950/80 text-slate-400 uppercase border-b border-slate-800 sticky top-0 z-10">
+                <tr>
+                  <th className="p-4">الكتاب / المادة</th>
+                  <th className="p-4">الشعبة / المادة</th>
+                  <th className="p-4">الصف</th>
+                  <th className="p-4 text-center">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800/60">
+                {books.map((b) => (
+                  <tr key={b.id} className="hover:bg-slate-800/40 transition-colors">
+                    <td className="p-4">
+                      <div className="flex items-center gap-3">
+                        <span className="text-xl">{b.icon || '📚'}</span>
+                        <div>
+                          <p className="font-semibold text-slate-100 text-sm">{b.title}</p>
+                          <p className="text-slate-400 text-[11px] truncate max-w-xs">{b.description}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-4">
+                      <span className="px-2.5 py-1 rounded-lg bg-indigo-950 border border-indigo-800 text-indigo-300 font-medium">
+                        {b.category}
+                      </span>
+                    </td>
+                    <td className="p-4 text-slate-300">{b.grade}</td>
+                    <td className="p-4">
+                      <div className="flex items-center justify-center gap-2">
+                        <a
+                          href={b.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
+                          title="معاينة الملف"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <button
+                          onClick={() => handleEditBook(b)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                          title="تعديل"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteBook(b.id)}
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                          title="حذف"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-800/60">
-                  {books.map((b) => (
-                    <tr key={b.id} className="hover:bg-slate-800/40 transition-colors">
-                      <td className="p-4">
-                        <div className="flex items-center gap-3">
-                          <span className="text-xl">{b.icon || '📚'}</span>
-                          <div>
-                            <p className="font-semibold text-slate-100 text-sm">{b.title}</p>
-                            <p className="text-slate-400 text-[11px] truncate max-w-xs">{b.description}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <span className="px-2.5 py-1 rounded-lg bg-indigo-950 border border-indigo-800 text-indigo-300 font-medium">
-                          {b.category}
-                        </span>
-                      </td>
-                      <td className="p-4 text-slate-300">{b.grade}</td>
-                      <td className="p-4 text-slate-400 max-w-xs truncate">
-                        {b.teacherNotes || '—'}
-                      </td>
-                      <td className="p-4">
-                        <div className="flex items-center justify-center gap-2">
-                          <a
-                            href={b.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-slate-800 transition-colors"
-                            title="معاينة الملف"
-                          >
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
-                          <button
-                            onClick={() => handleEditBook(b)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-slate-800 transition-colors"
-                            title="تعديل"
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteBook(b.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors"
-                            title="حذف"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
@@ -830,7 +708,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             <h3 className="font-bold text-white text-base">التقييمات والواجبات المنزلية الأسبوعية</h3>
             <button
               onClick={() => setShowEvalModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>إضافة تقييم أسبوعي جديد</span>
@@ -875,7 +753,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                   </div>
                   <button
                     onClick={() => handleDeleteEval(ev.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-400 transition-colors"
+                    className="p-1.5 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer"
                     title="حذف التقييم"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -893,11 +771,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="font-bold text-white text-base">بنك أسئلة الاختبارات التفاعلية</h3>
-              <p className="text-xs text-slate-400 mt-0.5">يمكنك إضافة أسئلة جديدة مع الخيارات الأربعة والشرح وتحديد الإجابة الصحيحة.</p>
             </div>
             <button
               onClick={() => setShowExamModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-xs font-bold shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 text-xs font-bold shadow-md transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>إضافة سؤال جديد</span>
@@ -959,7 +836,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             <h3 className="font-bold text-white text-base">إعلانات وتنبيهات الطلاب</h3>
             <button
               onClick={() => setShowAnnounceModal(true)}
-              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold shadow-md transition-colors"
+              className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold shadow-md transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>نشر إعلان جديد</span>
@@ -981,7 +858,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 </div>
                 <button
                   onClick={() => handleDeleteAnnounce(a.id)}
-                  className="p-1.5 text-slate-400 hover:text-rose-400 transition-colors shrink-0"
+                  className="p-1.5 text-slate-400 hover:text-rose-400 transition-colors shrink-0 cursor-pointer"
                   title="حذف الإعلان"
                 >
                   <Trash2 className="w-4 h-4" />
@@ -1000,7 +877,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               <h3 className="font-bold text-white text-base">
                 {editingBookId ? 'تعديل بيانات الكتاب' : 'إضافة كتاب أو مذكرة جديدة للمكتبة'}
               </h3>
-              <button onClick={() => setShowBookModal(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowBookModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -1093,13 +970,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowBookModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium"
+                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold flex items-center gap-2 cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   <span>حفظ الكتاب</span>
@@ -1116,7 +993,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
               <h3 className="font-bold text-white text-base">إضافة تقييم أو واجب أسبوعي جديد</h3>
-              <button onClick={() => setShowEvalModal(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowEvalModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -1188,13 +1065,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowEvalModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300"
+                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 cursor-pointer"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   <span>حفظ التقييم</span>
@@ -1211,7 +1088,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
               <h3 className="font-bold text-white text-base">إضافة سؤال جديد للاختبار التفاعلي</h3>
-              <button onClick={() => setShowExamModal(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowExamModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -1339,13 +1216,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowExamModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300"
+                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 cursor-pointer"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold flex items-center gap-2 cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   <span>إضافة السؤال</span>
@@ -1362,7 +1239,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
               <h3 className="font-bold text-white text-base">نشر إشعار أو تنبيه للطلاب</h3>
-              <button onClick={() => setShowAnnounceModal(false)} className="text-slate-400 hover:text-white">
+              <button onClick={() => setShowAnnounceModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -1410,13 +1287,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowAnnounceModal(false)}
-                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300"
+                  className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 cursor-pointer"
                 >
                   إلغاء
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold flex items-center gap-2"
+                  className="px-5 py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-white font-bold flex items-center gap-2 cursor-pointer"
                 >
                   <Save className="w-4 h-4" />
                   <span>نشر الإعلان</span>

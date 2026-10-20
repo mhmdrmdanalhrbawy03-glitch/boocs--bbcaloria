@@ -10,15 +10,13 @@ import {
   LogOut,
   User,
   Sparkles,
-  ShieldAlert
+  Phone
 } from 'lucide-react';
-import { User as FirebaseUser } from 'firebase/auth';
 
 interface NavbarProps {
   currentTab: 'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher';
   setCurrentTab: (tab: 'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher') => void;
-  user: FirebaseUser | null;
-  userRole: 'student' | 'teacher' | 'admin';
+  studentUser: { name: string; phone: string; grade: string } | null;
   onLoginClick: () => void;
   onLogoutClick: () => void;
   favoritesCount: number;
@@ -27,8 +25,7 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   setCurrentTab,
-  user,
-  userRole,
+  studentUser,
   onLoginClick,
   onLogoutClick,
   favoritesCount
@@ -38,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18 gap-4">
           
-          {/* Logo & Platform Name */}
+          {/* Logo */}
           <button
             onClick={() => setCurrentTab('books')}
             className="flex items-center gap-3 text-right group cursor-pointer focus:outline-none"
@@ -63,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <nav className="hidden md:flex items-center gap-1 text-sm font-medium">
             <button
               onClick={() => setCurrentTab('books')}
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors ${
+              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer ${
                 currentTab === 'books'
                   ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -75,7 +72,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setCurrentTab('evaluations')}
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors ${
+              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer ${
                 currentTab === 'evaluations'
                   ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -87,7 +84,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setCurrentTab('exams')}
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors ${
+              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer ${
                 currentTab === 'exams'
                   ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -99,7 +96,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setCurrentTab('favorites')}
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors relative ${
+              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors relative cursor-pointer ${
                 currentTab === 'favorites'
                   ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -116,7 +113,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => setCurrentTab('quran')}
-              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors ${
+              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer ${
                 currentTab === 'quran'
                   ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 font-semibold'
                   : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
@@ -132,7 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Teacher Dashboard Button */}
             <button
               onClick={() => setCurrentTab('teacher')}
-              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all ${
+              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer ${
                 currentTab === 'teacher'
                   ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25 ring-2 ring-amber-400'
                   : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
@@ -143,27 +140,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="sm:hidden">المعلم</span>
             </button>
 
-            {/* User auth badge / Login */}
-            {user ? (
+            {/* Student Account Badge or Login */}
+            {studentUser ? (
               <div className="flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700">
-                <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase overflow-hidden">
-                  {user.photoURL ? (
-                    <img src={user.photoURL} alt={user.displayName || 'user'} className="w-full h-full object-cover" />
-                  ) : (
-                    <User className="w-4 h-4" />
-                  )}
+                <div className="w-7 h-7 rounded-lg bg-indigo-600 flex items-center justify-center text-xs font-bold text-white">
+                  <User className="w-4 h-4" />
                 </div>
                 <div className="hidden lg:block text-right">
-                  <p className="text-xs font-semibold text-white truncate max-w-[100px]">
-                    {user.displayName || user.email?.split('@')[0]}
+                  <p className="text-xs font-semibold text-white truncate max-w-[120px]">
+                    {studentUser.name}
                   </p>
-                  <span className="text-[10px] text-amber-400 flex items-center gap-1 font-medium">
-                    {userRole === 'teacher' ? 'معلم / مشرف' : 'طالب'}
+                  <span className="text-[10px] text-indigo-300 flex items-center gap-1 font-mono" dir="ltr">
+                    {studentUser.phone}
                   </span>
                 </div>
                 <button
                   onClick={onLogoutClick}
-                  className="p-1 hover:text-red-400 text-slate-400 transition-colors"
+                  className="p-1 hover:text-red-400 text-slate-400 transition-colors cursor-pointer"
                   title="تسجيل الخروج"
                 >
                   <LogOut className="w-4 h-4" />
@@ -172,10 +165,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             ) : (
               <button
                 onClick={onLoginClick}
-                className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors shadow-md shadow-indigo-600/30"
+                className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors shadow-md shadow-indigo-600/30 cursor-pointer"
               >
                 <LogIn className="w-4 h-4" />
-                <span>تسجيل الدخول</span>
+                <span>دخول / تسجيل طالب</span>
               </button>
             )}
           </div>

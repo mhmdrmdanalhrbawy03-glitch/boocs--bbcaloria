@@ -18,36 +18,36 @@ import {
   DEFAULT_EXAM,
   DEFAULT_ANNOUNCEMENTS
 } from './data/initialData';
-import { auth, db, testConnection, handleFirestoreError, OperationType } from './firebase';
-import { onAuthStateChanged, signOut, User } from 'firebase/auth';
-import { collection, onSnapshot, doc, getDoc } from 'firebase/firestore';
+import { db, testConnection } from './firebase';
+import { collection, onSnapshot } from 'firebase/firestore';
 import {
   Search,
   BookOpen,
   Sparkles,
-  Flame,
-  ArrowRight,
   Filter,
-  CheckCircle2,
-  GraduationCap,
   Heart,
-  Volume2,
-  Layers,
   Bell
 } from 'lucide-react';
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState<'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher'>('books');
   
-  // Data states
+  // Data states initialized with all 53 books from legacy file
   const [books, setBooks] = useState<BookItem[]>(DEFAULT_BOOKS);
   const [evaluations, setEvaluations] = useState<EvaluationItem[]>(DEFAULT_EVALUATIONS);
   const [exams, setExams] = useState<ExamItem[]>([DEFAULT_EXAM]);
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(DEFAULT_ANNOUNCEMENTS);
   
-  // Auth & Profile
-  const [user, setUser] = useState<User | null>(null);
-  const [userRole, setUserRole] = useState<'student' | 'teacher' | 'admin'>('student');
+  // Student Phone/Password Auth state
+  const [studentUser, setStudentUser] = useState<{ name: string; phone: string; grade: string } | null>(() => {
+    try {
+      const saved = localStorage.getItem('student_session');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Search & Filters
@@ -72,29 +72,6 @@ export default function App() {
     testConnection();
   }, []);
 
-  // Listen to Auth state
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // Teacher admin default check
-        if (currentUser.email === 'ramadanh66778@gmail.com') {
-          setUserRole('teacher');
-        } else {
-          try {
-            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-            if (userDoc.exists() && userDoc.data().role) {
-              setUserRole(userDoc.data().role);
-            }
-          } catch (e) {
-            console.warn('Could not read user profile:', e);
-          }
-        }
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
   // Listen to Firestore Books
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'books'), (snapshot) => {
@@ -103,10 +80,12 @@ export default function App() {
         snapshot.forEach((doc) => {
           fetchedBooks.push(doc.data() as BookItem);
         });
-        setBooks(fetchedBooks);
+        if (fetchedBooks.length > 0) {
+          setBooks(fetchedBooks);
+        }
       }
     }, (error) => {
-      console.warn('Firestore books listener fallback to default:', error.message);
+      console.warn('Firestore books fallback to default:', error.message);
     });
     return () => unsub();
   }, []);
@@ -119,10 +98,12 @@ export default function App() {
         snapshot.forEach((doc) => {
           fetchedEvals.push(doc.data() as EvaluationItem);
         });
-        setEvaluations(fetchedEvals);
+        if (fetchedEvals.length > 0) {
+          setEvaluations(fetchedEvals);
+        }
       }
     }, (error) => {
-      console.warn('Firestore evaluations listener fallback:', error.message);
+      console.warn('Firestore evaluations fallback:', error.message);
     });
     return () => unsub();
   }, []);
@@ -155,7 +136,7 @@ export default function App() {
         }
       }
     }, (error) => {
-      console.warn('Firestore exams listener fallback:', error.message);
+      console.warn('Firestore exams fallback:', error.message);
     });
     return () => unsub();
   }, []);
@@ -168,10 +149,12 @@ export default function App() {
         snapshot.forEach((doc) => {
           fetchedAnn.push(doc.data() as AnnouncementItem);
         });
-        setAnnouncements(fetchedAnn);
+        if (fetchedAnn.length > 0) {
+          setAnnouncements(fetchedAnn);
+        }
       }
     }, (error) => {
-      console.warn('Firestore announcements listener fallback:', error.message);
+      console.warn('Firestore announcements fallback:', error.message);
     });
     return () => unsub();
   }, []);
@@ -188,10 +171,9 @@ export default function App() {
     });
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    setUser(null);
-    setUserRole('student');
+  const handleStudentLogout = () => {
+    localStorage.removeItem('student_session');
+    setStudentUser(null);
   };
 
   // Filter books
@@ -209,18 +191,17 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white" dir="rtl">
       
-      {/* Platform Header Navigation */}
+      {/* Header Navigation */}
       <Navbar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
-        user={user}
-        userRole={userRole}
+        studentUser={studentUser}
         onLoginClick={() => setShowAuthModal(true)}
-        onLogoutClick={handleLogout}
+        onLogoutClick={handleStudentLogout}
         favoritesCount={favorites.length}
       />
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* VIEW 1: Books & Library */}
@@ -235,7 +216,7 @@ export default function App() {
               <div className="relative z-10 max-w-3xl">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-4">
                   <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  المنصة التعليمية الرسمية • تانية بكالوريا والثانوية العامة
+                  المكتبة التعليمية الرسمية • تانية بكالوريا والثانوية العامة
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
@@ -243,10 +224,10 @@ export default function App() {
                 </h1>
 
                 <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-                  استعرض وحمل كافة كتب الوزارة، مذكرات التأسيس، والتقييمات الأسبوعية مع نماذج الإجابة النموذجية لكافة المواد والشعب في مكان واحد.
+                  استعرض وحمل جميع كتب الوزارة ({books.length} كتاب ومذكرة من الملفات المعتمدة)، مع التقييمات الأسبوعية ونماذج الإجابة النموذجية لكافة المواد والشعب.
                 </p>
 
-                {/* Search Bar inside Hero */}
+                {/* Search Bar */}
                 <div className="relative max-w-2xl">
                   <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-500">
                     <Search className="w-5 h-5 text-indigo-400" />
@@ -261,7 +242,7 @@ export default function App() {
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute inset-y-0 left-0 pl-4 flex items-center text-xs text-slate-400 hover:text-white"
+                      className="absolute inset-y-0 left-0 pl-4 flex items-center text-xs text-slate-400 hover:text-white cursor-pointer"
                     >
                       مسح
                     </button>
@@ -270,7 +251,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Announcements Flash Bar */}
+            {/* Announcements */}
             {announcements.length > 0 && (
               <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3 shadow-lg">
                 <span className="w-8 h-8 rounded-xl bg-violet-950 text-violet-400 border border-violet-800 flex items-center justify-center shrink-0">
@@ -284,7 +265,7 @@ export default function App() {
               </div>
             )}
 
-            {/* Categories Filter Tabs */}
+            {/* Categories */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
@@ -337,7 +318,7 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 2: Evaluations & Weekly Homework */}
+        {/* VIEW 2: Evaluations */}
         {currentTab === 'evaluations' && (
           <EvaluationsView evaluations={evaluations} />
         )}
@@ -347,12 +328,12 @@ export default function App() {
           <ExamRunner exam={exams[0] || DEFAULT_EXAM} />
         )}
 
-        {/* VIEW 4: Quran & Adhkar */}
+        {/* VIEW 4: Quran */}
         {currentTab === 'quran' && (
           <QuranSection />
         )}
 
-        {/* VIEW 5: Student Favorites */}
+        {/* VIEW 5: Favorites */}
         {currentTab === 'favorites' && (
           <div className="space-y-6">
             <div className="bg-gradient-to-r from-rose-950/70 via-slate-900 to-slate-900 border border-rose-500/30 rounded-2xl p-6 sm:p-8 shadow-xl">
@@ -397,8 +378,7 @@ export default function App() {
             evaluations={evaluations}
             exams={exams}
             announcements={announcements}
-            userId={user?.uid || 'teacher-admin'}
-            user={user}
+            userId="teacher-admin"
             onRefresh={() => {}}
           />
         )}
@@ -411,11 +391,11 @@ export default function App() {
         onClose={() => setActiveReadingBook(null)}
       />
 
-      {/* Authentication Modal */}
+      {/* Student Phone/Password Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
-        onSuccess={(role) => setUserRole(role)}
+        onSuccess={(student) => setStudentUser(student)}
       />
 
       {/* Footer */}
@@ -425,7 +405,7 @@ export default function App() {
             منصة المكتبة التعليمية الشاملة • تانية بكالوريا والثانوية العامة 2026/2027
           </p>
           <p className="text-slate-500 text-[11px]">
-            مدعومة بقاعدة بيانات حية (Firestore Backend) ولوحة تحكم متكاملة للمعلمين
+            لوحة تحكم المعلم محمية برمز أمان خاص • تسجيل حسابات الطلاب برقم الهاتف والرقم السري
           </p>
         </div>
       </footer>

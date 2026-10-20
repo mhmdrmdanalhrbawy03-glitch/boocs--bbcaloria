@@ -3,67 +3,39 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Global Deny All by default
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
-    // Helper functions
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function isTeacher() {
-      return isSignedIn() && (
-        request.auth.token.email == 'ramadanh66778@gmail.com' ||
-        (request.auth.token.email_verified == true) ||
-        (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['teacher', 'admin'])
-      );
-    }
-
-    function isValidId(id) {
-      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
-    }
-
-    // Users profile collection
-    match /users/{userId} {
-      allow get: if isSignedIn() && (request.auth.uid == userId || isTeacher());
-      allow list: if isTeacher();
-      allow create, update: if isSignedIn() && request.auth.uid == userId;
-      allow delete: if isTeacher();
-    }
-
-    // Educational Books collection
+    // Books collection - public reading, write managed by admin password in portal
     match /books/{bookId} {
-      allow read: if true;
-      allow create, update, delete: if isTeacher();
+      allow read, write: if true;
     }
 
-    // Evaluations & Weekly Homeworks
+    // Weekly Evaluations
     match /evaluations/{evalId} {
-      allow read: if true;
-      allow create, update, delete: if isTeacher();
+      allow read, write: if true;
     }
 
     // Quizzes and Interactive Exams
     match /exams/{examId} {
-      allow read: if true;
-      allow create, update, delete: if isTeacher();
+      allow read, write: if true;
+    }
+
+    // Student Accounts & Profiles (Auth by Phone and Password)
+    match /users/{userId} {
+      allow read, write: if true;
     }
 
     // Student Favorites
     match /favorites/{favId} {
-      allow get: if isSignedIn() && (resource.data.userId == request.auth.uid || isTeacher());
-      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
-      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
-      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow read, write: if true;
     }
 
-    // Announcements and Notices
+    // Announcements
     match /announcements/{announcementId} {
-      allow read: if true;
-      allow create, update, delete: if isTeacher();
+      allow read, write: if true;
+    }
+
+    // Catch-all deny for unknown collections
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }
