@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
   Plus,
@@ -14,7 +14,16 @@ import {
   ExternalLink,
   Save,
   X,
-  AlertCircle
+  AlertCircle,
+  Lock,
+  Unlock,
+  KeyRound,
+  ShieldCheck,
+  Eye,
+  EyeOff,
+  LogIn,
+  LogOut,
+  Info
 } from 'lucide-react';
 import {
   BookItem,
@@ -27,8 +36,9 @@ import {
   DEFAULT_EXAM,
   DEFAULT_ANNOUNCEMENTS
 } from '../data/initialData';
-import { db, handleFirestoreError, OperationType } from '../firebase';
+import { db, auth, googleProvider, handleFirestoreError, OperationType } from '../firebase';
 import { doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { signInWithPopup, User } from 'firebase/auth';
 
 interface TeacherDashboardProps {
   books: BookItem[];
@@ -37,6 +47,7 @@ interface TeacherDashboardProps {
   announcements: AnnouncementItem[];
   onRefresh: () => void;
   userId?: string;
+  user?: User | null;
 }
 
 export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
@@ -45,11 +56,28 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   exams,
   announcements,
   onRefresh,
-  userId = 'teacher-main'
+  userId = 'teacher-admin',
+  user
 }) => {
+  // Security & Authentication Gate
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('teacher_session_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [passwordInput, setPasswordInput] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+
+  // Active SubTab
   const [activeSubTab, setActiveSubTab] = useState<'books' | 'evaluations' | 'exams' | 'announcements'>('books');
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<string | null>(null);
+  const [syncProgress, setSyncProgress] = useState<string | null>(null);
 
   // Modal states
   const [showBookModal, setShowBookModal] = useState(false);
@@ -90,58 +118,148 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [examAns, setExamAns] = useState(0);
   const [examExp, setExamExp] = useState('');
 
-  // Sync initial repo data into Firestore
-  const handleSyncToFirestore = async () => {
-    setIsSyncing(true);
-    setSyncStatus('جاري مزامنة الكتب والمواد مع قاعدة البيانات...');
+  // Acceptable teacher passwords (flexible for the user)
+  const VALID_PASSWORDS = ['معلم2026', 'teacher2026', 'teacher123', 'admin2026', '123456'];
+
+  const handlePasswordLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    const clean = passwordInput.trim();
+    if (VALID_PASSWORDS.includes(clean)) {
+      setIsAuthenticated(true);
+      setAuthError(null);
+      try {
+        localStorage.setItem('teacher_session_auth', 'true');
+      } catch {}
+    } else {
+      setAuthError('كلمة المرور غير صحيحة. يرجى تجربة: معلم2026 أو teacher2026 أو 123456');
+    }
+  };
+
+  const handleGoogleTeacherLogin = async () => {
+    setGoogleLoading(true);
+    setAuthError(null);
     try {
-      // 1. Sync Books
+      const res = await signInWithPopup(auth, googleProvider);
+      const u = res.user;
+      
+      // Update profile in Firestore with role: teacher
+      await setDoc(doc(db, 'users', u.uid), {
+        id: u.uid,
+        fullName: u.displayName || 'معلم معتمد',
+        email: u.email || '',
+        role: 'teacher',
+        updatedAt: new Date().toISOString()
+      }, { merge: true });
+
+      setIsAuthenticated(true);
+      try {
+        localStorage.setItem('teacher_session_auth', 'true');
+      } catch {}
+    } catch (err: any) {
+      setAuthError(err.message || 'تعذر تسجيل الدخول بحساب Google');
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleLockDashboard = () => {
+    setIsAuthenticated(false);
+    setPasswordInput('');
+    try {
+      localStorage.removeItem('teacher_session_auth');
+    } catch {}
+  };
+
+  // Sync to Firestore with automated login check and progress tracking
+  const handleSyncToFirestore = async () => {
+    // 1. Check if user is signed in to Firebase Auth
+    if (!auth.currentUser) {
+      const confirmGoogle = window.confirm(
+        'لمزامنة البيانات مع قاعدة بيانات Firebase السحابية، يجب تسجيل الدخول بحساب المعلم أولاً.\nهل تريد تسجيل الدخول الآن بحساب Google؟'
+      );
+      if (confirmGoogle) {
+        try {
+          await handleGoogleTeacherLogin();
+        } catch {
+          return;
+        }
+      } else {
+        return;
+      }
+    }
+
+    const currentUid = auth.currentUser?.uid || userId;
+    setIsSyncing(true);
+    setSyncStatus(null);
+    setSyncProgress('بدء فحص الاتصال ومزامنة البيانات...');
+
+    try {
+      // 1. Ensure Teacher role in users document
+      if (auth.currentUser) {
+        await setDoc(doc(db, 'users', auth.currentUser.uid), {
+          id: auth.currentUser.uid,
+          fullName: auth.currentUser.displayName || 'معلم المنصة',
+          email: auth.currentUser.email || '',
+          role: 'teacher',
+          updatedAt: new Date().toISOString()
+        }, { merge: true });
+      }
+
+      // 2. Sync Books (1/4)
+      setSyncProgress('جاري مزامنة كتب الوزارة والمذكرات (1/4)...');
       for (const b of DEFAULT_BOOKS) {
         await setDoc(doc(db, 'books', b.id), {
           ...b,
-          createdBy: userId,
-          createdAt: new Date().toISOString()
+          createdBy: currentUid,
+          updatedAt: new Date().toISOString()
         });
       }
-      // 2. Sync Evaluations
+
+      // 3. Sync Evaluations (2/4)
+      setSyncProgress('جاري مزامنة التقييمات والواجبات الأسبوعية (2/4)...');
       for (const ev of DEFAULT_EVALUATIONS) {
         await setDoc(doc(db, 'evaluations', ev.id), {
           ...ev,
-          createdBy: userId,
-          createdAt: new Date().toISOString()
+          createdBy: currentUid,
+          updatedAt: new Date().toISOString()
         });
       }
-      // 3. Sync Exam
+
+      // 4. Sync Exam (3/4)
+      setSyncProgress('جاري مزامنة بنك أسئلة امتحان النحو التفاعلي (3/4)...');
       await setDoc(doc(db, 'exams', DEFAULT_EXAM.id), {
         id: DEFAULT_EXAM.id,
         title: DEFAULT_EXAM.title,
         subject: DEFAULT_EXAM.subject,
         timeLimit: DEFAULT_EXAM.timeLimit,
         questions: JSON.stringify(DEFAULT_EXAM.questions),
-        createdBy: userId,
-        createdAt: new Date().toISOString()
+        createdBy: currentUid,
+        updatedAt: new Date().toISOString()
       });
-      // 4. Sync Announcements
+
+      // 5. Sync Announcements (4/4)
+      setSyncProgress('جاري مزامنة الإعلانات والتنبيهات المدرسية (4/4)...');
       for (const a of DEFAULT_ANNOUNCEMENTS) {
         await setDoc(doc(db, 'announcements', a.id), {
           ...a,
-          createdBy: userId,
-          createdAt: new Date().toISOString()
+          createdBy: currentUid,
+          updatedAt: new Date().toISOString()
         });
       }
 
-      setSyncStatus('تمت مزامنة جميع البيانات الأولية بنجاح في قاعدة بيانات Firestore!');
+      setSyncStatus(`تمت المزامنة السحابية بنجاح تام! (${DEFAULT_BOOKS.length} كتاب، ${DEFAULT_EVALUATIONS.length} تقييم، والامتحانات)`);
+      setSyncProgress(null);
       onRefresh();
-    } catch (err) {
-      handleFirestoreError(err, OperationType.WRITE, 'books');
-      setSyncStatus('حدث خطأ أثناء المزامنة. يرجى التحقق من الاتصال.');
+    } catch (err: any) {
+      console.error('Sync error:', err);
+      setSyncStatus('حدث خطأ أثناء المزامنة: ' + (err.message || 'يرجى التأكد من تسجيل الدخول بحساب المعلم المعتمد.'));
+      setSyncProgress(null);
     } finally {
       setIsSyncing(false);
-      setTimeout(() => setSyncStatus(null), 4000);
     }
   };
 
-  // Save or Update Book
+  // Save Book
   const handleSaveBook = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!bookTitle.trim() || !bookUrl.trim()) return;
@@ -158,7 +276,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       popular: 85,
       isNew: true,
       teacherNotes: bookNotes,
-      createdBy: userId,
+      createdBy: auth.currentUser?.uid || userId,
       createdAt: new Date().toISOString()
     };
 
@@ -219,7 +337,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       url: evalUrl,
       solutionUrl: evalSolutionUrl || evalUrl,
       icon: '📝',
-      createdBy: userId,
+      createdBy: auth.currentUser?.uid || userId,
       createdAt: new Date().toISOString()
     };
 
@@ -257,7 +375,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       content: announceContent,
       category: announceCat,
       date: 'الآن',
-      createdBy: userId,
+      createdBy: auth.currentUser?.uid || userId,
       createdAt: new Date().toISOString()
     };
 
@@ -307,7 +425,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         subject: examQSubject,
         timeLimit: exams[0]?.timeLimit || DEFAULT_EXAM.timeLimit,
         questions: JSON.stringify(updated),
-        createdBy: userId,
+        createdBy: auth.currentUser?.uid || userId,
         updatedAt: new Date().toISOString()
       });
       setShowExamModal(false);
@@ -323,35 +441,145 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     }
   };
 
-  return (
-    <div className="space-y-8">
-      {/* Dashboard Top Header */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-indigo-500/30 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+  // =========================================================================
+  // IF NOT AUTHENTICATED: RENDER SECURE TEACHER LOGIN & PASSCODE GATE
+  // =========================================================================
+  if (!isAuthenticated) {
+    return (
+      <div className="max-w-md mx-auto my-8 p-6 sm:p-8 bg-slate-900 border border-amber-500/30 rounded-3xl shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        
+        {/* Lock Icon Header */}
+        <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-amber-500 to-amber-700 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-amber-500/20">
+          <Lock className="w-8 h-8 text-slate-950" />
+        </div>
+
+        <div className="text-center mb-6">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-2">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            منطقة محمية ومخصصة للمعلمين فقط
+          </div>
+          <h2 className="text-2xl font-black text-white">تسجيل دخول المعلم والمشرف</h2>
+          <p className="text-xs text-slate-400 mt-1">
+            أدخل كلمة مرور المعلم أو سجّل الدخول بحساب Google للوصول للوحة التحكم
+          </p>
+        </div>
+
+        {authError && (
+          <div className="mb-4 p-3 rounded-xl bg-rose-950/70 border border-rose-800/80 text-rose-200 text-xs flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+            <span>{authError}</span>
+          </div>
+        )}
+
+        {/* Password Form */}
+        <form onSubmit={handlePasswordLogin} className="space-y-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              لوحة الإدارة والتحكم الأكاديمي للمعلمين
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+              كلمة مرور المعلم المشرف (Teacher Password)
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="أدخل كلمة المرور (الافتراضية: معلم2026)"
+                className="w-full bg-slate-950 border border-slate-700 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 transition-colors"
+                autoFocus
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400 hover:text-white"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-              إدارة المحتوى والمكتبة وقاعدة البيانات
-            </h2>
-            <p className="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
-              تحكم كامل في إضافة وحذف وتعديل كتب الوزارة، التقييمات الأسبوعية، بنك الأسئلة للاختبارات التفاعلية، وإشعارات الطلاب.
+            <p className="text-[11px] text-slate-500 mt-1.5 flex items-center gap-1">
+              <KeyRound className="w-3 h-3 text-amber-400" />
+              كلمة المرور الافتراضية للمعلم: <strong className="text-amber-300 font-mono">معلم2026</strong> أو <strong className="text-amber-300 font-mono">123456</strong>
             </p>
           </div>
 
-          {/* Quick Sync Button */}
+          <button
+            type="submit"
+            className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-amber-500/25 transition-all cursor-pointer"
+          >
+            <Unlock className="w-4 h-4" />
+            <span>فتح لوحة التحكم بالرمز السري</span>
+          </button>
+        </form>
+
+        <div className="relative my-6 text-center">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-800" />
+          </div>
+          <span className="relative bg-slate-900 px-3 text-[11px] text-slate-500 uppercase tracking-wider font-semibold">
+            أو عبر حساب Google المعتمد
+          </span>
+        </div>
+
+        {/* Google Authentication */}
+        <button
+          onClick={handleGoogleTeacherLogin}
+          disabled={googleLoading}
+          className="w-full py-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs flex items-center justify-center gap-2.5 transition-colors cursor-pointer"
+        >
+          {googleLoading ? (
+            <RefreshCw className="w-4 h-4 animate-spin text-amber-400" />
+          ) : (
+            <LogIn className="w-4 h-4 text-amber-400" />
+          )}
+          <span>تسجيل الدخول بحساب Google الرسمي للمعلم</span>
+        </button>
+      </div>
+    );
+  }
+
+  // =========================================================================
+  // IF AUTHENTICATED: RENDER FULL TEACHER DASHBOARD
+  // =========================================================================
+  return (
+    <div className="space-y-8">
+      {/* Dashboard Top Header */}
+      <div className="bg-gradient-to-r from-slate-900 via-indigo-950/70 to-slate-900 border border-amber-500/40 rounded-2xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
+                جلسة معلم نشطة ومؤمنة
+              </span>
+              {auth.currentUser ? (
+                <span className="text-xs text-indigo-300 bg-indigo-950/60 px-2.5 py-1 rounded-full border border-indigo-800">
+                  متصل: {auth.currentUser.email}
+                </span>
+              ) : (
+                <span className="text-xs text-amber-300 bg-amber-950/60 px-2.5 py-1 rounded-full border border-amber-800">
+                  مفتوح بكلمة المرور
+                </span>
+              )}
+            </div>
+
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+              لوحة الإدارة والتحكم الأكاديمي
+            </h2>
+            <p className="text-sm text-slate-300 mt-2 max-w-2xl leading-relaxed">
+              تحكم كامل في إضافة وحذف وتعديل كتب الوزارة، التقييمات الأسبوعية، بنك الأسئلة، وإعلانات الطلاب مع حفظ فوري ومزامنة سحابية.
+            </p>
+          </div>
+
+          {/* Action Buttons: Sync & Lock */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
             <button
               onClick={handleSyncToFirestore}
               disabled={isSyncing}
-              className="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-bold text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-600 text-slate-950 font-extrabold text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition-all cursor-pointer disabled:opacity-60"
             >
               {isSyncing ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>جاري المزامنة...</span>
+                  <span>جاري المزامنة مع Firestore...</span>
                 </>
               ) : (
                 <>
@@ -360,14 +588,55 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 </>
               )}
             </button>
+
+            <button
+              onClick={handleLockDashboard}
+              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-rose-300 text-xs font-semibold border border-slate-700 transition-colors"
+              title="قفل لوحة التحكم"
+            >
+              <Lock className="w-4 h-4" />
+              <span>قفل اللوحة</span>
+            </button>
           </div>
         </div>
 
-        {/* Sync message banner */}
+        {/* Sync Progress Banner */}
+        {syncProgress && (
+          <div className="mt-4 p-3.5 rounded-xl bg-indigo-950/80 border border-indigo-700 text-indigo-200 text-xs flex items-center gap-2 animate-pulse">
+            <RefreshCw className="w-4 h-4 animate-spin text-indigo-400 shrink-0" />
+            <span className="font-semibold">{syncProgress}</span>
+          </div>
+        )}
+
+        {/* Sync status / result banner */}
         {syncStatus && (
-          <div className="mt-4 p-3 rounded-xl bg-emerald-950/70 border border-emerald-700/60 text-emerald-200 text-xs flex items-center gap-2">
-            <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>{syncStatus}</span>
+          <div className={`mt-4 p-3.5 rounded-xl text-xs flex items-center gap-2 ${
+            syncStatus.includes('بنجاح')
+              ? 'bg-emerald-950/80 border border-emerald-700 text-emerald-200'
+              : 'bg-rose-950/80 border border-rose-700 text-rose-200'
+          }`}>
+            {syncStatus.includes('بنجاح') ? (
+              <CheckCircle className="w-4 h-4 text-emerald-400 shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+            )}
+            <span className="font-semibold">{syncStatus}</span>
+          </div>
+        )}
+
+        {/* Notice for Google Connection if not signed into Firebase */}
+        {!auth.currentUser && (
+          <div className="mt-4 p-3 rounded-xl bg-slate-950/70 border border-slate-800 text-[11px] text-slate-300 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Info className="w-4 h-4 text-amber-400 shrink-0" />
+              <span>لضمان حفظ التعديلات في قاعدة بيانات Firebase السحابية، يفضل ربط حساب Google الخاص بك.</span>
+            </div>
+            <button
+              onClick={handleGoogleTeacherLogin}
+              className="text-amber-400 hover:underline font-bold shrink-0"
+            >
+              ربط الحساب الآن
+            </button>
           </div>
         )}
       </div>

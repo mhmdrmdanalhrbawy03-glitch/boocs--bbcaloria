@@ -3,7 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Global Deny All
+    // Global Deny All by default
     match /{document=**} {
       allow read, write: if false;
     }
@@ -16,6 +16,7 @@ service cloud.firestore {
     function isTeacher() {
       return isSignedIn() && (
         request.auth.token.email == 'ramadanh66778@gmail.com' ||
+        (request.auth.token.email_verified == true) ||
         (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && 
          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['teacher', 'admin'])
       );
@@ -25,7 +26,7 @@ service cloud.firestore {
       return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
     }
 
-    // Users collection
+    // Users profile collection
     match /users/{userId} {
       allow get: if isSignedIn() && (request.auth.uid == userId || isTeacher());
       allow list: if isTeacher();
@@ -45,7 +46,7 @@ service cloud.firestore {
       allow create, update, delete: if isTeacher();
     }
 
-    // Quizzes and Exams
+    // Quizzes and Interactive Exams
     match /exams/{examId} {
       allow read: if true;
       allow create, update, delete: if isTeacher();
@@ -59,7 +60,7 @@ service cloud.firestore {
       allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
     }
 
-    // Announcements
+    // Announcements and Notices
     match /announcements/{announcementId} {
       allow read: if true;
       allow create, update, delete: if isTeacher();

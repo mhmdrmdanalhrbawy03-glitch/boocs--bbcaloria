@@ -398,6 +398,7 @@ export default function App() {
             exams={exams}
             announcements={announcements}
             userId={user?.uid || 'teacher-admin'}
+            user={user}
             onRefresh={() => {}}
           />
         )}
