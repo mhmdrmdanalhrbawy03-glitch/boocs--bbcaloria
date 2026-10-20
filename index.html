@@ -6171,6 +6171,21 @@ if(newReligiousMessage&&religiousMessage){newReligiousMessage.onclick=()=>{let n
 })();
 </script>
 
+
+<script id="books-live-sync">
+/* ربط الكتب بلوحة التحكم: يقرأ القائمة من /api/books ويحدّث العرض.
+   لو الـ API غير متاح أو فارغ تبقى قائمة الكتب المدمجة في الملف كما هي. */
+(function(){
+  if(typeof books==='undefined'||!Array.isArray(books))return;
+  fetch('/api/books',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(d){
+    if(!d||!Array.isArray(d.books)||!d.books.length)return;
+    books.splice(0,books.length);
+    d.books.forEach(function(b){books.push(b)});
+    try{updateStats();renderFeatured();renderBooks();}catch(e){}
+    try{if(typeof renderNotifications==='function')renderNotifications();}catch(e){}
+  }).catch(function(){});
+})();
+</script>
 <style id="final-float-position-v5">
 /* الوضع النهائي: الصوت + واتساب + السهم في الجهة المقابلة بنفس الارتفاعات */
 body.library-open .floating .audioFloat{position:fixed!important;left:16px!important;right:auto!important;bottom:255px!important;top:auto!important;margin:0!important;z-index:2147482997!important;}
@@ -6233,5 +6248,448 @@ body.library-open .floating .up{position:fixed!important;left:16px!important;rig
 @media(max-width:650px){.videoLibraryCard{padding:19px;gap:14px}.videoLibraryIcon{flex-basis:58px;width:58px;height:58px;border-radius:17px;font-size:22px}.videoLibraryContent h3{font-size:21px}.videoLibraryContent p{font-size:13px}.videoLibraryBtn{padding:9px 13px;font-size:13px}}
 </style>
 </style>
+<style id="design-polish-v1">
+/* =========================================================
+   تحسين التصميم والحركة وترتيب الأيقونات — طبقة CSS فقط
+   لا تغيير في المحتوى أو الروابط أو الأكواد البرمجية
+   ========================================================= */
+:root{
+  --ease:cubic-bezier(.2,.7,.2,1);
+  --r-card:20px;
+  --r-ctl:14px;
+  --gold-soft:#f4cb5922;
+  --surface-1:#16293f;
+  --surface-2:#0e1c30;
+}
+html{-webkit-text-size-adjust:100%}
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;-webkit-tap-highlight-color:transparent}
+::selection{background:#f4cb5955;color:#fff}
+:focus-visible{outline:2px solid var(--gold)!important;outline-offset:3px!important;border-radius:10px}
+*{scrollbar-width:thin;scrollbar-color:#f4cb5955 transparent}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#f4cb5944;border-radius:9px}
+::-webkit-scrollbar-thumb:hover{background:#f4cb5988}
+button:active,.action:active,.pill:active,.enter:active{transform:scale(.97)}
+
+/* ---------- الصفحة الرئيسية ---------- */
+.home{
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 22%,#1d4270a8 0%,transparent 70%),
+    radial-gradient(circle at 50% 30%,#1b3b60b8 0%,#0d1f35 34%,#040b15 80%),
+    linear-gradient(145deg,#020712,#10223a);
+}
+.home::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;opacity:.35;
+  background-image:radial-gradient(#ffffff14 1px,transparent 1.2px);
+  background-size:26px 26px;
+  -webkit-mask-image:radial-gradient(circle at 50% 40%,#000 0%,transparent 70%);
+  mask-image:radial-gradient(circle at 50% 40%,#000 0%,transparent 70%);
+}
+.hero{display:flex;flex-direction:column;align-items:center;gap:0}
+.badge{font-size:12.5px;padding:9px 18px;background:#ffffff0d;border-color:#f4cb5944;backdrop-filter:blur(8px)}
+.sceneLabel{font-size:11.5px;padding:6px 14px}
+.logo{width:178px;height:178px;margin:14px auto 12px;border-radius:38px}
+.title{animation:none;letter-spacing:-.5px;text-shadow:0 6px 40px #f4cb5926,0 2px 0 #0006}
+.sub{font-size:15.5px;line-height:2.05;max-width:62ch;margin:12px auto 6px;color:#aebccf}
+.pills{gap:10px;margin:20px 0 22px;max-width:640px}
+.pill{
+  font-size:13.5px;padding:10px 18px;color:#e6edf6;
+  background:linear-gradient(180deg,#ffffff12,#ffffff06);
+  border:1px solid #ffffff1f;backdrop-filter:blur(8px);
+  transition:transform .3s var(--ease),border-color .3s,background .3s,box-shadow .3s;
+}
+.pill:hover{transform:translateY(-3px);background:linear-gradient(180deg,#f4cb5922,#f4cb590a);border-color:#f4cb5988;box-shadow:0 10px 26px #0006}
+.enter{
+  width:min(380px,100%);padding:16px;font-size:19px;border-radius:18px;
+  animation:none;box-shadow:0 18px 44px #f4cb5940,inset 0 1px 0 #ffffff80;
+  transition:transform .3s var(--ease),box-shadow .3s;
+}
+.enter:hover{transform:translateY(-3px);box-shadow:0 24px 54px #f4cb5955,inset 0 1px 0 #ffffffa0}
+.note{font-size:12.5px;margin-top:14px;color:var(--muted)}
 
 
+/* الصفحة الرئيسية دائمًا داكنة: ثبّت لون العنوان ليظهر في الوضعين */
+.home .hero .title{color:#f8fafc}
+.home .hero .title .gold{color:var(--gold)}
+
+/* دخول متتابع واحد بعد انتهاء الافتتاحية */
+@keyframes heroRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hero > *{animation:heroRise .8s var(--ease) both}
+.hero > .badge{animation-delay:5.7s}
+.hero > .scene{animation-delay:5.8s}
+.hero > .logo{animation:heroRise .8s var(--ease) 5.9s both,logoFloat 5s ease-in-out 6.7s infinite}
+.hero > .title{animation-delay:6s}
+.hero > .sub{animation-delay:6.1s}
+.hero > .pills{animation-delay:6.2s}
+.hero > .enter{animation-delay:6.3s}
+.hero > .note{animation-delay:6.4s}
+
+/* بطاقة الثانوية العامة */
+.generalSchoolCard{border-radius:24px;border-color:#3b82f6b0;transition:transform .35s var(--ease),box-shadow .35s}
+.generalSchoolCard strong{font-size:13px}
+.generalSchoolCard small{font-size:9.5px}
+.generalSchoolArrow{transition:transform .3s var(--ease)}
+.generalSchoolCard:hover .generalSchoolArrow{transform:translateX(-6px)}
+
+/* ---------- الهيدر وترتيب أيقونات الأدوات ---------- */
+.header{padding:11px 16px;box-shadow:0 10px 30px #0004}
+.tools{gap:9px;align-items:center}
+#menuBtn{order:1}
+#updatesBtn{order:2}
+#themeBtn{order:3}
+#shareBtn{order:4}
+.ib{
+  width:46px;height:46px;border-radius:15px;font-size:19px;display:grid;place-items:center;position:relative;
+  transition:transform .25s var(--ease),border-color .25s,background .25s,box-shadow .25s;
+}
+.ib:hover{transform:translateY(-2px);box-shadow:0 8px 20px #0004}
+.brand h2{font-size:19px;letter-spacing:-.2px}
+.brand p{font-size:11.5px}
+.brandLogo{border-radius:16px;box-shadow:0 6px 18px #0005}
+.clerkLoginBtn{height:46px;font-size:12.5px;padding:0 16px;border-radius:15px;transition:transform .25s var(--ease),box-shadow .25s}
+.clerkLoginBtn:hover{transform:translateY(-2px);box-shadow:0 10px 24px #f4cb5940}
+.news{font-size:13.5px;font-weight:800;padding:9px 0}
+.news a{text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1.5px}
+
+/* ---------- المحتوى ---------- */
+.wrap{padding:24px 16px 90px}
+.welcome{padding:18px 0 22px}
+.welcome small,.sectionHead small,.booksTitle small,.videoLibraryContent small,.evaluationsContent small{font-size:12.5px;font-weight:800}
+.welcome h2{font-size:clamp(24px,3.4vw,34px);line-height:1.5;margin:6px 0}
+.welcome p{font-size:15px;line-height:1.9;color:var(--muted);max-width:66ch}
+.sectionHead h3,.booksTitle h3{font-size:clamp(20px,2.6vw,26px)}
+
+/* بطاقات الفيديو والتقييمات */
+.videoLibraryCard,.evaluationsLibraryCard{
+  border-radius:26px;transition:transform .35s var(--ease),box-shadow .35s,border-color .35s;
+}
+.videoLibraryCard:hover,.evaluationsLibraryCard:hover{transform:translateY(-3px);border-color:rgba(230,189,77,.5);box-shadow:0 26px 60px rgba(0,0,0,.3)}
+.videoLibraryContent p,.evaluationsContent p{font-size:14.5px;max-width:70ch}
+.evaluationsSubjects span{font-size:12px;padding:7px 12px}
+.videoLibraryBtn,.evaluationsBtn{padding:12px 20px;font-size:14.5px;border-radius:14px}
+.videoLibraryBtn span,.evaluationsBtn span{display:inline-block;transition:transform .3s var(--ease)}
+.videoLibraryBtn:hover span,.evaluationsBtn:hover span{transform:translateX(-5px)}
+.videoLibraryIcon,.evaluationsIcon{transition:transform .4s var(--ease)}
+.videoLibraryCard:hover .videoLibraryIcon,.evaluationsLibraryCard:hover .evaluationsIcon{transform:rotate(-6deg) scale(1.06)}
+
+/* المسار الدراسي */
+.studyFilter{gap:10px}
+.studyFilter button{font-size:13px;padding:10px 18px;transition:transform .25s var(--ease),background .25s,color .25s}
+.studyFilter button:hover{transform:translateY(-2px)}
+.studyGrid{gap:14px}
+.studyCard{border-radius:var(--r-card);padding:22px;transition:transform .35s var(--ease),border-color .3s,box-shadow .35s}
+.studyCard:hover{transform:translateY(-4px);border-color:#f4cb5966;box-shadow:0 18px 40px #0004}
+.studyIcon{width:54px;height:54px;border-radius:17px;font-size:25px}
+.studyBadge{font-size:11.5px}
+.studyCard h4{font-size:16px;line-height:1.8}
+.studyCard p{font-size:13.5px;line-height:2}
+
+/* البحث والفرز والتصنيفات */
+.controls{padding:16px;border-radius:22px}
+.searchRow{gap:12px;align-items:center}
+.search input{height:54px;font-size:15px;border-radius:16px;transition:border-color .25s,box-shadow .25s}
+.search input:focus{border-color:var(--gold);box-shadow:0 0 0 4px #f4cb5920}
+.sort{gap:4px;padding:4px;border-radius:18px;border:1px solid var(--line)}
+body:not(.light) .sort{background:#0a1524}
+.sortBtn{height:44px;font-size:13px;padding:0 16px;border-radius:14px;transition:background .25s,color .25s,transform .25s var(--ease)}
+body:not(.light) .sort .sortBtn:not(.active){background:transparent;border-color:transparent}
+.sortBtn:hover:not(.active){transform:translateY(-1px)}
+.filters{gap:9px;padding:14px 2px 4px}
+.filter{font-size:13px;padding:9px 16px;transition:transform .25s var(--ease),background .25s,color .25s,border-color .25s}
+.filter:hover:not(.active){transform:translateY(-2px);border-color:#f4cb5966}
+.sectionBtn{font-size:13px;padding:9px 14px;border-radius:12px;transition:transform .25s var(--ease),background .25s}
+.sectionBtn:hover{transform:translateY(-2px)}
+
+/* الإحصائيات */
+.stats{gap:14px;margin:22px 0 34px}
+.stat{padding:16px;border-radius:var(--r-card)}
+.statIcon{width:48px;height:48px;flex:0 0 48px;border-radius:15px;display:grid;place-items:center;font-size:23px;background:#f4cb5914}
+.num{font-size:clamp(24px,3vw,32px);font-weight:900;line-height:1.1;font-variant-numeric:tabular-nums;color:var(--gold)}
+.stat .small{font-size:12.5px;margin-top:3px}
+body.light .num{color:#a9741a}
+.small{font-size:12.5px}
+
+/* البطاقات */
+body:not(.light) .controls,
+body:not(.light) .stat,
+body:not(.light) .mini,
+body:not(.light) .book,
+body:not(.light) .series,
+body:not(.light) .faqItem{
+  background:linear-gradient(160deg,var(--surface-1),var(--surface-2));
+  box-shadow:inset 0 1px 0 #ffffff0d,0 10px 26px #0003;
+}
+.mini,.series,.book{
+  border-radius:var(--r-card);
+  transition:transform .35s var(--ease),border-color .3s,box-shadow .35s;
+}
+.mini:hover,.series:hover,.book:hover{
+  transform:translateY(-5px);border-color:#f4cb5988;
+  box-shadow:0 20px 44px #0005,0 0 0 1px #f4cb5922;
+}
+.mini,.series{padding:16px}
+.mini h4,.series h4{font-size:14.5px;line-height:1.85}
+.mini p,.series p{font-size:12px}
+.book{padding:20px}
+.book h3{font-size:16.5px;line-height:1.85}
+.book .desc{font-size:13px;line-height:2}
+.bookIcon,.miniIcon{border-radius:18px;transition:transform .4s var(--ease)}
+.book:hover .bookIcon,.mini:hover .miniIcon{transform:rotate(-5deg) scale(1.07)}
+.tag,.meta{font-size:11px;padding:5px 10px}
+.new{font-size:11px}
+.favBtn{width:44px;height:44px;border-radius:14px;transition:transform .25s var(--ease),border-color .25s,background .25s}
+.favBtn:hover{transform:scale(1.1);border-color:#f4cb5988}
+.actions{gap:9px;margin-top:16px}
+.action{height:46px;font-size:13px;border-radius:13px;transition:transform .25s var(--ease),box-shadow .25s,filter .25s}
+.action:hover{transform:translateY(-2px);box-shadow:0 10px 22px #0004;filter:brightness(1.06)}
+.booksTitle{margin-bottom:16px}
+.booksGrid,.miniGrid{gap:16px}
+
+/* ظهور البطاقات عند الفلترة والبحث */
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.booksGrid > .book,.miniGrid > .mini,.seriesGrid > .series{animation:cardIn .5s var(--ease) both}
+.booksGrid > :nth-child(2),.miniGrid > :nth-child(2),.seriesGrid > :nth-child(2){animation-delay:.05s}
+.booksGrid > :nth-child(3),.miniGrid > :nth-child(3),.seriesGrid > :nth-child(3){animation-delay:.1s}
+.booksGrid > :nth-child(4),.miniGrid > :nth-child(4),.seriesGrid > :nth-child(4){animation-delay:.15s}
+.booksGrid > :nth-child(n+5),.miniGrid > :nth-child(n+5),.seriesGrid > :nth-child(n+5){animation-delay:.2s}
+
+/* الأسئلة الشائعة */
+.faqIntro p{font-size:14.5px;line-height:2}
+.faqBadge{font-size:12.5px}
+.faqItem{border-radius:var(--r-card);transition:border-color .3s,transform .3s var(--ease),box-shadow .3s}
+.faqItem:hover{border-color:#f4cb5955}
+.question{font-size:14.5px;min-height:70px;transition:color .25s}
+.question:hover{color:var(--gold)}
+.answer{font-size:13.5px;line-height:2.1}
+@keyframes answerIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.faqItem.active .answer{animation:answerIn .35s var(--ease)}
+
+/* الفوتر */
+footer{padding:42px 16px 30px}
+.footerTitle{font-size:22px}
+.footerText{font-size:14px;line-height:2}
+.footerLinks{gap:11px;margin:18px 0}
+.footerLinks a{font-size:13.5px;padding:10px 16px;border-radius:999px;transition:transform .25s var(--ease),box-shadow .25s,filter .25s}
+.footerLinks a:hover{transform:translateY(-3px);box-shadow:0 10px 22px #0004;filter:brightness(1.08)}
+.footerCredit{font-size:13px;line-height:2.1}
+.developerBtn{transition:transform .25s var(--ease),box-shadow .25s}
+.developerBtn:hover{transform:translateY(-2px)}
+
+/* القائمة الجانبية */
+.overlay{backdrop-filter:blur(3px)}
+.menuHead{font-size:19px;padding:22px 20px}
+.menu a:not(.quranMenuItem){
+  display:flex;align-items:center;gap:10px;margin:3px 12px;padding:13px 14px;border-radius:13px;
+  font-size:14.5px;font-weight:800;transition:background .25s,color .25s,transform .25s var(--ease);
+}
+.menu a:not(.quranMenuItem):hover{background:#f4cb5914;color:var(--gold);transform:translateX(-4px)}
+.menuInfo{font-size:13px;line-height:2.1}
+
+/* النوافذ المنبثقة والإشعارات */
+.modal{backdrop-filter:blur(6px)}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.modal.open .modalBox{animation:modalIn .4s var(--ease)}
+.modalBox{border-radius:26px;padding:26px;box-shadow:0 30px 80px #000a}
+.modalAction{height:48px;font-size:14px;border-radius:14px;transition:transform .25s var(--ease),filter .25s}
+.modalAction:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.modalDesc{font-size:14.5px;line-height:2.05}
+.notificationPanel{border-radius:22px}
+.notificationItem{transition:background .25s,transform .25s var(--ease)}
+.notificationItem:hover{transform:translateX(-3px)}
+
+/* ---------- الأيقونات العائمة: عمود موحد جهة اليسار ----------
+   من الأسفل للأعلى: واتساب ← الصوت ← الرجوع لأعلى
+   نفس الحجم ونفس المسافات، وTidio يبقى لوحده في اليمين */
+body.library-open .floating .float,
+body.library-open .floating .audioBtn{width:54px!important;height:54px!important}
+body.library-open .floating .wa{
+  position:fixed!important;left:18px!important;right:auto!important;top:auto!important;
+  bottom:calc(20px + env(safe-area-inset-bottom,0px))!important;margin:0!important;
+}
+body.library-open .floating .audioFloat{
+  position:fixed!important;left:18px!important;right:auto!important;top:auto!important;
+  bottom:calc(86px + env(safe-area-inset-bottom,0px))!important;margin:0!important;
+}
+body.library-open .floating .up{
+  position:fixed!important;left:18px!important;right:auto!important;top:auto!important;
+  bottom:calc(152px + env(safe-area-inset-bottom,0px))!important;margin:0!important;
+}
+body.library-open .floating .audioPicker{left:66px;bottom:0;border-radius:18px}
+.audioChoice{transition:background .25s,transform .25s var(--ease)}
+.audioChoice:hover{transform:translateX(3px)}
+.float,.audioBtn{transition:transform .3s var(--ease),box-shadow .3s}
+.float:hover,.audioBtn:hover{transform:translateY(-3px) scale(1.05)}
+@keyframes dockPop{from{opacity:0;transform:scale(.6) translateY(14px)}to{opacity:1;transform:none}}
+body.library-open .floating .wa{animation:dockPop .5s var(--ease) .15s backwards}
+body.library-open .floating .audioFloat{animation:dockPop .5s var(--ease) .27s backwards}
+body.library-open .floating .up{animation:dockPop .4s var(--ease) backwards}
+@media(max-width:700px){
+  body.library-open .floating .wa{left:12px!important;bottom:calc(14px + env(safe-area-inset-bottom,0px))!important}
+  body.library-open .floating .audioFloat{left:12px!important;bottom:calc(78px + env(safe-area-inset-bottom,0px))!important}
+  body.library-open .floating .up{left:12px!important;bottom:calc(142px + env(safe-area-inset-bottom,0px))!important}
+  body.library-open .floating .float,
+  body.library-open .floating .audioBtn{width:50px!important;height:50px!important}
+  body.library-open .floating .audioPicker{left:60px;width:190px}
+}
+
+/* ---------- الشاشات الصغيرة ---------- */
+@media(max-width:700px){
+  .logo{width:150px;height:150px}
+  .sub{font-size:14.5px}
+  .pill{font-size:13px;padding:9px 14px}
+  .wrap{padding:18px 12px 90px}
+  .header{padding:9px 12px}
+  .tools{gap:8px}
+  .ib{width:44px;height:44px}
+  .controls{padding:13px}
+  .search input{height:52px}
+  .sort{justify-content:space-between}
+  .sortBtn{flex:1;padding:0 10px}
+  .book{padding:17px}
+  .stat{padding:12px}
+  .statIcon{width:42px;height:42px;flex-basis:42px;font-size:20px}
+  .booksGrid,.miniGrid{gap:12px}
+  .brand h2{font-size:17px}
+}
+
+/* احترام من يفضّل تقليل الحركة */
+@media(prefers-reduced-motion:reduce){
+  .hero > *,.booksGrid > *,.miniGrid > *,.seriesGrid > *,
+  body.library-open .floating .wa,body.library-open .floating .audioFloat,body.library-open .floating .up,
+  .modal.open .modalBox,.faqItem.active .answer{animation:none!important}
+  .mini:hover,.series:hover,.book:hover,.studyCard:hover,.pill:hover,.action:hover{transform:none!important}
+}
+</style>
+<style id="design-polish-v2">
+/* =========================================================
+   الإصدار 2: ألوان أفتح بدل الأسود + ضمان ظهور Tidio و Crisp
+   ========================================================= */
+
+/* ---- افتتاحية: كحلي عميق بدل الأسود الكامل ---- */
+.introSplash{
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 38%,#245c94 0%,transparent 70%),
+    radial-gradient(ellipse at 50% 100%,#1b3f6e 0%,transparent 65%),
+    linear-gradient(160deg,#0d2543,#12315a 55%,#0a1d38)!important;
+}
+.introNoise{opacity:.25!important}
+
+/* ---- الصفحة الرئيسية: أزرق ملكي أفتح ---- */
+.home{
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 20%,#3a74b4a0 0%,transparent 70%),
+    radial-gradient(circle at 15% 85%,#2563eb30 0%,transparent 45%),
+    radial-gradient(circle at 85% 10%,#f4cb5922 0%,transparent 40%),
+    linear-gradient(160deg,#112c4d 0%,#173a66 50%,#0f2745 100%)!important;
+}
+.logo{background:linear-gradient(145deg,#f4cb5990,#ffffff22)}
+
+/* ---- الوضع الداكن: كحلي مريح بدل الأسود ---- */
+body:not(.light){
+  --bg:#102845;
+  --bg2:#173659;
+  --card:#1b3a60;
+  --line:#35587f;
+  --muted:#a9bdd3;
+  --surface-1:#1d3c63;
+  --surface-2:#163152;
+  background:linear-gradient(180deg,#102845,#173659)!important;
+}
+body:not(.light) .header{background:#12294aee}
+body:not(.light) .menu{background:#122c4d}
+body:not(.light) .ib,
+body:not(.light) .sectionBtn,
+body:not(.light) .favBtn{background:#1a3860}
+body:not(.light) .search input{background:#132f52}
+body:not(.light) .sortBtn:not(.active),
+body:not(.light) .filter:not(.active),
+body:not(.light) .studyFilter button:not(.active){background:#132f52}
+body:not(.light) .sortBtn.active,
+body:not(.light) .filter.active,
+body:not(.light) .studyFilter button.active{background:var(--gold);color:#111827;border-color:var(--gold)}
+body:not(.light) .sort{background:#0f2744}
+body:not(.light) .tag{background:#122b4a}
+body:not(.light) .modalBox{background:#1a3558}
+body:not(.light) .notificationPanel{background:#16315a}
+body:not(.light) .studyCard{background:linear-gradient(160deg,#1f406a,#173659)}
+body:not(.light) .videoLibraryCard{background:linear-gradient(135deg,rgba(28,58,96,.98),rgba(16,38,68,.98))}
+body:not(.light) .evaluationsLibraryCard{background:linear-gradient(135deg,rgba(30,62,102,.98),rgba(16,38,68,.98))}
+body:not(.light) footer{border-top-color:#2c4c75}
+
+/* ---- Tidio و Crisp: ظهور مضمون وعدم تداخل ---- */
+#tidio-chat,#tidio-chat iframe{visibility:visible!important;opacity:1!important}
+body.library-open #tidio-chat,
+body.library-open #tidio-chat iframe{pointer-events:auto!important}
+body.library-open #crisp-client,
+body.library-open #crisp-client .cc-kv6t,
+body.library-open #crisp-client .cc-kv6t > div{
+  visibility:visible!important;opacity:1!important;pointer-events:auto!important;
+}
+/* Crisp فوق Tidio في أسفل اليمين حتى لا يغطي أحدهما الآخر */
+body.library-open #crisp-client .cc-kv6t,
+body.library-open #crisp-client .cc-kv6t > div{
+  right:20px!important;left:auto!important;top:auto!important;bottom:96px!important;
+}
+@media(max-width:700px){
+  body.library-open #crisp-client .cc-kv6t,
+  body.library-open #crisp-client .cc-kv6t > div{right:14px!important;bottom:88px!important}
+}
+</style>
+
+<style id="design-polish-v3">
+/* =========================================================
+   الإصدار 3: شكل جديد للواجهة من الداخل
+   ========================================================= */
+/* ترحيب كبطاقة افتتاحية */
+.welcome{
+  position:relative;overflow:hidden;margin:0 0 22px;padding:26px 28px;border-radius:28px;
+  border:1px solid #f4cb5933;
+  background:
+    radial-gradient(circle at 12% 20%,#f4cb5920 0%,transparent 45%),
+    radial-gradient(circle at 90% 90%,#3b82f633 0%,transparent 50%),
+    linear-gradient(135deg,#1f4470,#173a63);
+  box-shadow:0 20px 50px #0003,inset 0 1px 0 #ffffff14;
+}
+.welcome::after{content:"📚";position:absolute;left:22px;bottom:-14px;font-size:96px;opacity:.1;transform:rotate(-12deg);pointer-events:none}
+.welcome h2,.welcome p,.welcome small{position:relative;z-index:1}
+.welcome h2{color:#fff}
+.welcome p{color:#cfe0f2}
+body.light .welcome{background:radial-gradient(circle at 12% 20%,#f4cb5930 0%,transparent 45%),linear-gradient(135deg,#ffffff,#eaf1fa);border-color:#e3c46a88;box-shadow:0 16px 40px #1b3a6020}
+body.light .welcome h2{color:#182235}
+body.light .welcome p{color:#52657c}
+
+/* عناوين الأقسام بعلامة ذهبية */
+.sectionHead > div,.booksTitle > div{position:relative;padding-inline-start:16px}
+.sectionHead > div::before,.booksTitle > div::before{
+  content:"";position:absolute;inset-inline-start:0;top:6px;bottom:6px;width:5px;border-radius:5px;
+  background:linear-gradient(180deg,#f8dc73,#d19a2c);
+}
+
+/* بطاقات الكتب: شريط ذهبي علوي وأيقونة بارزة */
+.book{position:relative;overflow:hidden}
+.book::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:4px;
+  background:linear-gradient(90deg,transparent,#f4cb59,transparent);
+  opacity:.0;transition:opacity .35s;
+}
+.book:hover::before{opacity:1}
+.bookIcon{background:linear-gradient(145deg,#f4cb5930,#f4cb5910);box-shadow:inset 0 0 0 1px #f4cb5930}
+.mini{position:relative}
+.mini .miniIcon{background:linear-gradient(145deg,#f4cb5930,#f4cb5910)}
+
+/* الإحصائيات: بطاقات بشريط جانبي */
+.stat{position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;inset-block:12px;inset-inline-start:0;width:4px;border-radius:0 4px 4px 0;background:linear-gradient(180deg,#f8dc73,#d19a2c)}
+
+/* شريط الأخبار */
+.news{background:linear-gradient(90deg,#f2c84f,#f8dc73,#f2c84f);box-shadow:0 6px 18px #0002}
+
+/* الفوتر */
+footer{position:relative;background:linear-gradient(180deg,transparent,#0d223d55)}
+footer::before{content:"";position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:140px;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,#f4cb59,transparent)}
+
+@media(max-width:700px){
+  .welcome{padding:20px 18px;border-radius:22px}
+  .welcome::after{font-size:70px}
+}
+</style>
