@@ -6,6 +6,7 @@ import { TeacherDashboard } from './components/TeacherDashboard';
 import { EvaluationsView } from './components/EvaluationsView';
 import { ExamRunner } from './components/ExamRunner';
 import { QuranSection } from './components/QuranSection';
+import { VideoSection } from './components/VideoSection';
 import { AuthModal } from './components/AuthModal';
 import { SupportModal, SupportTicket } from './components/SupportModal';
 import {
@@ -14,11 +15,14 @@ import {
   ExamItem,
   AnnouncementItem,
   StudentUser,
+  VideoItem,
+  StudentNote,
   CATEGORIES,
   DEFAULT_BOOKS,
   DEFAULT_EVALUATIONS,
   DEFAULT_EXAM,
-  DEFAULT_ANNOUNCEMENTS
+  DEFAULT_ANNOUNCEMENTS,
+  DEFAULT_VIDEOS
 } from './data/initialData';
 import { db, testConnection } from './firebase';
 import {
@@ -36,7 +40,9 @@ import {
   Filter,
   Heart,
   Bell,
-  Headphones
+  Headphones,
+  Video,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function App() {
@@ -60,15 +66,37 @@ export default function App() {
 
   const isDark = theme === 'dark';
 
-  const [currentTab, setCurrentTab] = useState<'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher'>('books');
+  const [currentTab, setCurrentTab] = useState<
+    'books' | 'videos' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher'
+  >('books');
 
-  // Data states initialized with books
+  // Books State
   const [books, setBooks] = useState<BookItem[]>(() => {
     try {
       const saved = localStorage.getItem('bac_books_cache');
       return saved ? JSON.parse(saved) : DEFAULT_BOOKS;
     } catch {
       return DEFAULT_BOOKS;
+    }
+  });
+
+  // Videos State
+  const [videos, setVideos] = useState<VideoItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('bac_videos_cache');
+      return saved ? JSON.parse(saved) : DEFAULT_VIDEOS;
+    } catch {
+      return DEFAULT_VIDEOS;
+    }
+  });
+
+  // Student Notes State (Saved in Firestore & local)
+  const [studentNotes, setStudentNotes] = useState<StudentNote[]>(() => {
+    try {
+      const saved = localStorage.getItem('bac_student_notes');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
     }
   });
 
@@ -109,7 +137,30 @@ export default function App() {
     }
   });
 
+  // Teacher Authentication State
+  const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('teacher_session_auth') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [teacherProfile, setTeacherProfile] = useState<{
+    name: string;
+    email: string;
+    photoURL?: string;
+  } | null>(() => {
+    try {
+      const saved = localStorage.getItem('teacher_profile');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | 'teacher'>('login');
   const [showSupportModal, setShowSupportModal] = useState(false);
 
   // Search & Filters
@@ -151,7 +202,6 @@ export default function App() {
             } catch {}
           }
         } else {
-          // Automatic Background Seeding once if Firestore collection is empty!
           try {
             for (const b of DEFAULT_BOOKS) {
               await setDoc(doc(db, 'books', b.id), {
@@ -172,7 +222,67 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // 2. Listen & Auto-Sync Evaluations
+  // 2. Listen & Auto-Sync Videos in Firestore
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, 'videos'),
+      async (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedVideos: VideoItem[] = [];
+          snapshot.forEach((docSnap) => {
+            fetchedVideos.push(docSnap.data() as VideoItem);
+          });
+          if (fetchedVideos.length > 0) {
+            setVideos(fetchedVideos);
+            try {
+              localStorage.setItem('bac_videos_cache', JSON.stringify(fetchedVideos));
+            } catch {}
+          }
+        } else {
+          try {
+            for (const v of DEFAULT_VIDEOS) {
+              await setDoc(doc(db, 'videos', v.id), {
+                ...v,
+                createdBy: 'auto-sync',
+                createdAt: new Date().toISOString()
+              });
+            }
+          } catch (e) {
+            console.warn('Auto-seed videos warning:', e);
+          }
+        }
+      },
+      (error) => {
+        console.warn('Firestore videos fallback:', error.message);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // 3. Listen & Auto-Sync Student Notes in Firestore
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, 'student_notes'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedNotes: StudentNote[] = [];
+          snapshot.forEach((docSnap) => {
+            fetchedNotes.push(docSnap.data() as StudentNote);
+          });
+          setStudentNotes(fetchedNotes);
+          try {
+            localStorage.setItem('bac_student_notes', JSON.stringify(fetchedNotes));
+          } catch {}
+        }
+      },
+      (error) => {
+        console.warn('Firestore student_notes fallback:', error.message);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // 4. Listen & Auto-Sync Evaluations
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, 'evaluations'),
@@ -206,7 +316,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // 3. Listen & Auto-Sync Exams
+  // 5. Listen & Auto-Sync Exams
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, 'exams'),
@@ -257,7 +367,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // 4. Listen & Auto-Sync Announcements
+  // 6. Listen & Auto-Sync Announcements
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, 'announcements'),
@@ -291,7 +401,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // 5. Listen to Registered Students (users collection) in Real-Time
+  // 7. Listen to Registered Students (users collection) in Real-Time
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, 'users'),
@@ -337,7 +447,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // 6. Listen to Support Tickets in Real-Time
+  // 8. Listen to Support Tickets in Real-Time
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, 'support_tickets'),
@@ -363,7 +473,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // Book Delete Handler (Updates Firestore and State automatically)
+  // Book Delete Handler
   const handleDeleteBook = async (id: string) => {
     try {
       await deleteDoc(doc(db, 'books', id));
@@ -379,7 +489,7 @@ export default function App() {
     });
   };
 
-  // Book Save / Edit Handler (Updates Firestore and State automatically)
+  // Book Save / Edit Handler
   const handleSaveBook = async (book: BookItem) => {
     try {
       await setDoc(doc(db, 'books', book.id), book);
@@ -393,6 +503,56 @@ export default function App() {
         : [book, ...prev];
       try {
         localStorage.setItem('bac_books_cache', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Video Save / Edit Handler
+  const handleSaveVideo = async (video: VideoItem) => {
+    try {
+      await setDoc(doc(db, 'videos', video.id), video);
+    } catch (err) {
+      console.warn('Firestore video save warning:', err);
+    }
+    setVideos((prev) => {
+      const exists = prev.some((v) => v.id === video.id);
+      const updated = exists ? prev.map((v) => (v.id === video.id ? video : v)) : [video, ...prev];
+      try {
+        localStorage.setItem('bac_videos_cache', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Video Delete Handler
+  const handleDeleteVideo = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'videos', id));
+    } catch (err) {
+      console.warn('Firestore video delete warning:', err);
+    }
+    setVideos((prev) => {
+      const updated = prev.filter((v) => v.id !== id);
+      try {
+        localStorage.setItem('bac_videos_cache', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Student Note Save Handler (Directly to Firestore and state!)
+  const handleSaveNote = async (note: StudentNote) => {
+    try {
+      await setDoc(doc(db, 'student_notes', note.id), note);
+    } catch (err) {
+      console.warn('Firestore note save warning:', err);
+    }
+    setStudentNotes((prev) => {
+      const exists = prev.some((n) => n.id === note.id);
+      const updated = exists ? prev.map((n) => (n.id === note.id ? note : n)) : [note, ...prev];
+      try {
+        localStorage.setItem('bac_student_notes', JSON.stringify(updated));
       } catch {}
       return updated;
     });
@@ -505,6 +665,25 @@ export default function App() {
     setStudentUser(null);
   };
 
+  // Teacher Success & Logout
+  const handleTeacherSuccess = (profile: { name: string; email: string; photoURL?: string }) => {
+    setTeacherProfile(profile);
+    setIsTeacherAuthenticated(true);
+    setCurrentTab('teacher');
+  };
+
+  const handleTeacherLogout = () => {
+    try {
+      localStorage.removeItem('teacher_session_auth');
+      localStorage.removeItem('teacher_profile');
+    } catch {}
+    setIsTeacherAuthenticated(false);
+    setTeacherProfile(null);
+    if (currentTab === 'teacher') {
+      setCurrentTab('books');
+    }
+  };
+
   // Filter books
   const filteredBooks = books.filter((b) => {
     const matchesCategory = selectedCategory === 'all' || b.category === selectedCategory;
@@ -525,11 +704,16 @@ export default function App() {
       dir="rtl"
     >
       {/* Top Banner: برعاية وتطوير محمد رمضان الحرباوي */}
-      <div className="bg-gradient-to-r from-amber-600 via-indigo-600 to-indigo-800 text-white text-xs sm:text-sm font-bold py-2.5 px-4 text-center flex items-center justify-center gap-2 shadow-lg relative z-50">
+      <div className="bg-gradient-to-r from-amber-600 via-amber-700 to-indigo-900 text-white py-3 px-4 text-center flex items-center justify-center gap-2 sm:gap-3 shadow-xl border-b border-amber-400/40 relative z-50">
         <Sparkles className="w-4 h-4 text-amber-300 animate-pulse shrink-0" />
-        <span className="tracking-wide">برعاية وتطوير: محمد رمضان الحرباوي</span>
-        <span className="hidden sm:inline text-indigo-200">•</span>
-        <span className="hidden sm:inline text-amber-200 text-xs">المكتبة التعليمية الشاملة • تانية بكالوريا والثانوية العامة</span>
+        <span className="font-black text-sm sm:text-base tracking-wide text-amber-100">
+          👑 برعاية وتطوير: محمد رمضان الحرباوي 👑
+        </span>
+        <span className="hidden md:inline text-amber-300/80">•</span>
+        <span className="hidden md:inline text-xs sm:text-sm text-indigo-100 font-bold">
+          المكتبة التعليمية الشاملة • تانية بكالوريا والثانوية العامة
+        </span>
+        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0" />
       </div>
 
       {/* Header Navigation with Day / Night Theme Toggle */}
@@ -537,12 +721,22 @@ export default function App() {
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         studentUser={studentUser}
-        onLoginClick={() => setShowAuthModal(true)}
+        onLoginClick={() => {
+          setAuthModalMode('login');
+          setShowAuthModal(true);
+        }}
         onLogoutClick={handleStudentLogout}
         onSupportClick={() => setShowSupportModal(true)}
         favoritesCount={favorites.length}
         theme={theme}
         onToggleTheme={toggleTheme}
+        isTeacherAuthenticated={isTeacherAuthenticated}
+        teacherProfile={teacherProfile}
+        onTeacherLogout={handleTeacherLogout}
+        onTeacherLoginClick={() => {
+          setAuthModalMode('teacher');
+          setShowAuthModal(true);
+        }}
       />
 
       {/* Main Content */}
@@ -686,22 +880,37 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 2: Evaluations */}
+        {/* VIEW 2: Videos & Lectures (NEW FEATURE) */}
+        {currentTab === 'videos' && (
+          <VideoSection
+            videos={videos}
+            theme={theme}
+            studentUser={studentUser}
+            onSaveNote={handleSaveNote}
+            savedNotes={studentNotes}
+            onOpenAuthModal={() => {
+              setAuthModalMode('login');
+              setShowAuthModal(true);
+            }}
+          />
+        )}
+
+        {/* VIEW 3: Evaluations */}
         {currentTab === 'evaluations' && (
           <EvaluationsView evaluations={evaluations} theme={theme} />
         )}
 
-        {/* VIEW 3: Interactive Exams */}
+        {/* VIEW 4: Interactive Exams */}
         {currentTab === 'exams' && (
           <ExamRunner exams={exams} theme={theme} />
         )}
 
-        {/* VIEW 4: Quran */}
+        {/* VIEW 5: Quran */}
         {currentTab === 'quran' && (
           <QuranSection theme={theme} />
         )}
 
-        {/* VIEW 5: Favorites */}
+        {/* VIEW 6: Favorites */}
         {currentTab === 'favorites' && (
           <div className="space-y-6">
             <div
@@ -748,7 +957,7 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 6: Teacher Dashboard with full automatic synchronization */}
+        {/* VIEW 7: Teacher Dashboard with full automatic synchronization */}
         {currentTab === 'teacher' && (
           <TeacherDashboard
             books={books}
@@ -757,6 +966,7 @@ export default function App() {
             announcements={announcements}
             supportTickets={supportTickets}
             students={students}
+            videos={videos}
             onRefresh={() => {}}
             onDeleteBook={handleDeleteBook}
             onSaveBook={handleSaveBook}
@@ -765,6 +975,8 @@ export default function App() {
             onDeleteStudent={handleDeleteStudent}
             onDeleteTicket={handleDeleteTicket}
             onToggleTicketStatus={handleToggleTicketStatus}
+            onSaveVideo={handleSaveVideo}
+            onDeleteVideo={handleDeleteVideo}
             userId="teacher-admin"
             theme={theme}
           />
@@ -791,11 +1003,13 @@ export default function App() {
       {/* Embedded Book Reader Modal */}
       <BookReaderModal book={activeReadingBook} onClose={() => setActiveReadingBook(null)} />
 
-      {/* Student Phone/Password Auth Modal */}
+      {/* Student & Teacher Auth Modal */}
       <AuthModal
         isOpen={showAuthModal}
+        initialMode={authModalMode}
         onClose={() => setShowAuthModal(false)}
         onSuccess={(student) => setStudentUser(student)}
+        onTeacherSuccess={handleTeacherSuccess}
       />
 
       {/* Technical Support Modal */}
@@ -806,7 +1020,7 @@ export default function App() {
         onTicketSubmitted={handleTicketSubmitted}
       />
 
-      {/* Footer (Removed protected password note as requested) */}
+      {/* Footer */}
       <footer
         className={`border-t py-8 text-center text-xs transition-colors mt-12 ${
           isDark ? 'border-slate-800 bg-slate-950 text-slate-400' : 'border-slate-200 bg-white text-slate-600'
@@ -828,12 +1042,25 @@ export default function App() {
               <span>إرسال رسالة للدعم الفني</span>
             </button>
             <span>•</span>
-            <button
-              onClick={() => setCurrentTab('teacher')}
-              className="text-amber-500 hover:underline flex items-center gap-1 cursor-pointer"
-            >
-              <span>دخول لوحة تحكم المعلم</span>
-            </button>
+            {isTeacherAuthenticated ? (
+              <button
+                onClick={() => setCurrentTab('teacher')}
+                className="text-amber-500 hover:underline flex items-center gap-1 font-bold cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>لوحة تحكم المعلم المشرف 👑</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setAuthModalMode('teacher');
+                  setShowAuthModal(true);
+                }}
+                className="text-slate-400 hover:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>دخول المعلم</span>
+              </button>
+            )}
           </div>
         </div>
       </footer>

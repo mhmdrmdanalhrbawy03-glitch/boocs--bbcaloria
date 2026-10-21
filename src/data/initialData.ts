@@ -60,6 +60,40 @@ export interface StudentUser {
   createdAt: string;
 }
 
+export interface VideoAttachment {
+  id: string;
+  title: string;
+  url: string;
+  type?: 'pdf' | 'doc' | 'link';
+}
+
+export interface VideoItem {
+  id: string;
+  title: string;
+  category: string;
+  grade: string;
+  description: string;
+  videoUrl: string;
+  thumbnail?: string;
+  duration?: string;
+  attachments?: VideoAttachment[];
+  teacherNotes?: string;
+  createdAt?: string;
+  createdBy?: string;
+}
+
+export interface StudentNote {
+  id: string;
+  studentPhone: string;
+  studentName: string;
+  title: string;
+  content: string;
+  relatedItemId?: string;
+  relatedItemTitle?: string;
+  updatedAt: string;
+}
+
+
 export const CATEGORIES = [
   { id: 'all', name: 'الكل', icon: '📚' },
   { id: 'لغة عربية', name: 'لغة عربية', icon: '📖' },
@@ -789,3 +823,87 @@ export const DEFAULT_ANNOUNCEMENTS: AnnouncementItem[] = [
     date: 'أمس'
   }
 ];
+
+export const DEFAULT_VIDEOS: VideoItem[] = [
+  {
+    id: 'vid-1',
+    title: 'كورس تأسيس الرياضيات للثانوية العامة وتانية بكالوريا',
+    category: 'رياضيات',
+    grade: 'الصف الثاني / الثالث الثانوي',
+    description: 'شرح تأسيسي شامل لأهم قواعد الرياضيات والجبر وحل المعادلات والمتطابقات مع أمثلة تطبيقية.',
+    videoUrl: 'https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing',
+    duration: '45 دقيقة',
+    attachments: [
+      {
+        id: 'att-1',
+        title: 'مذكرة تأسيس رياضيات (PDF)',
+        url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
+        type: 'pdf'
+      }
+    ],
+    teacherNotes: 'يرجى حل التمارين الموجودة في آخر المذكرة قبل بدء المحاضرة القادمة.',
+    createdAt: '2026-09-01T10:00:00Z',
+    createdBy: 'محمد رمضان الحرباوي'
+  },
+  {
+    id: 'vid-2',
+    title: 'الحصة التمهيدية في كورس البرمجة والذكاء الاصطناعي',
+    category: 'برمجة',
+    grade: 'الصف الثاني / الثالث الثانوي',
+    description: 'الحصة التمهيدية من إعداد وتجهيز محمد رمضان الحرباوي للتعريف بأساسيات البرمجة والتفكير المنطقي.',
+    videoUrl: 'https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing',
+    duration: '35 دقيقة',
+    attachments: [
+      {
+        id: 'att-2',
+        title: 'ملف الجزء الأول من كورس البرمجة (PDF)',
+        url: 'https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing',
+        type: 'pdf'
+      }
+    ],
+    teacherNotes: 'حصة تأسيسية ضرورية لفهم منطق البرمجة وكتابة الأكواد الأولى.',
+    createdAt: '2026-09-05T10:00:00Z',
+    createdBy: 'محمد رمضان الحرباوي'
+  },
+  {
+    id: 'vid-3',
+    title: 'محاضرة تأسيس وإتقان قواعد النحو والإعراب الشامل',
+    category: 'لغة عربية',
+    grade: 'الصف الثاني / الثالث الثانوي',
+    description: 'شرح مفصل وممتع لقواعد النحو، إعراب الجمل، المبتدأ والخبر، كان وأخواتها وإن وأخواتها.',
+    videoUrl: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',
+    duration: '50 دقيقة',
+    attachments: [
+      {
+        id: 'att-3',
+        title: 'كتاب النحو الدراسي المعتمد (PDF)',
+        url: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',
+        type: 'pdf'
+      }
+    ],
+    teacherNotes: 'ركز جيداً على التفرقة بين الحال والتمييز الموضحة في التطبيقات العملية.',
+    createdAt: '2026-09-10T10:00:00Z',
+    createdBy: 'محمد رمضان الحرباوي'
+  },
+  {
+    id: 'vid-4',
+    title: 'شرح الدرس الأول تاريخ - بناء الدولة الحديثة ومصر في عهد محمد علي',
+    category: 'تاريخ',
+    grade: 'الصف الثاني / الثالث الثانوي',
+    description: 'شرح الدرس الأول في مادة التاريخ الوطني: بناء الدولة المصرية الحديثة وتحليل نواتج التعلم.',
+    videoUrl: 'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link',
+    duration: '40 دقيقة',
+    attachments: [
+      {
+        id: 'att-4',
+        title: 'ملخص الدرس الأول للتاريخ (PDF)',
+        url: 'https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing',
+        type: 'pdf'
+      }
+    ],
+    teacherNotes: 'احرص على مراجعة الخرائط التاريخية المرفقة في الملخص.',
+    createdAt: '2026-09-15T10:00:00Z',
+    createdBy: 'محمد رمضان الحرباوي'
+  }
+];
+

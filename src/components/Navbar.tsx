@@ -12,12 +12,14 @@ import {
   Sparkles,
   Headphones,
   Sun,
-  Moon
+  Moon,
+  Video,
+  ShieldCheck
 } from 'lucide-react';
 
 interface NavbarProps {
-  currentTab: 'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher';
-  setCurrentTab: (tab: 'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher') => void;
+  currentTab: 'books' | 'videos' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher';
+  setCurrentTab: (tab: 'books' | 'videos' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher') => void;
   studentUser: { name: string; phone: string; grade: string } | null;
   onLoginClick: () => void;
   onLogoutClick: () => void;
@@ -25,6 +27,10 @@ interface NavbarProps {
   favoritesCount: number;
   theme?: 'dark' | 'light';
   onToggleTheme?: () => void;
+  isTeacherAuthenticated?: boolean;
+  teacherProfile?: { name: string; email: string; photoURL?: string } | null;
+  onTeacherLogout?: () => void;
+  onTeacherLoginClick?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -36,7 +42,11 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSupportClick,
   favoritesCount,
   theme = 'dark',
-  onToggleTheme
+  onToggleTheme,
+  isTeacherAuthenticated = false,
+  teacherProfile,
+  onTeacherLogout,
+  onTeacherLoginClick
 }) => {
   const isDark = theme === 'dark';
 
@@ -72,7 +82,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </span>
               </div>
               <p className={`text-xs hidden sm:block ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                كتب الوزارة • التقييمات الأسبوعية • بنك الاختبارات
+                كتب الوزارة • الفيديوهات والشروحات • التقييمات • الامتحانات
               </p>
             </div>
           </button>
@@ -91,6 +101,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <BookOpen className="w-4 h-4" />
               <span>المكتبة والكتب</span>
+            </button>
+
+            {/* NEW: Videos & Lectures Tab */}
+            <button
+              onClick={() => setCurrentTab('videos')}
+              className={`px-3.5 py-2 rounded-xl flex items-center gap-2 transition-colors cursor-pointer ${
+                currentTab === 'videos'
+                  ? 'bg-indigo-600/20 text-indigo-500 border border-indigo-500/30 font-semibold'
+                  : isDark
+                  ? 'text-slate-300 hover:text-white hover:bg-slate-800/60'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+              }`}
+            >
+              <Video className="w-4 h-4 text-purple-400" />
+              <span>الفيديوهات والشروحات</span>
             </button>
 
             <button
@@ -170,7 +195,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </nav>
 
-          {/* User, Theme Toggle & Teacher Dashboard CTA */}
+          {/* User, Theme Toggle & Teacher Dashboard (ONLY FOR AUTHENTICATED TEACHER) */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Theme Toggle (Day / Night) */}
             {onToggleTheme && (
@@ -187,21 +212,50 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             )}
 
-            {/* Teacher Dashboard Button */}
-            <button
-              onClick={() => setCurrentTab('teacher')}
-              className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer ${
-                currentTab === 'teacher'
-                  ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25 ring-2 ring-amber-400'
-                  : isDark
-                  ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                  : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300'
-              }`}
-            >
-              <Settings className="w-4 h-4 text-amber-500" />
-              <span className="hidden sm:inline">لوحة تحكم المعلم</span>
-              <span className="sm:hidden">المعلم</span>
-            </button>
+            {/* TEACHER DASHBOARD BUTTON */}
+            {isTeacherAuthenticated ? (
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => setCurrentTab('teacher')}
+                  className={`px-3.5 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer ${
+                    currentTab === 'teacher'
+                      ? 'bg-amber-500 text-slate-950 shadow-lg shadow-amber-500/25 ring-2 ring-amber-400'
+                      : isDark
+                      ? 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 shadow-sm'
+                      : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300'
+                  }`}
+                  title="لوحة تحكم المعلم المشرف"
+                >
+                  <ShieldCheck className="w-4 h-4 text-amber-500 shrink-0" />
+                  <span className="hidden sm:inline">لوحة المعلم (محمد رمضان) 👑</span>
+                  <span className="sm:hidden">المعلم 👑</span>
+                </button>
+
+                {onTeacherLogout && (
+                  <button
+                    onClick={onTeacherLogout}
+                    className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                    title="تسجيل خروج المعلم"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={onTeacherLoginClick || (() => setCurrentTab('teacher'))}
+                className={`px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                  isDark
+                    ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                    : 'bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300'
+                }`}
+                title="بوابة دخول المعلم المشرف (محمد رمضان الحرباوي)"
+              >
+                <ShieldCheck className="w-4 h-4 text-amber-500 shrink-0" />
+                <span className="hidden sm:inline">دخول المعلم (محمد رمضان) 👑</span>
+                <span className="sm:hidden">المعلم 👑</span>
+              </button>
+            )}
 
             {/* Student Account Badge or Login */}
             {studentUser ? (
@@ -246,7 +300,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xs sm:text-sm font-semibold flex items-center gap-2 transition-colors shadow-md shadow-indigo-600/30 cursor-pointer"
               >
                 <LogIn className="w-4 h-4" />
-                <span>دخول طالب</span>
+                <span>دخول</span>
               </button>
             )}
           </div>
@@ -271,6 +325,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             <BookOpen className="w-3.5 h-3.5" />
             <span>الكتب</span>
           </button>
+
+          <button
+            onClick={() => setCurrentTab('videos')}
+            className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5 ${
+              currentTab === 'videos'
+                ? 'bg-indigo-600 text-white font-bold'
+                : isDark
+                ? 'text-slate-400'
+                : 'text-slate-600'
+            }`}
+          >
+            <Video className="w-3.5 h-3.5" />
+            <span>الفيديوهات</span>
+          </button>
+
           <button
             onClick={() => setCurrentTab('evaluations')}
             className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5 ${
@@ -284,6 +353,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <FileCheck2 className="w-3.5 h-3.5" />
             <span>التقييمات</span>
           </button>
+
           <button
             onClick={() => setCurrentTab('exams')}
             className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5 ${
@@ -295,8 +365,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             }`}
           >
             <HelpCircle className="w-3.5 h-3.5" />
-            <span>الاختبارات</span>
+            <span>الامتحانات</span>
           </button>
+
           <button
             onClick={() => setCurrentTab('favorites')}
             className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5 ${
@@ -310,6 +381,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Heart className="w-3.5 h-3.5 text-rose-500" />
             <span>المفضلة</span>
           </button>
+
           <button
             onClick={() => setCurrentTab('quran')}
             className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5 ${
@@ -323,6 +395,23 @@ export const Navbar: React.FC<NavbarProps> = ({
             <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
             <span>القرآن</span>
           </button>
+
+          <button
+            onClick={
+              isTeacherAuthenticated
+                ? () => setCurrentTab('teacher')
+                : (onTeacherLoginClick || (() => setCurrentTab('teacher')))
+            }
+            className={`px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1.5 ${
+              currentTab === 'teacher'
+                ? 'bg-amber-500 text-slate-950 font-bold'
+                : 'text-amber-500 font-semibold'
+            }`}
+          >
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>{isTeacherAuthenticated ? 'لوحة المعلم 👑' : 'دخول المعلم 👑'}</span>
+          </button>
+
           {onSupportClick && (
             <button
               onClick={onSupportClick}

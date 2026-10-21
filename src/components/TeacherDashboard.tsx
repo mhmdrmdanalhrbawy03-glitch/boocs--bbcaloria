@@ -26,7 +26,10 @@ import {
   Users,
   GraduationCap,
   Clock,
-  UserCheck
+  UserCheck,
+  Video,
+  Paperclip,
+  FileText
 } from 'lucide-react';
 import {
   BookItem,
@@ -35,6 +38,8 @@ import {
   ExamQuestion,
   AnnouncementItem,
   StudentUser,
+  VideoItem,
+  VideoAttachment,
   CATEGORIES,
   DEFAULT_EXAM
 } from '../data/initialData';
@@ -50,6 +55,7 @@ interface TeacherDashboardProps {
   announcements: AnnouncementItem[];
   supportTickets: SupportTicket[];
   students: StudentUser[];
+  videos?: VideoItem[];
   onRefresh: () => void;
   onDeleteBook: (id: string) => Promise<void>;
   onSaveBook: (book: BookItem) => Promise<void>;
@@ -58,6 +64,8 @@ interface TeacherDashboardProps {
   onSaveExam?: (exam: ExamItem) => Promise<void>;
   onDeleteExam?: (id: string) => Promise<void>;
   onDeleteStudent?: (phone: string) => Promise<void>;
+  onSaveVideo?: (video: VideoItem) => Promise<void>;
+  onDeleteVideo?: (id: string) => Promise<void>;
   userId?: string;
   theme?: 'dark' | 'light';
 }
@@ -69,6 +77,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   announcements,
   supportTickets = [],
   students = [],
+  videos = [],
   onRefresh,
   onDeleteBook,
   onSaveBook,
@@ -77,6 +86,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   onSaveExam,
   onDeleteExam,
   onDeleteStudent,
+  onSaveVideo,
+  onDeleteVideo,
   userId = 'teacher-admin',
   theme = 'dark'
 }) => {
@@ -109,7 +120,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
   // Active SubTab
   const [activeSubTab, setActiveSubTab] = useState<
-    'books' | 'evaluations' | 'exams' | 'students' | 'announcements' | 'support'
+    'books' | 'videos' | 'evaluations' | 'exams' | 'students' | 'announcements' | 'support'
   >('books');
 
   // Notification Toast
@@ -125,11 +136,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   // Search States
   const [dashboardBookSearch, setDashboardBookSearch] = useState('');
   const [studentSearch, setStudentSearch] = useState('');
+  const [videoSearch, setVideoSearch] = useState('');
 
   // Delete Confirmation Modals
   const [deleteConfirmBook, setDeleteConfirmBook] = useState<BookItem | null>(null);
   const [deleteConfirmExam, setDeleteConfirmExam] = useState<ExamItem | null>(null);
   const [deleteConfirmStudent, setDeleteConfirmStudent] = useState<StudentUser | null>(null);
+  const [deleteConfirmVideo, setDeleteConfirmVideo] = useState<VideoItem | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
   // Selected Exam for editing
@@ -141,6 +154,19 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [showAnnounceModal, setShowAnnounceModal] = useState(false);
   const [showExamCreateModal, setShowExamCreateModal] = useState(false);
   const [showQuestionModal, setShowQuestionModal] = useState(false);
+  const [showVideoModal, setShowVideoModal] = useState(false);
+
+  // Video form state
+  const [editingVideoId, setEditingVideoId] = useState<string | null>(null);
+  const [videoTitle, setVideoTitle] = useState('');
+  const [videoCat, setVideoCat] = useState('رياضيات');
+  const [videoGrade, setVideoGrade] = useState('الصف الثاني / الثالث الثانوي');
+  const [videoDesc, setVideoDesc] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoDuration, setVideoDuration] = useState('45 دقيقة');
+  const [videoNotes, setVideoNotes] = useState('');
+  const [videoAttachments, setVideoAttachments] = useState<VideoAttachment[]>([]);
+  const [isSavingVideo, setIsSavingVideo] = useState(false);
 
   // Book form state
   const [bookTitle, setBookTitle] = useState('');
@@ -313,6 +339,110 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
       setIsDeleting(false);
     }
   };
+
+  // Reset Video Form
+  const resetVideoForm = () => {
+    setVideoTitle('');
+    setVideoCat('رياضيات');
+    setVideoGrade('الصف الثاني / الثالث الثانوي');
+    setVideoDesc('');
+    setVideoUrl('');
+    setVideoDuration('45 دقيقة');
+    setVideoNotes('');
+    setVideoAttachments([]);
+    setEditingVideoId(null);
+  };
+
+  // Edit Video
+  const handleEditVideo = (v: VideoItem) => {
+    setEditingVideoId(v.id);
+    setVideoTitle(v.title);
+    setVideoCat(v.category);
+    setVideoGrade(v.grade);
+    setVideoDesc(v.description);
+    setVideoUrl(v.videoUrl);
+    setVideoDuration(v.duration || '45 دقيقة');
+    setVideoNotes(v.teacherNotes || '');
+    setVideoAttachments(v.attachments ? [...v.attachments] : []);
+    setShowVideoModal(true);
+  };
+
+  // Save / Update Video
+  const handleSaveVideoSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!videoTitle.trim() || !videoUrl.trim()) return;
+
+    setIsSavingVideo(true);
+    const id = editingVideoId || `vid-${Date.now()}`;
+    const newVid: VideoItem = {
+      id,
+      title: videoTitle.trim(),
+      category: videoCat,
+      grade: videoGrade,
+      description: videoDesc.trim(),
+      videoUrl: videoUrl.trim(),
+      duration: videoDuration.trim() || '45 دقيقة',
+      teacherNotes: videoNotes.trim(),
+      attachments: videoAttachments.filter((a) => a.title.trim() && a.url.trim()),
+      createdBy: teacherProfile?.email || 'ramadanh66778@gmail.com',
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      if (onSaveVideo) {
+        await onSaveVideo(newVid);
+      } else {
+        await setDoc(doc(db, 'videos', id), newVid);
+      }
+      setShowVideoModal(false);
+      resetVideoForm();
+      showToast(editingVideoId ? 'تم تحديث المحاضرة بنجاح!' : 'تمت إضافة المحاضرة الجديدة بنجاح!');
+      onRefresh();
+    } catch (err: any) {
+      showToast('خطأ في حفظ الفيديو: ' + err.message, 'error');
+    } finally {
+      setIsSavingVideo(false);
+    }
+  };
+
+  // Confirm Delete Video
+  const handleConfirmDeleteVideo = async () => {
+    if (!deleteConfirmVideo) return;
+    setIsDeleting(true);
+    try {
+      if (onDeleteVideo) {
+        await onDeleteVideo(deleteConfirmVideo.id);
+      } else {
+        await deleteDoc(doc(db, 'videos', deleteConfirmVideo.id));
+      }
+      showToast(`تم حذف فيديو "${deleteConfirmVideo.title}" بنجاح.`);
+      setDeleteConfirmVideo(null);
+      onRefresh();
+    } catch (err: any) {
+      showToast('خطأ أثناء الحذف: ' + err.message, 'error');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Attachment Helpers for Video Modal
+  const handleAddAttachment = () => {
+    setVideoAttachments((prev) => [
+      ...prev,
+      { id: `att-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`, title: '', url: '', type: 'pdf' }
+    ]);
+  };
+
+  const handleRemoveAttachment = (id: string) => {
+    setVideoAttachments((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const handleUpdateAttachment = (id: string, field: 'title' | 'url', val: string) => {
+    setVideoAttachments((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, [field]: val } : a))
+    );
+  };
+
 
   // Save Evaluation
   const handleSaveEval = async (e: React.FormEvent) => {
@@ -610,6 +740,18 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     return s.name.toLowerCase().includes(q) || s.phone.includes(q) || s.grade.toLowerCase().includes(q);
   });
 
+  // Filtered videos
+  const displayedVideos = videos.filter((v) => {
+    if (!videoSearch.trim()) return true;
+    const q = videoSearch.toLowerCase();
+    return (
+      v.title.toLowerCase().includes(q) ||
+      v.category.toLowerCase().includes(q) ||
+      v.description.toLowerCase().includes(q)
+    );
+  });
+
+
   const activeExam = exams.find((e) => e.id === selectedExamId) || exams[0] || DEFAULT_EXAM;
   const unreadTicketsCount = supportTickets.filter((t) => t.status === 'جديدة').length;
 
@@ -863,6 +1005,21 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           </div>
         </div>
 
+        {/* Videos */}
+        <div
+          className={`border rounded-2xl p-4 sm:p-5 shadow-lg flex items-center justify-between ${
+            isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+          }`}
+        >
+          <div>
+            <span className="text-xs text-slate-500 font-medium">الفيديوهات</span>
+            <p className="text-2xl sm:text-3xl font-extrabold text-purple-500 mt-1">{videos.length}</p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-purple-500/10 text-purple-500 border border-purple-500/20 flex items-center justify-center">
+            <Video className="w-5 h-5" />
+          </div>
+        </div>
+
         {/* Support Tickets */}
         <div
           className={`border rounded-2xl p-4 sm:p-5 shadow-lg flex items-center justify-between col-span-2 lg:col-span-1 ${
@@ -902,6 +1059,18 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         >
           <BookOpen className="w-4 h-4" />
           <span>إدارة الكتب والمذكرات ({books.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('videos')}
+          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 cursor-pointer ${
+            activeSubTab === 'videos'
+              ? 'border-purple-500 text-purple-500 font-bold'
+              : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+          }`}
+        >
+          <Video className="w-4 h-4 text-purple-400" />
+          <span>إدارة الفيديوهات والشروحات ({videos.length})</span>
         </button>
 
         <button
@@ -1074,6 +1243,142 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                           onClick={() => setDeleteConfirmBook(b)}
                           className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 font-semibold text-xs flex items-center gap-1 transition-colors cursor-pointer"
                           title="حذف الكتاب"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                          <span>حذف</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* SubTab: Videos Management (NEW REQUEST) */}
+      {activeSubTab === 'videos' && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 className="font-bold text-base">
+                قائمة الفيديوهات والشروحات التعليمية ({videos.length} محاضرة)
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                إضافة شروحات جديدة، إرفاق أوراق عمل وملخصات PDF مع كل فيديو، وتعديل أو حذف المحاضرات.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={videoSearch}
+                  onChange={(e) => setVideoSearch(e.target.value)}
+                  placeholder="بحث في الفيديوهات..."
+                  className={`border rounded-xl pr-9 pl-3 py-2 text-xs focus:border-purple-500 w-48 sm:w-60 ${
+                    isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                  }`}
+                />
+                <Search className="w-3.5 h-3.5 text-slate-400 absolute right-3 top-3" />
+              </div>
+
+              <button
+                onClick={() => {
+                  resetVideoForm();
+                  setShowVideoModal(true);
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white text-xs font-semibold shadow-md transition-colors cursor-pointer shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>إضافة فيديو جديد</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            className={`rounded-2xl border overflow-hidden shadow-xl max-h-[620px] overflow-y-auto ${
+              isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200'
+            }`}
+          >
+            <table className="w-full text-right text-xs">
+              <thead
+                className={`uppercase border-b sticky top-0 z-10 backdrop-blur-sm ${
+                  isDark ? 'bg-slate-950/80 border-slate-800 text-slate-400' : 'bg-slate-100 border-slate-200 text-slate-600'
+                }`}
+              >
+                <tr>
+                  <th className="p-3.5 sm:p-4">المحاضرة / العنوان</th>
+                  <th className="p-3.5 sm:p-4">المادة</th>
+                  <th className="p-3.5 sm:p-4">الصف والمدة</th>
+                  <th className="p-3.5 sm:p-4">الملفات المرفقة</th>
+                  <th className="p-3.5 sm:p-4 text-center">إجراءات التحكم</th>
+                </tr>
+              </thead>
+              <tbody className={`divide-y ${isDark ? 'divide-slate-800/60' : 'divide-slate-200'}`}>
+                {displayedVideos.map((v) => (
+                  <tr key={v.id} className={isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}>
+                    <td className="p-3.5 sm:p-4">
+                      <div className="flex items-center gap-3">
+                        <span className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center shrink-0">
+                          <Video className="w-5 h-5" />
+                        </span>
+                        <div>
+                          <p className="font-semibold text-sm">{v.title}</p>
+                          <p className="text-slate-500 text-[11px] truncate max-w-xs">{v.description}</p>
+                          {v.teacherNotes && (
+                            <p className="text-amber-500 text-[10px] mt-0.5 truncate max-w-xs">
+                              💡 توجيهات: {v.teacherNotes}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-3.5 sm:p-4">
+                      <span className="px-2.5 py-1 rounded-lg bg-purple-500/10 text-purple-400 border border-purple-500/20 font-medium">
+                        {v.category}
+                      </span>
+                    </td>
+                    <td className="p-3.5 sm:p-4">
+                      <div>
+                        <p className="font-medium text-slate-300">{v.grade}</p>
+                        {v.duration && <p className="text-[10px] text-slate-400 mt-0.5">{v.duration}</p>}
+                      </div>
+                    </td>
+                    <td className="p-3.5 sm:p-4">
+                      {v.attachments && v.attachments.length > 0 ? (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 font-bold text-[11px]">
+                          <Paperclip className="w-3 h-3" />
+                          <span>{v.attachments.length} ملفات مرفقة</span>
+                        </span>
+                      ) : (
+                        <span className="text-slate-500 text-[11px]">لا يوجد</span>
+                      )}
+                    </td>
+                    <td className="p-3.5 sm:p-4 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <a
+                          href={v.videoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-lg text-slate-400 hover:text-purple-400 transition-colors"
+                          title="مشاهدة رابط الفيديو"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </a>
+                        <button
+                          onClick={() => handleEditVideo(v)}
+                          className="px-2.5 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 border border-amber-500/30 font-semibold text-xs flex items-center gap-1 transition-colors cursor-pointer"
+                          title="تعديل الفيديو والمرفقات"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>تعديل</span>
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirmVideo(v)}
+                          className="px-2.5 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-500 border border-rose-500/30 font-semibold text-xs flex items-center gap-1 transition-colors cursor-pointer"
+                          title="حذف الفيديو"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                           <span>حذف</span>
@@ -2353,6 +2658,277 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           </div>
         </div>
       )}
+
+      {/* DELETE CONFIRMATION MODAL (Videos) */}
+      {deleteConfirmVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+          <div
+            className={`border rounded-3xl w-full max-w-md p-6 shadow-2xl relative ${
+              isDark ? 'bg-slate-900 border-rose-500/40 text-slate-100' : 'bg-white border-rose-300 text-slate-900'
+            }`}
+          >
+            <div className="w-12 h-12 rounded-2xl bg-rose-500/10 text-rose-500 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-center">تأكيد حذف الفيديو</h3>
+            <p className="text-xs text-slate-500 text-center mt-2 leading-relaxed">
+              هل أنت متأكد من رغبتك في حذف فيديو:
+              <br />
+              <strong className="text-sm mt-1 inline-block">"{deleteConfirmVideo.title}"</strong>
+              <br />
+              سيتم حذفه من المنصة وقاعدة البيانات تلقائياً.
+            </p>
+            <div className="flex items-center gap-3 mt-6">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmVideo(null)}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 rounded-xl bg-slate-500/10 hover:bg-slate-500/20 text-slate-500 text-xs font-semibold cursor-pointer"
+              >
+                إلغاء
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmDeleteVideo}
+                disabled={isDeleting}
+                className="flex-1 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+              >
+                {isDeleting ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                <span>نعم، حذف الآن</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: Video Creation / Edit Modal */}
+      {showVideoModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
+          <div
+            className={`border rounded-3xl w-full max-w-2xl p-6 sm:p-8 shadow-2xl relative my-8 max-h-[90vh] overflow-y-auto ${
+              isDark ? 'bg-slate-900 border-purple-500/40 text-slate-100' : 'bg-white border-purple-300 text-slate-900'
+            }`}
+          >
+            <div className="flex items-center justify-between border-b pb-4 mb-5">
+              <div className="flex items-center gap-2">
+                <span className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center">
+                  <Video className="w-5 h-5" />
+                </span>
+                <h3 className="font-bold text-base sm:text-lg">
+                  {editingVideoId ? 'تعديل بيانات المحاضرة والشرح' : 'إضافة فيديو ومحاضرة تعليمية جديدة'}
+                </h3>
+              </div>
+              <button
+                onClick={() => setShowVideoModal(false)}
+                className="text-slate-400 hover:text-white cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveVideoSubmit} className="space-y-4 text-xs">
+              <div>
+                <label className="block font-semibold mb-1">عنوان المحاضرة / الفيديو *</label>
+                <input
+                  type="text"
+                  required
+                  value={videoTitle}
+                  onChange={(e) => setVideoTitle(e.target.value)}
+                  placeholder="مثال: شرح الدرس الأول تاريخ - بناء الدولة الحديثة"
+                  className={`w-full border rounded-xl p-3 ${
+                    isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                  }`}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold mb-1">المادة والتصنيف</label>
+                  <select
+                    value={videoCat}
+                    onChange={(e) => setVideoCat(e.target.value)}
+                    className={`w-full border rounded-xl p-3 ${
+                      isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                    }`}
+                  >
+                    <option value="رياضيات">رياضيات</option>
+                    <option value="لغة عربية">لغة عربية</option>
+                    <option value="تاريخ">تاريخ</option>
+                    <option value="فيزياء">فيزياء</option>
+                    <option value="كيمياء">كيمياء</option>
+                    <option value="أحياء">أحياء</option>
+                    <option value="برمجة">برمجة</option>
+                    <option value="إنجليزي">إنجليزي</option>
+                    <option value="مواد شرعية">مواد شرعية</option>
+                    <option value="عام">عام وثقافة</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">الصف الدراسي</label>
+                  <select
+                    value={videoGrade}
+                    onChange={(e) => setVideoGrade(e.target.value)}
+                    className={`w-full border rounded-xl p-3 ${
+                      isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                    }`}
+                  >
+                    <option value="الصف الثاني / الثالث الثانوي">الصف الثاني / الثالث الثانوي</option>
+                    <option value="تانية بكالوريا والثانوية">تانية بكالوريا والثانوية</option>
+                    <option value="الصف الثالث الثانوي علمي">الصف الثالث الثانوي علمي</option>
+                    <option value="الصف الثالث الثانوي أدبي">الصف الثالث الثانوي أدبي</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">مدة الفيديو التقريبية</label>
+                  <input
+                    type="text"
+                    value={videoDuration}
+                    onChange={(e) => setVideoDuration(e.target.value)}
+                    placeholder="مثال: 45 دقيقة"
+                    className={`w-full border rounded-xl p-3 ${
+                      isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                    }`}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1">
+                  رابط الفيديو (YouTube، Google Drive، أو رابط مباشر MP4) *
+                </label>
+                <input
+                  type="url"
+                  required
+                  dir="ltr"
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="https://www.youtube.com/watch?v=... أو https://drive.google.com/file/d/..."
+                  className={`w-full border rounded-xl p-3 ${
+                    isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                  }`}
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1">وصف المحاضرة والموضوعات</label>
+                <textarea
+                  rows={2}
+                  value={videoDesc}
+                  onChange={(e) => setVideoDesc(e.target.value)}
+                  placeholder="اكتب نبذة عن المحاضرة والنقاط الأساسية المشروحة..."
+                  className={`w-full border rounded-xl p-3 ${
+                    isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                  }`}
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold mb-1">توجيهات وملاحظات المعلم للطلاب</label>
+                <textarea
+                  rows={2}
+                  value={videoNotes}
+                  onChange={(e) => setVideoNotes(e.target.value)}
+                  placeholder="مثال: يرجى حل التمارين المرفقة بعد المشاهدة مباشرة..."
+                  className={`w-full border rounded-xl p-3 ${
+                    isDark ? 'bg-slate-950 border-slate-700 text-slate-100' : 'bg-white border-slate-300 text-slate-900'
+                  }`}
+                />
+              </div>
+
+              {/* Attachments Section */}
+              <div className="pt-3 border-t space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="font-bold flex items-center gap-1.5 text-sm">
+                      <Paperclip className="w-4 h-4 text-cyan-400" />
+                      <span>الملفات وأوراق العمل المرفقة مع الفيديو (PDF / مذكرات)</span>
+                    </label>
+                    <p className="text-[11px] text-slate-400">
+                      يمكنك ربط ملفات PDF وأوراق عمل ليتمكن الطالب من تحميلها أثناء مشاهدة الفيديو.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleAddAttachment}
+                    className="px-3 py-1.5 rounded-xl bg-cyan-600/20 text-cyan-400 hover:bg-cyan-600/30 border border-cyan-500/30 text-xs font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>إضافة ملف مرفق</span>
+                  </button>
+                </div>
+
+                {videoAttachments.length > 0 && (
+                  <div className="space-y-2">
+                    {videoAttachments.map((att, idx) => (
+                      <div
+                        key={att.id}
+                        className={`p-3 rounded-xl border flex flex-col sm:flex-row items-center gap-2 ${
+                          isDark ? 'bg-slate-950/60 border-slate-800' : 'bg-slate-50 border-slate-200'
+                        }`}
+                      >
+                        <input
+                          type="text"
+                          required
+                          value={att.title}
+                          onChange={(e) => handleUpdateAttachment(att.id, 'title', e.target.value)}
+                          placeholder="عنوان الملف (مثال: ورقة عمل الدرس الأول PDF)"
+                          className={`flex-1 w-full border rounded-lg p-2 text-xs ${
+                            isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-300'
+                          }`}
+                        />
+                        <input
+                          type="url"
+                          required
+                          dir="ltr"
+                          value={att.url}
+                          onChange={(e) => handleUpdateAttachment(att.id, 'url', e.target.value)}
+                          placeholder="رابط الملف (Google Drive أو مباشر)"
+                          className={`flex-1 w-full border rounded-lg p-2 text-xs ${
+                            isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-300'
+                          }`}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(att.id)}
+                          className="p-2 text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 rounded-lg cursor-pointer shrink-0"
+                          title="حذف الملف المرفق"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t">
+                <button
+                  type="button"
+                  onClick={() => setShowVideoModal(false)}
+                  className="px-4 py-2.5 rounded-xl bg-slate-500/10 text-slate-500 hover:bg-slate-500/20 text-xs font-semibold cursor-pointer"
+                >
+                  إلغاء
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingVideo}
+                  className="px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 active:bg-purple-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-purple-600/25 transition-all cursor-pointer disabled:opacity-50"
+                >
+                  {isSavingVideo ? (
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4" />
+                  )}
+                  <span>{editingVideoId ? 'حفظ التعديلات' : 'إضافة المحاضرة الآن'}</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
