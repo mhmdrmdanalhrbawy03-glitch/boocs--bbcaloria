@@ -33,6 +33,11 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    // Support Tickets & Student Inquiries
+    match /support_tickets/{ticketId} {
+      allow read, write: if true;
+    }
+
     // Catch-all deny for unknown collections
     match /{document=**} {
       allow read, write: if true;

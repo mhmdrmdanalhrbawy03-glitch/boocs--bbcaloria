@@ -4,30 +4,42 @@ import { FileCheck2, Download, CheckCircle, ExternalLink, Calendar, BookOpen } f
 
 interface EvaluationsViewProps {
   evaluations: EvaluationItem[];
+  theme?: 'dark' | 'light';
 }
 
-export const EvaluationsView: React.FC<EvaluationsViewProps> = ({ evaluations }) => {
+export const EvaluationsView: React.FC<EvaluationsViewProps> = ({
+  evaluations,
+  theme = 'dark'
+}) => {
+  const isDark = theme === 'dark';
   const [selectedSubject, setSelectedSubject] = useState('الكل');
 
-  const subjects = ['الكل', ...Array.from(new Set(evaluations.map(e => e.subject)))];
+  const subjects = ['الكل', ...Array.from(new Set(evaluations.map((e) => e.subject)))];
 
-  const filtered = selectedSubject === 'الكل'
-    ? evaluations
-    : evaluations.filter(e => e.subject === selectedSubject);
+  const filtered =
+    selectedSubject === 'الكل'
+      ? evaluations
+      : evaluations.filter((e) => e.subject === selectedSubject);
 
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-emerald-950/60 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 sm:p-8 shadow-xl">
+      <div
+        className={`border rounded-2xl p-6 sm:p-8 shadow-xl ${
+          isDark
+            ? 'bg-gradient-to-br from-emerald-950/60 via-slate-900 to-slate-900 border-emerald-500/30 text-white'
+            : 'bg-gradient-to-br from-emerald-50 via-white to-slate-50 border-emerald-200 text-slate-900 shadow-sm'
+        }`}
+      >
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-semibold mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-500 text-xs font-semibold mb-3">
             <FileCheck2 className="w-3.5 h-3.5" />
             التقييمات الأسبوعية والواجبات المنزلية الرسمية
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             ملفات التقييم الأسبوعي ونماذج الإجابة
           </h2>
-          <p className="text-slate-300 text-sm mt-2 leading-relaxed">
+          <p className={`text-sm mt-2 leading-relaxed ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
             جميع أوراق الواجبات والتقييمات المدرسية الأسبوعية المقررة لمختلف المواد مع إتاحة نماذج الإجابة النموذجية المعتمدة للمراجعة الذاتية.
           </p>
         </div>
@@ -39,10 +51,12 @@ export const EvaluationsView: React.FC<EvaluationsViewProps> = ({ evaluations })
           <button
             key={sub}
             onClick={() => setSelectedSubject(sub)}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer ${
               selectedSubject === sub
                 ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/25'
-                : 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+                : isDark
+                ? 'bg-slate-900/80 text-slate-400 hover:text-white border border-slate-800'
+                : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
             }`}
           >
             {sub}
@@ -55,37 +69,35 @@ export const EvaluationsView: React.FC<EvaluationsViewProps> = ({ evaluations })
         {filtered.map((item) => (
           <div
             key={item.id}
-            className="bg-slate-900/80 hover:bg-slate-900 border border-slate-800 hover:border-emerald-500/40 rounded-2xl p-5 shadow-lg transition-all flex flex-col justify-between hover:-translate-y-1"
+            className={`border rounded-2xl p-5 shadow-lg transition-all flex flex-col justify-between hover:-translate-y-1 ${
+              isDark
+                ? 'bg-slate-900/80 hover:bg-slate-900 border-slate-800 hover:border-emerald-500/40 text-white'
+                : 'bg-white hover:bg-slate-50 border-slate-200 hover:border-emerald-400 text-slate-900 shadow-sm'
+            }`}
           >
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <span className="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 text-xs font-bold">
                   {item.subject}
                 </span>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                  <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                <span className="text-xs text-slate-500 flex items-center gap-1 font-medium">
+                  <Calendar className="w-3.5 h-3.5" />
                   {item.week}
                 </span>
               </div>
 
-              <h3 className="font-bold text-white text-base mb-2 leading-snug">
-                {item.title}
-              </h3>
-
-              <p className="text-xs text-slate-400 mb-4">
-                يشمل أسئلة التقييم الوزاري الأسبوعي واختبارات قياس الفهم والاستيعاب.
-              </p>
+              <h3 className="font-bold text-base leading-snug mb-3">{item.title}</h3>
             </div>
 
-            <div className="pt-4 border-t border-slate-800 flex items-center gap-2">
+            <div className={`pt-4 border-t mt-4 flex items-center gap-2 ${isDark ? 'border-slate-800' : 'border-slate-200'}`}>
               <a
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-md shadow-emerald-600/20"
+                className="flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/20 transition-colors"
               >
                 <Download className="w-3.5 h-3.5" />
-                <span>تحميل ورقة التقييم</span>
+                <span>ورقة التقييم</span>
               </a>
 
               {item.solutionUrl && (
@@ -93,11 +105,14 @@ export const EvaluationsView: React.FC<EvaluationsViewProps> = ({ evaluations })
                   href={item.solutionUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors"
-                  title="عرض نموذج الإجابة"
+                  className={`flex-1 py-2 px-3 rounded-xl border font-semibold text-xs flex items-center justify-center gap-1.5 transition-colors ${
+                    isDark
+                      ? 'bg-slate-800 hover:bg-slate-700 text-slate-200 border-slate-700'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
+                  }`}
                 >
-                  <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="hidden sm:inline">الحل</span>
+                  <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                  <span>نموذج الحل</span>
                 </a>
               )}
             </div>

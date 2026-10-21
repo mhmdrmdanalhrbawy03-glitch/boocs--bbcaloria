@@ -91,6 +91,21 @@
         "createdAt": { "type": "string", "description": "Timestamp" }
       },
       "required": ["id", "title", "content", "createdBy"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "description": "Student technical support and feedback messages",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Ticket ID" },
+        "name": { "type": "string", "description": "Student full name" },
+        "phone": { "type": "string", "description": "Student phone number" },
+        "message": { "type": "string", "description": "Message text or inquiry" },
+        "category": { "type": "string", "description": "Ticket category" },
+        "status": { "type": "string", "enum": ["جديدة", "تمت المراجعة"], "description": "Resolution status" },
+        "createdAt": { "type": "string", "description": "Submission timestamp" }
+      },
+      "required": ["id", "name", "phone", "message"]
     }
   },
   "firestore": {
@@ -117,6 +132,10 @@
     "/announcements/{announcementId}": {
       "schema": "Announcement",
       "description": "Teacher notices and announcements"
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": "SupportTicket",
+      "description": "Support tickets submitted by students"
     }
   }
 }

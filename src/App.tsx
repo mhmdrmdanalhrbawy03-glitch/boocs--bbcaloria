@@ -7,11 +7,13 @@ import { EvaluationsView } from './components/EvaluationsView';
 import { ExamRunner } from './components/ExamRunner';
 import { QuranSection } from './components/QuranSection';
 import { AuthModal } from './components/AuthModal';
+import { SupportModal, SupportTicket } from './components/SupportModal';
 import {
   BookItem,
   EvaluationItem,
   ExamItem,
   AnnouncementItem,
+  StudentUser,
   CATEGORIES,
   DEFAULT_BOOKS,
   DEFAULT_EVALUATIONS,
@@ -19,25 +21,84 @@ import {
   DEFAULT_ANNOUNCEMENTS
 } from './data/initialData';
 import { db, testConnection } from './firebase';
-import { collection, onSnapshot } from 'firebase/firestore';
+import {
+  collection,
+  onSnapshot,
+  doc,
+  setDoc,
+  deleteDoc,
+  updateDoc
+} from 'firebase/firestore';
 import {
   Search,
   BookOpen,
   Sparkles,
   Filter,
   Heart,
-  Bell
+  Bell,
+  Headphones
 } from 'lucide-react';
 
 export default function App() {
+  // Day / Night Theme State
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    try {
+      const saved = localStorage.getItem('bac_theme');
+      return saved === 'light' ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  const toggleTheme = () => {
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    try {
+      localStorage.setItem('bac_theme', nextTheme);
+    } catch {}
+  };
+
+  const isDark = theme === 'dark';
+
   const [currentTab, setCurrentTab] = useState<'books' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher'>('books');
-  
-  // Data states initialized with all 53 books from legacy file
-  const [books, setBooks] = useState<BookItem[]>(DEFAULT_BOOKS);
+
+  // Data states initialized with books
+  const [books, setBooks] = useState<BookItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('bac_books_cache');
+      return saved ? JSON.parse(saved) : DEFAULT_BOOKS;
+    } catch {
+      return DEFAULT_BOOKS;
+    }
+  });
+
   const [evaluations, setEvaluations] = useState<EvaluationItem[]>(DEFAULT_EVALUATIONS);
   const [exams, setExams] = useState<ExamItem[]>([DEFAULT_EXAM]);
   const [announcements, setAnnouncements] = useState<AnnouncementItem[]>(DEFAULT_ANNOUNCEMENTS);
-  
+
+  // Support Tickets State
+  const [supportTickets, setSupportTickets] = useState<SupportTicket[]>(() => {
+    try {
+      const saved = localStorage.getItem('bac_support_tickets');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Registered Students State
+  const [students, setStudents] = useState<StudentUser[]>(() => {
+    try {
+      const localUsersStr = localStorage.getItem('bac_registered_students');
+      if (localUsersStr) {
+        return Object.values(JSON.parse(localUsersStr));
+      }
+      return [];
+    } catch {
+      return [];
+    }
+  });
+
   // Student Phone/Password Auth state
   const [studentUser, setStudentUser] = useState<{ name: string; phone: string; grade: string } | null>(() => {
     try {
@@ -49,6 +110,7 @@ export default function App() {
   });
 
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showSupportModal, setShowSupportModal] = useState(false);
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -72,92 +134,359 @@ export default function App() {
     testConnection();
   }, []);
 
-  // Listen to Firestore Books
+  // 1. Listen & Auto-Sync Books in Firestore
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'books'), (snapshot) => {
-      if (!snapshot.empty) {
-        const fetchedBooks: BookItem[] = [];
-        snapshot.forEach((doc) => {
-          fetchedBooks.push(doc.data() as BookItem);
-        });
-        if (fetchedBooks.length > 0) {
-          setBooks(fetchedBooks);
-        }
-      }
-    }, (error) => {
-      console.warn('Firestore books fallback to default:', error.message);
-    });
-    return () => unsub();
-  }, []);
-
-  // Listen to Evaluations
-  useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'evaluations'), (snapshot) => {
-      if (!snapshot.empty) {
-        const fetchedEvals: EvaluationItem[] = [];
-        snapshot.forEach((doc) => {
-          fetchedEvals.push(doc.data() as EvaluationItem);
-        });
-        if (fetchedEvals.length > 0) {
-          setEvaluations(fetchedEvals);
-        }
-      }
-    }, (error) => {
-      console.warn('Firestore evaluations fallback:', error.message);
-    });
-    return () => unsub();
-  }, []);
-
-  // Listen to Exams
-  useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'exams'), (snapshot) => {
-      if (!snapshot.empty) {
-        const fetchedExams: ExamItem[] = [];
-        snapshot.forEach((doc) => {
-          const d = doc.data();
-          let parsedQuestions = DEFAULT_EXAM.questions;
-          if (typeof d.questions === 'string') {
+    const unsub = onSnapshot(
+      collection(db, 'books'),
+      async (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedBooks: BookItem[] = [];
+          snapshot.forEach((docSnap) => {
+            fetchedBooks.push(docSnap.data() as BookItem);
+          });
+          if (fetchedBooks.length > 0) {
+            setBooks(fetchedBooks);
             try {
-              parsedQuestions = JSON.parse(d.questions);
+              localStorage.setItem('bac_books_cache', JSON.stringify(fetchedBooks));
             } catch {}
-          } else if (Array.isArray(d.questions)) {
-            parsedQuestions = d.questions;
           }
-          fetchedExams.push({
-            id: d.id || doc.id,
-            title: d.title,
-            subject: d.subject,
-            timeLimit: d.timeLimit || 15,
-            questions: parsedQuestions
+        } else {
+          // Automatic Background Seeding once if Firestore collection is empty!
+          try {
+            for (const b of DEFAULT_BOOKS) {
+              await setDoc(doc(db, 'books', b.id), {
+                ...b,
+                createdBy: 'auto-sync',
+                createdAt: new Date().toISOString()
+              });
+            }
+          } catch (e) {
+            console.warn('Auto-seed books warning:', e);
+          }
+        }
+      },
+      (error) => {
+        console.warn('Firestore books fallback to default:', error.message);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // 2. Listen & Auto-Sync Evaluations
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, 'evaluations'),
+      async (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedEvals: EvaluationItem[] = [];
+          snapshot.forEach((docSnap) => {
+            fetchedEvals.push(docSnap.data() as EvaluationItem);
+          });
+          if (fetchedEvals.length > 0) {
+            setEvaluations(fetchedEvals);
+          }
+        } else {
+          try {
+            for (const ev of DEFAULT_EVALUATIONS) {
+              await setDoc(doc(db, 'evaluations', ev.id), {
+                ...ev,
+                createdBy: 'auto-sync',
+                createdAt: new Date().toISOString()
+              });
+            }
+          } catch (e) {
+            console.warn('Auto-seed evaluations warning:', e);
+          }
+        }
+      },
+      (error) => {
+        console.warn('Firestore evaluations fallback:', error.message);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // 3. Listen & Auto-Sync Exams
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, 'exams'),
+      async (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedExams: ExamItem[] = [];
+          snapshot.forEach((docSnap) => {
+            const d = docSnap.data();
+            let parsedQuestions = DEFAULT_EXAM.questions;
+            if (typeof d.questions === 'string') {
+              try {
+                parsedQuestions = JSON.parse(d.questions);
+              } catch {}
+            } else if (Array.isArray(d.questions)) {
+              parsedQuestions = d.questions;
+            }
+            fetchedExams.push({
+              id: d.id || docSnap.id,
+              title: d.title,
+              subject: d.subject,
+              timeLimit: d.timeLimit || 15,
+              questions: parsedQuestions
+            });
+          });
+          if (fetchedExams.length > 0) {
+            setExams(fetchedExams);
+          }
+        } else {
+          try {
+            await setDoc(doc(db, 'exams', DEFAULT_EXAM.id), {
+              id: DEFAULT_EXAM.id,
+              title: DEFAULT_EXAM.title,
+              subject: DEFAULT_EXAM.subject,
+              timeLimit: DEFAULT_EXAM.timeLimit,
+              questions: JSON.stringify(DEFAULT_EXAM.questions),
+              createdBy: 'auto-sync',
+              createdAt: new Date().toISOString()
+            });
+          } catch (e) {
+            console.warn('Auto-seed exam warning:', e);
+          }
+        }
+      },
+      (error) => {
+        console.warn('Firestore exams fallback:', error.message);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // 4. Listen & Auto-Sync Announcements
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, 'announcements'),
+      async (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedAnn: AnnouncementItem[] = [];
+          snapshot.forEach((docSnap) => {
+            fetchedAnn.push(docSnap.data() as AnnouncementItem);
+          });
+          if (fetchedAnn.length > 0) {
+            setAnnouncements(fetchedAnn);
+          }
+        } else {
+          try {
+            for (const a of DEFAULT_ANNOUNCEMENTS) {
+              await setDoc(doc(db, 'announcements', a.id), {
+                ...a,
+                createdBy: 'auto-sync',
+                createdAt: new Date().toISOString()
+              });
+            }
+          } catch (e) {
+            console.warn('Auto-seed announcements warning:', e);
+          }
+        }
+      },
+      (error) => {
+        console.warn('Firestore announcements fallback:', error.message);
+      }
+    );
+    return () => unsub();
+  }, []);
+
+  // 5. Listen to Registered Students (users collection) in Real-Time
+  useEffect(() => {
+    const unsub = onSnapshot(
+      collection(db, 'users'),
+      (snapshot) => {
+        const studentList: StudentUser[] = [];
+        snapshot.forEach((docSnap) => {
+          const d = docSnap.data();
+          studentList.push({
+            phone: d.phone || docSnap.id,
+            name: d.name || 'طالب',
+            grade: d.grade || 'تانية بكالوريا والثانوية',
+            createdAt: d.createdAt || new Date().toISOString()
           });
         });
-        if (fetchedExams.length > 0) {
-          setExams(fetchedExams);
-        }
+
+        // Merge with local registrations
+        try {
+          const localUsersStr = localStorage.getItem('bac_registered_students');
+          if (localUsersStr) {
+            const localObj = JSON.parse(localUsersStr);
+            Object.values(localObj).forEach((u: any) => {
+              if (u && u.phone && !studentList.some((s) => s.phone === u.phone)) {
+                studentList.push({
+                  phone: u.phone,
+                  name: u.name || 'طالب',
+                  grade: u.grade || 'تانية بكالوريا والثانوية',
+                  createdAt: u.createdAt || new Date().toISOString()
+                });
+              }
+            });
+          }
+        } catch {}
+
+        studentList.sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setStudents(studentList);
+      },
+      (error) => {
+        console.warn('Firestore users fallback:', error.message);
       }
-    }, (error) => {
-      console.warn('Firestore exams fallback:', error.message);
-    });
+    );
     return () => unsub();
   }, []);
 
-  // Listen to Announcements
+  // 6. Listen to Support Tickets in Real-Time
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, 'announcements'), (snapshot) => {
-      if (!snapshot.empty) {
-        const fetchedAnn: AnnouncementItem[] = [];
-        snapshot.forEach((doc) => {
-          fetchedAnn.push(doc.data() as AnnouncementItem);
-        });
-        if (fetchedAnn.length > 0) {
-          setAnnouncements(fetchedAnn);
+    const unsub = onSnapshot(
+      collection(db, 'support_tickets'),
+      (snapshot) => {
+        if (!snapshot.empty) {
+          const fetchedTickets: SupportTicket[] = [];
+          snapshot.forEach((docSnap) => {
+            fetchedTickets.push(docSnap.data() as SupportTicket);
+          });
+          fetchedTickets.sort(
+            (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          setSupportTickets(fetchedTickets);
+          try {
+            localStorage.setItem('bac_support_tickets', JSON.stringify(fetchedTickets));
+          } catch {}
         }
+      },
+      (error) => {
+        console.warn('Firestore support_tickets fallback:', error.message);
       }
-    }, (error) => {
-      console.warn('Firestore announcements fallback:', error.message);
-    });
+    );
     return () => unsub();
   }, []);
+
+  // Book Delete Handler (Updates Firestore and State automatically)
+  const handleDeleteBook = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'books', id));
+    } catch (err) {
+      console.warn('Firestore book delete warning:', err);
+    }
+    setBooks((prev) => {
+      const updated = prev.filter((b) => b.id !== id);
+      try {
+        localStorage.setItem('bac_books_cache', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Book Save / Edit Handler (Updates Firestore and State automatically)
+  const handleSaveBook = async (book: BookItem) => {
+    try {
+      await setDoc(doc(db, 'books', book.id), book);
+    } catch (err) {
+      console.warn('Firestore book save warning:', err);
+    }
+    setBooks((prev) => {
+      const exists = prev.some((b) => b.id === book.id);
+      const updated = exists
+        ? prev.map((b) => (b.id === book.id ? book : b))
+        : [book, ...prev];
+      try {
+        localStorage.setItem('bac_books_cache', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  // Exam Save / Update Handler
+  const handleSaveExam = async (exam: ExamItem) => {
+    try {
+      await setDoc(doc(db, 'exams', exam.id), {
+        id: exam.id,
+        title: exam.title,
+        subject: exam.subject,
+        timeLimit: exam.timeLimit,
+        questions: JSON.stringify(exam.questions),
+        updatedAt: new Date().toISOString()
+      });
+    } catch (err) {
+      console.warn('Firestore exam save warning:', err);
+    }
+    setExams((prev) => {
+      const exists = prev.some((e) => e.id === exam.id);
+      return exists ? prev.map((e) => (e.id === exam.id ? exam : e)) : [...prev, exam];
+    });
+  };
+
+  // Exam Delete Handler
+  const handleDeleteExam = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'exams', id));
+    } catch (err) {
+      console.warn('Firestore exam delete warning:', err);
+    }
+    setExams((prev) => prev.filter((e) => e.id !== id));
+  };
+
+  // Student Delete Handler
+  const handleDeleteStudent = async (phone: string) => {
+    try {
+      await deleteDoc(doc(db, 'users', phone));
+    } catch (err) {
+      console.warn('Firestore student delete warning:', err);
+    }
+    try {
+      const localUsersStr = localStorage.getItem('bac_registered_students');
+      if (localUsersStr) {
+        const localObj = JSON.parse(localUsersStr);
+        delete localObj[phone];
+        localStorage.setItem('bac_registered_students', JSON.stringify(localObj));
+      }
+    } catch {}
+    setStudents((prev) => prev.filter((s) => s.phone !== phone));
+  };
+
+  // Support Ticket Handlers
+  const handleDeleteTicket = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, 'support_tickets', id));
+    } catch (err) {
+      console.warn('Firestore ticket delete warning:', err);
+    }
+    setSupportTickets((prev) => {
+      const updated = prev.filter((t) => t.id !== id);
+      try {
+        localStorage.setItem('bac_support_tickets', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  const handleToggleTicketStatus = async (id: string) => {
+    const target = supportTickets.find((t) => t.id === id);
+    if (!target) return;
+    const newStatus = target.status === 'جديدة' ? 'تمت المراجعة' : 'جديدة';
+
+    try {
+      await updateDoc(doc(db, 'support_tickets', id), {
+        status: newStatus
+      });
+    } catch (err) {
+      console.warn('Firestore ticket update warning:', err);
+    }
+
+    setSupportTickets((prev) => {
+      const updated = prev.map((t) => (t.id === id ? { ...t, status: newStatus as any } : t));
+      try {
+        localStorage.setItem('bac_support_tickets', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
+  const handleTicketSubmitted = (newTicket: SupportTicket) => {
+    setSupportTickets((prev) => [newTicket, ...prev.filter((t) => t.id !== newTicket.id)]);
+  };
 
   const handleToggleFavorite = (bookId: string) => {
     setFavorites((prev) => {
@@ -189,60 +518,88 @@ export default function App() {
   const favoriteBooks = books.filter((b) => favorites.includes(b.id));
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white" dir="rtl">
-      
-      {/* Header Navigation */}
+    <div
+      className={`min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white transition-colors duration-200 relative ${
+        isDark ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+      }`}
+      dir="rtl"
+    >
+      {/* Top Banner: برعاية وتطوير محمد رمضان الحرباوي */}
+      <div className="bg-gradient-to-r from-amber-600 via-indigo-600 to-indigo-800 text-white text-xs sm:text-sm font-bold py-2.5 px-4 text-center flex items-center justify-center gap-2 shadow-lg relative z-50">
+        <Sparkles className="w-4 h-4 text-amber-300 animate-pulse shrink-0" />
+        <span className="tracking-wide">برعاية وتطوير: محمد رمضان الحرباوي</span>
+        <span className="hidden sm:inline text-indigo-200">•</span>
+        <span className="hidden sm:inline text-amber-200 text-xs">المكتبة التعليمية الشاملة • تانية بكالوريا والثانوية العامة</span>
+      </div>
+
+      {/* Header Navigation with Day / Night Theme Toggle */}
       <Navbar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
         studentUser={studentUser}
         onLoginClick={() => setShowAuthModal(true)}
         onLogoutClick={handleStudentLogout}
+        onSupportClick={() => setShowSupportModal(true)}
         favoritesCount={favorites.length}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       {/* Main Content */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        
         {/* VIEW 1: Books & Library */}
         {currentTab === 'books' && (
           <div className="space-y-8">
-            
             {/* Hero Banner */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-900 border border-indigo-500/30 p-6 sm:p-10 shadow-2xl">
+            <div
+              className={`relative overflow-hidden rounded-3xl border p-6 sm:p-10 shadow-2xl transition-colors ${
+                isDark
+                  ? 'bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-900 border-indigo-500/30 text-white'
+                  : 'bg-gradient-to-br from-indigo-50 via-white to-blue-50 border-indigo-200 text-slate-900 shadow-sm'
+              }`}
+            >
               <div className="absolute top-0 right-0 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
               <div className="relative z-10 max-w-3xl">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-4">
-                  <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                  المكتبة التعليمية الرسمية • تانية بكالوريا والثانوية العامة
+                <div className="flex flex-wrap items-center gap-2 mb-4">
+                  <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-500 text-xs font-semibold">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    المكتبة التعليمية الرسمية • تانية بكالوريا والثانوية العامة
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 text-xs font-extrabold shadow-sm">
+                    <span>👑 برعاية وتطوير: محمد رمضان الحرباوي</span>
+                  </div>
                 </div>
 
-                <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-4">
+                <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight mb-4">
                   مكتبة الكتب والمذكرات والتقييمات المعتمدة
                 </h1>
 
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed mb-6">
-                  استعرض وحمل جميع كتب الوزارة ({books.length} كتاب ومذكرة من الملفات المعتمدة)، مع التقييمات الأسبوعية ونماذج الإجابة النموذجية لكافة المواد والشعب.
+                <p className={`text-sm sm:text-base leading-relaxed mb-6 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                  استعرض وحمّل جميع كتب الوزارة ({books.length} كتاب ومذكرة من الملفات المعتمدة)، مع التقييمات الأسبوعية ونماذج الإجابة النموذجية لكافة المواد والشعب.
                 </p>
 
                 {/* Search Bar */}
                 <div className="relative max-w-2xl">
-                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-500">
-                    <Search className="w-5 h-5 text-indigo-400" />
+                  <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-slate-400">
+                    <Search className="w-5 h-5 text-indigo-500" />
                   </div>
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="ابحث باسم الكتاب، المادة، أو الموضوع (مثال: تاريخ، نحو، رياضيات، فيزياء)..."
-                    className="w-full bg-slate-950/90 border border-indigo-500/40 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 rounded-2xl pr-12 pl-4 py-3.5 text-sm text-slate-100 placeholder-slate-400 shadow-xl transition-all"
+                    className={`w-full border rounded-2xl pr-12 pl-4 py-3.5 text-sm shadow-xl transition-all focus:ring-2 focus:ring-indigo-500/20 ${
+                      isDark
+                        ? 'bg-slate-950/90 border-indigo-500/40 text-slate-100 placeholder-slate-400 focus:border-indigo-400'
+                        : 'bg-white border-indigo-300 text-slate-900 placeholder-slate-400 focus:border-indigo-600'
+                    }`}
                   />
                   {searchQuery && (
                     <button
                       onClick={() => setSearchQuery('')}
-                      className="absolute inset-y-0 left-0 pl-4 flex items-center text-xs text-slate-400 hover:text-white cursor-pointer"
+                      className="absolute inset-y-0 left-0 pl-4 flex items-center text-xs text-slate-400 hover:text-slate-600 dark:hover:text-white cursor-pointer"
                     >
                       مسح
                     </button>
@@ -253,23 +610,27 @@ export default function App() {
 
             {/* Announcements */}
             {announcements.length > 0 && (
-              <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3 shadow-lg">
-                <span className="w-8 h-8 rounded-xl bg-violet-950 text-violet-400 border border-violet-800 flex items-center justify-center shrink-0">
+              <div
+                className={`border rounded-2xl p-4 flex items-center gap-3 shadow-lg ${
+                  isDark ? 'bg-slate-900/80 border-slate-800' : 'bg-white border-slate-200'
+                }`}
+              >
+                <span className="w-8 h-8 rounded-xl bg-violet-500/10 text-violet-500 border border-violet-500/20 flex items-center justify-center shrink-0">
                   <Bell className="w-4 h-4" />
                 </span>
                 <div className="flex-1 overflow-hidden">
-                  <p className="text-xs font-bold text-white truncate">{announcements[0].title}</p>
-                  <p className="text-[11px] text-slate-400 truncate">{announcements[0].content}</p>
+                  <p className="text-xs font-bold truncate">{announcements[0].title}</p>
+                  <p className="text-[11px] text-slate-500 truncate">{announcements[0].content}</p>
                 </div>
-                <span className="text-[10px] text-slate-500 shrink-0">{announcements[0].date}</span>
+                <span className="text-[10px] text-slate-400 shrink-0">{announcements[0].date}</span>
               </div>
             )}
 
             {/* Categories */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <Filter className="w-3.5 h-3.5 text-indigo-400" />
+                <span className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Filter className="w-3.5 h-3.5 text-indigo-500" />
                   تصفية حسب المادة أو الشعبة:
                 </span>
                 <span className="text-xs text-slate-400">
@@ -285,7 +646,9 @@ export default function App() {
                     className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 flex items-center gap-2 cursor-pointer ${
                       selectedCategory === cat.id
                         ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/30'
-                        : 'bg-slate-900 text-slate-400 hover:text-slate-100 hover:bg-slate-800/80 border border-slate-800'
+                        : isDark
+                        ? 'bg-slate-900 text-slate-400 hover:text-slate-100 hover:bg-slate-800 border border-slate-800'
+                        : 'bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'
                     }`}
                   >
                     <span>{cat.icon}</span>
@@ -305,14 +668,19 @@ export default function App() {
                     onRead={(b) => setActiveReadingBook(b)}
                     isFavorite={favorites.includes(book.id)}
                     onToggleFavorite={handleToggleFavorite}
+                    theme={theme}
                   />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-slate-900/50 rounded-2xl border border-slate-800">
-                <BookOpen className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-slate-300">لم يتم العثور على كتب مطابقة</h3>
-                <p className="text-xs text-slate-500 mt-1">جرب البحث بكلمة أخرى أو اختر تصنيفاً مختلفاً</p>
+              <div
+                className={`text-center py-16 rounded-2xl border ${
+                  isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+                }`}
+              >
+                <BookOpen className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                <h3 className="text-base font-bold text-slate-500">لم يتم العثور على كتب مطابقة</h3>
+                <p className="text-xs text-slate-400 mt-1">جرب البحث بكلمة أخرى أو اختر تصنيفاً مختلفاً</p>
               </div>
             )}
           </div>
@@ -320,31 +688,35 @@ export default function App() {
 
         {/* VIEW 2: Evaluations */}
         {currentTab === 'evaluations' && (
-          <EvaluationsView evaluations={evaluations} />
+          <EvaluationsView evaluations={evaluations} theme={theme} />
         )}
 
         {/* VIEW 3: Interactive Exams */}
         {currentTab === 'exams' && (
-          <ExamRunner exam={exams[0] || DEFAULT_EXAM} />
+          <ExamRunner exams={exams} theme={theme} />
         )}
 
         {/* VIEW 4: Quran */}
         {currentTab === 'quran' && (
-          <QuranSection />
+          <QuranSection theme={theme} />
         )}
 
         {/* VIEW 5: Favorites */}
         {currentTab === 'favorites' && (
           <div className="space-y-6">
-            <div className="bg-gradient-to-r from-rose-950/70 via-slate-900 to-slate-900 border border-rose-500/30 rounded-2xl p-6 sm:p-8 shadow-xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs font-semibold mb-3">
-                <Heart className="w-3.5 h-3.5 fill-rose-400 text-rose-400" />
+            <div
+              className={`border rounded-2xl p-6 sm:p-8 shadow-xl ${
+                isDark
+                  ? 'bg-gradient-to-r from-rose-950/70 via-slate-900 to-slate-900 border-rose-500/30 text-white'
+                  : 'bg-gradient-to-r from-rose-50 via-white to-pink-50 border-rose-200 text-slate-900 shadow-sm'
+              }`}
+            >
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-semibold mb-3">
+                <Heart className="w-3.5 h-3.5 fill-rose-500" />
                 قائمتك المفضلة للوصول السريع
               </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-                الكتب والمذكرات المحفوظة
-              </h2>
-              <p className="text-slate-300 text-sm mt-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold">الكتب والمذكرات المحفوظة</h2>
+              <p className={`text-sm mt-2 ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
                 الكتب التي قمت بحفظها للرجوع إليها في أي وقت أثناء المذاكرة.
               </p>
             </div>
@@ -358,38 +730,66 @@ export default function App() {
                     onRead={(b) => setActiveReadingBook(b)}
                     isFavorite={true}
                     onToggleFavorite={handleToggleFavorite}
+                    theme={theme}
                   />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-slate-900/50 rounded-2xl border border-slate-800">
-                <Heart className="w-12 h-12 text-slate-600 mx-auto mb-3" />
-                <h3 className="text-base font-bold text-slate-300">لا توجد كتب في المفضلة حالياً</h3>
-                <p className="text-xs text-slate-500 mt-1">اضغط على أيقونة القلب على أي كتاب لإضافته هنا</p>
+              <div
+                className={`text-center py-16 rounded-2xl border ${
+                  isDark ? 'bg-slate-900/50 border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+                }`}
+              >
+                <Heart className="w-12 h-12 text-slate-400 mx-auto mb-3" />
+                <h3 className="text-base font-bold text-slate-500">لا توجد كتب في المفضلة حالياً</h3>
+                <p className="text-xs text-slate-400 mt-1">اضغط على أيقونة القلب على أي كتاب لإضافته هنا</p>
               </div>
             )}
           </div>
         )}
 
-        {/* VIEW 6: Teacher Dashboard */}
+        {/* VIEW 6: Teacher Dashboard with full automatic synchronization */}
         {currentTab === 'teacher' && (
           <TeacherDashboard
             books={books}
             evaluations={evaluations}
             exams={exams}
             announcements={announcements}
-            userId="teacher-admin"
+            supportTickets={supportTickets}
+            students={students}
             onRefresh={() => {}}
+            onDeleteBook={handleDeleteBook}
+            onSaveBook={handleSaveBook}
+            onSaveExam={handleSaveExam}
+            onDeleteExam={handleDeleteExam}
+            onDeleteStudent={handleDeleteStudent}
+            onDeleteTicket={handleDeleteTicket}
+            onToggleTicketStatus={handleToggleTicketStatus}
+            userId="teacher-admin"
+            theme={theme}
           />
         )}
-
       </main>
 
+      {/* Floating Technical Support Button */}
+      <div className="fixed bottom-6 left-6 z-40">
+        <button
+          onClick={() => setShowSupportModal(true)}
+          className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-gradient-to-r from-cyan-600 via-indigo-600 to-indigo-700 hover:from-cyan-500 hover:to-indigo-600 text-white font-bold text-xs shadow-2xl shadow-cyan-600/40 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-cyan-400/40"
+          title="الدعم الفني وخدمة الطلاب"
+        >
+          <div className="relative">
+            <Headphones className="w-4 h-4 text-cyan-200" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400" />
+          </div>
+          <span className="hidden sm:inline font-bold">الدعم الفني والمساعدة</span>
+          <span className="sm:hidden font-bold">الدعم</span>
+        </button>
+      </div>
+
       {/* Embedded Book Reader Modal */}
-      <BookReaderModal
-        book={activeReadingBook}
-        onClose={() => setActiveReadingBook(null)}
-      />
+      <BookReaderModal book={activeReadingBook} onClose={() => setActiveReadingBook(null)} />
 
       {/* Student Phone/Password Auth Modal */}
       <AuthModal
@@ -398,15 +798,43 @@ export default function App() {
         onSuccess={(student) => setStudentUser(student)}
       />
 
-      {/* Footer */}
-      <footer className="border-t border-slate-800 bg-slate-950 py-8 text-center text-xs text-slate-400 mt-12">
+      {/* Technical Support Modal */}
+      <SupportModal
+        isOpen={showSupportModal}
+        onClose={() => setShowSupportModal(false)}
+        studentUser={studentUser}
+        onTicketSubmitted={handleTicketSubmitted}
+      />
+
+      {/* Footer (Removed protected password note as requested) */}
+      <footer
+        className={`border-t py-8 text-center text-xs transition-colors mt-12 ${
+          isDark ? 'border-slate-800 bg-slate-950 text-slate-400' : 'border-slate-200 bg-white text-slate-600'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-2">
-          <p className="font-bold text-slate-300">
-            منصة المكتبة التعليمية الشاملة • تانية بكالوريا والثانوية العامة 2026/2027
+          <p className="font-extrabold text-sm text-amber-500">
+            برعاية وتطوير: محمد رمضان الحرباوي
           </p>
-          <p className="text-slate-500 text-[11px]">
-            لوحة تحكم المعلم محمية برمز أمان خاص • تسجيل حسابات الطلاب برقم الهاتف والرقم السري
+          <p className="font-bold">
+            منصة المكتبة التعليمية الشاملة • تانية بكالوريا والثانوية العامة
           </p>
+          <div className="flex items-center justify-center gap-4 text-[11px] pt-1">
+            <button
+              onClick={() => setShowSupportModal(true)}
+              className="text-cyan-500 hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <Headphones className="w-3 h-3" />
+              <span>إرسال رسالة للدعم الفني</span>
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setCurrentTab('teacher')}
+              className="text-amber-500 hover:underline flex items-center gap-1 cursor-pointer"
+            >
+              <span>دخول لوحة تحكم المعلم</span>
+            </button>
+          </div>
         </div>
       </footer>
     </div>
