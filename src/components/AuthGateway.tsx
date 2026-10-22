@@ -21,6 +21,14 @@ import { db, auth, googleProvider } from '../firebase';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { signInWithPopup } from 'firebase/auth';
 import { StudentUser } from '../data/initialData';
+import {
+  executeGoogleSignIn,
+  checkGoogleRedirectResult,
+  processGoogleUser,
+  decodeJwt,
+  OWNER_EMAIL,
+  TEACHER_MASTER_PASSCODES
+} from '../utils/googleAuth';
 
 interface AuthGatewayProps {
   onStudentApproved: (userData: StudentUser) => void;
@@ -52,6 +60,60 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Teacher Direct Security Login
+  const [showTeacherLogin, setShowTeacherLogin] = useState(false);
+  const [teacherEmailInput, setTeacherEmailInput] = useState(OWNER_EMAIL);
+  const [teacherPasscodeInput, setTeacherPasscodeInput] = useState('');
+  const [teacherLoginError, setTeacherLoginError] = useState<string | null>(null);
+
+  // Check Google Redirect on Mount
+  useEffect(() => {
+    checkGoogleRedirectResult().then((result) => {
+      if (result && result.success) {
+        if (result.isTeacher && result.teacherProfile) {
+          onTeacherLogin(result.teacherProfile);
+        } else if (result.studentData) {
+          onStudentApproved(result.studentData);
+        }
+      }
+    });
+  }, []);
+
+  // Initialize Google Identity Services (GSI) if available
+  useEffect(() => {
+    try {
+      const g = (window as any).google;
+      if (g && g.accounts && g.accounts.id) {
+        g.accounts.id.initialize({
+          client_id: '735952128063-tknsdf5lpbl0pqe08vnott1kpiqm06ol.apps.googleusercontent.com',
+          callback: async (response: any) => {
+            if (response && response.credential) {
+              setGoogleLoading(true);
+              const decoded = decodeJwt(response.credential);
+              if (decoded && decoded.email) {
+                const res = await processGoogleUser(
+                  decoded.email,
+                  decoded.name || '',
+                  decoded.picture || undefined
+                );
+                if (res.success) {
+                  if (res.isTeacher && res.teacherProfile) {
+                    onTeacherLogin(res.teacherProfile);
+                  } else if (res.studentData) {
+                    onStudentApproved(res.studentData);
+                  }
+                }
+              }
+              setGoogleLoading(false);
+            }
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('GSI init notice:', e);
+    }
+  }, []);
 
   // Real-time status sync for pending students
   useEffect(() => {
@@ -214,65 +276,59 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
     setGoogleLoading(true);
     setError(null);
     try {
-      const res = await signInWithPopup(auth, googleProvider);
-      if (res.user) {
-        const userEmail = (res.user.email || '').toLowerCase().trim();
-        const userName = res.user.displayName || 'مستخدم Google';
-
-        // Check if OWNER
-        if (userEmail === 'ramadanh66778@gmail.com') {
-          const profile = {
-            name: 'الأستاذ: محمد رمضان الحرباوي (المعلم المشرف)',
-            email: userEmail,
-            photoURL: res.user.photoURL || undefined
-          };
-          localStorage.setItem('teacher_session_auth', 'true');
-          localStorage.setItem('teacher_profile', JSON.stringify(profile));
-          onTeacherLogin(profile);
-          return;
+      const result = await executeGoogleSignIn();
+      if (result.success) {
+        if (result.isTeacher && result.teacherProfile) {
+          onTeacherLogin(result.teacherProfile);
+        } else if (result.studentData) {
+          onStudentApproved(result.studentData);
         }
-
-        // Otherwise: Student via Google
-        let existingStatus: 'pending' | 'approved' | 'rejected' = 'pending';
-        const safeDocId = userEmail.replace(/[^a-zA-Z0-9_]/g, '_');
-
-        try {
-          const userDoc = await getDoc(doc(db, 'users', safeDocId));
-          if (userDoc.exists()) {
-            existingStatus = userDoc.data().status || 'pending';
-          } else {
-            // Create pending record
-            await setDoc(doc(db, 'users', safeDocId), {
-              name: userName,
-              email: userEmail,
-              phone: userEmail,
-              grade: 'طالب مسجل عبر Google',
-              role: 'student',
-              status: 'pending',
-              createdAt: new Date().toISOString()
-            });
-          }
-        } catch (e) {
-          console.warn('Google user sync fallback:', e);
+      } else {
+        if (result.error) {
+          setError(result.error);
         }
-
-        const studentData: StudentUser = {
-          name: userName,
-          phone: userEmail,
-          grade: 'طالب مسجل عبر Google',
-          status: existingStatus,
-          createdAt: new Date().toISOString()
-        };
-
-        localStorage.setItem('student_session', JSON.stringify(studentData));
-        onStudentApproved(studentData);
+        if (result.isUnauthorizedDomain) {
+          setShowTeacherLogin(true);
+        }
       }
     } catch (err: any) {
       console.warn('Google sign-in error:', err);
-      setError('تعذر تسجيل الدخول بـ Google. يرجى استخدام رقم الهاتف أو التأكد من إذن النوافذ المنبثقة.');
+      setError('حدث خطأ أثناء مصادقة Google. يمكنك استخدام رقم الهاتف أو تسجيل دخول المعلم المباشر.');
     } finally {
       setGoogleLoading(false);
     }
+  };
+
+  // Direct Teacher Security Login (Guaranteed access for ramadanh66778@gmail.com)
+  const handleTeacherDirectLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setTeacherLoginError(null);
+    const cleanEmail = teacherEmailInput.trim().toLowerCase();
+    const cleanPass = teacherPasscodeInput.trim();
+
+    if (cleanEmail !== OWNER_EMAIL.toLowerCase()) {
+      setTeacherLoginError(`هذا الدخول مخصص حصرياً للمشرف: ${OWNER_EMAIL}`);
+      return;
+    }
+
+    const isValidPass = TEACHER_MASTER_PASSCODES.includes(cleanPass);
+    if (!isValidPass) {
+      setTeacherLoginError('رمز أمان المعلم غير صحيح. يرجى إدخال رمز الأمان المعتمد للأستاذ محمد رمضان.');
+      return;
+    }
+
+    const profile = {
+      name: 'الأستاذ: محمد رمضان الحرباوي (المعلم المشرف)',
+      email: OWNER_EMAIL,
+      photoURL: undefined
+    };
+
+    try {
+      localStorage.setItem('teacher_session_auth', 'true');
+      localStorage.setItem('teacher_profile', JSON.stringify(profile));
+    } catch {}
+
+    onTeacherLogin(profile);
   };
 
   // =======================================================================
@@ -617,6 +673,76 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
             )}
           </button>
         </form>
+
+        {/* TEACHER / OWNER DIRECT ACCESS ACCORDION */}
+        <div className="pt-2 border-t border-slate-800">
+          <button
+            type="button"
+            onClick={() => setShowTeacherLogin(!showTeacherLogin)}
+            className="w-full py-2 px-3 rounded-xl bg-slate-950/70 hover:bg-slate-800/80 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-between transition-all cursor-pointer"
+          >
+            <span className="flex items-center gap-2">
+              <ShieldCheck className="w-4 h-4 text-amber-400" />
+              <span>دخول الأستاذ محمد رمضان الحرباوي (المعلم المشرف)</span>
+            </span>
+            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full text-amber-300">
+              {showTeacherLogin ? 'إخفاء' : 'دخول مباشر'}
+            </span>
+          </button>
+
+          {showTeacherLogin && (
+            <form
+              onSubmit={handleTeacherDirectLogin}
+              className="mt-3 p-4 rounded-2xl bg-slate-950 border border-amber-500/40 space-y-3 animate-in fade-in duration-200"
+            >
+              <div className="text-[11px] text-amber-300/90 leading-relaxed font-semibold">
+                🔒 دخول مشفر ومخصص للأستاذ محمد رمضان الحرباوي لضمان الوصول اللحظي للوحة التحكم بدون الاعتماد على نطاقات خارجية.
+              </div>
+
+              {teacherLoginError && (
+                <div className="p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-xs flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                  <span>{teacherLoginError}</span>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-slate-300 text-[11px] font-semibold mb-1">البريد الإلكتروني للمالك *</label>
+                <input
+                  type="email"
+                  required
+                  dir="ltr"
+                  value={teacherEmailInput}
+                  onChange={(e) => setTeacherEmailInput(e.target.value)}
+                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 text-left focus:border-amber-400"
+                />
+              </div>
+
+              <div>
+                <label className="block text-slate-300 text-[11px] font-semibold mb-1">رمز أمان المعلم المشرف *</label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    required
+                    value={teacherPasscodeInput}
+                    onChange={(e) => setTeacherPasscodeInput(e.target.value)}
+                    placeholder="أدخل رمز أمان المعلم"
+                    className="w-full bg-slate-900 border border-slate-700 rounded-xl pr-9 pl-3 py-2.5 text-xs text-slate-100 focus:border-amber-400"
+                  />
+                  <Lock className="w-4 h-4 text-slate-500 absolute right-3 top-2.5" />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/30 transition-all cursor-pointer"
+              >
+                <ShieldCheck className="w-4 h-4" />
+                <span>دخول فوري للوحة تحكم المعلم</span>
+              </button>
+            </form>
+          )}
+        </div>
 
         {/* Footer Support link */}
         <div className="pt-2 text-center border-t border-slate-800">

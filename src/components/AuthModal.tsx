@@ -14,6 +14,7 @@ import {
 import { db, auth, googleProvider } from '../firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { signInWithPopup } from 'firebase/auth';
+import { executeGoogleSignIn } from '../utils/googleAuth';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -170,59 +171,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setGoogleLoading(true);
     setError(null);
     try {
-      const res = await signInWithPopup(auth, googleProvider);
-      if (res.user) {
-        const userEmail = (res.user.email || '').toLowerCase().trim();
-        const userName = res.user.displayName || 'مستخدم Google';
-
-        // Check if this is the designated Teacher / Owner Account
-        if (userEmail === 'ramadanh66778@gmail.com') {
-          const profile = {
-            name: 'الأستاذ: محمد رمضان الحرباوي (المعلم المشرف)',
-            email: userEmail,
-            photoURL: res.user.photoURL || undefined
-          };
-          localStorage.setItem('teacher_session_auth', 'true');
-          localStorage.setItem('teacher_profile', JSON.stringify(profile));
-
+      const result = await executeGoogleSignIn();
+      if (result.success) {
+        if (result.isTeacher && result.teacherProfile) {
           if (onTeacherSuccess) {
-            onTeacherSuccess(profile);
+            onTeacherSuccess(result.teacherProfile);
           }
           onClose();
-        } else {
-          // Regular student logging in with Google
-          const studentData = {
-            name: userName,
-            phone: userEmail,
-            grade: 'طالب مسجل عبر Google'
-          };
-          localStorage.setItem('student_session', JSON.stringify(studentData));
-
-          // Also save in Firestore users collection
-          try {
-            await setDoc(
-              doc(db, 'users', userEmail.replace(/[^a-zA-Z0-9_]/g, '_')),
-              {
-                name: userName,
-                email: userEmail,
-                phone: userEmail,
-                grade: 'طالب Google',
-                role: 'student',
-                createdAt: new Date().toISOString()
-              },
-              { merge: true }
-            );
-          } catch (e) {
-            console.warn('Google user sync fallback:', e);
-          }
-
-          onSuccess(studentData);
+        } else if (result.studentData) {
+          onSuccess({
+            name: result.studentData.name,
+            phone: result.studentData.phone,
+            grade: result.studentData.grade
+          });
           onClose();
         }
+      } else {
+        setError(result.error || 'تعذر تسجيل الدخول بـ Google. يرجى تجربة رقم الهاتف.');
       }
     } catch (err: any) {
       console.warn('Google sign-in error:', err);
-      setError('تعذر تسجيل الدخول بـ Google. يرجى التأكد من اتصال الإنترنت أو استخدام تسجيل الدخول برقم الهاتف.');
+      setError('حدث خطأ أثناء الاتصال بـ Google. يرجى استخدام تسجيل الدخول برقم الهاتف.');
     } finally {
       setGoogleLoading(false);
     }

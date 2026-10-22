@@ -26,6 +26,7 @@ import {
   DEFAULT_VIDEOS
 } from './data/initialData';
 import { db, testConnection } from './firebase';
+import { checkGoogleRedirectResult } from './utils/googleAuth';
 import {
   collection,
   onSnapshot,
@@ -193,9 +194,21 @@ export default function App() {
   // Reading modal
   const [activeReadingBook, setActiveReadingBook] = useState<BookItem | null>(null);
 
-  // Test connection on mount
+  // Test connection & check Google redirect login on mount
   useEffect(() => {
     testConnection();
+    checkGoogleRedirectResult().then((result) => {
+      if (result && result.success) {
+        if (result.isTeacher && result.teacherProfile) {
+          handleTeacherSuccess(result.teacherProfile);
+        } else if (result.studentData) {
+          setStudentUser(result.studentData);
+          try {
+            localStorage.setItem('student_session', JSON.stringify(result.studentData));
+          } catch {}
+        }
+      }
+    });
   }, []);
 
   // 1. Listen & Auto-Sync Books in Firestore

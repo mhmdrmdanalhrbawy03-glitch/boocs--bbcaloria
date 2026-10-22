@@ -49,6 +49,11 @@ import { SupportTicket } from './SupportModal';
 import { db, auth, googleProvider } from '../firebase';
 import { doc, setDoc, deleteDoc, collection, onSnapshot } from 'firebase/firestore';
 import { signInWithPopup, signOut } from 'firebase/auth';
+import {
+  executeGoogleSignIn,
+  OWNER_EMAIL,
+  TEACHER_MASTER_PASSCODES
+} from '../utils/googleAuth';
 
 interface TeacherDashboardProps {
   books: BookItem[];
@@ -214,40 +219,63 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [examAns, setExamAns] = useState(0);
   const [examExp, setExamExp] = useState('');
 
+  // Direct Teacher Key State
+  const [showDirectKeyLogin, setShowDirectKeyLogin] = useState(false);
+  const [directKeyPasscode, setDirectKeyPasscode] = useState('');
+
   // Google Login Authentication Handler (STRICTLY FOR ramadanh66778@gmail.com)
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     setAuthError(null);
     try {
-      const res = await signInWithPopup(auth, googleProvider);
-      if (res.user) {
-        const email = (res.user.email || '').toLowerCase().trim();
-        if (email !== 'ramadanh66778@gmail.com') {
-          await signOut(auth);
-          setIsAuthenticated(false);
-          setTeacherProfile(null);
-          setAuthError('غير مصرح لك بالدخول نهائياً. هذه اللوحة مشفرة ومخصصة فقط للمالك (الأستاذ محمد رمضان الحرباوي: ramadanh66778@gmail.com).');
-          return;
-        }
-        const profile = {
-          name: res.user.displayName || 'محمد رمضان الحرباوي',
-          email: email,
-          photoURL: res.user.photoURL || undefined
-        };
+      const result = await executeGoogleSignIn();
+      if (result.success && result.isTeacher && result.teacherProfile) {
         setIsAuthenticated(true);
-        setTeacherProfile(profile);
+        setTeacherProfile(result.teacherProfile);
         try {
           localStorage.setItem('teacher_session_auth', 'true');
-          localStorage.setItem('teacher_profile', JSON.stringify(profile));
+          localStorage.setItem('teacher_profile', JSON.stringify(result.teacherProfile));
         } catch {}
-        showToast(`مرحباً بك يا أستاذ ${profile.name}! تم التحقق من هويتك بنجاح.`);
+        showToast(`مرحباً بك يا أستاذ ${result.teacherProfile.name}! تم التحقق من هويتك بنجاح.`);
+      } else if (result.success && !result.isTeacher) {
+        await signOut(auth);
+        setIsAuthenticated(false);
+        setTeacherProfile(null);
+        setAuthError(`غير مصرح لك بالدخول نهائياً. هذه اللوحة مشفرة ومخصصة فقط للمالك (${OWNER_EMAIL}).`);
+      } else {
+        setAuthError(result.error || 'تعذر تسجيل الدخول بـ Google.');
+        if (result.isUnauthorizedDomain) {
+          setShowDirectKeyLogin(true);
+        }
       }
     } catch (err: any) {
       console.warn('Google sign-in error:', err);
-      setAuthError(err.message || 'تعذر تسجيل الدخول عبر Google. يرجى التأكد من الاتصال.');
+      setAuthError('حدث خطأ أثناء مصادقة Google. يمكنك استخدام رمز أمان المعلم المباشر.');
     } finally {
       setGoogleLoading(false);
     }
+  };
+
+  // Direct Key Passcode Login for Teacher
+  const handleDirectKeyLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+    if (!TEACHER_MASTER_PASSCODES.includes(directKeyPasscode.trim())) {
+      setAuthError('رمز أمان المعلم غير صحيح. يرجى إدخال رمز الأمان المعتمد للأستاذ محمد رمضان.');
+      return;
+    }
+    const profile = {
+      name: 'الأستاذ: محمد رمضان الحرباوي (المعلم المشرف)',
+      email: OWNER_EMAIL,
+      photoURL: undefined
+    };
+    setIsAuthenticated(true);
+    setTeacherProfile(profile);
+    try {
+      localStorage.setItem('teacher_session_auth', 'true');
+      localStorage.setItem('teacher_profile', JSON.stringify(profile));
+    } catch {}
+    showToast(`مرحباً بك يا أستاذ ${profile.name}! تم الدخول برمز الأمان بنجاح.`);
   };
 
   const handleLogout = async () => {
@@ -884,13 +912,57 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             <span>المتابعة بحساب Google</span>
           </button>
 
-          
+          {/* Emergency / Direct Teacher Security Key */}
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={() => setShowDirectKeyLogin(!showDirectKeyLogin)}
+              className="w-full py-2.5 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-between transition-all cursor-pointer"
+            >
+              <span className="flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5 text-amber-400" />
+                <span>دخول برمز أمان المعلم المباشر (بدون Google)</span>
+              </span>
+              <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded text-amber-300">
+                {showDirectKeyLogin ? 'إخفاء' : 'فتح'}
+              </span>
+            </button>
+
+            {showDirectKeyLogin && (
+              <form
+                onSubmit={handleDirectKeyLogin}
+                className="mt-3 p-3.5 rounded-xl bg-slate-950 border border-amber-500/40 space-y-2.5"
+              >
+                <div className="text-[11px] text-amber-300/80 font-medium">
+                  أدخل رمز أمان المعلم المعتمد للأستاذ محمد رمضان:
+                </div>
+                <div className="relative">
+                  <input
+                    type="password"
+                    required
+                    value={directKeyPasscode}
+                    onChange={(e) => setDirectKeyPasscode(e.target.value)}
+                    placeholder="رمز الأمان..."
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg pr-9 pl-3 py-2 text-xs text-slate-100 focus:border-amber-400"
+                  />
+                  <Lock className="w-3.5 h-3.5 text-slate-500 absolute right-3 top-2.5" />
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>تأكيد والدخول للوحة التحكم</span>
+                </button>
+              </form>
+            )}
+          </div>
         </div>
 
         <div className="mt-6 pt-4 border-t border-slate-700/50 text-center">
           <p className="text-[11px] text-slate-500 flex items-center justify-center gap-1">
             <Lock className="w-3 h-3" />
-            <span>نظام مصادقة آمن • صلاحيات كاملة لإدارة المكتبة والامتحانات</span>
+            <span>نظام مصادقة آمن 100% • مخصص حصرياً للمشرف: محمد رمضان الحرباوي</span>
           </p>
         </div>
       </div>
