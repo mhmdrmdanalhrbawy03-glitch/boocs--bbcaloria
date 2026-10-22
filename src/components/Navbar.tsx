@@ -279,15 +279,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
-            ) : (
-              <button
-                onClick={onLoginClick}
-                className="px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 text-white text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-colors shadow-md shadow-indigo-600/30 cursor-pointer"
-              >
-                <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                <span>دخول</span>
-              </button>
-            )}
+            ) : null}
           </div>
         </div>
 

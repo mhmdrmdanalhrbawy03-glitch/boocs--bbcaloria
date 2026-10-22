@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
   Plus,
@@ -29,9 +29,11 @@ import {
   UserCheck,
   Video,
   Paperclip,
-  FileText
+  FileText,
+  Send
 } from 'lucide-react';
 import {
+  SupportChatMessage,
   BookItem,
   EvaluationItem,
   ExamItem,
@@ -45,7 +47,7 @@ import {
 } from '../data/initialData';
 import { SupportTicket } from './SupportModal';
 import { db, auth, googleProvider } from '../firebase';
-import { doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, deleteDoc, collection, onSnapshot } from 'firebase/firestore';
 import { signInWithPopup, signOut } from 'firebase/auth';
 
 interface TeacherDashboardProps {
@@ -64,6 +66,8 @@ interface TeacherDashboardProps {
   onSaveExam?: (exam: ExamItem) => Promise<void>;
   onDeleteExam?: (id: string) => Promise<void>;
   onDeleteStudent?: (phone: string) => Promise<void>;
+  onApproveStudent?: (phone: string) => Promise<void>;
+  onRejectStudent?: (phone: string) => Promise<void>;
   onSaveVideo?: (video: VideoItem) => Promise<void>;
   onDeleteVideo?: (id: string) => Promise<void>;
   userId?: string;
@@ -86,6 +90,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   onSaveExam,
   onDeleteExam,
   onDeleteStudent,
+  onApproveStudent,
+  onRejectStudent,
   onSaveVideo,
   onDeleteVideo,
   userId = 'teacher-admin',
@@ -120,7 +126,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
   // Active SubTab
   const [activeSubTab, setActiveSubTab] = useState<
-    'books' | 'videos' | 'evaluations' | 'exams' | 'students' | 'announcements' | 'support'
+    'books' | 'videos' | 'evaluations' | 'exams' | 'students' | 'chat' | 'announcements' | 'support'
   >('books');
 
   // Notification Toast
@@ -208,16 +214,24 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [examAns, setExamAns] = useState(0);
   const [examExp, setExamExp] = useState('');
 
-  // Google Login Authentication Handler
+  // Google Login Authentication Handler (STRICTLY FOR ramadanh66778@gmail.com)
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     setAuthError(null);
     try {
       const res = await signInWithPopup(auth, googleProvider);
       if (res.user) {
+        const email = (res.user.email || '').toLowerCase().trim();
+        if (email !== 'ramadanh66778@gmail.com') {
+          await signOut(auth);
+          setIsAuthenticated(false);
+          setTeacherProfile(null);
+          setAuthError('غير مصرح لك بالدخول نهائياً. هذه اللوحة مشفرة ومخصصة فقط للمالك (الأستاذ محمد رمضان الحرباوي: ramadanh66778@gmail.com).');
+          return;
+        }
         const profile = {
-          name: res.user.displayName || 'المعلم المشرف',
-          email: res.user.email || 'ramadanh66778@gmail.com',
+          name: res.user.displayName || 'محمد رمضان الحرباوي',
+          email: email,
           photoURL: res.user.photoURL || undefined
         };
         setIsAuthenticated(true);
@@ -226,35 +240,14 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           localStorage.setItem('teacher_session_auth', 'true');
           localStorage.setItem('teacher_profile', JSON.stringify(profile));
         } catch {}
-        showToast(`مرحباً بك يا أستاذ ${profile.name}! تم تسجيل الدخول بنجاح.`);
+        showToast(`مرحباً بك يا أستاذ ${profile.name}! تم التحقق من هويتك بنجاح.`);
       }
     } catch (err: any) {
       console.warn('Google sign-in error:', err);
-      if (err.code === 'auth/unauthorized-domain' || err.code === 'auth/popup-blocked') {
-        setAuthError('دومين المعاينة يحتاج إضافة في Firebase Console. يمكنك استخدام الدخول المباشر المعتمد أدناه بنقرة واحدة.');
-      } else {
-        setAuthError(err.message || 'تعذر تسجيل الدخول عبر Google. يمكنك استخدام الدخول المباشر المعتمد.');
-      }
+      setAuthError(err.message || 'تعذر تسجيل الدخول عبر Google. يرجى التأكد من الاتصال.');
     } finally {
       setGoogleLoading(false);
     }
-  };
-
-  // Direct Teacher Access (safe fallback for preview environments)
-  const handleDirectTeacherAccess = () => {
-    const profile = {
-      name: 'الأستاذ رمضان الحصري (المشرف العام)',
-      email: 'ramadanh66778@gmail.com',
-      photoURL: undefined
-    };
-    setIsAuthenticated(true);
-    setTeacherProfile(profile);
-    setAuthError(null);
-    try {
-      localStorage.setItem('teacher_session_auth', 'true');
-      localStorage.setItem('teacher_profile', JSON.stringify(profile));
-    } catch {}
-    showToast('تم الدخول بنجاح كمعلم ومشرف رئيسي.');
   };
 
   const handleLogout = async () => {
@@ -733,11 +726,75 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     );
   });
 
+  // Student Approval Filter & Live Chat States
+  const [studentStatusFilter, setStudentStatusFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all');
+  const [chatMessages, setChatMessages] = useState<SupportChatMessage[]>([]);
+  const [selectedChatStudentPhone, setSelectedChatStudentPhone] = useState<string | null>(null);
+  const [teacherReplyText, setTeacherReplyText] = useState('');
+  const [isSendingReply, setIsSendingReply] = useState(false);
+
+  // Sync Live Chat Messages
+  useEffect(() => {
+    try {
+      const unsub = onSnapshot(collection(db, 'support_messages'), (snapshot) => {
+        const msgs: SupportChatMessage[] = [];
+        snapshot.forEach((d) => msgs.push(d.data() as SupportChatMessage));
+        msgs.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        setChatMessages(msgs);
+      });
+      return () => unsub();
+    } catch (e) {
+      console.warn('Chat listener error:', e);
+    }
+  }, []);
+
+  // Unique students who messaged in chat
+  const chatStudentPhones = Array.from(new Set(chatMessages.map((m) => m.studentPhone)));
+
+  const handleSendTeacherReply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedChatStudentPhone || !teacherReplyText.trim()) return;
+
+    setIsSendingReply(true);
+    const targetStudent = students.find((s) => s.phone === selectedChatStudentPhone);
+    const studentName = targetStudent?.name || 'طالب';
+    const msgId = `msg-${Date.now()}`;
+    const newMsg: SupportChatMessage = {
+      id: msgId,
+      studentPhone: selectedChatStudentPhone,
+      studentName,
+      senderRole: 'teacher',
+      senderName: 'الأستاذ: محمد رمضان الحرباوي 👑',
+      text: teacherReplyText.trim(),
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      await setDoc(doc(db, 'support_messages', msgId), newMsg);
+      setTeacherReplyText('');
+      showToast('تم إرسال ردك للطالب بنجاح! 📨');
+    } catch (err: any) {
+      showToast('خطأ في إرسال الرد: ' + err.message, 'error');
+    } finally {
+      setIsSendingReply(false);
+    }
+  };
+
+  const pendingStudentsCount = students.filter((s) => s.status === 'pending' || !s.status).length;
+  const approvedStudentsCount = students.filter((s) => s.status === 'approved').length;
+  const rejectedStudentsCount = students.filter((s) => s.status === 'rejected').length;
+
   // Filtered students
   const displayedStudents = students.filter((s) => {
-    if (!studentSearch.trim()) return true;
-    const q = studentSearch.toLowerCase();
-    return s.name.toLowerCase().includes(q) || s.phone.includes(q) || s.grade.toLowerCase().includes(q);
+    const q = studentSearch.toLowerCase().trim();
+    const matchesSearch = !q || s.name.toLowerCase().includes(q) || s.phone.includes(q) || (s.grade && s.grade.toLowerCase().includes(q));
+    const matchesStatus =
+      studentStatusFilter === 'all'
+        ? true
+        : studentStatusFilter === 'pending'
+        ? s.status === 'pending' || !s.status
+        : s.status === studentStatusFilter;
+    return matchesSearch && matchesStatus;
   });
 
   // Filtered videos
@@ -827,18 +884,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             <span>المتابعة بحساب Google</span>
           </button>
 
-          {/* Quick Direct Teacher Access Button */}
-          <button
-            onClick={handleDirectTeacherAccess}
-            className={`w-full py-3 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border ${
-              isDark
-                ? 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border-amber-500/30'
-                : 'bg-amber-100 hover:bg-amber-200 text-amber-900 border-amber-300'
-            }`}
-          >
-            <UserCheck className="w-4 h-4 text-amber-500" />
-            <span>دخول مباشر كمعلم ومشرف رئيسي (ramadanh66778@gmail.com)</span>
-          </button>
+          
         </div>
 
         <div className="mt-6 pt-4 border-t border-slate-700/50 text-center">
@@ -1082,7 +1128,29 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
           }`}
         >
           <Users className="w-4 h-4" />
-          <span>الطلاب المسجلين ({students.length})</span>
+          <span>الطلاب واعتماد الحسابات ({students.length})</span>
+          {pendingStudentsCount > 0 && (
+            <span className="text-[10px] bg-amber-500 text-slate-950 font-black px-1.5 py-0.2 rounded-full animate-pulse">
+              {pendingStudentsCount} طلبات معلقة ⏳
+            </span>
+          )}
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('chat')}
+          className={`pb-3 px-3 font-semibold border-b-2 transition-colors flex items-center gap-2 shrink-0 cursor-pointer ${
+            activeSubTab === 'chat'
+              ? 'border-emerald-500 text-emerald-500 font-bold'
+              : 'border-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-200'
+          }`}
+        >
+          <MessageCircle className="w-4 h-4" />
+          <span>محادثات الطلاب الحية (Live Chat) 💬</span>
+          {chatStudentPhones.length > 0 && (
+            <span className="text-[10px] bg-emerald-500 text-white font-bold px-1.5 py-0.2 rounded-full">
+              {chatStudentPhones.length}
+            </span>
+          )}
         </button>
 
         <button
@@ -1393,16 +1461,23 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         </div>
       )}
 
-      {/* SubTab 2: Registered Students (NEW REQUEST) */}
+      {/* SubTab 2: Registered Students & Access Approval */}
       {activeSubTab === 'students' && (
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
-              <h3 className="font-bold text-base">
-                قائمة الطلاب المسجلين في الموقع ({students.length} طالب)
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-black text-base sm:text-lg">
+                  مراجعة واعتماد طلبات الطلاب ({students.length} حساب)
+                </h3>
+                {pendingStudentsCount > 0 && (
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 font-black animate-pulse">
+                    {pendingStudentsCount} طلبات بانتظار موافقتك ⏳
+                  </span>
+                )}
+              </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                تظهر هنا كافة حسابات الطلاب المسجلة بأرقام هواتفهم للتواصل السريع والمتابعة.
+                يمكنك الموافقة على تفعيل الحساب فوراً لتفتح للطالب المكتبة، أو رفضه أو تجميده لحماية المنصة.
               </p>
             </div>
 
@@ -1420,6 +1495,67 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             </div>
           </div>
 
+          {/* Status Filter Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            <button
+              onClick={() => setStudentStatusFilter('all')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                studentStatusFilter === 'all'
+                  ? 'bg-blue-600 text-white shadow-md'
+                  : isDark
+                  ? 'bg-slate-800 text-slate-400 hover:text-white'
+                  : 'bg-slate-100 text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              جميع الطلاب ({students.length})
+            </button>
+            <button
+              onClick={() => setStudentStatusFilter('pending')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                studentStatusFilter === 'pending'
+                  ? 'bg-amber-500 text-slate-950 font-black shadow-md'
+                  : isDark
+                  ? 'bg-amber-500/10 text-amber-400 border border-amber-500/30'
+                  : 'bg-amber-50 text-amber-800 border border-amber-200'
+              }`}
+            >
+              <span>قيد الانتظار والمراجعة ⏳</span>
+              <span className="text-[10px] bg-amber-600/30 px-1.5 py-0.2 rounded-full">
+                {pendingStudentsCount}
+              </span>
+            </button>
+            <button
+              onClick={() => setStudentStatusFilter('approved')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                studentStatusFilter === 'approved'
+                  ? 'bg-emerald-600 text-white shadow-md'
+                  : isDark
+                  ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                  : 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+              }`}
+            >
+              <span>المعتمدين والمفعلين ✅</span>
+              <span className="text-[10px] bg-emerald-600/30 px-1.5 py-0.2 rounded-full">
+                {approvedStudentsCount}
+              </span>
+            </button>
+            <button
+              onClick={() => setStudentStatusFilter('rejected')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                studentStatusFilter === 'rejected'
+                  ? 'bg-rose-600 text-white shadow-md'
+                  : isDark
+                  ? 'bg-rose-500/10 text-rose-400 border border-rose-500/30'
+                  : 'bg-rose-50 text-rose-800 border border-rose-200'
+              }`}
+            >
+              <span>المرفوضين ❌</span>
+              <span className="text-[10px] bg-rose-600/30 px-1.5 py-0.2 rounded-full">
+                {rejectedStudentsCount}
+              </span>
+            </button>
+          </div>
+
           {displayedStudents.length > 0 ? (
             <div
               className={`rounded-2xl border overflow-hidden shadow-xl max-h-[620px] overflow-y-auto ${
@@ -1434,79 +1570,135 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 >
                   <tr>
                     <th className="p-3.5 sm:p-4">اسم الطالب</th>
-                    <th className="p-3.5 sm:p-4">رقم الهاتف / الواتساب</th>
-                    <th className="p-3.5 sm:p-4">الصف الدراسي</th>
-                    <th className="p-3.5 sm:p-4">تاريخ التسجيل</th>
-                    <th className="p-3.5 sm:p-4 text-center">إجراءات التواصل</th>
+                    <th className="p-3.5 sm:p-4">رقم الهاتف</th>
+                    <th className="p-3.5 sm:p-4">الصف</th>
+                    <th className="p-3.5 sm:p-4 text-center">حالة الحساب</th>
+                    <th className="p-3.5 sm:p-4">تاريخ الطلب</th>
+                    <th className="p-3.5 sm:p-4 text-center">المراجعة والاعتماد</th>
                   </tr>
                 </thead>
                 <tbody className={`divide-y ${isDark ? 'divide-slate-800/60' : 'divide-slate-200'}`}>
-                  {displayedStudents.map((s, idx) => (
-                    <tr key={s.phone || idx} className={isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}>
-                      <td className="p-3.5 sm:p-4">
-                        <div className="flex items-center gap-3">
-                          <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center font-bold text-sm">
-                            {s.name.charAt(0) || 'ط'}
-                          </div>
-                          <div>
-                            <p className="font-semibold text-sm">{s.name}</p>
-                            <span className="text-[10px] text-slate-400">طالب مسجل</span>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="p-3.5 sm:p-4">
-                        <span className="font-mono text-indigo-500 font-semibold" dir="ltr">
-                          {s.phone}
-                        </span>
-                      </td>
-                      <td className="p-3.5 sm:p-4">
-                        <span className="px-2.5 py-1 rounded-lg bg-slate-500/10 text-slate-500 font-medium text-[11px]">
-                          {s.grade || 'تانية بكالوريا والثانوية'}
-                        </span>
-                      </td>
-                      <td className="p-3.5 sm:p-4 text-slate-500 text-[11px]">
-                        {s.createdAt ? new Date(s.createdAt).toLocaleDateString('ar-EG') : 'مسجل'}
-                      </td>
-                      <td className="p-3.5 sm:p-4">
-                        <div className="flex items-center justify-center gap-1.5">
-                          {/* WhatsApp */}
-                          <a
-                            href={`https://wa.me/${s.phone.replace(/[^0-9]/g, '')}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition-colors"
-                            title="محادثة واتساب"
-                          >
-                            <MessageCircle className="w-3.5 h-3.5" />
-                            <span className="hidden sm:inline">واتساب</span>
-                          </a>
+                  {displayedStudents.map((s, idx) => {
+                    const isApproved = s.status === 'approved';
+                    const isRejected = s.status === 'rejected';
+                    const isPending = !isApproved && !isRejected;
 
-                          {/* Direct call */}
-                          <a
-                            href={`tel:${s.phone}`}
-                            className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
-                              isDark
-                                ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700'
-                                : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-300'
-                            }`}
-                            title="اتصال هاتفي"
-                          >
-                            <Phone className="w-3.5 h-3.5" />
-                            <span className="hidden sm:inline">اتصال</span>
-                          </a>
+                    return (
+                      <tr key={s.phone || idx} className={isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}>
+                        <td className="p-3.5 sm:p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center font-bold text-sm shrink-0">
+                              {s.name.charAt(0) || 'ط'}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-sm">{s.name}</p>
+                              <span className="text-[10px] text-slate-400">طالب</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-3.5 sm:p-4">
+                          <span className="font-mono text-indigo-400 font-semibold text-xs" dir="ltr">
+                            {s.phone}
+                          </span>
+                        </td>
+                        <td className="p-3.5 sm:p-4 text-slate-400 text-xs">
+                          {s.grade || 'تانية بكالوريا'}
+                        </td>
+                        <td className="p-3.5 sm:p-4 text-center">
+                          {isApproved && (
+                            <span className="px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-bold text-[11px] inline-flex items-center gap-1">
+                              <span>معتمد ومفعل</span>
+                              <CheckCircle className="w-3 h-3" />
+                            </span>
+                          )}
+                          {isRejected && (
+                            <span className="px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-400 border border-rose-500/30 font-bold text-[11px] inline-flex items-center gap-1">
+                              <span>مرفوض</span>
+                              <X className="w-3 h-3" />
+                            </span>
+                          )}
+                          {isPending && (
+                            <span className="px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 font-bold text-[11px] inline-flex items-center gap-1 animate-pulse">
+                              <span>قيد المراجعة</span>
+                              <Clock className="w-3 h-3" />
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3.5 sm:p-4 text-slate-500 text-[11px]">
+                          {s.createdAt ? new Date(s.createdAt).toLocaleDateString('ar-EG') : 'جديد'}
+                        </td>
+                        <td className="p-3.5 sm:p-4">
+                          <div className="flex items-center justify-center gap-1.5 flex-wrap">
+                            {/* APPROVE BUTTON */}
+                            {!isApproved && (
+                              <button
+                                onClick={async () => {
+                                  if (onApproveStudent) {
+                                    await onApproveStudent(s.phone);
+                                    showToast(`تم اعتماد وتفعيل حساب الطالب ${s.name} بنجاح! ✅`);
+                                  }
+                                }}
+                                className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1 shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
+                                title="موافقة وتفعيل الحساب فوراً"
+                              >
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                <span>موافقة</span>
+                              </button>
+                            )}
 
-                          {/* Delete Student */}
-                          <button
-                            onClick={() => setDeleteConfirmStudent(s)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
-                            title="حذف حساب الطالب"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            {/* REJECT BUTTON */}
+                            {!isRejected && (
+                              <button
+                                onClick={async () => {
+                                  if (onRejectStudent) {
+                                    await onRejectStudent(s.phone);
+                                    showToast(`تم رفض حساب الطالب ${s.name} ❌`, 'error');
+                                  }
+                                }}
+                                className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-semibold text-xs flex items-center gap-1 transition-all cursor-pointer"
+                                title="رفض الحساب"
+                              >
+                                <X className="w-3.5 h-3.5" />
+                                <span>رفض</span>
+                              </button>
+                            )}
+
+                            {/* Live Chat with Student */}
+                            <button
+                              onClick={() => {
+                                setSelectedChatStudentPhone(s.phone);
+                                setActiveSubTab('chat');
+                              }}
+                              className="p-1.5 rounded-lg bg-cyan-600/20 text-cyan-300 hover:bg-cyan-600/30 transition-colors cursor-pointer"
+                              title="بدء شات مباشر مع الطالب"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5" />
+                            </button>
+
+                            {/* WhatsApp */}
+                            <a
+                              href={`https://wa.me/${s.phone.replace(/[^0-9]/g, '')}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="p-1.5 rounded-lg bg-emerald-600/20 text-emerald-400 hover:bg-emerald-600/30 transition-colors"
+                              title="محادثة واتساب"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5" />
+                            </a>
+
+                            {/* Delete Student */}
+                            <button
+                              onClick={() => setDeleteConfirmStudent(s)}
+                              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
+                              title="حذف حساب الطالب"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -1517,12 +1709,174 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               }`}
             >
               <Users className="w-12 h-12 text-slate-400 mx-auto mb-3" />
-              <h4 className="text-base font-bold text-slate-500">لا يوجد طلاب مسجلين بعد</h4>
+              <h4 className="text-base font-bold text-slate-500">لا يوجد طلاب في هذا التصنيف حالياً</h4>
               <p className="text-xs text-slate-400 mt-1">
-                عندما يقوم الطلاب بإنشاء حسابات برقم الهاتف، ستظهر أسماؤهم وأرقامهم هنا فوراً.
+                اختر تصنيفاً آخر أو انتظر تسجيل طلبات جديدة من الطلاب.
               </p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* SubTab 2.5: Live Student Chat & Messaging */}
+      {activeSubTab === 'chat' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-black text-base sm:text-lg flex items-center gap-2">
+                <MessageCircle className="w-5 h-5 text-emerald-400" />
+                <span>محادثات الطلاب الحية والمباشرة (Live Chat)</span>
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                تحدث مع طلابك مباشرة بشكل لحظي، أجب على استفساراتهم وساعدهم في المذاكرة.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Conversations List (Students) */}
+            <div
+              className={`p-3 rounded-2xl border space-y-2 max-h-[550px] overflow-y-auto ${
+                isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              <h4 className="text-xs font-bold text-slate-400 px-1 mb-2">
+                قائمة محادثات الطلاب ({chatStudentPhones.length}):
+              </h4>
+
+              {chatStudentPhones.length > 0 ? (
+                chatStudentPhones.map((ph) => {
+                  const student = students.find((s) => s.phone === ph);
+                  const studentMsgs = chatMessages.filter((m) => m.studentPhone === ph);
+                  const lastMsg = studentMsgs[studentMsgs.length - 1];
+                  const isSelected = selectedChatStudentPhone === ph;
+
+                  return (
+                    <div
+                      key={ph}
+                      onClick={() => setSelectedChatStudentPhone(ph)}
+                      className={`p-3 rounded-xl border transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-indigo-600/20 border-indigo-500 shadow-md'
+                          : isDark
+                          ? 'bg-slate-950/60 hover:bg-slate-800/60 border-slate-800 text-slate-300'
+                          : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-800'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-bold text-xs truncate">
+                          {student?.name || lastMsg?.studentName || 'طالب'}
+                        </span>
+                        <span className="text-[10px] text-slate-500 font-mono" dir="ltr">
+                          {ph}
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-slate-400 truncate">
+                        {lastMsg?.text || 'لا توجد رسائل بعد'}
+                      </p>
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="text-center py-8 text-xs text-slate-500">
+                  لا توجد محادثات نشطة حالياً. عندما يرسل طالب رسالة ستظهر هنا فوراً.
+                </div>
+              )}
+            </div>
+
+            {/* Active Chat Conversation */}
+            <div
+              className={`md:col-span-2 p-4 rounded-2xl border flex flex-col min-h-[450px] max-h-[550px] ${
+                isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
+              }`}
+            >
+              {selectedChatStudentPhone ? (
+                <>
+                  {/* Chat Top Bar */}
+                  <div className="pb-3 border-b border-slate-800 flex items-center justify-between">
+                    <div>
+                      <h4 className="text-xs sm:text-sm font-black text-white">
+                        محادثة مع: {students.find((s) => s.phone === selectedChatStudentPhone)?.name || 'طالب'}
+                      </h4>
+                      <span className="text-[10px] text-slate-400 font-mono" dir="ltr">
+                        {selectedChatStudentPhone}
+                      </span>
+                    </div>
+
+                    <a
+                      href={`https://wa.me/${selectedChatStudentPhone.replace(/[^0-9]/g, '')}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold flex items-center gap-1"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>واتساب</span>
+                    </a>
+                  </div>
+
+                  {/* Messages Bubble Area */}
+                  <div className="flex-1 overflow-y-auto space-y-3 py-3 px-1">
+                    {chatMessages
+                      .filter((m) => m.studentPhone === selectedChatStudentPhone)
+                      .map((msg) => {
+                        const isTeacher = msg.senderRole === 'teacher';
+                        return (
+                          <div
+                            key={msg.id}
+                            className={`flex items-start gap-2 max-w-[80%] ${
+                              isTeacher ? 'mr-auto' : 'ml-auto flex-row-reverse'
+                            }`}
+                          >
+                            <div
+                              className={`p-3 rounded-2xl text-xs leading-relaxed ${
+                                isTeacher
+                                  ? 'bg-amber-500 text-slate-950 font-medium rounded-tr-none shadow-md'
+                                  : 'bg-slate-800 text-slate-200 rounded-tl-none border border-slate-700'
+                              }`}
+                            >
+                              <div className="font-bold text-[10px] mb-0.5 opacity-80">
+                                {isTeacher ? 'أنت (المعلم المشرف 👑)' : msg.senderName}
+                              </div>
+                              <p className="whitespace-pre-wrap">{msg.text}</p>
+                              <div className="text-[9px] mt-1 opacity-60 text-left">
+                                {new Date(msg.createdAt).toLocaleTimeString('ar-EG', {
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+
+                  {/* Teacher Reply Input */}
+                  <form onSubmit={handleSendTeacherReply} className="pt-3 border-t border-slate-800 flex gap-2">
+                    <input
+                      type="text"
+                      value={teacherReplyText}
+                      onChange={(e) => setTeacherReplyText(e.target.value)}
+                      placeholder="اكتب ردك المباشر كمعلم ومشرف للطالب..."
+                      className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:border-amber-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={isSendingReply || !teacherReplyText.trim()}
+                      className="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-black flex items-center gap-1.5 shadow-md shadow-amber-500/25 transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      <Send className="w-3.5 h-3.5" />
+                      <span>إرسال الرد</span>
+                    </button>
+                  </form>
+                </>
+              ) : (
+                <div className="flex-1 flex flex-col items-center justify-center text-center text-slate-500 space-y-2">
+                  <MessageCircle className="w-12 h-12 text-slate-600" />
+                  <p className="text-xs font-bold">اختر طالباً من القائمة لعرض المحادثة والرد عليه</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 

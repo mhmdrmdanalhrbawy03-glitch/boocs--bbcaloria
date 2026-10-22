@@ -57,6 +57,20 @@ export interface StudentUser {
   phone: string;
   name: string;
   grade: string;
+  role?: 'student' | 'admin';
+  status?: 'pending' | 'approved' | 'rejected';
+  createdAt: string;
+  reviewedAt?: string;
+  reviewedBy?: string;
+}
+
+export interface SupportChatMessage {
+  id: string;
+  studentPhone: string;
+  studentName: string;
+  senderRole: 'student' | 'teacher';
+  senderName: string;
+  text: string;
   createdAt: string;
 }
 

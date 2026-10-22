@@ -8,6 +8,7 @@ import { ExamRunner } from './components/ExamRunner';
 import { QuranSection } from './components/QuranSection';
 import { VideoSection } from './components/VideoSection';
 import { AuthModal } from './components/AuthModal';
+import { AuthGateway } from './components/AuthGateway';
 import { SupportModal, SupportTicket } from './components/SupportModal';
 import {
   BookItem,
@@ -127,8 +128,8 @@ export default function App() {
     }
   });
 
-  // Student Phone/Password Auth state
-  const [studentUser, setStudentUser] = useState<{ name: string; phone: string; grade: string } | null>(() => {
+  // Student Phone/Password Auth state (with security status)
+  const [studentUser, setStudentUser] = useState<StudentUser | null>(() => {
     try {
       const saved = localStorage.getItem('student_session');
       return saved ? JSON.parse(saved) : null;
@@ -638,6 +639,64 @@ export default function App() {
     setExams((prev) => prev.filter((e) => e.id !== id));
   };
 
+  // Student Approval Handler (Admin approves student)
+  const handleApproveStudent = async (phone: string) => {
+    try {
+      await setDoc(
+        doc(db, 'users', phone),
+        {
+          status: 'approved',
+          reviewedAt: new Date().toISOString(),
+          reviewedBy: 'محمد رمضان الحرباوي'
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.warn('Firestore student approve warning:', err);
+    }
+
+    setStudents((prev) =>
+      prev.map((s) => (s.phone === phone ? { ...s, status: 'approved' } : s))
+    );
+
+    if (studentUser && studentUser.phone === phone) {
+      const updated: StudentUser = { ...studentUser, status: 'approved' };
+      setStudentUser(updated);
+      try {
+        localStorage.setItem('student_session', JSON.stringify(updated));
+      } catch {}
+    }
+  };
+
+  // Student Reject Handler (Admin rejects student)
+  const handleRejectStudent = async (phone: string) => {
+    try {
+      await setDoc(
+        doc(db, 'users', phone),
+        {
+          status: 'rejected',
+          reviewedAt: new Date().toISOString(),
+          reviewedBy: 'محمد رمضان الحرباوي'
+        },
+        { merge: true }
+      );
+    } catch (err) {
+      console.warn('Firestore student reject warning:', err);
+    }
+
+    setStudents((prev) =>
+      prev.map((s) => (s.phone === phone ? { ...s, status: 'rejected' } : s))
+    );
+
+    if (studentUser && studentUser.phone === phone) {
+      const updated: StudentUser = { ...studentUser, status: 'rejected' };
+      setStudentUser(updated);
+      try {
+        localStorage.setItem('student_session', JSON.stringify(updated));
+      } catch {}
+    }
+  };
+
   // Student Delete Handler
   const handleDeleteStudent = async (phone: string) => {
     try {
@@ -745,6 +804,40 @@ export default function App() {
   });
 
   const favoriteBooks = books.filter((b) => favorites.includes(b.id));
+
+  // Access Control Gatekeeper: Only approved students or authenticated teacher can view library
+  const isAuthorizedAccess =
+    isTeacherAuthenticated || (studentUser && studentUser.status === 'approved');
+
+  if (!isAuthorizedAccess) {
+    return (
+      <div className={theme === 'dark' ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'}>
+        <AuthGateway
+          currentStudentUser={studentUser}
+          onStudentApproved={(userData) => {
+            setStudentUser(userData);
+            try {
+              localStorage.setItem('student_session', JSON.stringify(userData));
+            } catch {}
+          }}
+          onTeacherLogin={(profile) => {
+            handleTeacherSuccess(profile);
+          }}
+          onLogout={handleStudentLogout}
+          onOpenSupport={() => setShowSupportModal(true)}
+          theme={theme}
+        />
+
+        {/* Technical Support Modal with Live Chat */}
+        <SupportModal
+          isOpen={showSupportModal}
+          onClose={() => setShowSupportModal(false)}
+          studentUser={studentUser}
+          onTicketSubmitted={handleTicketSubmitted}
+        />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -1021,6 +1114,8 @@ export default function App() {
               onSaveExam={handleSaveExam}
               onDeleteExam={handleDeleteExam}
               onDeleteStudent={handleDeleteStudent}
+              onApproveStudent={handleApproveStudent}
+              onRejectStudent={handleRejectStudent}
               onDeleteTicket={handleDeleteTicket}
               onToggleTicketStatus={handleToggleTicketStatus}
               onSaveVideo={handleSaveVideo}
@@ -1073,7 +1168,13 @@ export default function App() {
         isOpen={showAuthModal}
         initialMode={authModalMode}
         onClose={() => setShowAuthModal(false)}
-        onSuccess={(student) => setStudentUser(student)}
+        onSuccess={(student) =>
+          setStudentUser({
+            ...student,
+            status: 'approved',
+            createdAt: new Date().toISOString()
+          })
+        }
         onTeacherSuccess={handleTeacherSuccess}
       />
 
