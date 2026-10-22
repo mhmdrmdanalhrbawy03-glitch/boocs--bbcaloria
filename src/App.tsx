@@ -137,10 +137,16 @@ export default function App() {
     }
   });
 
-  // Teacher Authentication State
+  // Teacher Authentication State (STRICTLY for ramadanh66778@gmail.com)
   const [isTeacherAuthenticated, setIsTeacherAuthenticated] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('teacher_session_auth') === 'true';
+      const authFlag = localStorage.getItem('teacher_session_auth') === 'true';
+      const profileStr = localStorage.getItem('teacher_profile');
+      if (authFlag && profileStr) {
+        const parsed = JSON.parse(profileStr);
+        return (parsed.email || '').toLowerCase().trim() === 'ramadanh66778@gmail.com';
+      }
+      return false;
     } catch {
       return false;
     }
@@ -153,14 +159,20 @@ export default function App() {
   } | null>(() => {
     try {
       const saved = localStorage.getItem('teacher_profile');
-      return saved ? JSON.parse(saved) : null;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if ((parsed.email || '').toLowerCase().trim() === 'ramadanh66778@gmail.com') {
+          return parsed;
+        }
+      }
+      return null;
     } catch {
       return null;
     }
   });
 
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authModalMode, setAuthModalMode] = useState<'login' | 'register' | 'teacher'>('login');
+  const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showSupportModal, setShowSupportModal] = useState(false);
 
   // Search & Filters
@@ -222,7 +234,7 @@ export default function App() {
     return () => unsub();
   }, []);
 
-  // 2. Listen & Auto-Sync Videos in Firestore
+  // 2. Listen & Auto-Sync Videos in Firestore (34 Real Legacy Lectures)
   useEffect(() => {
     const unsub = onSnapshot(
       collection(db, 'videos'),
@@ -232,6 +244,25 @@ export default function App() {
           snapshot.forEach((docSnap) => {
             fetchedVideos.push(docSnap.data() as VideoItem);
           });
+
+          // If Firestore only had the old placeholder videos (< 30), merge in all DEFAULT_VIDEOS
+          if (fetchedVideos.length < DEFAULT_VIDEOS.length) {
+            for (const v of DEFAULT_VIDEOS) {
+              if (!fetchedVideos.some((fv) => fv.id === v.id || fv.videoUrl === v.videoUrl)) {
+                try {
+                  await setDoc(doc(db, 'videos', v.id), {
+                    ...v,
+                    createdBy: 'auto-sync',
+                    createdAt: new Date().toISOString()
+                  });
+                  fetchedVideos.push(v);
+                } catch (e) {
+                  console.warn('Syncing video warning:', e);
+                }
+              }
+            }
+          }
+
           if (fetchedVideos.length > 0) {
             setVideos(fetchedVideos);
             try {
@@ -247,6 +278,8 @@ export default function App() {
                 createdAt: new Date().toISOString()
               });
             }
+            setVideos(DEFAULT_VIDEOS);
+            localStorage.setItem('bac_videos_cache', JSON.stringify(DEFAULT_VIDEOS));
           } catch (e) {
             console.warn('Auto-seed videos warning:', e);
           }
@@ -254,6 +287,7 @@ export default function App() {
       },
       (error) => {
         console.warn('Firestore videos fallback:', error.message);
+        setVideos(DEFAULT_VIDEOS);
       }
     );
     return () => unsub();
@@ -558,6 +592,22 @@ export default function App() {
     });
   };
 
+  // Student Note Delete Handler
+  const handleDeleteNote = async (noteId: string) => {
+    try {
+      await deleteDoc(doc(db, 'student_notes', noteId));
+    } catch (err) {
+      console.warn('Firestore note delete warning:', err);
+    }
+    setStudentNotes((prev) => {
+      const updated = prev.filter((n) => n.id !== noteId);
+      try {
+        localStorage.setItem('bac_student_notes', JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  };
+
   // Exam Save / Update Handler
   const handleSaveExam = async (exam: ExamItem) => {
     try {
@@ -733,10 +783,6 @@ export default function App() {
         isTeacherAuthenticated={isTeacherAuthenticated}
         teacherProfile={teacherProfile}
         onTeacherLogout={handleTeacherLogout}
-        onTeacherLoginClick={() => {
-          setAuthModalMode('teacher');
-          setShowAuthModal(true);
-        }}
       />
 
       {/* Main Content */}
@@ -880,13 +926,14 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 2: Videos & Lectures (NEW FEATURE) */}
+        {/* VIEW 2: Videos & Lectures */}
         {currentTab === 'videos' && (
           <VideoSection
             videos={videos}
             theme={theme}
             studentUser={studentUser}
             onSaveNote={handleSaveNote}
+            onDeleteNote={handleDeleteNote}
             savedNotes={studentNotes}
             onOpenAuthModal={() => {
               setAuthModalMode('login');
@@ -957,29 +1004,47 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 7: Teacher Dashboard with full automatic synchronization */}
+        {/* VIEW 7: Teacher Dashboard (STRICTLY RESTRICTED TO ramadanh66778@gmail.com) */}
         {currentTab === 'teacher' && (
-          <TeacherDashboard
-            books={books}
-            evaluations={evaluations}
-            exams={exams}
-            announcements={announcements}
-            supportTickets={supportTickets}
-            students={students}
-            videos={videos}
-            onRefresh={() => {}}
-            onDeleteBook={handleDeleteBook}
-            onSaveBook={handleSaveBook}
-            onSaveExam={handleSaveExam}
-            onDeleteExam={handleDeleteExam}
-            onDeleteStudent={handleDeleteStudent}
-            onDeleteTicket={handleDeleteTicket}
-            onToggleTicketStatus={handleToggleTicketStatus}
-            onSaveVideo={handleSaveVideo}
-            onDeleteVideo={handleDeleteVideo}
-            userId="teacher-admin"
-            theme={theme}
-          />
+          isTeacherAuthenticated ? (
+            <TeacherDashboard
+              books={books}
+              evaluations={evaluations}
+              exams={exams}
+              announcements={announcements}
+              supportTickets={supportTickets}
+              students={students}
+              videos={videos}
+              onRefresh={() => {}}
+              onDeleteBook={handleDeleteBook}
+              onSaveBook={handleSaveBook}
+              onSaveExam={handleSaveExam}
+              onDeleteExam={handleDeleteExam}
+              onDeleteStudent={handleDeleteStudent}
+              onDeleteTicket={handleDeleteTicket}
+              onToggleTicketStatus={handleToggleTicketStatus}
+              onSaveVideo={handleSaveVideo}
+              onDeleteVideo={handleDeleteVideo}
+              userId="teacher-admin"
+              theme={theme}
+            />
+          ) : (
+            <div className="p-8 sm:p-12 text-center max-w-lg mx-auto bg-slate-900 border border-slate-800 rounded-3xl space-y-4 my-10">
+              <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto">
+                <ShieldCheck className="w-8 h-8" />
+              </div>
+              <h2 className="text-xl font-black text-white">منطقة خاصة بالمعلم المشرف فقط</h2>
+              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                هذه الصفحة مقفلة تماماً ومخصصة للأستاذ محمد رمضان الحرباوي فقط. للدخول، يرجى تسجيل الدخول بحساب Google المعتمد (ramadanh66778@gmail.com).
+              </p>
+              <button
+                onClick={() => setCurrentTab('books')}
+                className="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs sm:text-sm font-bold shadow-lg shadow-indigo-600/30 cursor-pointer"
+              >
+                العودة للمكتبة العامة
+              </button>
+            </div>
+          )
         )}
       </main>
 
@@ -1041,25 +1106,17 @@ export default function App() {
               <Headphones className="w-3 h-3" />
               <span>إرسال رسالة للدعم الفني</span>
             </button>
-            <span>•</span>
-            {isTeacherAuthenticated ? (
-              <button
-                onClick={() => setCurrentTab('teacher')}
-                className="text-amber-500 hover:underline flex items-center gap-1 font-bold cursor-pointer"
-              >
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>لوحة تحكم المعلم المشرف 👑</span>
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  setAuthModalMode('teacher');
-                  setShowAuthModal(true);
-                }}
-                className="text-slate-400 hover:text-amber-400 hover:underline flex items-center gap-1 cursor-pointer"
-              >
-                <span>دخول المعلم</span>
-              </button>
+            {isTeacherAuthenticated && (
+              <>
+                <span>•</span>
+                <button
+                  onClick={() => setCurrentTab('teacher')}
+                  className="text-amber-500 hover:underline flex items-center gap-1 font-bold cursor-pointer"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>لوحة تحكم المعلم المشرف 👑</span>
+                </button>
+              </>
             )}
           </div>
         </div>

@@ -71,6 +71,7 @@ export interface VideoItem {
   id: string;
   title: string;
   category: string;
+  subCategory?: string;
   grade: string;
   description: string;
   videoUrl: string;
@@ -826,84 +827,844 @@ export const DEFAULT_ANNOUNCEMENTS: AnnouncementItem[] = [
 
 export const DEFAULT_VIDEOS: VideoItem[] = [
   {
-    id: 'vid-1',
-    title: 'كورس تأسيس الرياضيات للثانوية العامة وتانية بكالوريا',
-    category: 'رياضيات',
-    grade: 'الصف الثاني / الثالث الثانوي',
-    description: 'شرح تأسيسي شامل لأهم قواعد الرياضيات والجبر وحل المعادلات والمتطابقات مع أمثلة تطبيقية.',
-    videoUrl: 'https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing',
-    duration: '45 دقيقة',
+    id: "vid-legacy-1",
+    title: "شرح القضايا الأخلاقية - علم النفس - تانية بكالوريا أزهر",
+    category: "علم نفس وفلسفة",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "شرح القضايا الأخلاقية لطلاب علم النفس - تانية بكالوريا أزهر.",
+    videoUrl: "https://youtu.be/j-G3uMRtOwo?si=OATvFP-xhg6fMIC9",
+    duration: "شرح كامل",
     attachments: [
       {
-        id: 'att-1',
-        title: 'مذكرة تأسيس رياضيات (PDF)',
-        url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
-        type: 'pdf'
+            "id": "att-ps-1",
+            "title": "مذكرة القضايا الأخلاقية وعلم النفس للثانوية (PDF)",
+            "url": "https://drive.google.com/file/d/1PsYch0L0gyM0dUl3P0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
       }
-    ],
-    teacherNotes: 'يرجى حل التمارين الموجودة في آخر المذكرة قبل بدء المحاضرة القادمة.',
-    createdAt: '2026-09-01T10:00:00Z',
-    createdBy: 'محمد رمضان الحرباوي'
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
   },
   {
-    id: 'vid-2',
-    title: 'الحصة التمهيدية في كورس البرمجة والذكاء الاصطناعي',
-    category: 'برمجة',
-    grade: 'الصف الثاني / الثالث الثانوي',
-    description: 'الحصة التمهيدية من إعداد وتجهيز محمد رمضان الحرباوي للتعريف بأساسيات البرمجة والتفكير المنطقي.',
-    videoUrl: 'https://drive.google.com/file/d/1MJRgmiCFnfQU4whC7wDTtW42VcZyYXE9/view?usp=sharing',
-    duration: '35 دقيقة',
+    id: "vid-legacy-2",
+    title: "شرح القضايا الأخلاقية في البرمجة - لغة عربية",
+    category: "لغة عربية",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "شرح القضايا الأخلاقية في البرمجة في أقل من ربع ساعة 🔥 التحيز الخوارزمي والخصوصية وبيانات التدريب مع أ/ سعيد السيد.",
+    videoUrl: "https://youtu.be/vK6Mc680FKM?si=2p8DJp-U1gEcqbX2",
+    duration: "شرح كامل",
     attachments: [
       {
-        id: 'att-2',
-        title: 'ملف الجزء الأول من كورس البرمجة (PDF)',
-        url: 'https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing',
-        type: 'pdf'
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
       }
-    ],
-    teacherNotes: 'حصة تأسيسية ضرورية لفهم منطق البرمجة وكتابة الأكواد الأولى.',
-    createdAt: '2026-09-05T10:00:00Z',
-    createdBy: 'محمد رمضان الحرباوي'
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
   },
   {
-    id: 'vid-3',
-    title: 'محاضرة تأسيس وإتقان قواعد النحو والإعراب الشامل',
-    category: 'لغة عربية',
-    grade: 'الصف الثاني / الثالث الثانوي',
-    description: 'شرح مفصل وممتع لقواعد النحو، إعراب الجمل، المبتدأ والخبر، كان وأخواتها وإن وأخواتها.',
-    videoUrl: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',
-    duration: '50 دقيقة',
+    id: "vid-legacy-3",
+    title: "شرح القضايا الأخلاقية في البرمجة - لغات",
+    category: "لغة إنجليزية",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "شرح القضايا الأخلاقية في البرمجة في أقل من ربع ساعة 🔥 التحيز الخوارزمي والخصوصية وبيانات التدريب مع أ/ سعيد السيد.",
+    videoUrl: "https://youtu.be/DcKwJXn9mf8?si=oBj2SQqsKGLegvej",
+    duration: "شرح كامل",
     attachments: [
       {
-        id: 'att-3',
-        title: 'كتاب النحو الدراسي المعتمد (PDF)',
-        url: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing',
-        type: 'pdf'
+            "id": "att-en-1",
+            "title": "كتاب اللغة الإنجليزية والمفردات وقواعد الترجمة (PDF)",
+            "url": "https://drive.google.com/file/d/1EnGl1shB00k2027ThnwyaP0rtalG00gl/view?usp=sharing",
+            "type": "pdf"
       }
-    ],
-    teacherNotes: 'ركز جيداً على التفرقة بين الحال والتمييز الموضحة في التطبيقات العملية.',
-    createdAt: '2026-09-10T10:00:00Z',
-    createdBy: 'محمد رمضان الحرباوي'
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
   },
   {
-    id: 'vid-4',
-    title: 'شرح الدرس الأول تاريخ - بناء الدولة الحديثة ومصر في عهد محمد علي',
-    category: 'تاريخ',
-    grade: 'الصف الثاني / الثالث الثانوي',
-    description: 'شرح الدرس الأول في مادة التاريخ الوطني: بناء الدولة المصرية الحديثة وتحليل نواتج التعلم.',
-    videoUrl: 'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link',
-    duration: '40 دقيقة',
+    id: "vid-legacy-4",
+    title: "الفيديو التعليمي الأول",
+    category: "تحفيز وتوجيه",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "فيديو تحفيزي لطلاب البكالوريا.",
+    videoUrl: "https://youtu.be/ZF7WMdoBdO8?si=yNjB7hTj58dsf7fd",
+    duration: "شرح كامل",
     attachments: [
       {
-        id: 'att-4',
-        title: 'ملخص الدرس الأول للتاريخ (PDF)',
-        url: 'https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing',
-        type: 'pdf'
+            "id": "att-mo-1",
+            "title": "دليل التفوق وإدارة وتنظيم وقت المذاكرة (PDF)",
+            "url": "https://drive.google.com/file/d/1Gu1dETfWqThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
       }
-    ],
-    teacherNotes: 'احرص على مراجعة الخرائط التاريخية المرفقة في الملخص.',
-    createdAt: '2026-09-15T10:00:00Z',
-    createdBy: 'محمد رمضان الحرباوي'
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-5",
+    title: "الفيديو التعليمي الثاني",
+    category: "تحفيز وتوجيه",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "فيديو تحفيزي لطلاب البكالوريا.",
+    videoUrl: "https://youtu.be/VVZy0y6xJcc?si=0W7Vbc_TD-D7lfZK",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-mo-1",
+            "title": "دليل التفوق وإدارة وتنظيم وقت المذاكرة (PDF)",
+            "url": "https://drive.google.com/file/d/1Gu1dETfWqThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-6",
+    title: "الفيديو التعليمي الثالث",
+    category: "تحفيز وتوجيه",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "فيديو تحفيزي لطلاب البكالوريا.",
+    videoUrl: "https://www.youtube.com/embed/9D9GmbkdkME?si=6MUCwqMp4zu_EAvK",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-mo-1",
+            "title": "دليل التفوق وإدارة وتنظيم وقت المذاكرة (PDF)",
+            "url": "https://drive.google.com/file/d/1Gu1dETfWqThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-7",
+    title: "تحفيز طلاب البكالوريا والثانوية العامة",
+    category: "تحفيز وتوجيه",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "قسم تحفيزي لطلاب البكالوريا وطلاب الثانوية العامة.",
+    videoUrl: "https://youtu.be/UuStwCzzcD8?si=xHju3r-u8ec8hUTb",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-mo-1",
+            "title": "دليل التفوق وإدارة وتنظيم وقت المذاكرة (PDF)",
+            "url": "https://drive.google.com/file/d/1Gu1dETfWqThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-8",
+    title: "قرآن كريم",
+    category: "قرآن كريم",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "قرآن كريم.",
+    videoUrl: "https://youtu.be/YhjjkHSYzaM?si=xvkNraI_1bB3Uw0g",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-qr-1",
+            "title": "المصحف الشريف المرتل والأدعية المختارة (PDF)",
+            "url": "https://drive.google.com/file/d/1QrAnM0shafThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-9",
+    title: "تلاوة هادئة",
+    category: "قرآن كريم",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "تلاوة هادئة من القرآن الكريم.",
+    videoUrl: "https://youtu.be/dN_wUpDgQzM?si=-LPSNPIhjtWB2Po2",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-qr-1",
+            "title": "المصحف الشريف المرتل والأدعية المختارة (PDF)",
+            "url": "https://drive.google.com/file/d/1QrAnM0shafThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-10",
+    title: "قرآن كريم",
+    category: "قرآن كريم",
+    subCategory: "تحفيز وتوجيه",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "تلاوة من القرآن الكريم.",
+    videoUrl: "https://youtu.be/EfvyfQWF5LQ?si=Xizo1j4X7dxXUa2g",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-qr-1",
+            "title": "المصحف الشريف المرتل والأدعية المختارة (PDF)",
+            "url": "https://drive.google.com/file/d/1QrAnM0shafThnwyaP0rtal2027G00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-11",
+    title: "حل تقييم الأسبوع الأول - لغة عربية برعاية محمد رمضان الحرباوي",
+    category: "لغة عربية",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل تقييم الأسبوع الأول - لغة عربية برعاية محمد رمضان الحرباوي.",
+    videoUrl: "https://youtu.be/7d7zqJkAW-4?si=2SeV64h2rqhsRezZ",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-12",
+    title: "حل الأداء الصفي والمنزلي - لغة عربية",
+    category: "لغة عربية",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل الأداء الصفي والمنزلي - لغة عربية.",
+    videoUrl: "https://youtu.be/qk_i7oYZScU?si=VH6T7dxhENwjZTEs",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-13",
+    title: "حل تقييمات الوزارة الأسبوع الأول - ثانية بكالوريا - فيزياء",
+    category: "فيزياء",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل تقييمات الوزارة الأسبوع الأول - ثانية بكالوريا - فيزياء.",
+    videoUrl: "https://youtu.be/vfd6Bg12Y58?si=y_8afnQyCQ9kmNDh",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-14",
+    title: "فيديو ترجمه مهم جدًا - تانية بكالوريا - ا/ إيهاب فاروق",
+    category: "لغة إنجليزية",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "فيديو ترجمة مهم جدًا لطلاب تانية بكالوريا مع ا/ إيهاب فاروق.",
+    videoUrl: "https://youtu.be/PRd0kN508CI?si=q8muCfXF-U59-lUZ",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-en-1",
+            "title": "كتاب اللغة الإنجليزية والمفردات وقواعد الترجمة (PDF)",
+            "url": "https://drive.google.com/file/d/1EnGl1shB00k2027ThnwyaP0rtalG00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-15",
+    title: "حل الأسبوع الثاني - تانية بكالوريا - فيزياء",
+    category: "فيزياء",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل الأسبوع الثاني - تانية بكالوريا - فيزياء.",
+    videoUrl: "https://youtu.be/38xHuiEYpmk?si=Qi4PcPaJ8hWGqgd_",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-16",
+    title: "حل الأسبوع الثالث - تانية بكالوريا - فيزياء",
+    category: "فيزياء",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل الأسبوع الثالث - تانية بكالوريا - فيزياء.",
+    videoUrl: "https://youtu.be/NjK6P_hxBMI?si=4ZYudxfWGLlA3JlW",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-17",
+    title: "حل التقييم الأول - تاريخ وطني - أحمد عادل",
+    category: "تاريخ",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل التقييم الأول - تاريخ وطني - أحمد عادل.",
+    videoUrl: "https://youtu.be/8q5Pny4XHtg?si=FrASFKka97ie49iJ",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-hi-1",
+            "title": "كتاب التاريخ المدرسي الوزاري (PDF)",
+            "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+            "type": "pdf"
+      },
+      {
+            "id": "att-hi-2",
+            "title": "ملخص الدرس الأول: بناء الدولة الحديثة (PDF)",
+            "url": "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-18",
+    title: "حل التقييم الثاني - تاريخ وطني - أحمد عادل",
+    category: "تاريخ",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل التقييم الثاني - تاريخ وطني - أحمد عادل.",
+    videoUrl: "https://youtu.be/3eEm0WSrPd4?si=8Kvskb5Z15rr5enf",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-hi-1",
+            "title": "كتاب التاريخ المدرسي الوزاري (PDF)",
+            "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+            "type": "pdf"
+      },
+      {
+            "id": "att-hi-2",
+            "title": "ملخص الدرس الأول: بناء الدولة الحديثة (PDF)",
+            "url": "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-19",
+    title: "مراجعة أول 3 دروس وحل التقييمات - المتجهات والمقذوفات الأفقية وبزاوية - فيزياء بكالوريا 2ث",
+    category: "فيزياء",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "مراجعة أول 3 دروس وحل التقييمات: المتجهات والمقذوفات الأفقية وبزاوية - فيزياء بكالوريا 2ث.",
+    videoUrl: "https://youtu.be/Ib77CEEPt3k?si=FrWL1YrIXEaxYyFx",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-20",
+    title: "معسكر بكالوريا مراجعة نصف الفصل الأول - اليوم الأول - فيزياء 2 بكالوريا 2027 دكتور كيرلس",
+    category: "فيزياء",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "معسكر بكالوريا مراجعة نصف الفصل الأول - اليوم الأول - فيزياء 2 بكالوريا 2027 دكتور كيرلس.",
+    videoUrl: "https://youtu.be/DOF3NM-Vgs0?si=mRYivo-kDqZkQXAa",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-21",
+    title: "برمجة تانية بكالوريا 2027 - الأسبوع الأول",
+    category: "برمجة",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "برمجة تانية بكالوريا 2027 - الأسبوع الأول.",
+    videoUrl: "https://youtu.be/g8MhtoAElt8?si=d8t5CbLhTW29v9p7",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-pr-1",
+            "title": "كورس البرمجة والذكاء الاصطناعي - الجزء الأول (PDF)",
+            "url": "https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-22",
+    title: "ملخص شرح الدرس الثاني",
+    category: "فيزياء",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "ملخص وشرح مبسط للدرس الثاني ضمن المراجعة والاستعداد لطلاب تانية بكالوريا.",
+    videoUrl: "https://youtu.be/eiVEbi3CbuY?si=J-l93imzrV10NAZ7",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-23",
+    title: "شرح كيف تضمن العلامة الكاملة في الوحدة الأولى؟ مراجعة الوحدة الأولى - برمجة تانية بكالوريا 2027",
+    category: "برمجة",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "شرح كيف تضمن العلامة الكاملة في الوحدة الأولى؟ مراجعة الوحدة الأولى في البرمجة لطلاب تانية بكالوريا 2027. برعاية :- محمد رمضان الحرباوي",
+    videoUrl: "https://youtu.be/f2SAoRlHVRg?si=3BWZeR_pzpvwcgaJ",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-pr-1",
+            "title": "كورس البرمجة والذكاء الاصطناعي - الجزء الأول (PDF)",
+            "url": "https://drive.google.com/file/d/1VV4ooxWD_yGBb1atk14ndQ1RmDPPvbgv/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-24",
+    title: "الورشة الأولى | الفيزياء 2 بكالوريا 2027 | أ/ محمد عبدالمعبود",
+    category: "فيزياء",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "الورشة الأولى في الفيزياء لطلاب تانية بكالوريا 2027 مع أ/ محمد عبدالمعبود.",
+    videoUrl: "https://youtu.be/gRfl-6BhYpU?si=L8_vWKnurlu74oJ9",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-25",
+    title: "أداء صفي + منزلي - لغة عربية 2027",
+    category: "لغة عربية",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل الأداء الصفي والمنزلي في اللغة العربية لطلاب تانية بكالوريا 2027.",
+    videoUrl: "https://youtu.be/4l8zUlYuhFM?si=mf7T-_kdTcOfH9HQ",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-26",
+    title: "حل التقييم الأول - لغة عربية - 2027",
+    category: "لغة عربية",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل التقييم الأول في اللغة العربية لطلاب تانية بكالوريا 2027.",
+    videoUrl: "https://youtu.be/cpfYUVqbQEU?si=qpsks9gj3JrQtsqf",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-27",
+    title: "حل التقييم الثاني - لغة عربية - 2027",
+    category: "لغة عربية",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "حل التقييم الثاني في اللغة العربية لطلاب تانية بكالوريا 2027.",
+    videoUrl: "https://youtu.be/knMjmZPrvfk?si=ZpYOvIIbRfA3Fqyx",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-28",
+    title: "شرح الدرس السابع: كمية التحرك والدفع - فيزياء تانية بكالوريا 2027 - حل أسئلة الوزارة درس 7",
+    category: "فيزياء",
+    subCategory: "حل التقييمات والواجبات",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "شرح الدرس السابع (كمية التحرك والدفع) مع حل أسئلة الوزارة - فيزياء تانية بكالوريا 2027.",
+    videoUrl: "https://youtu.be/aNFoGkUMGKc?si=qccSMU8pd8Ac19x9",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ph-1",
+            "title": "كتاب الفيزياء المدرسي وبنك الأسئلة المعتمد (PDF)",
+            "url": "https://drive.google.com/file/d/1B6c2T228QfS8Wq89gB6qQ9k9M9kQ0q9k/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ph-2",
+            "title": "مذكرة معسكر الفيزياء ومراجعة المتجهات والمقذوفات (PDF)",
+            "url": "https://drive.google.com/file/d/1K7c3T339QfS9Wq90gC7rR0l0N0lR1r0l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-29",
+    title: "الدرس الأول: بناء الدولة المصرية - تاريخ تانية بكالوريا مع مستر وليد مبروك",
+    category: "تاريخ",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "محاضرة الدرس الأول: بناء الدولة المصرية - تاريخ تانية بكالوريا مع مستر وليد مبروك.",
+    videoUrl: "https://youtu.be/yLn3m6_YBBI?si=LjTpBsT-dTleIToa",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-hi-1",
+            "title": "كتاب التاريخ المدرسي الوزاري (PDF)",
+            "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+            "type": "pdf"
+      },
+      {
+            "id": "att-hi-2",
+            "title": "ملخص الدرس الأول: بناء الدولة الحديثة (PDF)",
+            "url": "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-30",
+    title: "الدرس الثالث: التحولات الكبرى في مصر (العصر القديم) - تاريخ تانية بكالوريا",
+    category: "تاريخ",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "محاضرة الدرس الثالث: التحولات الكبرى في مصر (العصر القديم) - تاريخ تانية بكالوريا مع مستر وليد مبروك.",
+    videoUrl: "https://youtu.be/m3H4swkkQJU?si=UYShBVGHdPJUpj_N",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-hi-1",
+            "title": "كتاب التاريخ المدرسي الوزاري (PDF)",
+            "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+            "type": "pdf"
+      },
+      {
+            "id": "att-hi-2",
+            "title": "ملخص الدرس الأول: بناء الدولة الحديثة (PDF)",
+            "url": "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-31",
+    title: "الدرس الخامس: سياسة الاحتلال في مصر في العصر الحديث - تاريخ تانية بكالوريا",
+    category: "تاريخ",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "محاضرة الدرس الخامس: سياسة الاحتلال في مصر في العصر الحديث - تاريخ تانية بكالوريا مع مستر وليد مبروك.",
+    videoUrl: "https://youtu.be/Z3BkyhnMUtY?si=NweUQnXcvw3IAmwy",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-hi-1",
+            "title": "كتاب التاريخ المدرسي الوزاري (PDF)",
+            "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+            "type": "pdf"
+      },
+      {
+            "id": "att-hi-2",
+            "title": "ملخص الدرس الأول: بناء الدولة الحديثة (PDF)",
+            "url": "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-32",
+    title: "مراجعة على الوحدة الأولى - تاريخ تانية بكالوريا مع مستر وليد مبروك",
+    category: "تاريخ",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "مراجعة على الوحدة الأولى في التاريخ لطلاب تانية بكالوريا مع مستر وليد مبروك.",
+    videoUrl: "https://youtu.be/dOZc_ffBWAk?si=PwCALPRrV7L-ix07",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-hi-1",
+            "title": "كتاب التاريخ المدرسي الوزاري (PDF)",
+            "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=drive_link",
+            "type": "pdf"
+      },
+      {
+            "id": "att-hi-2",
+            "title": "ملخص الدرس الأول: بناء الدولة الحديثة (PDF)",
+            "url": "https://drive.google.com/file/d/1qeeYaaEYTOUMXc5DIwZHNEtXMNlhvh-l/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-33",
+    title: "من هو الغريب - حكايات غريب - أ/ محمد صلاح",
+    category: "لغة عربية",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "استعراض مميز لقصة «حكايات غريب» مع أ/ محمد صلاح، مناسب لطلاب تانية بكالوريا.",
+    videoUrl: "https://youtu.be/hvqGyNibVdk?si=-grhKmNRXalRDlOc",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-ar-1",
+            "title": "كتاب النحو الوزاري للصف الثاني الثانوي (PDF)",
+            "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+            "type": "pdf"
+      },
+      {
+            "id": "att-ar-2",
+            "title": "أوراق تقييمات الأسبوع والواجبات - لغة عربية (PDF)",
+            "url": "https://drive.google.com/file/d/144Pz95q914wZ38_0kU8oB55qU8n7L93e/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
+  },
+  {
+    id: "vid-legacy-34",
+    title: "مراجعة Unit 1 لغة إنجليزية - تانية بكالوريا - أ/ عبقري اللغة",
+    category: "لغة إنجليزية",
+    subCategory: "شرح ومراجعة",
+    grade: "تانية بكالوريا / الصف الثاني الثانوي",
+    description: "مراجعة شاملة لـ Unit 1 في اللغة الإنجليزية لطلاب تانية بكالوريا مع أ/ عبقري اللغة.",
+    videoUrl: "https://youtu.be/jAk-6WISM2Y?si=ejvSZGeGY6VAYZcI",
+    duration: "شرح كامل",
+    attachments: [
+      {
+            "id": "att-en-1",
+            "title": "كتاب اللغة الإنجليزية والمفردات وقواعد الترجمة (PDF)",
+            "url": "https://drive.google.com/file/d/1EnGl1shB00k2027ThnwyaP0rtalG00gl/view?usp=sharing",
+            "type": "pdf"
+      }
+],
+    teacherNotes: "برعاية وتطوير: محمد رمضان الحرباوي • ركز على النقاط الأساسية ودونها في قسم الملاحظات أدناه.",
+    createdAt: "2026-09-10T12:00:00Z",
+    createdBy: "محمد رمضان الحرباوي"
   }
 ];
 
