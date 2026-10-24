@@ -265,6 +265,23 @@ export default function App() {
           snapshot.forEach((docSnap) => {
             fetchedBooks.push(docSnap.data() as BookItem);
           });
+
+          // Check if any default books are missing in Firestore, sync them
+          for (const b of DEFAULT_BOOKS) {
+            if (!fetchedBooks.some((fb) => fb.id === b.id)) {
+              try {
+                await setDoc(doc(db, 'books', b.id), {
+                  ...b,
+                  createdBy: 'auto-sync',
+                  createdAt: new Date().toISOString()
+                });
+                fetchedBooks.push(b);
+              } catch (e) {
+                console.warn('Syncing missing book warning:', e);
+              }
+            }
+          }
+
           if (fetchedBooks.length > 0) {
             setBooks(fetchedBooks);
             try {
@@ -384,6 +401,23 @@ export default function App() {
           snapshot.forEach((docSnap) => {
             fetchedEvals.push(docSnap.data() as EvaluationItem);
           });
+
+          // Check if any default evaluations are missing in Firestore, sync them
+          for (const ev of DEFAULT_EVALUATIONS) {
+            if (!fetchedEvals.some((fe) => fe.id === ev.id)) {
+              try {
+                await setDoc(doc(db, 'evaluations', ev.id), {
+                  ...ev,
+                  createdBy: 'auto-sync',
+                  createdAt: new Date().toISOString()
+                });
+                fetchedEvals.push(ev);
+              } catch (e) {
+                console.warn('Syncing missing eval warning:', e);
+              }
+            }
+          }
+
           if (fetchedEvals.length > 0) {
             setEvaluations(fetchedEvals);
           }
