@@ -61,12 +61,6 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Teacher Direct Security Login
-  const [showTeacherLogin, setShowTeacherLogin] = useState(false);
-  const [teacherEmailInput, setTeacherEmailInput] = useState(OWNER_EMAIL);
-  const [teacherPasscodeInput, setTeacherPasscodeInput] = useState('');
-  const [teacherLoginError, setTeacherLoginError] = useState<string | null>(null);
-
   // Check Google Redirect on Mount
   useEffect(() => {
     checkGoogleRedirectResult().then((result) => {
@@ -115,30 +109,63 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
     }
   }, []);
 
-  // Real-time status sync for pending students
+  // Real-time status sync for pending students (listens to Firestore & local cache)
   useEffect(() => {
     if (!currentStudentUser || currentStudentUser.status === 'approved') return;
 
-    const userDocId = currentStudentUser.phone.replace(/[^a-zA-Z0-9_]/g, '_');
-    
-    // Check both raw phone and formatted ID
-    const unsub = onSnapshot(doc(db, 'users', currentStudentUser.phone), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data.status === 'approved') {
-          const approvedStudent: StudentUser = {
-            ...currentStudentUser,
-            status: 'approved',
-            name: data.name || currentStudentUser.name,
-            grade: data.grade || currentStudentUser.grade
-          };
-          localStorage.setItem('student_session', JSON.stringify(approvedStudent));
-          onStudentApproved(approvedStudent);
-        }
-      }
-    });
+    const safeDocId = currentStudentUser.phone.replace(/[^a-zA-Z0-9_]/g, '_');
 
-    return () => unsub();
+    const handleApproved = (data: any) => {
+      const approvedStudent: StudentUser = {
+        ...currentStudentUser,
+        status: 'approved',
+        name: data?.name || currentStudentUser.name,
+        grade: data?.grade || currentStudentUser.grade
+      };
+      localStorage.setItem('student_session', JSON.stringify(approvedStudent));
+      onStudentApproved(approvedStudent);
+    };
+
+    // Check localStorage in case teacher approved in this or another tab
+    const interval = setInterval(() => {
+      try {
+        const localSession = localStorage.getItem('student_session');
+        if (localSession) {
+          const parsed = JSON.parse(localSession);
+          if (parsed.status === 'approved' && (parsed.phone === currentStudentUser.phone || parsed.phone === safeDocId)) {
+            handleApproved(parsed);
+          }
+        }
+        const localReg = localStorage.getItem('bac_registered_students');
+        if (localReg) {
+          const regObj = JSON.parse(localReg);
+          const found = regObj[currentStudentUser.phone] || regObj[safeDocId];
+          if (found && found.status === 'approved') {
+            handleApproved(found);
+          }
+        }
+      } catch {}
+    }, 1500);
+
+    // 1. Listen on raw phone doc
+    const unsub1 = onSnapshot(doc(db, 'users', currentStudentUser.phone), (docSnap) => {
+      if (docSnap.exists() && docSnap.data().status === 'approved') {
+        handleApproved(docSnap.data());
+      }
+    }, () => {});
+
+    // 2. Listen on safeDocId doc
+    const unsub2 = onSnapshot(doc(db, 'users', safeDocId), (docSnap) => {
+      if (docSnap.exists() && docSnap.data().status === 'approved') {
+        handleApproved(docSnap.data());
+      }
+    }, () => {});
+
+    return () => {
+      clearInterval(interval);
+      unsub1();
+      unsub2();
+    };
   }, [currentStudentUser?.phone, currentStudentUser?.status]);
 
   // Student Phone/Password Login
@@ -271,7 +298,7 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
     }
   };
 
-  // Google Login (Owner ramadanh66778@gmail.com = Instant Teacher Access; Others = Pending Student)
+  // Google Login (Owner ramadanh66778@gmail.com = Instant Teacher Access; Others = Student)
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     setError(null);
@@ -287,48 +314,13 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
         if (result.error) {
           setError(result.error);
         }
-        if (result.isUnauthorizedDomain) {
-          setShowTeacherLogin(true);
-        }
       }
     } catch (err: any) {
       console.warn('Google sign-in error:', err);
-      setError('حدث خطأ أثناء مصادقة Google. يمكنك استخدام رقم الهاتف أو تسجيل دخول المعلم المباشر.');
+      setError('حدث خطأ أثناء الاتصال بحساب Google. يمكنك المحاولة مجدداً أو استخدام رقم الهاتف.');
     } finally {
       setGoogleLoading(false);
     }
-  };
-
-  // Direct Teacher Security Login (Guaranteed access for ramadanh66778@gmail.com)
-  const handleTeacherDirectLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setTeacherLoginError(null);
-    const cleanEmail = teacherEmailInput.trim().toLowerCase();
-    const cleanPass = teacherPasscodeInput.trim();
-
-    if (cleanEmail !== OWNER_EMAIL.toLowerCase()) {
-      setTeacherLoginError(`هذا الدخول مخصص حصرياً للمشرف: ${OWNER_EMAIL}`);
-      return;
-    }
-
-    const isValidPass = TEACHER_MASTER_PASSCODES.includes(cleanPass);
-    if (!isValidPass) {
-      setTeacherLoginError('رمز أمان المعلم غير صحيح. يرجى إدخال رمز الأمان المعتمد للأستاذ محمد رمضان.');
-      return;
-    }
-
-    const profile = {
-      name: 'الأستاذ: محمد رمضان الحرباوي (المعلم المشرف)',
-      email: OWNER_EMAIL,
-      photoURL: undefined
-    };
-
-    try {
-      localStorage.setItem('teacher_session_auth', 'true');
-      localStorage.setItem('teacher_profile', JSON.stringify(profile));
-    } catch {}
-
-    onTeacherLogin(profile);
   };
 
   // =======================================================================
@@ -673,76 +665,6 @@ export const AuthGateway: React.FC<AuthGatewayProps> = ({
             )}
           </button>
         </form>
-
-        {/* TEACHER / OWNER DIRECT ACCESS ACCORDION */}
-        <div className="pt-2 border-t border-slate-800">
-          <button
-            type="button"
-            onClick={() => setShowTeacherLogin(!showTeacherLogin)}
-            className="w-full py-2 px-3 rounded-xl bg-slate-950/70 hover:bg-slate-800/80 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-between transition-all cursor-pointer"
-          >
-            <span className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-amber-400" />
-              <span>دخول الأستاذ محمد رمضان الحرباوي (المعلم المشرف)</span>
-            </span>
-            <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded-full text-amber-300">
-              {showTeacherLogin ? 'إخفاء' : 'دخول مباشر'}
-            </span>
-          </button>
-
-          {showTeacherLogin && (
-            <form
-              onSubmit={handleTeacherDirectLogin}
-              className="mt-3 p-4 rounded-2xl bg-slate-950 border border-amber-500/40 space-y-3 animate-in fade-in duration-200"
-            >
-              <div className="text-[11px] text-amber-300/90 leading-relaxed font-semibold">
-                🔒 دخول مشفر ومخصص للأستاذ محمد رمضان الحرباوي لضمان الوصول اللحظي للوحة التحكم بدون الاعتماد على نطاقات خارجية.
-              </div>
-
-              {teacherLoginError && (
-                <div className="p-2.5 rounded-xl bg-rose-950/80 border border-rose-800 text-rose-200 text-xs flex items-center gap-2">
-                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                  <span>{teacherLoginError}</span>
-                </div>
-              )}
-
-              <div>
-                <label className="block text-slate-300 text-[11px] font-semibold mb-1">البريد الإلكتروني للمالك *</label>
-                <input
-                  type="email"
-                  required
-                  dir="ltr"
-                  value={teacherEmailInput}
-                  onChange={(e) => setTeacherEmailInput(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs text-slate-100 text-left focus:border-amber-400"
-                />
-              </div>
-
-              <div>
-                <label className="block text-slate-300 text-[11px] font-semibold mb-1">رمز أمان المعلم المشرف *</label>
-                <div className="relative">
-                  <input
-                    type="password"
-                    required
-                    value={teacherPasscodeInput}
-                    onChange={(e) => setTeacherPasscodeInput(e.target.value)}
-                    placeholder="أدخل رمز أمان المعلم"
-                    className="w-full bg-slate-900 border border-slate-700 rounded-xl pr-9 pl-3 py-2.5 text-xs text-slate-100 focus:border-amber-400"
-                  />
-                  <Lock className="w-4 h-4 text-slate-500 absolute right-3 top-2.5" />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-black text-xs flex items-center justify-center gap-2 shadow-lg shadow-amber-600/30 transition-all cursor-pointer"
-              >
-                <ShieldCheck className="w-4 h-4" />
-                <span>دخول فوري للوحة تحكم المعلم</span>
-              </button>
-            </form>
-          )}
-        </div>
 
         {/* Footer Support link */}
         <div className="pt-2 text-center border-t border-slate-800">

@@ -56,13 +56,112 @@ export interface AnnouncementItem {
 export interface StudentUser {
   phone: string;
   name: string;
+  username?: string;
   grade: string;
-  role?: 'student' | 'admin';
+  role?: 'student' | 'admin' | 'owner';
   status?: 'pending' | 'approved' | 'rejected';
+  forumStatus?: 'pending' | 'approved' | 'rejected';
   createdAt: string;
   reviewedAt?: string;
   reviewedBy?: string;
+  promotedAt?: string;
+  promotedBy?: string;
+  watchedVideos?: string[];
+  completedExams?: { examId: string; score: number; total: number; date: string }[];
 }
+
+export interface ForumPost {
+  id: string;
+  authorPhone: string;
+  authorName: string;
+  authorUsername: string;
+  authorRole: 'student' | 'admin' | 'owner';
+  title: string;
+  content: string;
+  category: string;
+  likes: string[];
+  repliesCount: number;
+  createdAt: string;
+  isPinned?: boolean;
+}
+
+export interface ForumReply {
+  id: string;
+  postId: string;
+  authorPhone: string;
+  authorName: string;
+  authorUsername: string;
+  authorRole: 'student' | 'admin' | 'owner';
+  content: string;
+  likes: string[];
+  createdAt: string;
+}
+
+export const FORUM_CATEGORIES = [
+  { id: 'all', name: 'جميع الموضوعات', icon: '💬' },
+  { id: 'general', name: 'نقاش عام وتجارب', icon: '📢' },
+  { id: 'questions', name: 'أسئلة ومسائل صعبة', icon: '❓' },
+  { id: 'summaries', name: 'ملخصات ومذكرات الطلاب', icon: '📝' },
+  { id: 'tips', name: 'نصائح المذاكرة وتنظيم الوقت', icon: '💡' }
+];
+
+export const DEFAULT_FORUM_POSTS: ForumPost[] = [
+  {
+    id: 'post-1',
+    authorPhone: 'ramadanh66778@gmail.com',
+    authorName: 'الأستاذ: محمد رمضان الحرباوي',
+    authorUsername: 'ramadan_admin',
+    authorRole: 'owner',
+    title: 'أهلاً وسهلاً بجميع الطلاب في منتدى ومجتمع المكتبة التعليمية الشاملة 👑',
+    content: 'مرحباً بكم يا أبطال تانية بكالوريا والثانوية العامة! هذا المنتدى مخصص لمناقشة الدروس، حل المسائل الصعبة، مشاركة الملخصات المفيدة، والتواصل المباشر مع المعلمين والمشرفين. نرجو الالتزام بالاحترام والتعاون المثمر.',
+    category: 'نقاش عام وتجارب',
+    likes: ['ramadanh66778@gmail.com'],
+    repliesCount: 2,
+    createdAt: new Date().toISOString(),
+    isPinned: true
+  },
+  {
+    id: 'post-2',
+    authorPhone: '01099887766',
+    authorName: 'أحمد محمود',
+    authorUsername: 'ahmed_bac2',
+    authorRole: 'student',
+    title: 'طريقة مبسطة لفهم وحفظ قواعد النحو وإعراب جمل تانية بكالوريا 📚',
+    content: 'جمعت لكم تلخيص سريع لأهم القواعد النحوية وإعراب جمل المصادر والمشتقات اللي بتيجي دايماً في امتحانات الوزارة والتقييمات الأسبوعية. تقدروا تشاركوني أي جملة وقفت معاكم هنا وسأساعدكم في إعرابها!',
+    category: 'ملخصات ومذكرات الطلاب',
+    likes: ['01099887766'],
+    repliesCount: 1,
+    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+    isPinned: false
+  }
+];
+
+export const DEFAULT_FORUM_REPLIES: Record<string, ForumReply[]> = {
+  'post-1': [
+    {
+      id: 'rep-1',
+      postId: 'post-1',
+      authorPhone: '01011223344',
+      authorName: 'سارة خالد',
+      authorUsername: 'sara_study',
+      authorRole: 'student',
+      content: 'شكراً جزيلاً لحضرتك يا أستاذ محمد على المجهود العظيم والموقع الرائع والكتب المعتمدة!',
+      likes: [],
+      createdAt: new Date(Date.now() - 3600000 * 2).toISOString()
+    },
+    {
+      id: 'rep-2',
+      postId: 'post-1',
+      authorPhone: 'ramadanh66778@gmail.com',
+      authorName: 'الأستاذ: محمد رمضان الحرباوي',
+      authorUsername: 'ramadan_admin',
+      authorRole: 'owner',
+      content: 'بالتوفيق والنجاح الباهر لجميع أبنائنا وبناتنا الأعزاء دائماً 🌟',
+      likes: [],
+      createdAt: new Date(Date.now() - 3600000).toISOString()
+    }
+  ]
+};
 
 export interface SupportChatMessage {
   id: string;
@@ -111,15 +210,19 @@ export interface StudentNote {
 
 export const CATEGORIES = [
   { id: 'all', name: 'الكل', icon: '📚' },
+  { id: 'علمي علوم', name: 'علمي علوم 🧬', icon: '🧬' },
+  { id: 'علمي رياضة', name: 'علمي رياضة 📐', icon: '📐' },
+  { id: 'أدبي', name: 'شعبة أدبي 📜', icon: '📜' },
   { id: 'لغة عربية', name: 'لغة عربية', icon: '📖' },
-  { id: 'تاريخ', name: 'تاريخ', icon: '🏛️' },
-  { id: 'رياضيات', name: 'رياضيات', icon: '📐' },
+  { id: 'إنجليزي', name: 'لغة إنجليزية', icon: '🇬🇧' },
   { id: 'فيزياء', name: 'فيزياء', icon: '⚡' },
   { id: 'كيمياء', name: 'كيمياء', icon: '🧪' },
-  { id: 'أحياء', name: 'أحياء', icon: '🧬' },
+  { id: 'أحياء', name: 'أحياء وجيولوجيا', icon: '🧬' },
+  { id: 'رياضيات', name: 'رياضيات وتفاضل', icon: '📐' },
+  { id: 'تاريخ', name: 'تاريخ وجغرافيا', icon: '🏛️' },
+  { id: 'فلسفة ومنطق', name: 'فلسفة وعلم نفس', icon: '💡' },
   { id: 'مواد شرعية', name: 'مواد شرعية', icon: '🕌' },
-  { id: 'فلسفة ومنطق', name: 'فلسفة ومنطق', icon: '💡' },
-  { id: 'برمجة', name: 'برمجة', icon: '💻' },
+  { id: 'برمجة', name: 'برمجة وتكنولوجيا', icon: '💻' },
   { id: 'عام', name: 'عام وثقافة', icon: '🌐' },
 ];
 
@@ -706,6 +809,149 @@ export const DEFAULT_BOOKS: BookItem[] = [
     "url": "https://drive.google.com/file/d/1RCnANotlh94UtFPWnU0_9ooCcQk_DRid/view?usp=sharing",
     "popular": 175,
     "isNew": false
+  },
+  {
+    "id": "book-54",
+    "title": "كتاب الأحياء الرسمي - وزارة التربية والتعليم (شعبة علمي علوم)",
+    "icon": "🧬",
+    "category": "أحياء",
+    "grade": "الصف الثالث الثانوي - علمي علوم",
+    "description": "الكتاب الوزاري المعتمد في مادة الأحياء للصف الثالث الثانوي: الدعامة، الحركة، التنسيق الهرموني، والتكاثر والبيولوجيا الجزيئية.",
+    "url": "https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing",
+    "popular": 190,
+    "isNew": true
+  },
+  {
+    "id": "book-55",
+    "title": "كتاب الجيولوجيا والعلوم البيئية - الثانوية العامة",
+    "icon": "🌍",
+    "category": "أحياء",
+    "grade": "الصف الثالث الثانوي - علمي علوم",
+    "description": "كتاب الوزارة في الجيولوجيا والتراكيب الجيولوجية وحركات الأرض والعلوم البيئية للصف الثالث الثانوي.",
+    "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+    "popular": 185,
+    "isNew": true
+  },
+  {
+    "id": "book-56",
+    "title": "كتاب الكيمياء للصف الثالث الثانوي - دليل الوزارة المعتمد",
+    "icon": "🧪",
+    "category": "كيمياء",
+    "grade": "الصف الثالث الثانوي - علمي علوم ورياضة",
+    "description": "كتاب الوزارة الرسمي في الكيمياء: العناصر الانتقالية، التحليل الكيميائي، الاتزان الكيميائي، الكيمياء الكهربية، والكيمياء العضوية.",
+    "url": "https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
+    "popular": 195,
+    "isNew": true
+  },
+  {
+    "id": "book-57",
+    "title": "كتاب الفيزياء - التيار الكهربي والفيزياء الحديثة",
+    "icon": "⚡",
+    "category": "فيزياء",
+    "grade": "الصف الثالث الثانوي - علمي",
+    "description": "كتاب الفيزياء الرسمي الصادر عن وزارة التربية والتعليم لطلاب الثانوية العامة بفرعيها مع تدريبات بنك المعرفة.",
+    "url": "https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing",
+    "popular": 210,
+    "isNew": true
+  },
+  {
+    "id": "book-58",
+    "title": "كتاب التفاضل والتكامل - الثانوية العامة (شعبة علمي رياضة)",
+    "icon": "📐",
+    "category": "رياضيات",
+    "grade": "الصف الثالث الثانوي - علمي رياضة",
+    "description": "كتاب الرياضيات البحتة (التفاضل والتكامل) لطلاب شعبة الرياضيات مع شروحات وحلول مسائل بنك المعرفة.",
+    "url": "https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
+    "popular": 180,
+    "isNew": true
+  },
+  {
+    "id": "book-59",
+    "title": "كتاب الجبر والهندسة الفراغية - الثانوية العامة",
+    "icon": "📏",
+    "category": "رياضيات",
+    "grade": "الصف الثالث الثانوي - علمي رياضة",
+    "description": "كتاب الجبر والهندسة الفراغية الرسمي لطلاب الصف الثالث الثانوي - شرح المحدود، المصفوفات، وهندسة الفراغ.",
+    "url": "https://drive.google.com/file/d/1eZAa1apbXTuTGpokc2oF5MZVLzxrvvi5/view?usp=sharing",
+    "popular": 175,
+    "isNew": true
+  },
+  {
+    "id": "book-60",
+    "title": "كتاب الميكانيكا (الاستاتيكا والديناميكا) - الصف الثالث الثانوي",
+    "icon": "⚙️",
+    "category": "رياضيات",
+    "grade": "الصف الثالث الثانوي - علمي رياضة",
+    "description": "كتاب الرياضيات التطبيقية: استاتيكا وديناميكا لطلاب شعبة علمي رياضة مع تدريبات نموذجية للامتحانات الرسمية.",
+    "url": "https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing",
+    "popular": 170,
+    "isNew": true
+  },
+  {
+    "id": "book-61",
+    "title": "كتاب تاريخ مصر والعرب الحديث - الثانوية العامة (أدبي)",
+    "icon": "🏛️",
+    "category": "تاريخ",
+    "grade": "الصف الثالث الثانوي - أدبي",
+    "description": "الكتاب الوزاري المعتمد في مادة التاريخ للثانوية العامة الأدبية من الحملة الفرنسية وحتى العصر المعاصر.",
+    "url": "https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=sharing",
+    "popular": 190,
+    "isNew": true
+  },
+  {
+    "id": "book-62",
+    "title": "كتاب الجغرافيا السياسية - الصف الثالث الثانوي (أدبي)",
+    "icon": "🗺️",
+    "category": "تاريخ",
+    "grade": "الصف الثالث الثانوي - أدبي",
+    "description": "كتاب الجغرافيا السياسية المعتمد من وزارة التربية والتعليم للصف الثالث الثانوي: الدولة والمقومات والحدود والأحلاف.",
+    "url": "https://drive.google.com/file/d/1RCnANotlh94UtFPWnU0_9ooCcQk_DRid/view?usp=sharing",
+    "popular": 180,
+    "isNew": true
+  },
+  {
+    "id": "book-63",
+    "title": "كتاب الفلسفة وقضايا العصر والمنطق الحديث - الثانوية العامة",
+    "icon": "💡",
+    "category": "فلسفة ومنطق",
+    "grade": "الصف الثالث الثانوي - أدبي",
+    "description": "كتاب الوزارة الرسمي في الفلسفة البيئية، البيوتيقا، وأخلاقيات المهنة، ومبادئ المنطق الاستقرائي والاستنباطي.",
+    "url": "https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing",
+    "popular": 165,
+    "isNew": true
+  },
+  {
+    "id": "book-64",
+    "title": "كتاب علم النفس والاجتماع - الصف الثالث الثانوي",
+    "icon": "🧠",
+    "category": "فلسفة ومنطق",
+    "grade": "الصف الثالث الثانوي - أدبي",
+    "description": "كتاب علم النفس والاجتماع الرسمي: نظريات التعلم، الذكاءات المتعددة، الشخصية، والعمليات والظواهر الاجتماعية.",
+    "url": "https://drive.google.com/file/d/1rcocqEmuz8sG9SMgXOfzHeeIgpWVsrHf/view?usp=sharing",
+    "popular": 170,
+    "isNew": true
+  },
+  {
+    "id": "book-65",
+    "title": "كتاب اللغة العربية الشامل وقصة الأيام - الثانوية العامة",
+    "icon": "📖",
+    "category": "لغة عربية",
+    "grade": "الصف الثالث الثانوي",
+    "description": "كتاب النصوص والقراءة والنحو والبلاغة مع قصة الأيام لعميد الأدب العربي طه حسين لطلاب الثانوية العامة.",
+    "url": "https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing",
+    "popular": 215,
+    "isNew": true
+  },
+  {
+    "id": "book-66",
+    "title": "كتاب New Hello! English - الصف الثالث الثانوي 2026",
+    "icon": "🇬🇧",
+    "category": "إنجليزي",
+    "grade": "الصف الثالث الثانوي",
+    "description": "الكتاب الوزاري المعتمد للغة الإنجليزية للثانوية العامة متضمناً القواعد والكلمات وقصة Great Expectations.",
+    "url": "https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing",
+    "popular": 200,
+    "isNew": true
   }
 ];
 
@@ -715,7 +961,7 @@ export const DEFAULT_EVALUATIONS: EvaluationItem[] = [
     subject: 'اللغة العربية',
     icon: '📖',
     week: 'الأسبوع الأول',
-    title: 'تقييم النحو والبلاغة - الأسبوع 1',
+    title: 'تقييم النحو والبلاغة (الوحدة الأولى - همزة الوصل والقطع)',
     url: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing',
     solutionUrl: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing'
   },
@@ -724,36 +970,126 @@ export const DEFAULT_EVALUATIONS: EvaluationItem[] = [
     subject: 'اللغة العربية',
     icon: '📖',
     week: 'الأسبوع الثاني',
-    title: 'واجب القراءة المتحررة والتعبير - الأسبوع 2',
+    title: 'واجب القراءة المتحررة والتعبير والفقرة الحجاجية',
     url: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing',
     solutionUrl: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing'
   },
   {
     id: 'eval-3',
-    subject: 'التاريخ',
-    icon: '🏛️',
-    week: 'الأسبوع الأول',
-    title: 'تقييم الدرس الأول: الحملة الفرنسية وأثرها',
-    url: 'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=sharing',
-    solutionUrl: 'https://drive.google.com/file/d/1qeeYaaEYTOUM4J9y3y_i92jA6nB8_eY/view?usp=sharing'
+    subject: 'اللغة العربية',
+    icon: '📖',
+    week: 'الأسبوع الثالث',
+    title: 'التقييم الأسبوعي الثالث - المشتقات وإعمالها وقصة الأيام',
+    url: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1DH8DeZDQqVnYfTovoug5EuGxTpA-7CqR/view?usp=sharing'
   },
   {
     id: 'eval-4',
-    subject: 'الرياضيات',
-    icon: '📐',
+    subject: 'الفيزياء',
+    icon: '⚡',
     week: 'الأسبوع الأول',
-    title: 'تقييم النهايات والاتصال - الأسبوع 1',
-    url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
-    solutionUrl: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing'
+    title: 'تقييم قانون أوم وتوصيل المقاومات الكهربية',
+    url: 'https://drive.google.com/file/d/1bC-17hC06L05p3w37gJkY8r6vY-fS99L/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1bC-17hC06L05p3w37gJkY8r6vY-fS99L/view?usp=sharing'
   },
   {
     id: 'eval-5',
     subject: 'الفيزياء',
     icon: '⚡',
     week: 'الأسبوع الثاني',
-    title: 'تقييم التيار الكهربي وتوصيل المقاومات',
-    url: 'https://drive.google.com/file/d/1bC-17hC06L05p3w37gJkY8r6vY-fS99L/view?usp=sharing',
-    solutionUrl: 'https://drive.google.com/file/d/1bC-17hC06L05p3w37gJkY8r6vY-fS99L/view?usp=sharing'
+    title: 'تقييم قانوني كيرشوف والمجال المغناطيسي للتيار',
+    url: 'https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/11TRHopBJ1tfw4D26ScOpLGH4ff-Lt0US/view?usp=sharing'
+  },
+  {
+    id: 'eval-6',
+    subject: 'الكيمياء',
+    icon: '🧪',
+    week: 'الأسبوع الأول',
+    title: 'تقييم العناصر الانتقالية والخواص العامة للسلسلة الأولى',
+    url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing'
+  },
+  {
+    id: 'eval-7',
+    subject: 'الكيمياء',
+    icon: '🧪',
+    week: 'الأسبوع الثاني',
+    title: 'تقييم أكاسيد الحديد وخاماته وطرق استخلاصه',
+    url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing'
+  },
+  {
+    id: 'eval-8',
+    subject: 'الأحياء',
+    icon: '🧬',
+    week: 'الأسبوع الأول',
+    title: 'تقييم الدعامة في النبات والإنسان (الهيكل العظمي)',
+    url: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing'
+  },
+  {
+    id: 'eval-9',
+    subject: 'الأحياء',
+    icon: '🧬',
+    week: 'الأسبوع الثاني',
+    title: 'تقييم الحركة في الكائنات الحية وانقباض العضلات',
+    url: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1IxPP_VsH2Wom8T5n3IyPduudFXd3-DSc/view?usp=sharing'
+  },
+  {
+    id: 'eval-10',
+    subject: 'الرياضيات',
+    icon: '📐',
+    week: 'الأسبوع الأول',
+    title: 'تقييم اشتقاق الدوال المثلثية وتطبيقات التفاضل والتكامل',
+    url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing'
+  },
+  {
+    id: 'eval-11',
+    subject: 'الرياضيات',
+    icon: '📐',
+    week: 'الأسبوع الثاني',
+    title: 'تقييم الاشتقاق البارامتري والمشتقات العليا',
+    url: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1qxqcD6p7RBt19L6EvxMRLa1aore8DmeD/view?usp=sharing'
+  },
+  {
+    id: 'eval-12',
+    subject: 'التاريخ',
+    icon: '🏛️',
+    week: 'الأسبوع الأول',
+    title: 'تقييم الحملة الفرنسية على مصر والشام والآثار الفكرية',
+    url: 'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1qeeYaaEYTOUM4J9y3y_i92jA6nB8_eY/view?usp=sharing'
+  },
+  {
+    id: 'eval-13',
+    subject: 'التاريخ',
+    icon: '🏛️',
+    week: 'الأسبوع الثاني',
+    title: 'تقييم بناء الدولة الحديثة في عهد محمد علي وخلفائه',
+    url: 'https://drive.google.com/file/d/1JQlVNklrEfleYtSSgntUNfUrP09mWhEu/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1qeeYaaEYTOUM4J9y3y_i92jA6nB8_eY/view?usp=sharing'
+  },
+  {
+    id: 'eval-14',
+    subject: 'اللغة الإنجليزية',
+    icon: '🇬🇧',
+    week: 'الأسبوع الأول',
+    title: 'Weekly Quiz Unit 1: Past Simple vs Past Continuous & Vocabulary',
+    url: 'https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1Vty0yywJ_sPPJ67LFW9ujmtAgZyJ6Ah8/view?usp=sharing'
+  },
+  {
+    id: 'eval-15',
+    subject: 'فلسفة ومنطق',
+    icon: '💡',
+    week: 'الأسبوع الأول',
+    title: 'تقييم الفلسفة وقضايا البيئة والمسؤولية الأخلاقية للأجيال القادمة',
+    url: 'https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing',
+    solutionUrl: 'https://drive.google.com/file/d/1S3guUKhyG89zaRtfRr4HTE_GKc0-gh2Z/view?usp=sharing'
   }
 ];
 

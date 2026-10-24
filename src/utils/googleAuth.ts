@@ -123,6 +123,56 @@ export async function processGoogleUser(
   };
 }
 
+// Direct Google OAuth2 token fallback for external domains (e.g. Vercel)
+export function signInWithGoogleOAuthDirect(): Promise<GoogleAuthResult> {
+  return new Promise((resolve) => {
+    try {
+      const g = (window as any).google;
+      if (g && g.accounts && g.accounts.oauth2) {
+        const client = g.accounts.oauth2.initTokenClient({
+          client_id: '735952128063-tknsdf5lpbl0pqe08vnott1kpiqm06ol.apps.googleusercontent.com',
+          scope: 'email profile openid',
+          callback: async (tokenResponse: any) => {
+            if (tokenResponse && tokenResponse.access_token) {
+              try {
+                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                  headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                });
+                const userData = await res.json();
+                if (userData && userData.email) {
+                  const authResult = await processGoogleUser(
+                    userData.email,
+                    userData.name || 'مستخدم Google',
+                    userData.picture || undefined
+                  );
+                  resolve(authResult);
+                  return;
+                }
+              } catch (fetchErr) {
+                console.warn('UserInfo fetch error:', fetchErr);
+              }
+            }
+            resolve({
+              success: false,
+              isTeacher: false,
+              error: 'تعذر التحقق من حساب Google. يرجى التأكد من اتصال الإنترنت.'
+            });
+          }
+        });
+        client.requestAccessToken();
+        return;
+      }
+    } catch (e) {
+      console.warn('Google OAuth2 direct error:', e);
+    }
+    resolve({
+      success: false,
+      isTeacher: false,
+      error: 'تعذر تشغيل نافذة مصادقة Google. يرجى استخدام تسجيل الدخول برقم الهاتف.'
+    });
+  });
+}
+
 // Handle Google Sign-In with multiple fallback mechanisms
 export async function executeGoogleSignIn(): Promise<GoogleAuthResult> {
   // Try Firebase signInWithPopup first
@@ -138,9 +188,26 @@ export async function executeGoogleSignIn(): Promise<GoogleAuthResult> {
     }
     return { success: false, isTeacher: false, error: 'لم يتم استلام بيانات الحساب من Google' };
   } catch (err: any) {
-    console.warn('Firebase signInWithPopup error:', err.code, err.message);
+    console.warn('Firebase signInWithPopup notice:', err.code, err.message);
 
-    // Case A: Popup was blocked by browser -> try Redirect
+    // Case A: Unauthorized domain in Firebase (e.g. Vercel deployment) -> Try Google OAuth2 direct
+    if (err.code === 'auth/unauthorized-domain') {
+      try {
+        const directRes = await signInWithGoogleOAuthDirect();
+        if (directRes.success) {
+          return directRes;
+        }
+      } catch (directErr) {
+        console.warn('Direct OAuth fallback error:', directErr);
+      }
+      return {
+        success: false,
+        isTeacher: false,
+        error: 'جاري تحديث مصادقة Google. يمكنك تسجيل الدخول برقم الهاتف مباشرة دون انتظار.'
+      };
+    }
+
+    // Case B: Popup was blocked by browser -> try Redirect
     if (err.code === 'auth/popup-blocked') {
       try {
         await signInWithRedirect(auth, googleProvider);
@@ -158,22 +225,12 @@ export async function executeGoogleSignIn(): Promise<GoogleAuthResult> {
       }
     }
 
-    // Case B: User closed popup
+    // Case C: User closed popup
     if (err.code === 'auth/popup-closed-by-user') {
       return {
         success: false,
         isTeacher: false,
         error: 'تم إغلاق نافذة تسجيل الدخول قبل إتمام العملية.'
-      };
-    }
-
-    // Case C: Unauthorized domain in Firebase (e.g. Vercel deployment)
-    if (err.code === 'auth/unauthorized-domain') {
-      return {
-        success: false,
-        isTeacher: false,
-        isUnauthorizedDomain: true,
-        error: `النطاق الحالي (${window.location.hostname}) يحتاج إلى تفعيل في Firebase Console، أو يمكنك استخدام رقم الهاتف أو تسجيل دخول المعلم المباشر.`
       };
     }
 

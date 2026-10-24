@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { VideoItem, StudentNote } from '../data/initialData';
+import { VideoItem, StudentNote, StudentUser } from '../data/initialData';
+import { CustomVideoPlayer } from './CustomVideoPlayer';
 import {
   Play,
   Video,
@@ -27,11 +28,13 @@ import {
 interface VideoSectionProps {
   videos: VideoItem[];
   theme?: 'dark' | 'light';
-  studentUser: { name: string; phone: string; grade: string } | null;
+  studentUser: StudentUser | null;
   onSaveNote: (note: StudentNote) => Promise<void>;
   onDeleteNote?: (noteId: string) => Promise<void>;
   savedNotes: StudentNote[];
   onOpenAuthModal: () => void;
+  watchedVideos?: string[];
+  onToggleWatchedVideo?: (videoId: string) => Promise<void>;
 }
 
 export const VideoSection: React.FC<VideoSectionProps> = ({
@@ -41,7 +44,9 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
   onSaveNote,
   onDeleteNote,
   savedNotes,
-  onOpenAuthModal
+  onOpenAuthModal,
+  watchedVideos = [],
+  onToggleWatchedVideo
 }) => {
   const isDark = theme === 'dark';
   const [selectedVideo, setSelectedVideo] = useState<VideoItem | null>(() => videos[0] || null);
@@ -223,25 +228,19 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
                 isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
               }`}
             >
-              {/* Responsive Video Frame */}
-              <div className="relative aspect-video w-full bg-black overflow-hidden group">
-                {selectedVideo.videoUrl.endsWith('.mp4') || selectedVideo.videoUrl.endsWith('.webm') ? (
-                  <video
-                    src={selectedVideo.videoUrl}
-                    controls
-                    className="w-full h-full object-contain"
-                    poster={selectedVideo.thumbnail}
-                  />
-                ) : (
-                  <iframe
-                    src={getEmbedUrl(selectedVideo.videoUrl)}
-                    title={selectedVideo.title}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="w-full h-full border-0"
-                  />
-                )}
-              </div>
+              {/* Custom Protected Video Player with Anti-Piracy Watermark & Controls */}
+              <CustomVideoPlayer
+                videoUrl={selectedVideo.videoUrl}
+                title={selectedVideo.title}
+                thumbnail={selectedVideo.thumbnail}
+                studentUser={studentUser}
+                theme={theme}
+                onEnded={() => {
+                  if (onToggleWatchedVideo && !watchedVideos.includes(selectedVideo.id)) {
+                    onToggleWatchedVideo(selectedVideo.id);
+                  }
+                }}
+              />
 
               {/* Video Info Header */}
               <div className="p-4 sm:p-6 space-y-4">
@@ -266,15 +265,38 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
                     )}
                   </div>
 
-                  <a
-                    href={selectedVideo.videoUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-indigo-400 hover:text-indigo-300 underline font-semibold"
-                  >
-                    <span>فتح في YouTube</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
+                  {/* Watched Toggle Button */}
+                  {selectedVideo && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!studentUser) {
+                          onOpenAuthModal();
+                          return;
+                        }
+                        if (onToggleWatchedVideo) {
+                          onToggleWatchedVideo(selectedVideo.id);
+                        }
+                      }}
+                      className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                        watchedVideos.includes(selectedVideo.id)
+                          ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-600/30'
+                          : isDark
+                          ? 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300'
+                      }`}
+                      title={watchedVideos.includes(selectedVideo.id) ? 'إلغاء تحديد المشاهدة' : 'تحديد هذه المحاضرة كمكتملة ومحفوظة في حسابك'}
+                    >
+                      <CheckCircle2
+                        className={`w-4 h-4 ${
+                          watchedVideos.includes(selectedVideo.id) ? 'text-emerald-400' : 'text-slate-400'
+                        }`}
+                      />
+                      <span>
+                        {watchedVideos.includes(selectedVideo.id) ? 'تمت المشاهدة بنجاح ✅' : 'تحديد كـ تمت المشاهدة 👁️'}
+                      </span>
+                    </button>
+                  )}
                 </div>
 
                 <h2 className={`text-lg sm:text-2xl font-black break-words ${isDark ? 'text-white' : 'text-slate-900'}`}>
@@ -559,6 +581,29 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
             </div>
           </div>
 
+          {/* Watched Progress Statistics Card */}
+          <div
+            className={`p-3.5 rounded-2xl border ${
+              isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white border-slate-200 shadow-sm'
+            }`}
+          >
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="font-bold flex items-center gap-1.5 text-emerald-400">
+                <CheckCircle2 className="w-3.5 h-3.5" />
+                <span>إنجازك في المحاضرات:</span>
+              </span>
+              <span className="font-bold text-slate-300">
+                {videos.filter((v) => watchedVideos.includes(v.id)).length} من {videos.length} ({Math.round(((videos.filter((v) => watchedVideos.includes(v.id)).length) / (videos.length || 1)) * 100)}%)
+              </span>
+            </div>
+            <div className="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div
+                className="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-500"
+                style={{ width: `${Math.round(((videos.filter((v) => watchedVideos.includes(v.id)).length) / (videos.length || 1)) * 100)}%` }}
+              />
+            </div>
+          </div>
+
           {/* Videos List */}
           <div className="space-y-3">
             <div className="flex items-center justify-between text-xs text-slate-400 px-1">
@@ -568,6 +613,7 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
             <div className="space-y-2.5 max-h-[600px] overflow-y-auto pr-1">
               {filteredVideos.map((video) => {
                 const isSelected = selectedVideo?.id === video.id;
+                const isWatched = watchedVideos.includes(video.id);
                 const videoNoteCount = studentPersonalNotes.filter(
                   (n) => n.relatedItemId === video.id
                 ).length;
@@ -589,12 +635,18 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
                         className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shrink-0 ${
                           isSelected
                             ? 'bg-indigo-600 text-white'
+                            : isWatched
+                            ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/30'
                             : isDark
                             ? 'bg-slate-800 text-slate-400'
                             : 'bg-indigo-50 text-indigo-600'
                         }`}
                       >
-                        <Play className="w-4 h-4 fill-current ml-0.5" />
+                        {isWatched ? (
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        ) : (
+                          <Play className="w-4 h-4 fill-current ml-0.5" />
+                        )}
                       </div>
 
                       <div className="flex-1 min-w-0">
@@ -605,6 +657,12 @@ export const VideoSection: React.FC<VideoSectionProps> = ({
                           {video.subCategory && (
                             <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400">
                               {video.subCategory}
+                            </span>
+                          )}
+                          {isWatched && (
+                            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 flex items-center gap-0.5">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                              <span>تمت المشاهدة</span>
                             </span>
                           )}
                           {videoNoteCount > 0 && (

@@ -10,6 +10,8 @@ import { VideoSection } from './components/VideoSection';
 import { AuthModal } from './components/AuthModal';
 import { AuthGateway } from './components/AuthGateway';
 import { SupportModal, SupportTicket } from './components/SupportModal';
+import { StudentProfileView } from './components/StudentProfileView';
+import { ForumSection } from './components/ForumSection';
 import {
   BookItem,
   EvaluationItem,
@@ -47,6 +49,46 @@ import {
   ShieldCheck
 } from 'lucide-react';
 
+// Helper to normalize phone / email keys to prevent duplicate keys in lists
+function normalizeStudentId(raw?: string): string {
+  if (!raw) return '';
+  return raw.trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+}
+
+function deduplicateStudentList(rawList: any[]): StudentUser[] {
+  const map = new Map<string, StudentUser>();
+  rawList.forEach((u) => {
+    if (!u) return;
+    const phone = (u.phone || u.id || '').trim();
+    if (!phone) return;
+    const key = normalizeStudentId(phone);
+    if (!key) return;
+
+    const existing = map.get(key);
+    const item: StudentUser = {
+      phone,
+      name: u.name || existing?.name || 'طالب',
+      grade: u.grade || existing?.grade || 'تانية بكالوريا والثانوية',
+      status: u.status || existing?.status || 'approved',
+      createdAt: u.createdAt || existing?.createdAt || new Date().toISOString(),
+      watchedVideos: Array.isArray(u.watchedVideos)
+        ? u.watchedVideos
+        : existing?.watchedVideos || [],
+      completedExams: Array.isArray(u.completedExams)
+        ? u.completedExams
+        : existing?.completedExams || []
+    };
+
+    if (!existing || u.status === 'approved' || (u.status && !existing.status)) {
+      map.set(key, item);
+    }
+  });
+
+  return Array.from(map.values()).sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  );
+}
+
 export default function App() {
   // Day / Night Theme State
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -69,7 +111,7 @@ export default function App() {
   const isDark = theme === 'dark';
 
   const [currentTab, setCurrentTab] = useState<
-    'books' | 'videos' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher'
+    'books' | 'videos' | 'evaluations' | 'exams' | 'quran' | 'favorites' | 'teacher' | 'profile' | 'forum'
   >('books');
 
   // Books State
@@ -116,12 +158,12 @@ export default function App() {
     }
   });
 
-  // Registered Students State
+  // Registered Students State (Always Deduplicated)
   const [students, setStudents] = useState<StudentUser[]>(() => {
     try {
       const localUsersStr = localStorage.getItem('bac_registered_students');
       if (localUsersStr) {
-        return Object.values(JSON.parse(localUsersStr));
+        return deduplicateStudentList(Object.values(JSON.parse(localUsersStr)));
       }
       return [];
     } catch {
@@ -176,6 +218,8 @@ export default function App() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
   const [showSupportModal, setShowSupportModal] = useState(false);
+
+  const canAccessAdmin = isTeacherAuthenticated || studentUser?.role === 'admin' || studentUser?.role === 'owner';
 
   // Search & Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -454,14 +498,17 @@ export default function App() {
     const unsub = onSnapshot(
       collection(db, 'users'),
       (snapshot) => {
-        const studentList: StudentUser[] = [];
+        const rawList: any[] = [];
         snapshot.forEach((docSnap) => {
           const d = docSnap.data();
-          studentList.push({
+          rawList.push({
             phone: d.phone || docSnap.id,
-            name: d.name || 'طالب',
-            grade: d.grade || 'تانية بكالوريا والثانوية',
-            createdAt: d.createdAt || new Date().toISOString()
+            name: d.name,
+            grade: d.grade,
+            status: d.status,
+            createdAt: d.createdAt,
+            watchedVideos: d.watchedVideos,
+            completedExams: d.completedExams
           });
         });
 
@@ -471,22 +518,15 @@ export default function App() {
           if (localUsersStr) {
             const localObj = JSON.parse(localUsersStr);
             Object.values(localObj).forEach((u: any) => {
-              if (u && u.phone && !studentList.some((s) => s.phone === u.phone)) {
-                studentList.push({
-                  phone: u.phone,
-                  name: u.name || 'طالب',
-                  grade: u.grade || 'تانية بكالوريا والثانوية',
-                  createdAt: u.createdAt || new Date().toISOString()
-                });
+              if (u && u.phone) {
+                rawList.push(u);
               }
             });
           }
         } catch {}
 
-        studentList.sort(
-          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-        setStudents(studentList);
+        const cleanList = deduplicateStudentList(rawList);
+        setStudents(cleanList);
       },
       (error) => {
         console.warn('Firestore users fallback:', error.message);
@@ -652,61 +692,134 @@ export default function App() {
     setExams((prev) => prev.filter((e) => e.id !== id));
   };
 
+  // Evaluation Save / Edit Handler (Direct to Firestore and local state)
+  const handleSaveEval = async (evaluation: EvaluationItem) => {
+    try {
+      await setDoc(doc(db, 'evaluations', evaluation.id), evaluation, { merge: true });
+    } catch (err) {
+      console.warn('Firestore eval save warning:', err);
+    }
+    setEvaluations((prev) => {
+      const exists = prev.some((e) => e.id === evaluation.id);
+      return exists
+        ? prev.map((e) => (e.id === evaluation.id ? evaluation : e))
+        : [evaluation, ...prev];
+    });
+  };
+
+  // Supervisor Promotion & Role Handler (Promote to Admin / Owner or demote to Student)
+  const handlePromoteStudent = async (phone: string, role: 'student' | 'admin' | 'owner') => {
+    const safeDocId = phone.replace(/[^a-zA-Z0-9_]/g, '_');
+    setStudents((prev) =>
+      prev.map((s) => (s.phone === phone || s.phone === safeDocId ? { ...s, role } : s))
+    );
+    if (studentUser && (studentUser.phone === phone || studentUser.phone === safeDocId)) {
+      const updated: StudentUser = { ...studentUser, role };
+      setStudentUser(updated);
+      try {
+        localStorage.setItem('student_session', JSON.stringify(updated));
+      } catch {}
+    }
+    try {
+      const roleData = {
+        role,
+        promotedAt: new Date().toISOString(),
+        promotedBy: 'محمد رمضان الحرباوي'
+      };
+      await Promise.allSettled([
+        setDoc(doc(db, 'users', phone), roleData, { merge: true }),
+        setDoc(doc(db, 'users', safeDocId), roleData, { merge: true })
+      ]);
+    } catch (err) {
+      console.warn('Firestore promote warning:', err);
+    }
+  };
+
   // Student Approval Handler (Admin approves student)
   const handleApproveStudent = async (phone: string) => {
-    try {
-      await setDoc(
-        doc(db, 'users', phone),
-        {
-          status: 'approved',
-          reviewedAt: new Date().toISOString(),
-          reviewedBy: 'محمد رمضان الحرباوي'
-        },
-        { merge: true }
-      );
-    } catch (err) {
-      console.warn('Firestore student approve warning:', err);
-    }
+    const safeDocId = phone.replace(/[^a-zA-Z0-9_]/g, '_');
 
+    // 1. Instant local state update
     setStudents((prev) =>
-      prev.map((s) => (s.phone === phone ? { ...s, status: 'approved' } : s))
+      prev.map((s) => (s.phone === phone || s.phone === safeDocId ? { ...s, status: 'approved' } : s))
     );
 
-    if (studentUser && studentUser.phone === phone) {
+    // 2. Instant localStorage cache update
+    try {
+      const localUsersStr = localStorage.getItem('bac_registered_students');
+      if (localUsersStr) {
+        const localObj = JSON.parse(localUsersStr);
+        if (localObj[phone]) localObj[phone].status = 'approved';
+        if (localObj[safeDocId]) localObj[safeDocId].status = 'approved';
+        localStorage.setItem('bac_registered_students', JSON.stringify(localObj));
+      }
+    } catch {}
+
+    if (studentUser && (studentUser.phone === phone || studentUser.phone === safeDocId)) {
       const updated: StudentUser = { ...studentUser, status: 'approved' };
       setStudentUser(updated);
       try {
         localStorage.setItem('student_session', JSON.stringify(updated));
       } catch {}
     }
+
+    // 3. Sync to Firestore without blocking UI
+    try {
+      const approvalData = {
+        status: 'approved',
+        reviewedAt: new Date().toISOString(),
+        reviewedBy: 'محمد رمضان الحرباوي'
+      };
+      await Promise.allSettled([
+        setDoc(doc(db, 'users', phone), approvalData, { merge: true }),
+        setDoc(doc(db, 'users', safeDocId), approvalData, { merge: true })
+      ]);
+    } catch (err) {
+      console.warn('Firestore student approve warning:', err);
+    }
   };
 
   // Student Reject Handler (Admin rejects student)
   const handleRejectStudent = async (phone: string) => {
-    try {
-      await setDoc(
-        doc(db, 'users', phone),
-        {
-          status: 'rejected',
-          reviewedAt: new Date().toISOString(),
-          reviewedBy: 'محمد رمضان الحرباوي'
-        },
-        { merge: true }
-      );
-    } catch (err) {
-      console.warn('Firestore student reject warning:', err);
-    }
+    const safeDocId = phone.replace(/[^a-zA-Z0-9_]/g, '_');
 
+    // 1. Instant local state update
     setStudents((prev) =>
-      prev.map((s) => (s.phone === phone ? { ...s, status: 'rejected' } : s))
+      prev.map((s) => (s.phone === phone || s.phone === safeDocId ? { ...s, status: 'rejected' } : s))
     );
 
-    if (studentUser && studentUser.phone === phone) {
+    // 2. Instant localStorage cache update
+    try {
+      const localUsersStr = localStorage.getItem('bac_registered_students');
+      if (localUsersStr) {
+        const localObj = JSON.parse(localUsersStr);
+        if (localObj[phone]) localObj[phone].status = 'rejected';
+        if (localObj[safeDocId]) localObj[safeDocId].status = 'rejected';
+        localStorage.setItem('bac_registered_students', JSON.stringify(localObj));
+      }
+    } catch {}
+
+    if (studentUser && (studentUser.phone === phone || studentUser.phone === safeDocId)) {
       const updated: StudentUser = { ...studentUser, status: 'rejected' };
       setStudentUser(updated);
       try {
         localStorage.setItem('student_session', JSON.stringify(updated));
       } catch {}
+    }
+
+    // 3. Sync to Firestore without blocking UI
+    try {
+      const rejectData = {
+        status: 'rejected',
+        reviewedAt: new Date().toISOString(),
+        reviewedBy: 'محمد رمضان الحرباوي'
+      };
+      await Promise.allSettled([
+        setDoc(doc(db, 'users', phone), rejectData, { merge: true }),
+        setDoc(doc(db, 'users', safeDocId), rejectData, { merge: true })
+      ]);
+    } catch (err) {
+      console.warn('Firestore student reject warning:', err);
     }
   };
 
@@ -782,9 +895,63 @@ export default function App() {
     });
   };
 
+  // Watched Video Toggle Handler (Synced with Student Profile & Firestore)
+  const handleToggleWatchedVideo = async (videoId: string) => {
+    if (!studentUser) return;
+    const currentWatched = studentUser.watchedVideos || [];
+    const isWatched = currentWatched.includes(videoId);
+    const updatedWatched = isWatched
+      ? currentWatched.filter((id) => id !== videoId)
+      : [...currentWatched, videoId];
+
+    const updatedUser: StudentUser = {
+      ...studentUser,
+      watchedVideos: updatedWatched
+    };
+
+    // 1. Instant local React state update
+    setStudentUser(updatedUser);
+
+    // 2. Update students directory state
+    setStudents((prev) =>
+      prev.map((s) =>
+        s.phone === studentUser.phone ? { ...s, watchedVideos: updatedWatched } : s
+      )
+    );
+
+    // 3. Update localStorage cache immediately
+    try {
+      localStorage.setItem('student_session', JSON.stringify(updatedUser));
+      const localUsersStr = localStorage.getItem('bac_registered_students');
+      if (localUsersStr) {
+        const localObj = JSON.parse(localUsersStr);
+        if (localObj[studentUser.phone]) {
+          localObj[studentUser.phone].watchedVideos = updatedWatched;
+        }
+        const safeDocId = studentUser.phone.replace(/[^a-zA-Z0-9_]/g, '_');
+        if (localObj[safeDocId]) {
+          localObj[safeDocId].watchedVideos = updatedWatched;
+        }
+        localStorage.setItem('bac_registered_students', JSON.stringify(localObj));
+      }
+    } catch {}
+
+    // 4. Background sync to Firestore without blocking UI
+    try {
+      const safeDocId = studentUser.phone.replace(/[^a-zA-Z0-9_]/g, '_');
+      await Promise.allSettled([
+        setDoc(doc(db, 'users', studentUser.phone), { watchedVideos: updatedWatched }, { merge: true }),
+        setDoc(doc(db, 'users', safeDocId), { watchedVideos: updatedWatched }, { merge: true })
+      ]);
+    } catch (err) {
+      console.warn('Firestore toggle watched warning:', err);
+    }
+  };
+
   const handleStudentLogout = () => {
     localStorage.removeItem('student_session');
     setStudentUser(null);
+    setCurrentTab('books');
   };
 
   // Teacher Success & Logout
@@ -829,6 +996,7 @@ export default function App() {
           currentStudentUser={studentUser}
           onStudentApproved={(userData) => {
             setStudentUser(userData);
+            setCurrentTab('profile'); // Direct user to profile to see all their account details!
             try {
               localStorage.setItem('student_session', JSON.stringify(userData));
             } catch {}
@@ -1041,6 +1209,8 @@ export default function App() {
             onSaveNote={handleSaveNote}
             onDeleteNote={handleDeleteNote}
             savedNotes={studentNotes}
+            watchedVideos={studentUser?.watchedVideos || []}
+            onToggleWatchedVideo={handleToggleWatchedVideo}
             onOpenAuthModal={() => {
               setAuthModalMode('login');
               setShowAuthModal(true);
@@ -1110,9 +1280,9 @@ export default function App() {
           </div>
         )}
 
-        {/* VIEW 7: Teacher Dashboard (STRICTLY RESTRICTED TO ramadanh66778@gmail.com) */}
+        {/* VIEW 7: Teacher / Admin Dashboard */}
         {currentTab === 'teacher' && (
-          isTeacherAuthenticated ? (
+          canAccessAdmin ? (
             <TeacherDashboard
               books={books}
               evaluations={evaluations}
@@ -1124,6 +1294,8 @@ export default function App() {
               onRefresh={() => {}}
               onDeleteBook={handleDeleteBook}
               onSaveBook={handleSaveBook}
+              onSaveEval={handleSaveEval}
+              onPromoteStudent={handlePromoteStudent}
               onSaveExam={handleSaveExam}
               onDeleteExam={handleDeleteExam}
               onDeleteStudent={handleDeleteStudent}
@@ -1141,9 +1313,9 @@ export default function App() {
               <div className="w-16 h-16 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto">
                 <ShieldCheck className="w-8 h-8" />
               </div>
-              <h2 className="text-xl font-black text-white">منطقة خاصة بالمعلم المشرف فقط</h2>
+              <h2 className="text-xl font-black text-white">منطقة خاصة بالإدارة والمعلم المشرف فقط</h2>
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                هذه الصفحة مقفلة تماماً ومخصصة للأستاذ محمد رمضان الحرباوي فقط. للدخول، يرجى تسجيل الدخول بحساب Google المعتمد (ramadanh66778@gmail.com).
+                هذه الصفحة مقفلة تماماً ومخصصة للأستاذ محمد رمضان الحرباوي والمشرفين المعتمدين فقط. للدخول، يرجى تسجيل الدخول بحساب Google المعتمد (ramadanh66778@gmail.com) أو الحصول على صلاحية من المالك.
               </p>
               <button
                 onClick={() => setCurrentTab('books')}
@@ -1153,6 +1325,40 @@ export default function App() {
               </button>
             </div>
           )
+        )}
+
+        {/* VIEW 8: Student Profile View & Stats */}
+        {currentTab === 'profile' && studentUser && (
+          <StudentProfileView
+            studentUser={studentUser}
+            videos={videos}
+            savedNotes={studentNotes}
+            favoritesCount={favorites.length}
+            theme={theme}
+            onNavigateTab={(tab) => setCurrentTab(tab)}
+            onOpenSupport={() => setShowSupportModal(true)}
+            onLogout={handleStudentLogout}
+          />
+        )}
+
+        {/* VIEW 9: Student Forum & Community */}
+        {currentTab === 'forum' && (
+          <ForumSection
+            studentUser={studentUser}
+            isTeacherAuthenticated={isTeacherAuthenticated}
+            teacherProfile={teacherProfile}
+            onOpenAuthModal={() => {
+              setAuthModalMode('login');
+              setShowAuthModal(true);
+            }}
+            onUpdateStudentUser={(updatedUser) => {
+              setStudentUser(updatedUser);
+              try {
+                localStorage.setItem('student_session', JSON.stringify(updatedUser));
+              } catch {}
+            }}
+            theme={theme}
+          />
         )}
       </main>
 
@@ -1181,13 +1387,18 @@ export default function App() {
         isOpen={showAuthModal}
         initialMode={authModalMode}
         onClose={() => setShowAuthModal(false)}
-        onSuccess={(student) =>
-          setStudentUser({
+        onSuccess={(student) => {
+          const approvedStudent: StudentUser = {
             ...student,
             status: 'approved',
             createdAt: new Date().toISOString()
-          })
-        }
+          };
+          setStudentUser(approvedStudent);
+          setCurrentTab('profile'); // Immediately direct to student profile view
+          try {
+            localStorage.setItem('student_session', JSON.stringify(approvedStudent));
+          } catch {}
+        }}
         onTeacherSuccess={handleTeacherSuccess}
       />
 

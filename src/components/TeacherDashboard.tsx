@@ -73,6 +73,8 @@ interface TeacherDashboardProps {
   onDeleteStudent?: (phone: string) => Promise<void>;
   onApproveStudent?: (phone: string) => Promise<void>;
   onRejectStudent?: (phone: string) => Promise<void>;
+  onPromoteStudent?: (phone: string, role: 'student' | 'admin' | 'owner') => Promise<void>;
+  onSaveEval?: (evaluation: EvaluationItem) => Promise<void>;
   onSaveVideo?: (video: VideoItem) => Promise<void>;
   onDeleteVideo?: (id: string) => Promise<void>;
   userId?: string;
@@ -97,6 +99,8 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   onDeleteStudent,
   onApproveStudent,
   onRejectStudent,
+  onPromoteStudent,
+  onSaveEval,
   onSaveVideo,
   onDeleteVideo,
   userId = 'teacher-admin',
@@ -104,10 +108,16 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 }) => {
   const isDark = theme === 'dark';
 
-  // Security & Authentication Gate
+  // Security & Authentication Gate (Accepts Teacher Google Auth or Promoted Admin/Owner Students)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     try {
-      return localStorage.getItem('teacher_session_auth') === 'true';
+      const isTeacher = localStorage.getItem('teacher_session_auth') === 'true';
+      const studentSession = localStorage.getItem('student_session');
+      if (studentSession) {
+        const parsed = JSON.parse(studentSession);
+        if (parsed.role === 'admin' || parsed.role === 'owner') return true;
+      }
+      return isTeacher;
     } catch {
       return false;
     }
@@ -196,6 +206,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [evalTitle, setEvalTitle] = useState('');
   const [evalUrl, setEvalUrl] = useState('');
   const [evalSolutionUrl, setEvalSolutionUrl] = useState('');
+  const [editingEvalId, setEditingEvalId] = useState<string | null>(null);
 
   // Announcement form state
   const [announceTitle, setAnnounceTitle] = useState('');
@@ -219,9 +230,79 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   const [examAns, setExamAns] = useState(0);
   const [examExp, setExamExp] = useState('');
 
-  // Direct Teacher Key State
-  const [showDirectKeyLogin, setShowDirectKeyLogin] = useState(false);
-  const [directKeyPasscode, setDirectKeyPasscode] = useState('');
+  // Local optimistic students state (deduplicated by phone/email to avoid duplicate keys)
+  const dedupeStudents = (list: StudentUser[]): StudentUser[] => {
+    const map = new Map<string, StudentUser>();
+    list.forEach((s) => {
+      if (!s) return;
+      const key = (s.phone || '').trim().toLowerCase().replace(/[^a-zA-Z0-9]/g, '');
+      if (!key) return;
+      const existing = map.get(key);
+      if (!existing || s.status === 'approved' || (s.status && !existing.status)) {
+        map.set(key, s);
+      }
+    });
+    return Array.from(map.values());
+  };
+
+  const [localStudents, setLocalStudents] = useState<StudentUser[]>(() => dedupeStudents(students));
+  useEffect(() => {
+    setLocalStudents(dedupeStudents(students));
+  }, [students]);
+
+  // Optimistic Student Approval Handler
+  const handleApproveStudentOptimistic = (phone: string, studentName: string) => {
+    setLocalStudents((prev) =>
+      prev.map((s) => (s.phone === phone ? { ...s, status: 'approved' } : s))
+    );
+    showToast(`تم اعتماد وتفعيل حساب الطالب ${studentName} فوراً! ✅`);
+    if (onApproveStudent) {
+      onApproveStudent(phone).catch((e) => console.warn('Approve student error:', e));
+    }
+  };
+
+  // Optimistic Student Rejection Handler
+  const handleRejectStudentOptimistic = (phone: string, studentName: string) => {
+    setLocalStudents((prev) =>
+      prev.map((s) => (s.phone === phone ? { ...s, status: 'rejected' } : s))
+    );
+    showToast(`تم رفض حساب الطالب ${studentName} ❌`, 'error');
+    if (onRejectStudent) {
+      onRejectStudent(phone).catch((e) => console.warn('Reject student error:', e));
+    }
+  };
+
+  // Supervisor Promotion & Role Handler (Promote to Admin / Owner or demote to Student)
+  const handlePromoteStudent = async (phone: string, role: 'student' | 'admin' | 'owner', studentName: string) => {
+    // 1. Instant optimistic local state update
+    setLocalStudents((prev) =>
+      prev.map((s) => (s.phone === phone ? { ...s, role } : s))
+    );
+
+    const roleName =
+      role === 'owner' ? 'مالك مساعد 👑' : role === 'admin' ? 'مشرف عام / أدمن 🛡️' : 'طالب عادي 🎓';
+    showToast(`تم تعيين رتبة "${studentName}" كـ (${roleName}) بنجاح!`);
+
+    // 2. Call parent handler or write directly to Firestore
+    if (onPromoteStudent) {
+      await onPromoteStudent(phone, role);
+    } else {
+      const safeDocId = phone.replace(/[^a-zA-Z0-9_]/g, '_');
+      const promotionData = {
+        role,
+        promotedAt: new Date().toISOString(),
+        promotedBy: teacherProfile?.name || 'محمد رمضان الحرباوي'
+      };
+      try {
+        await Promise.allSettled([
+          setDoc(doc(db, 'users', phone), promotionData, { merge: true }),
+          setDoc(doc(db, 'users', safeDocId), promotionData, { merge: true })
+        ]);
+      } catch (err) {
+        console.warn('Firestore promotion warning:', err);
+      }
+    }
+  };
 
   // Google Login Authentication Handler (STRICTLY FOR ramadanh66778@gmail.com)
   const handleGoogleLogin = async () => {
@@ -244,38 +325,13 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
         setAuthError(`غير مصرح لك بالدخول نهائياً. هذه اللوحة مشفرة ومخصصة فقط للمالك (${OWNER_EMAIL}).`);
       } else {
         setAuthError(result.error || 'تعذر تسجيل الدخول بـ Google.');
-        if (result.isUnauthorizedDomain) {
-          setShowDirectKeyLogin(true);
-        }
       }
     } catch (err: any) {
       console.warn('Google sign-in error:', err);
-      setAuthError('حدث خطأ أثناء مصادقة Google. يمكنك استخدام رمز أمان المعلم المباشر.');
+      setAuthError('حدث خطأ أثناء مصادقة Google. يرجى المحاولة مرة أخرى.');
     } finally {
       setGoogleLoading(false);
     }
-  };
-
-  // Direct Key Passcode Login for Teacher
-  const handleDirectKeyLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    setAuthError(null);
-    if (!TEACHER_MASTER_PASSCODES.includes(directKeyPasscode.trim())) {
-      setAuthError('رمز أمان المعلم غير صحيح. يرجى إدخال رمز الأمان المعتمد للأستاذ محمد رمضان.');
-      return;
-    }
-    const profile = {
-      name: 'الأستاذ: محمد رمضان الحرباوي (المعلم المشرف)',
-      email: OWNER_EMAIL,
-      photoURL: undefined
-    };
-    setIsAuthenticated(true);
-    setTeacherProfile(profile);
-    try {
-      localStorage.setItem('teacher_session_auth', 'true');
-      localStorage.setItem('teacher_profile', JSON.stringify(profile));
-    } catch {}
-    showToast(`مرحباً بك يا أستاذ ${profile.name}! تم الدخول برمز الأمان بنجاح.`);
   };
 
   const handleLogout = async () => {
@@ -465,31 +521,54 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
   };
 
 
-  // Save Evaluation
+  // Reset Evaluation Form
+  const resetEvalForm = () => {
+    setEvalTitle('');
+    setEvalUrl('');
+    setEvalSolutionUrl('');
+    setEvalSubject('اللغة العربية');
+    setEvalWeek('الأسبوع الأول');
+    setEditingEvalId(null);
+  };
+
+  // Edit Evaluation
+  const handleEditEval = (ev: EvaluationItem) => {
+    setEditingEvalId(ev.id);
+    setEvalSubject(ev.subject);
+    setEvalWeek(ev.week);
+    setEvalTitle(ev.title);
+    setEvalUrl(ev.url);
+    setEvalSolutionUrl(ev.solutionUrl || '');
+    setShowEvalModal(true);
+  };
+
+  // Save Evaluation (Add or Edit)
   const handleSaveEval = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!evalTitle.trim() || !evalUrl.trim()) return;
 
-    const id = `eval-${Date.now()}`;
+    const id = editingEvalId || `eval-${Date.now()}`;
     const newEval: EvaluationItem = {
       id,
       subject: evalSubject,
       week: evalWeek,
-      title: evalTitle,
-      url: evalUrl,
-      solutionUrl: evalSolutionUrl || evalUrl,
+      title: evalTitle.trim(),
+      url: evalUrl.trim(),
+      solutionUrl: evalSolutionUrl.trim() || evalUrl.trim(),
       icon: '📝',
       createdBy: teacherProfile?.email || 'admin-teacher',
       createdAt: new Date().toISOString()
     };
 
     try {
-      await setDoc(doc(db, 'evaluations', id), newEval);
+      if (onSaveEval) {
+        await onSaveEval(newEval);
+      } else {
+        await setDoc(doc(db, 'evaluations', id), newEval, { merge: true });
+      }
       setShowEvalModal(false);
-      setEvalTitle('');
-      setEvalUrl('');
-      setEvalSolutionUrl('');
-      showToast('تمت إضافة التقييم الأسبوعي وحفظه تلقائياً!');
+      resetEvalForm();
+      showToast(editingEvalId ? 'تم تحديث بيانات التقييم بنجاح!' : 'تمت إضافة التقييم الأسبوعي وحفظه تلقائياً!');
       onRefresh();
     } catch (err: any) {
       showToast('خطأ في حفظ التقييم: ' + err.message, 'error');
@@ -808,12 +887,12 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
     }
   };
 
-  const pendingStudentsCount = students.filter((s) => s.status === 'pending' || !s.status).length;
-  const approvedStudentsCount = students.filter((s) => s.status === 'approved').length;
-  const rejectedStudentsCount = students.filter((s) => s.status === 'rejected').length;
+  const pendingStudentsCount = localStudents.filter((s) => s.status === 'pending' || !s.status).length;
+  const approvedStudentsCount = localStudents.filter((s) => s.status === 'approved').length;
+  const rejectedStudentsCount = localStudents.filter((s) => s.status === 'rejected').length;
 
   // Filtered students
-  const displayedStudents = students.filter((s) => {
+  const displayedStudents = localStudents.filter((s) => {
     const q = studentSearch.toLowerCase().trim();
     const matchesSearch = !q || s.name.toLowerCase().includes(q) || s.phone.includes(q) || (s.grade && s.grade.toLowerCase().includes(q));
     const matchesStatus =
@@ -911,52 +990,6 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             )}
             <span>المتابعة بحساب Google</span>
           </button>
-
-          {/* Emergency / Direct Teacher Security Key */}
-          <div className="pt-2">
-            <button
-              type="button"
-              onClick={() => setShowDirectKeyLogin(!showDirectKeyLogin)}
-              className="w-full py-2.5 px-3 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 border border-amber-500/30 text-amber-300 text-xs font-bold flex items-center justify-between transition-all cursor-pointer"
-            >
-              <span className="flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-amber-400" />
-                <span>دخول برمز أمان المعلم المباشر (بدون Google)</span>
-              </span>
-              <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded text-amber-300">
-                {showDirectKeyLogin ? 'إخفاء' : 'فتح'}
-              </span>
-            </button>
-
-            {showDirectKeyLogin && (
-              <form
-                onSubmit={handleDirectKeyLogin}
-                className="mt-3 p-3.5 rounded-xl bg-slate-950 border border-amber-500/40 space-y-2.5"
-              >
-                <div className="text-[11px] text-amber-300/80 font-medium">
-                  أدخل رمز أمان المعلم المعتمد للأستاذ محمد رمضان:
-                </div>
-                <div className="relative">
-                  <input
-                    type="password"
-                    required
-                    value={directKeyPasscode}
-                    onChange={(e) => setDirectKeyPasscode(e.target.value)}
-                    placeholder="رمز الأمان..."
-                    className="w-full bg-slate-900 border border-slate-700 rounded-lg pr-9 pl-3 py-2 text-xs text-slate-100 focus:border-amber-400"
-                  />
-                  <Lock className="w-3.5 h-3.5 text-slate-500 absolute right-3 top-2.5" />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full py-2 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-                >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>تأكيد والدخول للوحة التحكم</span>
-                </button>
-              </form>
-            )}
-          </div>
         </div>
 
         <div className="mt-6 pt-4 border-t border-slate-700/50 text-center">
@@ -1645,6 +1678,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                     <th className="p-3.5 sm:p-4">رقم الهاتف</th>
                     <th className="p-3.5 sm:p-4">الصف</th>
                     <th className="p-3.5 sm:p-4 text-center">حالة الحساب</th>
+                    <th className="p-3.5 sm:p-4 text-center">الرتبة والصلاحية (ترقية المشرفين) 👑</th>
                     <th className="p-3.5 sm:p-4">تاريخ الطلب</th>
                     <th className="p-3.5 sm:p-4 text-center">المراجعة والاعتماد</th>
                   </tr>
@@ -1656,7 +1690,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                     const isPending = !isApproved && !isRejected;
 
                     return (
-                      <tr key={s.phone || idx} className={isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}>
+                      <tr key={`${s.phone || 'student'}-${idx}`} className={isDark ? 'hover:bg-slate-800/40' : 'hover:bg-slate-50'}>
                         <td className="p-3.5 sm:p-4">
                           <div className="flex items-center gap-3">
                             <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center font-bold text-sm shrink-0">
@@ -1696,6 +1730,31 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                             </span>
                           )}
                         </td>
+                        {/* SUPERVISOR / ROLE PROMOTION SELECTOR */}
+                        <td className="p-3.5 sm:p-4 text-center">
+                          <div className="inline-flex items-center gap-1.5">
+                            <select
+                              value={s.role || 'student'}
+                              onChange={(e) =>
+                                handlePromoteStudent(s.phone, e.target.value as 'student' | 'admin' | 'owner', s.name)
+                              }
+                              className={`text-[11px] font-bold px-2.5 py-1.5 rounded-xl border cursor-pointer focus:outline-none transition-colors ${
+                                s.role === 'owner'
+                                  ? 'bg-amber-500/20 border-amber-500/50 text-amber-400 font-black'
+                                  : s.role === 'admin'
+                                  ? 'bg-purple-500/20 border-purple-500/50 text-purple-400 font-bold'
+                                  : isDark
+                                  ? 'bg-slate-800 border-slate-700 text-slate-300'
+                                  : 'bg-slate-100 border-slate-300 text-slate-700'
+                              }`}
+                              title="ترقية أو تغيير رتبة المستخدم"
+                            >
+                              <option value="student">🎓 طالب عادي</option>
+                              <option value="admin">🛡️ مشرف عام (أدمن)</option>
+                              <option value="owner">👑 مالك مساعد</option>
+                            </select>
+                          </div>
+                        </td>
                         <td className="p-3.5 sm:p-4 text-slate-500 text-[11px]">
                           {s.createdAt ? new Date(s.createdAt).toLocaleDateString('ar-EG') : 'جديد'}
                         </td>
@@ -1704,12 +1763,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                             {/* APPROVE BUTTON */}
                             {!isApproved && (
                               <button
-                                onClick={async () => {
-                                  if (onApproveStudent) {
-                                    await onApproveStudent(s.phone);
-                                    showToast(`تم اعتماد وتفعيل حساب الطالب ${s.name} بنجاح! ✅`);
-                                  }
-                                }}
+                                onClick={() => handleApproveStudentOptimistic(s.phone, s.name)}
                                 className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-1 shadow-md shadow-emerald-600/25 transition-all cursor-pointer"
                                 title="موافقة وتفعيل الحساب فوراً"
                               >
@@ -1721,12 +1775,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                             {/* REJECT BUTTON */}
                             {!isRejected && (
                               <button
-                                onClick={async () => {
-                                  if (onRejectStudent) {
-                                    await onRejectStudent(s.phone);
-                                    showToast(`تم رفض حساب الطالب ${s.name} ❌`, 'error');
-                                  }
-                                }}
+                                onClick={() => handleRejectStudentOptimistic(s.phone, s.name)}
                                 className="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 border border-rose-500/30 font-semibold text-xs flex items-center gap-1 transition-all cursor-pointer"
                                 title="رفض الحساب"
                               >
@@ -1817,7 +1866,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               </h4>
 
               {chatStudentPhones.length > 0 ? (
-                chatStudentPhones.map((ph) => {
+                chatStudentPhones.map((ph, phIdx) => {
                   const student = students.find((s) => s.phone === ph);
                   const studentMsgs = chatMessages.filter((m) => m.studentPhone === ph);
                   const lastMsg = studentMsgs[studentMsgs.length - 1];
@@ -1825,7 +1874,7 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
 
                   return (
                     <div
-                      key={ph}
+                      key={`${ph}-${phIdx}`}
                       onClick={() => setSelectedChatStudentPhone(ph)}
                       className={`p-3 rounded-xl border transition-all cursor-pointer ${
                         isSelected
@@ -2170,7 +2219,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
               </p>
             </div>
             <button
-              onClick={() => setShowEvalModal(true)}
+              onClick={() => {
+                resetEvalForm();
+                setShowEvalModal(true);
+              }}
               className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-md transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
@@ -2219,13 +2271,22 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                       </a>
                     )}
                   </div>
-                  <button
-                    onClick={() => handleDeleteEval(ev.id)}
-                    className="p-1.5 text-slate-400 hover:text-rose-500 transition-colors cursor-pointer"
-                    title="حذف التقييم"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => handleEditEval(ev)}
+                      className="p-1.5 text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors cursor-pointer"
+                      title="تعديل التقييم والواجب"
+                    >
+                      <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteEval(ev.id)}
+                      className="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
+                      title="حذف التقييم"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -2904,7 +2965,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
             }`}
           >
             <div className="flex items-center justify-between border-b pb-3 mb-4">
-              <h3 className="font-bold text-base">إضافة تقييم أو واجب أسبوعي جديد</h3>
+              <h3 className="font-bold text-base flex items-center gap-2">
+                <Edit3 className="w-5 h-5 text-emerald-500" />
+                <span>{editingEvalId ? 'تعديل بيانات التقييم والواجب الأسبوعي' : 'إضافة تقييم أو واجب أسبوعي جديد'}</span>
+              </h3>
               <button onClick={() => setShowEvalModal(false)} className="text-slate-400 hover:text-white cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
@@ -2993,10 +3057,10 @@ export const TeacherDashboard: React.FC<TeacherDashboardProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 cursor-pointer"
+                  className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold flex items-center gap-2 cursor-pointer shadow-md"
                 >
                   <Save className="w-4 h-4" />
-                  <span>حفظ التقييم</span>
+                  <span>{editingEvalId ? 'حفظ تعديلات التقييم ✅' : 'حفظ التقييم الأسبوعي 🚀'}</span>
                 </button>
               </div>
             </form>
